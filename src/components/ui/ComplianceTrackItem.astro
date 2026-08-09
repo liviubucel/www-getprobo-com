@@ -1,0 +1,43 @@
+---
+type Props = {
+  position: string;
+  title: string;
+};
+---
+
+<div
+  class="compliance-item group relative flex w-full min-w-0 flex-col pl-7 last:pb-0 sm:p-0 sm:pt-13"
+>
+  <!-- Square indicator -->
+  <div
+    class="square bg-border-low group-data-active:bg-accent absolute top-3 left-0 size-2 transition-all sm:top-0"
+  >
+  </div>
+
+  <!-- ProgressBar -->
+  <div
+    class="bg-border-low absolute top-5 -bottom-9 left-[3px] w-0.5 group-last:bottom-0 sm:top-[3px] sm:-right-16 sm:bottom-auto sm:left-2 sm:h-[2px] sm:w-auto group-last:sm:right-0"
+  >
+    <div
+      class="bg-accent duration:0 size-full origin-top scale-y-0 group-data-active:scale-y-100 group-data-active:duration-2000 sm:origin-left sm:scale-x-0 sm:scale-y-100 sm:group-data-active:scale-x-100"
+    >
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div
+    class="mb-2 flex h-8.5 w-max items-center rounded-lg border text-lg font-medium sm:mb-4"
+  >
+    <div
+      class="text-quaternary group-data-active:text-accent grid h-full place-items-center border-r px-2.5"
+    >
+      {Astro.props.position}
+    </div>
+    <div class="px-2.5">
+      {Astro.props.title}
+    </div>
+  </div>
+  <p class="mb-2 text-lg sm:mb-6">
+    <slot />
+  </p>
+</div>

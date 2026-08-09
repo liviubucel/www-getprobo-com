@@ -1,0 +1,99 @@
+---
+import { Image } from "astro:assets";
+import BryanPortrait from "../../assets/about/bryan-frimin.png";
+import AntoinePortrait from "../../assets/about/antoine-bourchardy.png";
+import LudovicPortrait from "../../assets/about/ludovic-vielle.jpeg";
+import SachaPortrait from "../../assets/about/sacha-al-himdani.png";
+import ArthurPortrait from "../../assets/about/arthur-mayoux.jpeg";
+import EmilePortrait from "../../assets/about/emile-re.jpeg";
+
+const founders = [
+  {
+    img: AntoinePortrait,
+    alt: "Antoine Bourchardy",
+    name: "Antoine Bourchardy",
+    role: "Co-founder & CEO",
+    bio: "ISO 27001 auditor with experience in compliance assessment and implementation. Passionate about making compliance accessible and straightforward.",
+  },
+  {
+    img: BryanPortrait,
+    alt: "Bryan Frimin",
+    name: "Bryan Frimin",
+    role: "Co-founder & CTO",
+    bio: "YC alumnus and engineer who managed SOC2/ISO27001 compliance at his previous startup. Experienced in building scalable solutions for complex problems.",
+  },
+];
+
+const employees = [
+  {
+    img: SachaPortrait,
+    alt: "Sacha Al Himdani",
+    name: "Sacha Al Himdani",
+    role: "Founding Engineer",
+  },
+  {
+    img: ArthurPortrait,
+    alt: "Arthur Mayoux",
+    name: "Arthur Mayoux",
+    role: "Biz Ops",
+  },
+  {
+    img: EmilePortrait,
+    alt: "Émile Ré",
+    name: "Émile Ré",
+    role: "Founding Engineer",
+  },
+  {
+    img: LudovicPortrait,
+    alt: "Ludovic Vielle",
+    name: "Ludovic Vielle",
+    role: "Founding Engineer",
+  },
+];
+
+const team = [...founders, ...employees];
+---
+
+<section class="container py-10 sm:py-20">
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Founders</h2>
+  <div class="flex flex-col gap-10 sm:flex-row sm:gap-20">
+    {
+      founders.map((f) => (
+        <article class="space-y-2">
+          <Image
+            densities={[1, 2]}
+            src={f.img}
+            alt={f.alt}
+            width={102}
+            height={102}
+            class="mb-4 rounded-lg sm:mb-8"
+          />
+          <h3 class="font-medium">{f.name}</h3>
+          <div>{f.role}</div>
+          <p class="text-lg">{f.bio}</p>
+        </article>
+      ))
+    }
+  </div>
+  <hr class="my-10 sm:my-30" />
+
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Our team</h2>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    {
+      team.map((item) => (
+        <article class="space-y-2">
+          <Image
+            densities={[1, 2]}
+            src={item.img}
+            alt={item.alt}
+            width={102}
+            height={102}
+            class="mb-4 rounded-lg sm:mb-8"
+          />
+          <h3 class="font-medium">{item.name}</h3>
+          <div>{item.role}</div>
+        </article>
+      ))
+    }
+  </div>
+</section>

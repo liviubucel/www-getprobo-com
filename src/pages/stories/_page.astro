@@ -1,0 +1,189 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Prose from "../../components/Prose.astro";
+import Image from "astro/components/Image.astro";
+import { dynamicImages } from "../../lib/images.ts";
+import Sharer from "../../components/block/Sharer.svelte";
+import Newsletter from "../../components/block/Newsletter.astro";
+import { random } from "../../lib/array";
+import StoryCard from "../../components/StoryCard.astro";
+type Props = {
+  item: CollectionEntry<"stories">;
+};
+const { item } = Astro.props;
+const { Content } = await render(item);
+const data = item.data;
+const images = dynamicImages(
+  import.meta.glob<{
+    default: ImageMetadata;
+  }>("/src/assets/stories/*.{jpeg,jpg,png,gif,svg}"),
+);
+const image = images(data.image);
+const logo = images(data.logo);
+const stories = random(
+  (await getCollection("stories")).filter((s) => s.id !== item.id),
+  3,
+);
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: data.title,
+  ...(data.description && { description: data.description }),
+  datePublished: data.date.toISOString(),
+  author: {
+    "@type": "Organization",
+    name: "Probo",
+    url: "https://www.probo.com",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Probo",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.probo.com/probo-logo.svg",
+    },
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": Astro.url.toString(),
+  },
+  image: data.ogImage
+    ? `https://www.probo.com${data.ogImage}`
+    : "https://www.probo.com/og.png",
+};
+---
+
+<Layout
+  title={item.data.title}
+  description={item.data.description}
+  ogImage={item.data.ogImage}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <header class="relative flex h-115 flex-col justify-end sm:h-163">
+    <Image
+      src={image}
+      height={652}
+      layout="full-width"
+      alt={data.title}
+      class="absolute inset-0 z-1 size-full object-cover object-[center_35%]"
+      fetchpriority="high"
+    />
+    <div
+      class="relative z-3 flex flex-col gap-6 p-5 sm:container sm:mb-37 sm:py-0"
+    >
+      <Image
+        src={logo}
+        height={data.logoHeight ?? 23}
+        class={`animate-perspective-in${
+          data.invertLogo
+            ? " [filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.28))_drop-shadow(0_16px_36px_rgba(0,0,0,0.2))]"
+            : ""
+        }`}
+        alt={`Logo ${data.company.name}`}
+      />
+      <h1
+        class="text-h3 text-invert sm:text-h2 animate-perspective-in animation-delay-100 font-medium whitespace-pre-line"
+      >
+        {data.title}
+      </h1>
+    </div>
+  </header>
+
+  <div
+    class="relative z-5 mx-5 mt-10 mb-6 flex grid-cols-3 flex-col gap-4 sm:container sm:my-0 sm:-mt-[50px] sm:grid sm:-translate-y-12"
+  >
+    {
+      data.impacts.map((impact, k) => (
+        <div>
+          <div
+            class="text-h4 sm:text-invert animate-perspective-in font-medium"
+            style={`animation-delay: ${k * 100 + 200}ms`}
+          >
+            {impact.title}
+          </div>
+          <div
+            class="text-muted-foreground sm:text-tertiary-foreground animate-perspective-in text-lg"
+            style={`animation-delay: ${k * 100 + 200}ms`}
+          >
+            {impact.label}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <main
+    class="animate-slide-in animation-delay-400 container flex grid-cols-[1fr_320px] flex-col gap-10 sm:my-20 sm:grid sm:gap-20"
+  >
+    <Prose>
+      <Content />
+    </Prose>
+    <hr class="-mr-5 sm:hidden" />
+    <aside class="@container space-y-6 text-xs">
+      <div class="space-y-2">
+        <Sharer
+          client:only
+          url={Astro.url.toString()}
+          title={data.title}
+          class="items-start text-start"
+        />
+      </div>
+      <div class="space-y-2">
+        <div class="font-medium">Company name</div>
+        <div class="text-muted-foreground">
+          {
+            data.company.url ? (
+              <a
+                href={data.company.url}
+                class="text-inherit underline-offset-4 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {data.company.name}
+              </a>
+            ) : (
+              data.company.name
+            )
+          }
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="font-medium">Industry</div>
+        <div class="text-muted-foreground">{data.company.industry}</div>
+      </div>
+      <div class="space-y-2">
+        <div class="font-medium">Company type</div>
+        <div class="text-muted-foreground">{data.company.type}</div>
+      </div>
+      <div class="mb-10 space-y-2">
+        <div class="font-medium">About the company</div>
+        <div class="text-muted-foreground">{data.company.about}</div>
+      </div>
+      <Newsletter />
+    </aside>
+  </main>
+
+  <div class="container mb-10 sm:mb-20">
+    <hr class="my-10 sm:my-20" />
+    <aside>
+      <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">
+        Explore more stories
+      </h2>
+      <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
+        {stories.map((story) => <StoryCard story={story} size="relative" />)}
+      </div>
+    </aside>
+  </div>
+</Layout>
+
+<style>
+  header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.25), transparent);
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+title: Cursor
+description: Connect Cursor as an access review source using a Read-only team Admin API key so Probo can list your team's members and their roles.
+---
+
+import { Steps, Badge } from "@astrojs/starlight/components";
+
+Probo reads your Cursor team's members through the Cursor Admin API so you can review who has access.
+
+:::caution
+Use a team API key (`crsr_…`) with the **Read-only** scope, created by a team administrator in the Cursor dashboard. A personal **User API Key** will **not** work because it cannot list team members through the Admin API.
+:::
+
+## Prerequisites
+
+- Probo organization administrator access
+- The **team administrator** role in Cursor (only team administrators can create and manage Admin API keys)
+- A Cursor team on a paid **Business** plan (the Admin API is not available on individual accounts)
+
+## Collected Fields
+
+| Probo field | Cursor field                                             | Notes                                                                                                                     |
+| ----------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Name        | `name`                                                   | Member display name                                                                                                       |
+| Email       | `email`                                                  | Member email address                                                                                                      |
+| Role        | `role`                                                   | `owner` and `free-owner` map to Owner, `member` to Member, `removed` to Removed; any other value passes through unchanged |
+| Admin       | `role`                                                   | Flagged as an administrator when `role` is `owner` or `free-owner`                                                        |
+| Status      | `isRemoved`, `role`                                      | Shown inactive when `isRemoved` is true or `role` is `removed`, otherwise active                                          |
+| MFA         | <Badge text="Not supported" class="badge-unsupported" /> |                                                                                                                           |
+| Last login  | <Badge text="Not supported" class="badge-unsupported" /> |                                                                                                                           |
+| External ID | `id`                                                     | Stable identifier used to track the account across reviews                                                                |
+| Created at  | <Badge text="Not supported" class="badge-unsupported" /> |                                                                                                                           |
+
+## Step 1: Create an API Key
+
+<Steps>
+
+1. In Cursor (signed in as a team administrator), open `cursor.com/dashboard`, go to **Settings**, and select **API Keys** in the sidebar.
+2. Open the **Team** tab and click **New API Key**.
+3. Enter a name (e.g. `Probo Access Review`), choose an expiration date, and set **Scope** to **Read-only**.
+4. Create and copy the key (`crsr_…`), then store it securely. It's shown only once.
+
+</Steps>
+
+## Step 2: Connect in Probo
+
+<Steps>
+
+1. In Probo, go to **Access Reviews** > **Sources** > **Add Source**.
+2. Find **Cursor**, click **API Key**, paste the key, and click **Connect**.
+
+</Steps>
+
+The Admin API exposes no team or organization name endpoint, so Probo lists the source under the fixed name Cursor and pulls its members into your campaigns.
+
+## Troubleshooting
+
+- **Key rejected.** Confirm it's a team API key (`crsr_…`) with the **Read-only** scope, created by a team administrator. A personal User API Key won't work, and because the Admin API accepts only Basic auth, Bearer tokens are rejected.
+- **No members appear.** The key must be created by a team administrator and belong to the team you're reviewing on a paid Business plan.

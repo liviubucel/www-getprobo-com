@@ -1,0 +1,96 @@
+---
+import { clsx } from "clsx";
+interface Props {
+  title: string;
+  class?: string;
+  video?: string;
+}
+const { title, video, ...props } = Astro.props;
+const poster = video?.replace(/\.mp4$/, ".jpg");
+---
+
+<section class={clsx("flex flex-col gap-8 sm:gap-10", props.class)}>
+  <div class="space-y-2">
+    {
+      video && (
+        <autopilot-video class="relative mb-6 block aspect-560/360 w-full overflow-hidden rounded-2xl bg-[#EEEDE8] sm:mb-10">
+          <video
+            muted
+            playsinline
+            loop
+            preload="metadata"
+            poster={poster}
+            src={video}
+            class="relative block aspect-560/360 w-full rounded-2xl object-cover"
+            width={500}
+            height={360}
+          />
+          <div class="from-level-0 to-level-0/0 absolute right-0 bottom-0 left-0 z-10 h-20 bg-gradient-to-t" />
+        </autopilot-video>
+      )
+    }
+    <h3 class="text-h4 font-medium">
+      {title}
+    </h3>
+    <div class="text-muted-foreground space-y-2 text-lg">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { customElementDefine } from "../../lib/dom";
+
+  class AutopilotVideo extends HTMLElement {
+    private observer: IntersectionObserver | null = null;
+    private video: HTMLVideoElement | null = null;
+    private inView = false;
+
+    connectedCallback() {
+      this.video = this.querySelector("video");
+      if (!this.video) {
+        return;
+      }
+
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            this.inView = entry.isIntersecting;
+            this.syncPlayback();
+          }
+        },
+        { threshold: 0.35 },
+      );
+      this.observer.observe(this.video);
+      document.addEventListener("visibilitychange", this.onVisibilityChange);
+    }
+
+    private onVisibilityChange = () => {
+      this.syncPlayback();
+    };
+
+    private syncPlayback() {
+      const video = this.video;
+      if (!video) {
+        return;
+      }
+
+      if (this.inView && document.visibilityState === "visible") {
+        void video.play().catch(() => {
+          // Autoplay can be blocked; poster still shows.
+        });
+      } else {
+        video.pause();
+      }
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("visibilitychange", this.onVisibilityChange);
+      this.observer?.disconnect();
+      this.observer = null;
+      this.video = null;
+    }
+  }
+
+  customElementDefine("autopilot-video", () => AutopilotVideo);
+</script>

@@ -1,0 +1,151 @@
+---
+import Icon from "../Icon.astro";
+---
+
+<starlight-menu-button
+  class="ml-3 grid size-9 place-items-center lg:hidden print:hidden"
+>
+  <button
+    class="group grid size-9 place-items-center"
+    type="button"
+    aria-expanded="false"
+    aria-controls="starlight__sidebar"
+    aria-label="Open documentation menu"
+  >
+    <Icon name="list" size={16} class="open-menu" />
+    <Icon name="x" size={16} class="close-menu" />
+  </button>
+</starlight-menu-button>
+
+<script>
+  import { customElementDefine } from "../../lib/dom";
+
+  class StarlightMenuButton extends HTMLElement {
+    btn = this.querySelector("button")!;
+    desktop = matchMedia("(min-width: 64rem)");
+
+    connectedCallback() {
+      this.btn.addEventListener("click", this.toggleExpanded);
+      document.addEventListener("keydown", this.closeOnEscape);
+      document.addEventListener("astro:before-swap", this.closeBeforeSwap);
+      this.desktop.addEventListener("change", this.closeForDesktop);
+      document
+        .getElementById("starlight__sidebar")
+        ?.addEventListener("click", this.closeAfterNavigation);
+      this.setExpanded(false);
+    }
+
+    disconnectedCallback() {
+      this.btn.removeEventListener("click", this.toggleExpanded);
+      document.removeEventListener("keydown", this.closeOnEscape);
+      document.removeEventListener("astro:before-swap", this.closeBeforeSwap);
+      this.desktop.removeEventListener("change", this.closeForDesktop);
+      document
+        .getElementById("starlight__sidebar")
+        ?.removeEventListener("click", this.closeAfterNavigation);
+      this.setExpanded(false);
+    }
+
+    setExpanded(expanded: boolean) {
+      const isExpanded = expanded && !this.desktop.matches;
+      const sidebar = document.getElementById("starlight__sidebar");
+
+      this.setAttribute("aria-expanded", String(isExpanded));
+      this.btn.setAttribute("aria-expanded", String(isExpanded));
+      this.btn.setAttribute(
+        "aria-label",
+        isExpanded ? "Close documentation menu" : "Open documentation menu",
+      );
+      document.body.toggleAttribute("data-mobile-menu-expanded", isExpanded);
+      sidebar?.toggleAttribute("inert", !this.desktop.matches && !isExpanded);
+
+      document
+        .querySelectorAll<HTMLElement>(
+          ".docs-content, .right-sidebar, .sl-skip-link, probo-cookie-banner",
+        )
+        .forEach((element) => {
+          element.toggleAttribute("inert", isExpanded);
+        });
+
+      if (isExpanded) {
+        window.setTimeout(
+          () =>
+            sidebar
+              ?.querySelector<HTMLElement>("a[href], button, summary")
+              ?.focus(),
+          0,
+        );
+      }
+    }
+
+    toggleExpanded = () =>
+      this.setExpanded(this.btn.getAttribute("aria-expanded") !== "true");
+
+    closeOnEscape = (event: KeyboardEvent) => {
+      if (
+        event.key === "Escape" &&
+        this.btn.getAttribute("aria-expanded") === "true"
+      ) {
+        this.setExpanded(false);
+        this.btn.focus();
+      }
+    };
+
+    closeAfterNavigation = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest("a")) {
+        this.setExpanded(false);
+      }
+    };
+
+    closeBeforeSwap = () => this.setExpanded(false);
+    closeForDesktop = () => this.setExpanded(false);
+  }
+
+  customElementDefine("starlight-menu-button", () => StarlightMenuButton);
+</script>
+
+<style>
+  @layer starlight.core {
+    button {
+      border: 0;
+      border-radius: 50%;
+      width: var(--sl-menu-button-size);
+      height: var(--sl-menu-button-size);
+      padding: 0.5rem;
+      background-color: var(--sl-color-white);
+      color: var(--sl-color-black);
+      box-shadow: var(--sl-shadow-md);
+      cursor: pointer;
+    }
+
+    [aria-expanded="true"] button {
+      background-color: var(--sl-color-gray-2);
+      box-shadow: none;
+    }
+
+    [aria-expanded="true"] .open-menu {
+      display: none;
+    }
+
+    :not([aria-expanded="true"]) .close-menu {
+      display: none;
+    }
+
+    :global([data-theme="light"]) button {
+      background-color: var(--sl-color-black);
+      color: var(--sl-color-white);
+    }
+
+    :global([data-theme="light"]) [aria-expanded="true"] button {
+      background-color: var(--sl-color-gray-5);
+    }
+  }
+</style>
+
+<style is:global>
+  @layer starlight.core {
+    [data-mobile-menu-expanded] {
+      overflow: hidden;
+    }
+  }
+</style>

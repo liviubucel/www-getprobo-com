@@ -1,0 +1,85 @@
+---
+title: Geolocation and Regulations
+description: Learn how Probo detects a visitor's country and automatically applies the matching privacy regulation, presentation, and consent mode for the banner.
+---
+
+Probo automatically detects each visitor's country from their IP address and applies the correct privacy regulation. The banner's **presentation** (opt-in, opt-out, or notice), button set, initial/reopen state, and copy all adapt to the visitor's location without any manual configuration.
+
+## How It Works
+
+Every time the JavaScript SDK fetches the banner configuration, the API resolves the visitor's location:
+
+1. The visitor's IP address is extracted from the request.
+2. The IP is looked up against a geolocation database to determine the country.
+3. The country is mapped to an applicable privacy regulation (e.g. GDPR for France, CCPA for the United States).
+4. The regulation determines the **layout** (`presentation`, `initial_state`, `reopen_state`, buttons, settings-link style) and consent mode. Banner text variants are selected to match.
+
+This happens transparently on every configuration request. You do not need to install any additional library or pass location data from the client.
+
+If geolocation cannot resolve a country (for example the IP cannot be looked up), Probo falls back to **GDPR** — the strictest opt-in model.
+
+## Presentations
+
+The SDK renders from three presentations (see `layout.presentation` in the [JavaScript SDK](/docs/product/cookie-banner/javascript-sdk#layout-api)):
+
+| Presentation | Behavior | Typical reopen target |
+| ------------ | -------- | --------------------- |
+| **OPT_IN** | Non-essential cookies blocked until the visitor consents. Accept / reject / customize. | Preference panel |
+| **OPT_OUT** | Non-essential cookies active by default. Compact acknowledge + opt-out banner. Under **CCPA** the banner starts closed and reopen opens **Privacy Choices**. | Compact banner (or Privacy Choices for CCPA) |
+| **NOTICE** | Informational notice with a single dismiss control. Records `ACKNOWLEDGE` (not accept-all). Cookies follow the opt-out model (active by default). | Notice banner |
+
+## Supported Regulations
+
+### Opt-in (`OPT_IN`)
+
+| Regulation  | Countries                                                                                                                                                                                                                                                                          |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **GDPR**    | Austria, Belgium, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden, Iceland, Liechtenstein, Norway |
+| **UK GDPR** | United Kingdom                                                                                                                                                                                                                                                                     |
+| **FADP**    | Switzerland                                                                                                                                                                                                                                                                        |
+| **POPIA**   | South Africa                                                                                                                                                                                                                                                                       |
+| **PDPA**    | Thailand                                                                                                                                                                                                                                                                           |
+| **PIPL**    | China                                                                                                                                                                                                                                                                              |
+| **PIPA**    | South Korea                                                                                                                                                                                                                                                                        |
+| **DPDP**    | India                                                                                                                                                                                                                                                                              |
+| **PDPL**    | Saudi Arabia                                                                                                                                                                                                                                                                       |
+
+### Opt-out (`OPT_OUT`)
+
+| Regulation      | Countries     | Notes |
+| --------------- | ------------- | ----- |
+| **CCPA / CPRA** | United States | Starts closed; `<probo-settings-link>` shows “Your Privacy Choices” + official icon and opens the Privacy Choices panel |
+| **PIPEDA**      | Canada        | Compact opt-out banner; settings link reopens that banner |
+| **LGPD**        | Brazil        | Compact opt-out banner; settings link reopens that banner |
+
+### Notice (`NOTICE`)
+
+Informational dismiss only — implied-consent or no cookie-consent law:
+
+| Regulation      | Countries | Notes |
+| --------------- | --------- | ----- |
+| **APPI**        | Japan     | Single acknowledge / dismiss control |
+| **LFPDPPP**     | Mexico    | Single acknowledge / dismiss control |
+| **None**        | Other identified countries with no mapped cookie-consent regulation | Same notice presentation |
+
+## Resolution Priority
+
+1. **Country resolved** — Map to the regulation above and apply that regulation's layout (presentation, consent mode, reopen target, settings-link style).
+2. **Country unresolved** — Fall back to **GDPR** (strict opt-in).
+3. There is **no console “default consent mode”** override. Layout is always derived from the resolved regulation.
+
+## Banner Text Adaptation
+
+The API adjusts button labels and description text to match the resolved presentation. You do not need to manage separate text variants in code — use presentation-specific translation keys in the console (or `resolveBannerText` in headless embeds).
+
+| Presentation | Banner behavior |
+| ------------ | --------------- |
+| **OPT_IN** | Accept all, reject all, and customize with the standard consent description |
+| **OPT_OUT** | Acknowledge + opt-out with opt-out-specific description. Under **CCPA** the first visit starts closed; settings link opens Privacy Choices |
+| **NOTICE** | Single dismiss button with a notice-style description — records `ACKNOWLEDGE` |
+
+If you have customized banner translations, the system uses your opt-out or notice-specific text variants when they apply. Configure these per language in the Probo console under the banner's **Translations** tab.
+
+## What to Configure
+
+Geolocation and regulation mapping are fully automatic. You do **not** pick a consent mode when creating a banner — only name, origin, policy URLs, expiry, and languages. Everything else — IP resolution, country-to-regulation mapping, layout, and text adaptation — is handled by Probo.

@@ -1,0 +1,22 @@
+---
+import { getStarsCount } from "../lib/github";
+const stars = await getStarsCount();
+---
+
+<github-stars {...Astro.props}>
+  {stars}
+</github-stars>
+
+<script>
+  import { getStarsCount } from "../lib/github";
+  import { customElementDefine } from "../lib/dom";
+
+  class GithubStars extends HTMLElement {
+    connectedCallback() {
+      getStarsCount().then((stars) => {
+        this.innerText = stars;
+      });
+    }
+  }
+  customElementDefine("github-stars", () => GithubStars);
+</script>

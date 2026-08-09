@@ -1,0 +1,30 @@
+---
+import Portrait from "../../assets/antoine-bourchardy.png";
+import Image from "astro/components/Image.astro";
+---
+
+<section class="container max-w-[760px] py-10 text-center sm:py-20">
+  <h2 class="text-h3 sm:text-h2 font-medium">Why are we open source?</h2>
+  <p class="text-quote text-muted-foreground text-gradient my-10 sm:my-12">
+    "Because compliance isn't a spreadsheet, it's a system. Everyone has their
+    own way of working, so we built Probo to be open and extensible. Being open
+    source means anyone can adapt it, extend it, and make it truly theirs."
+  </p>
+  <Image
+    densities={[1, 2]}
+    class="mx-auto mb-10 block sm:mb-12"
+    src={Portrait}
+    alt="Portrait of Antoine Bouchardy"
+    width={164}
+    height={164}
+  />
+  <p class="text-muted-foreground">— Antoine Bouchardy, Co-founder & CEO</p>
+</section>
+
+<style>
+  .text-gradient {
+    background: -webkit-linear-gradient(#6b716a, #141e12);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>

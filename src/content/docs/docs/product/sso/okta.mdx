@@ -1,0 +1,213 @@
+---
+title: Okta SSO
+description: Set up SAML SSO between Okta and Probo, including domain verification, attribute statements, relay state, group-based access, and troubleshooting.
+---
+
+This guide walks you through setting up SAML Single Sign-On between Okta and Probo.
+
+## Prerequisites
+
+- Okta administrator access
+- Probo organization administrator access
+- Your Probo domain (e.g., `probo.example.com`)
+- Access to your DNS settings for domain verification
+
+## Prepare Probo Information
+
+Before configuring Okta, gather these Probo service provider details:
+
+| Field         | Value                                                            |
+| ------------- | ---------------------------------------------------------------- |
+| **ACS URL**   | `https://your-probo-domain.com/api/connect/v1/saml/2.0/consume`  |
+| **Entity ID** | `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata` |
+
+Replace `your-probo-domain.com` with your actual Probo domain.
+
+## Domain Verification
+
+Before configuring anything else, you must verify domain ownership:
+
+import { Steps } from "@astrojs/starlight/components";
+
+<Steps>
+
+1. Log in to Probo as an organization administrator
+2. Go to **Organization Settings** → **Authentication** → **SAML**
+3. Click **Verify Domain** (if no configurations exist yet, this option will be available)
+4. Copy the provided TXT record value
+5. Add a TXT record to your domain's DNS settings:
+   ```
+   Type: TXT
+   Name: _probo-domain-verification.your-company.com
+   Value: [Verification token from Probo]
+   TTL: 300 (or your DNS provider's default)
+   ```
+6. Wait for DNS propagation (usually 5-15 minutes)
+7. In Probo, click **Complete Verification**
+8. If successful, the domain status will show as "Verified"
+
+</Steps>
+
+## Configure Okta
+
+<Steps>
+
+1. Sign in to your [Okta Admin Console](https://your-domain-admin.okta.com)
+2. Go to **Applications** → **Applications**
+3. Click **Create App Integration**
+4. Select **SAML 2.0**
+5. Click **Next**
+6. Configure the general settings:
+
+   | Field              | Value                        |
+   | ------------------ | ---------------------------- |
+   | **App name**       | `Probo`                      |
+   | **App logo**       | Upload Probo logo (optional) |
+   | **App visibility** | Check desired options        |
+
+7. Click **Next**
+8. Configure the SAML settings:
+
+   | Field                                              | Value                                                            |
+   | -------------------------------------------------- | ---------------------------------------------------------------- |
+   | **Single sign on URL**                             | `https://your-probo-domain.com/api/connect/v1/saml/2.0/consume`  |
+   | **Use this for Recipient URL and Destination URL** | ☑️ (Check this box)                                              |
+   | **Audience URI (SP Entity ID)**                    | `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata` |
+   | **Default Relay State**                            | `[SAML Configuration ID]` (optional - see note below)            |
+   | **Name ID format**                                 | `EmailAddress`                                                   |
+   | **Application username**                           | `Email`                                                          |
+
+   **Important**: The **Default Relay State** is optional but if you want to support IdP-initiated login flows, it MUST be set to your exact SAML configuration ID (not a placeholder). If set incorrectly, SSO will not work. You'll get this ID after creating the SAML configuration in Probo. You can initially leave this empty and update it later with the exact configuration ID.
+
+9. Add the following attribute statements:
+
+   | Name        | Name format | Value                  |
+   | ----------- | ----------- | ---------------------- |
+   | `email`     | Unspecified | `user.email`           |
+   | `firstName` | Unspecified | `user.firstName`       |
+   | `lastName`  | Unspecified | `user.lastName`        |
+   | `role`      | Unspecified | `user.role` (optional) |
+
+10. Click **Next**
+11. Select **I'm an Okta customer adding an internal app**
+12. Set **App type** to: Internal app for employees
+13. Click **Finish**
+14. Go to the **Sign On** tab of your Probo app
+15. Click **View SAML setup instructions**
+16. **Save these values** for Probo configuration:
+    - **Identity Provider Single Sign-On URL**
+    - **Identity Provider Issuer**
+    - **X.509 Certificate**
+17. Go to the **Assignments** tab
+18. Click **Assign** → **Assign to People** or **Assign to Groups**
+19. Select users/groups that should have access to Probo
+20. Click **Assign** and **Done**
+
+</Steps>
+
+## Configure Probo
+
+<Steps>
+
+1. Log in to Probo as an organization administrator
+2. Go to **Organization Settings** → **Authentication** → **SAML**
+3. Click **Add SAML Configuration**
+4. Configure the basic settings:
+
+   | Field                  | Value              | Notes                            |
+   | ---------------------- | ------------------ | -------------------------------- |
+   | **Email Domain**       | `your-company.com` | Your organization's email domain |
+   | **Enforcement Policy** | `OPTIONAL`         | Recommended for initial setup    |
+
+5. Configure the Identity Provider settings with values from Okta:
+
+   | Field               | Value                                    | Notes                |
+   | ------------------- | ---------------------------------------- | -------------------- |
+   | **IdP Entity ID**   | `[Identity Provider Issuer]`             | Copy from Okta setup |
+   | **IdP SSO URL**     | `[Identity Provider Single Sign-On URL]` | Copy from Okta setup |
+   | **IdP Certificate** | `[X.509 Certificate]`                    | Copy from Okta setup |
+
+6. Configure the attribute mappings:
+
+   | Field                    | Value       | Notes                   |
+   | ------------------------ | ----------- | ----------------------- |
+   | **Email Attribute**      | `email`     | Maps to user email      |
+   | **First Name Attribute** | `firstName` | Maps to user first name |
+   | **Last Name Attribute**  | `lastName`  | Maps to user last name  |
+   | **Role Attribute**       | `role`      | Optional; values `OWNER`, `ADMIN`, `EMPLOYEE`, or `VIEWER` |
+
+7. Configure user settings:
+
+   | Field           | Value     | Notes                                             |
+   | --------------- | --------- | ------------------------------------------------- |
+   | **Auto Signup** | `Enabled` | Allows new users to sign up automatically via SSO |
+
+8. Click **Save Configuration**
+9. **Copy the SAML Configuration ID** that appears after saving (e.g., `saml_config_1a2b3c4d`)
+
+</Steps>
+
+## Update Okta Relay State
+
+Return to Okta to enable IdP-initiated login:
+
+<Steps>
+
+1. Go to your Probo app in Okta Admin Console
+2. Click **General** tab → **Edit** SAML Settings
+3. In the **Default Relay State** field, enter your SAML configuration ID
+4. Click **Next** → **Next** → **Finish**
+
+</Steps>
+
+## Troubleshooting
+
+### "SAML assertion audience mismatch" Error
+
+- **Cause**: Audience URI mismatch between Okta and Probo
+- **Solution**: Ensure Audience URI in Okta exactly matches your Entity ID:
+  - Should be: `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata`
+
+### "User not assigned to application" Error
+
+- **Cause**: User not assigned to Probo app in Okta
+- **Solution**: Assign user to the application in Okta's Assignments tab
+
+### Attributes Not Mapping
+
+- **Cause**: Incorrect attribute statement names in Okta
+- **Solution**: Verify attribute statement names match exactly: `email`, `firstName`, `lastName`
+
+### "Invalid RelayState" Error
+
+- **Cause**: Incorrect Default Relay State configuration
+- **Solution**: Ensure Default Relay State is either empty or set to the exact SAML configuration ID from Probo
+
+### Debugging Steps
+
+#### Check Okta System Log
+
+1. Go to Okta Admin Console → **Reports** → **System Log**
+2. Filter by application name (Probo)
+3. Look for authentication failures and error details
+
+## Advanced Configuration
+
+### Custom Attributes
+
+To map additional Okta user attributes:
+
+1. In Okta, add custom attributes to user profiles
+2. Add attribute statements in the SAML app configuration
+3. Map these attributes in Probo SAML configuration
+
+### Group-Based Access
+
+Control access using Okta groups:
+
+1. Create groups in Okta for Probo access
+2. Assign users to appropriate groups
+3. Assign the Probo app to groups instead of individual users
+4. Use group filters for fine-grained access control
+
+For detailed troubleshooting and advanced configuration options, see the [SSO Overview](/docs/product/sso/overview) guide.

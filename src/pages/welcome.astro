@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Welcome aboard"
+  description="Welcome to Probo - Next steps for new customers"
+  noIndex={true}
+  noFrameworks={true}
+>
+  <main>
+    <section class="container py-20 sm:py-32">
+      <div class="mx-auto max-w-2xl">
+        <h1 class="text-h1 mb-10 font-medium">Welcome aboard 👋</h1>
+
+        <h2 class="text-h3 mb-6 font-medium">What's next?</h2>
+
+        <ul class="space-y-6 text-lg">
+          <li class="flex gap-4">
+            <span class="text-2xl">💬</span>
+            <span
+              >You should already have received a <strong
+                >Slack Connect invite</strong
+              > from our team.</span
+            >
+          </li>
+
+          <li class="flex gap-4">
+            <span class="text-2xl">📝</span>
+            <span
+              >You'll soon receive your <strong
+                >contract and legal documents</strong
+              > via DocuSign.</span
+            >
+          </li>
+
+          <li class="flex gap-4">
+            <span class="text-2xl">📞</span>
+            <span
+              >Once everything is signed, we'll schedule a <strong
+                >30-minute onboarding call</strong
+              > to walk you through the next steps and kick off your compliance work
+              together.</span
+            >
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</Layout>

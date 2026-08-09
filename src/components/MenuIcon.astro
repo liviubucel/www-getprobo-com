@@ -1,0 +1,13 @@
+---
+import Icon from "./Icon.astro";
+import type { MenuIconName } from "../content/menu";
+
+interface Props {
+  name: MenuIconName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+---
+
+<Icon name={name} size={24} class:list={["block size-6", className]} />

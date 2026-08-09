@@ -1,0 +1,87 @@
+---
+import { getCollection } from "astro:content";
+import StoryCard from "../StoryCard.astro";
+import Slider from "../ui/Slider.svelte";
+import { sortStoriesForListing } from "../../lib/stories.ts";
+
+const stories = sortStoriesForListing(await getCollection("stories"));
+---
+
+<section class="stories dark bg-level-0 text-foreground overflow-hidden">
+  <div class="container py-10 sm:py-30">
+    <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
+      Case studies
+    </h2>
+    <p class="text-muted-foreground mx-auto mb-6 max-w-140 text-center text-lg">
+      We help companies design and scale their cybersecurity compliance programs
+      so they can focus on what they are best at - their business.
+    </p>
+
+    <a
+      href="/stories"
+      class="group mb-10 flex items-center justify-center gap-1.5 text-lg font-medium sm:mb-12"
+    >
+      All case studies
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        xmlns="http://www.w3.org/2000/svg"
+        class="transition-transform group-hover:translate-x-1"
+      >
+        <path
+          d="M9.33325 4L13.3333 7.99999L9.33325 12"
+          stroke="currentColor"
+          stroke-width="1.33333"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <path
+          d="M12.6667 8H2.66675"
+          stroke="currentColor"
+          stroke-width="1.33333"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </a>
+
+    <div class="slider mx-auto">
+      <Slider
+        client:load
+        withOverflow
+        navigateOnClick
+        options={{
+          perPage: 1,
+          updateOnMove: true,
+          gap: 24,
+          pagination: false,
+          breakpoints: {
+            640: {
+              gap: 16,
+            },
+          },
+        }}
+      >
+        {stories.map((story) => <StoryCard size="home" story={story} />)}
+      </Slider>
+    </div>
+  </div>
+</section>
+
+<style>
+  .slider {
+    width: min(80vw, 720px);
+  }
+  .slider :global(.splide__slide) {
+    opacity: 0.4;
+  }
+  .slider :global(.splide__slide.is-active) {
+    opacity: 1;
+  }
+  .slider :global(.badge) {
+    opacity: 0;
+    transition: 0.3s;
+  }
+  .slider :global(.splide__slide.is-active .badge) {
+    opacity: 1;
+  }
+</style>

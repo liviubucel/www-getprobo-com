@@ -1,0 +1,73 @@
+---
+title: Cookie consent
+description: Learn how Probo's cookie-consent service and JavaScript client publish banner versions, group trackers into categories, and record visitor consent.
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+
+Probo provides a cookie-consent service and the `@probo/cookie-banner` client package. Together they publish a versioned banner, collect a visitor’s choices, and control configured tracker resources.
+
+## System model
+
+- A **banner** contains defaults, presentation settings, and translations.
+- **Categories** group trackers by purpose. Necessary and uncategorized categories have system behavior; custom categories can be added and reordered.
+- **Tracker patterns** identify resources and cookies. Tracker resources can be moved between categories.
+- A **published version** is the configuration delivered to visitors.
+- A **consent record** stores the action, category choices, banner version, client context, and timestamp reported to Probo.
+
+Draft changes do not alter the configuration already shown to visitors. Publish a new version after reviewing categories, translations, resources, and defaults.
+
+## Browser behavior
+
+The JavaScript client fetches published configuration from `/api/cookie-banner/v1`, resolves language, regulation, and layout (presentation), reads existing consent, and renders the selected UI. It can block configured scripts, iframes, images, and other resources until their category is allowed.
+
+The package supports a ready-made banner and lower-level web components for custom interfaces. The Consent Manager API exposes current choices and change events to other application code.
+
+## Privacy and legal responsibility
+
+Geolocation, presentations (opt-in, opt-out, and notice), Global Privacy Control handling, version history, and consent records help teams implement a consent program. They do not determine which law applies, classify every tracker automatically, or guarantee legal compliance. The site operator remains responsible for tracker inventory, category purpose, copy, retention, and legal review.
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Geolocation and regulations"
+    description="Understand how location determines presentation and consent mode"
+    href="/docs/product/cookie-banner/geolocation"
+  />
+  <LinkCard
+    title="JavaScript SDK"
+    description="Reference installation forms, components, events, and language behavior"
+    href="/docs/product/cookie-banner/javascript-sdk"
+  />
+  <LinkCard
+    title="Consent Manager API"
+    description="Read consent and subscribe to changes from application code"
+    href="/docs/product/cookie-banner/consent-manager"
+  />
+  <LinkCard
+    title="Blocking resources"
+    description="Control third-party resources according to category consent"
+    href="/docs/product/cookie-banner/blocking-resources"
+  />
+</CardGrid>
+
+## Automation
+
+<CardGrid>
+  <LinkCard
+    title="CLI cookie banner"
+    description="Manage banners and published versions with prb"
+    href="/docs/developers/cli/commands/cookie-banner"
+  />
+  <LinkCard
+    title="MCP cookie consent"
+    description="Operate cookie consent from supported AI tools"
+    href="/docs/developers/api/mcp/tools/catalog/cookie-consent"
+  />
+  <LinkCard
+    title="n8n Cookie Banner"
+    description="Automate banner configuration in n8n"
+    href="/docs/developers/api/n8n/resources/cookie-banner"
+  />
+</CardGrid>

@@ -1,0 +1,109 @@
+@plugin "./aria-plugin.ts";
+
+@theme {
+  --font-sans: "Geist", sans-serif;
+
+  --text-*: initial;
+  --color-*: initial;
+  --breakpoint-*: initial;
+  --container-*: initial;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 72rem;
+  --container-sm: 640px;
+  --breakpoint-md: 1120px;
+
+  --color-foreground: #141e12;
+  --color-primary: var(--color-foreground);
+  --color-primary-foreground: #fcfdfc;
+  --color-muted-foreground: #6b716a;
+  --color-secondary: #fff;
+  --color-tertiary-foreground: #818780;
+  --color-level-0: #fffffb;
+  --color-level-1: #ffffff;
+  --color-level-3: #141e12;
+  --color-border-low: #022a0213;
+  --color-border-mid: #001a0027;
+  --color-border-solid: #ecefec;
+
+  --color-quaternary: #c3c8c2;
+  --color-accent: #93c926;
+  --color-success: #5d770d;
+  --color-active: #e4f7c7;
+  --color-invert: #fff;
+  --color-highlight: #0027000d;
+  --color-subtle: #054d0507;
+
+  --text-h1: 4rem; /* 72px */
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -1.4px;
+
+  --text-h2: 2.75rem; /* 44px */
+  --text-h2--line-height: 1.09;
+  --text-h2--letter-spacing: -1.4px;
+
+  --text-h3: 2rem; /* 34px */
+  --text-h3--line-height: 1.09;
+  --text-h3--letter-spacing: -0.6px;
+
+  --text-h4: 1.4375rem; /* 23px */
+  --text-h4--line-height: 1.08;
+  --text-h4--letter-spacing: -0.6px;
+
+  --text-h5: 1.3125rem; /* 21px */
+  --text-h5--line-height: 1.2;
+  --text-h5--letter-spacing: -0.4px;
+
+  --text-lg: 1.0625rem; /* 17px */
+  --text-lg--line-height: 1.529;
+  --text-lg--letter-spacing: -0.2px;
+
+  --text-base: 0.9375rem; /* 15px */
+  --text-base--line-height: 1.4666;
+  --text-base--letter-spacing: -0.1px;
+
+  --text-sm: 0.875rem; /* 14px */
+  --text-sm--line-height: 1.428;
+  --text-sm--letter-spacing: -0.1px;
+
+  --text-xs: 0.8125rem; /* 13px */
+  --text-xs--line-height: 1.384;
+  --text-xs--letter-spacing: -0.1px;
+
+  --text-xxs: 0.75rem; /* 12px */
+  --text-xxs--line-height: 1.58888;
+  --text-xxs--letter-spacing: 0px;
+
+  --text-quote: 1.5rem; /* 21px */
+  --text-quote--line-height: 1.33;
+  --text-quote--letter-spacing: -0.6px;
+
+  --shadow-*: initial;
+  --shadow-btn: 0 1px 3px #0b13241a, inset 0 1px 0px rgba(0, 0, 0, 0.1);
+  --shadow-image:
+    0px 24px 24px -12px #0000000a, 0px 12px 12px -6px #0000000a,
+    0px 6px 6px -3px #0000000f, 0px 3px 3px -1.5px #0000000f,
+    0px 1px 1px -0.5px #0000000f, 0px 0px 0px 1px #0000000f;
+  --shadow-mid: 0px 2px 12px 0px #0000000f, 0px 2px 4px 0px #00000014;
+
+  --animate-scroll: scroll 4s linear infinite;
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  --animate-scaleX: scaleX 4s linear infinite;
+  @keyframes scaleX {
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }
+}

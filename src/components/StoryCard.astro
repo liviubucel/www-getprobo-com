@@ -1,0 +1,330 @@
+---
+import type { StoryData } from "../schema.ts";
+import { dynamicImages } from "../lib/images.ts";
+import ResponsiveImage from "./ui/ResponsiveImage.astro";
+import { Image } from "astro:assets";
+import FrameworkBadge from "../components/FrameworkBadge.svelte";
+import { tv } from "tailwind-variants";
+import clsx from "clsx";
+import { frameworks } from "../content/frameworks.ts";
+
+interface Props {
+  size?: "default" | "home" | "relative";
+  story: {
+    id: string;
+    data: StoryData;
+  };
+}
+const { story, size = "default" } = Astro.props;
+const images = dynamicImages(
+  import.meta.glob<{
+    default: ImageMetadata;
+  }>("/src/assets/stories/*.{jpeg,jpg,png,gif,svg}"),
+);
+
+const card = tv({
+  slots: {
+    base: "group block overflow-hidden rounded-3xl transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:-translate-y-1",
+    image:
+      "w-full origin-center object-cover transition-transform duration-500 [transition-timing-function:cubic-bezier(0.33,1,0.68,1)] group-hover:scale-[1.04]",
+    badge: "",
+    title: "",
+    body: "",
+  },
+  variants: {
+    size: {
+      default: {
+        base: "bg-[#f7f9f7] sm:border sm:border-[0.5px] sm:shadow-sm sm:hover:shadow-lg hover:shadow-md",
+        image: "aspect-[320/208] rounded-t-3xl sm:aspect-[512/332]",
+        badge: "",
+        title:
+          "text-lg font-normal first-line:font-semibold leading-snug sm:text-h4",
+        body: "px-6 pb-8 pt-6 sm:px-8 sm:pb-10 sm:pt-8",
+      },
+      relative: {
+        base: "rounded-xl shadow-sm hover:shadow-md",
+        image: "aspect-320/180 sm:aspect-344/200 rounded-xl object-cover",
+        badge: "hidden",
+        title: "text-base leading-snug sm:text-h5",
+        body: "flex items-center px-2 pt-6",
+      },
+      home: {
+        base: "border border-[0.5px] bg-highlight p-2 shadow-sm hover:shadow-md sm:hover:shadow-lg",
+        image: "aspect-square rounded-2xl object-cover sm:aspect-704/450",
+        badge: "",
+        title: "text-sm leading-snug sm:text-h5",
+        body: "p-3 sm:p-8",
+      },
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+});
+const isDark = size === "home";
+const framework = frameworks.find((f) => f.label === story.data.framework);
+const classNames = card(Astro.props);
+const imageSizes = (function (): [[number, number], [number, number]] {
+  switch (Astro.props.size) {
+    case "home":
+      return [
+        [640, 360],
+        [512, 450],
+      ];
+    case "relative":
+      return [
+        [670, 400],
+        [344, 200],
+      ];
+    default:
+      return [
+        [320, 208],
+        [512, 332],
+      ];
+  }
+})();
+const badge = isDark
+  ? (framework?.badgeDark ?? framework?.badge)
+  : framework?.badge;
+const shouldInvert = isDark && !framework?.badgeDark;
+const url =
+  "/" +
+  (story.id.includes("/")
+    ? story.id.replace("/", "/stories/")
+    : `stories/${story.id}`);
+
+const heroLogo = images(story.data.logo);
+const logoFilter =
+  "[filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.28))_drop-shadow(0_16px_36px_rgba(0,0,0,0.2))]";
+const lh = story.data.logoHeight ?? 23;
+const logoSizeClass =
+  lh <= 23
+    ? "h-7 sm:h-8"
+    : lh <= 30
+      ? "h-8 sm:h-9"
+      : lh <= 38
+        ? "h-9 sm:h-10"
+        : "h-10 sm:h-11";
+const floatingHeroLogoImg = `block w-auto max-w-[min(100%,18rem)] ${logoSizeClass} ${logoFilter}`;
+
+const imageGradientOverlay =
+  "pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(0,0,0,0.25)] to-transparent";
+
+const heroLogoPosition =
+  story.data.logoPosition === "top-left"
+    ? "absolute top-4 left-4 z-10 max-w-[calc(100%-2rem)] sm:top-5 sm:left-5 sm:max-w-[calc(100%-2.5rem)]"
+    : "absolute bottom-4 left-4 z-10 max-w-[calc(100%-2rem)] sm:bottom-5 sm:left-5 sm:max-w-[calc(100%-2.5rem)]";
+
+const trailer = story.data.trailer;
+const posterSrc = trailer?.replace(/\.mp4$/i, ".jpg");
+const mediaShell =
+  size === "default"
+    ? "relative overflow-hidden rounded-t-3xl"
+    : size === "home"
+      ? "relative mb-2 overflow-hidden rounded-2xl"
+      : "relative mb-2 overflow-hidden rounded-xl";
+const mediaRadius =
+  size === "default"
+    ? "rounded-t-3xl"
+    : size === "home"
+      ? "rounded-2xl"
+      : "rounded-xl";
+---
+
+<a href={url} class={classNames.base()}>
+  <div class={mediaShell}>
+    {
+      trailer ? (
+        <story-trailer-video class="group/trailer relative block w-full">
+          <video
+            muted
+            playsinline
+            loop
+            preload="none"
+            poster={posterSrc}
+            data-src={trailer}
+            class={clsx(classNames.image(), "object-center")}
+          />
+          <div
+            class="pointer-events-none absolute top-1/2 left-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 transition-[top,transform] duration-300 ease-out group-data-[playing]/trailer:top-3 group-data-[playing]/trailer:translate-y-0 sm:group-data-[playing]/trailer:top-4"
+            aria-hidden="true"
+          >
+            <div class="flex size-10 items-center justify-center rounded-full bg-[#d2d8d6] text-[#141e12] sm:size-12">
+              <svg
+                viewBox="0 0 24 24"
+                class="size-3.5 translate-x-px sm:size-4"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </story-trailer-video>
+      ) : (
+        <ResponsiveImage
+          src={images(story.data.previewImage ?? story.data.image)}
+          mobileSrc={images(story.data.image)}
+          class={classNames.image()}
+          mobile={imageSizes[0]}
+          sm={imageSizes[1]}
+          alt={story.data.title}
+        />
+      )
+    }
+    <div class:list={[imageGradientOverlay, mediaRadius]} aria-hidden="true">
+    </div>
+    <div class={heroLogoPosition}>
+      <Image
+        src={heroLogo}
+        alt={`${story.data.company?.name || story.data.title} logo`}
+        class={floatingHeroLogoImg}
+      />
+    </div>
+  </div>
+  {
+    size === "default" ? (
+      <div class={classNames.body()}>
+        <div class="flex flex-wrap items-start gap-x-3 gap-y-2 sm:gap-x-4">
+          <h3
+            class={clsx(
+              classNames.title(),
+              "min-w-0 flex-1 whitespace-pre-line",
+            )}
+          >
+            {story.data.title}
+          </h3>
+          {framework && badge && (
+            <div class="shrink-0">
+              <FrameworkBadge
+                client:only
+                name={badge}
+                class={clsx(
+                  "block size-10 sm:size-11",
+                  shouldInvert && "invert",
+                )}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    ) : size === "home" ? (
+      <div class={classNames.body()}>
+        <div class="flex flex-wrap items-start gap-x-3 gap-y-2 sm:gap-x-4">
+          <h3
+            class={clsx(
+              classNames.title(),
+              "min-w-0 flex-1 whitespace-pre-line",
+            )}
+          >
+            {story.data.title}
+          </h3>
+          {framework && badge && (
+            <div class="badge shrink-0">
+              <FrameworkBadge
+                client:only
+                name={badge}
+                class={clsx(
+                  "block size-10 sm:size-11",
+                  shouldInvert && "invert",
+                )}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    ) : (
+      <div class={classNames.body()}>
+        <div class="min-w-0 flex-1">
+          <h3 class={clsx(classNames.title(), "whitespace-pre-line")}>
+            {story.data.title}
+          </h3>
+        </div>
+        {framework && badge && (
+          <div class={classNames.badge()}>
+            <div class="badge flex justify-center text-center">
+              <FrameworkBadge
+                client:only
+                name={badge}
+                class={clsx("mx-auto block size-15", shouldInvert && "invert")}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+</a>
+
+<script>
+  import { customElementDefine } from "../lib/dom";
+
+  class StoryTrailerVideo extends HTMLElement {
+    private video: HTMLVideoElement | null = null;
+    private card: HTMLElement | null = null;
+
+    connectedCallback() {
+      this.video = this.querySelector("video");
+      this.card = this.closest("a");
+      if (!this.video || !this.card) {
+        return;
+      }
+
+      this.card.addEventListener("pointerenter", this.onEnter);
+      this.card.addEventListener("pointerleave", this.onLeave);
+      this.video.addEventListener("playing", this.onPlaying);
+    }
+
+    private canHover() {
+      return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    }
+
+    private setPlaying(playing: boolean) {
+      if (playing) {
+        this.setAttribute("data-playing", "");
+      } else {
+        this.removeAttribute("data-playing");
+      }
+    }
+
+    private onPlaying = () => {
+      this.setPlaying(true);
+    };
+
+    private onEnter = () => {
+      const video = this.video;
+      if (!video || !this.canHover()) {
+        return;
+      }
+
+      const src = video.dataset.src;
+      if (src && video.getAttribute("src") !== src) {
+        video.src = src;
+      }
+
+      void video.play().catch(() => {
+        // Autoplay can be blocked; poster still shows.
+      });
+    };
+
+    private onLeave = () => {
+      const video = this.video;
+      if (!video) {
+        return;
+      }
+
+      video.pause();
+      this.setPlaying(false);
+    };
+
+    disconnectedCallback() {
+      this.card?.removeEventListener("pointerenter", this.onEnter);
+      this.card?.removeEventListener("pointerleave", this.onLeave);
+      this.video?.removeEventListener("playing", this.onPlaying);
+      this.card = null;
+      this.video = null;
+    }
+  }
+
+  customElementDefine("story-trailer-video", () => StoryTrailerVideo);
+</script>

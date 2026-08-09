@@ -1,0 +1,96 @@
+---
+import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
+---
+
+<section class="animate-fade-in animation-delay-500 container py-10 sm:py-20">
+  <h2
+    class="text-h3 sm:text-h2 intersect-once intersect:animate-slide-in mb-3 text-center font-medium"
+  >
+    From chaos to confidence
+  </h2>
+  <p
+    class="text-muted-foreground intersect-once intersect:animate-slide-in motion-delay-100 mx-auto mb-10 max-w-180 text-center text-lg sm:mb-16"
+  >
+    Our compliance officers handle the entire journey for you - from setup and
+    risk assessments to audit coordination and ongoing monitoring - so you can
+    stay focused on building.
+  </p>
+  <compliance-track class="flex flex-col gap-6 sm:flex-row sm:gap-16">
+    <ComplianceTrackItem position="01" title="Set up and plan">
+      We start by reviewing your environment, completing the risk and vendor
+      assessments, identifying gaps, and defining the right path forward. Then
+      we create a compliance program tailored to how your team actually
+      operates.
+    </ComplianceTrackItem>
+    <ComplianceTrackItem position="02" title="Implementation & audit">
+      Evidence collection is automated through the platform, and our team
+      prepares every document and manages all communication with your auditor.
+      You only join the essential calls, and we guide you through them with full
+      preparation.
+    </ComplianceTrackItem>
+    <ComplianceTrackItem position="03" title="Stay compliant">
+      Once certified, we run your compliance program in the background -
+      monitoring, updating controls, refreshing evidence, and maintaining
+      assessments - so you remain continuously audit-ready with no extra effort.
+    </ComplianceTrackItem>
+  </compliance-track>
+</section>
+
+<script>
+  import { customElementDefine } from "../../lib/dom";
+
+  class ComplianceTrack extends HTMLElement {
+    observer: IntersectionObserver | null = null;
+    timer: ReturnType<typeof setTimeout> | null = null;
+
+    connectedCallback() {
+      let step = 0;
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const tick = () => {
+              step++;
+              if (step < 3) {
+                this.timer = setTimeout(tick, 2000);
+                this.children[step - 1]?.setAttribute("data-active", "true");
+              }
+
+              // Update the UI
+              this.children[step - 1]?.setAttribute("data-active", "true");
+            };
+            this.timer = setTimeout(tick, 1000);
+          }
+        });
+      });
+      this.observer.observe(this);
+    }
+
+    disconnectedCallback() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  }
+
+  customElementDefine("compliance-track", () => ComplianceTrack);
+</script>
+
+<style>
+  .compliance-item[data-active] .square {
+    animation: squareIn 0.5s ease-in-out;
+  }
+  @keyframes squareIn {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(0.5);
+    }
+    0% {
+      transform: scale(1);
+    }
+  }
+</style>

@@ -1,0 +1,240 @@
+---
+title: Google Workspace SSO
+description: Set up SAML SSO between Google Workspace and Probo, including domain verification, attribute mapping, the Start URL, and troubleshooting steps.
+---
+
+This guide walks you through setting up SAML Single Sign-On between Google Workspace (formerly G Suite) and Probo.
+
+## Prerequisites
+
+- Google Workspace administrator access
+- Probo organization administrator access
+- Your Probo domain (e.g., `probo.example.com`)
+- Access to your DNS settings for domain verification
+
+## Prepare Probo Information
+
+Before configuring Google Workspace, gather these Probo service provider details:
+
+| Field         | Value                                                            |
+| ------------- | ---------------------------------------------------------------- |
+| **ACS URL**   | `https://your-probo-domain.com/api/connect/v1/saml/2.0/consume`  |
+| **Entity ID** | `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata` |
+| **Start URL** | `https://your-probo-domain.com` (optional)                       |
+
+Replace `your-probo-domain.com` with your actual Probo domain.
+
+import { Steps } from "@astrojs/starlight/components";
+
+## Domain Verification
+
+Before configuring anything else, you must verify domain ownership:
+
+<Steps>
+
+1. Log in to Probo as an organization administrator
+2. Go to **Organization Settings** → **Authentication** → **SAML**
+3. Click **Verify Domain** (if no configurations exist yet, this option will be available)
+4. Copy the provided TXT record value
+5. Add a TXT record to your domain's DNS settings:
+   ```
+   Type: TXT
+   Name: _probo-domain-verification.your-company.com
+   Value: [Verification token from Probo]
+   TTL: 300 (or your DNS provider's default)
+   ```
+6. Wait for DNS propagation (usually 5-15 minutes)
+7. In Probo, click **Complete Verification**
+8. If successful, the domain status will show as "Verified"
+
+</Steps>
+
+## Configure Google Workspace
+
+<Steps>
+
+1. Sign in to the [Google Admin Console](https://admin.google.com/)
+2. Go to **Apps** → **Web and mobile apps**
+3. Click **Add app** → **Add custom SAML app**
+4. Configure the app details:
+
+   | Field           | Value                                                                                                       |
+   | --------------- | ----------------------------------------------------------------------------------------------------------- |
+   | **App name**    | `Probo`                                                                                                     |
+   | **Description** | `Probo Compliance Management Platform`                                                                      |
+   | **Upload logo** | Download from [GitHub](https://github.com/getprobo/probo/tree/main/apps/console/public) (optional) |
+
+5. Click **Continue**
+6. **Save the Google Identity Provider details** that appear (you'll need these for Probo configuration):
+
+   | Field           | Example Value                                             | Notes                                                       |
+   | --------------- | --------------------------------------------------------- | ----------------------------------------------------------- |
+   | **SSO URL**     | `https://accounts.google.com/o/saml2/idp?idpid=XXXXXXXXX` | Copy this exact URL                                         |
+   | **Entity ID**   | `https://accounts.google.com/o/saml2?idpid=XXXXXXXXX`     | Copy this exact URL                                         |
+   | **Certificate** | X.509 Certificate text                                    | Download the certificate or copy the X.509 certificate text |
+
+7. Click **Continue**
+8. Configure the service provider details:
+
+   | Field              | Value                                                            |
+   | ------------------ | ---------------------------------------------------------------- |
+   | **ACS URL**        | `https://your-probo-domain.com/api/connect/v1/saml/2.0/consume`  |
+   | **Entity ID**      | `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata` |
+   | **Start URL**      | `[SAML Configuration ID]` (optional - see note below)            |
+   | **Name ID format** | `EMAIL`                                                          |
+   | **Name ID**        | `Basic Information > Primary email`                              |
+
+   **Important**: The **Start URL** is optional but if you want to support IdP-initiated login flows, it MUST be set to your exact SAML configuration ID (not a placeholder). If set incorrectly, SSO will not work. You'll get this ID after creating the SAML configuration in Probo.
+
+9. Click **Continue**
+10. Configure the attribute mappings:
+
+    | Google Directory attributes           | App attributes |
+    | ------------------------------------- | -------------- |
+    | **Basic Information > Primary email** | `email`        |
+    | **Basic Information > First name**    | `firstName`    |
+    | **Basic Information > Last name**     | `lastName`     |
+
+11. Click **Finish**
+12. In the app list, click on your **Probo** app
+13. Click **User access**
+14. Select **ON for everyone** or configure specific organizational units
+15. Click **Save**
+
+</Steps>
+
+## Configure Probo
+
+<Steps>
+
+1. Log in to Probo as an organization administrator
+2. Go to **Organization Settings** → **Authentication** → **SAML**
+3. Click **Add SAML Configuration**
+4. Configure the basic settings:
+
+   | Field                  | Value              | Notes                            |
+   | ---------------------- | ------------------ | -------------------------------- |
+   | **Email Domain**       | `your-company.com` | Your organization's email domain |
+   | **Enforcement Policy** | `OPTIONAL`         | Recommended for initial setup    |
+
+5. Configure the Identity Provider settings with values from Google Workspace:
+
+   | Field               | Value                                                     | Notes                             |
+   | ------------------- | --------------------------------------------------------- | --------------------------------- |
+   | **IdP Entity ID**   | `https://accounts.google.com/o/saml2?idpid=XXXXXXXXX`     | Copy from Google Workspace setup  |
+   | **IdP SSO URL**     | `https://accounts.google.com/o/saml2/idp?idpid=XXXXXXXXX` | Copy from Google Workspace setup  |
+   | **IdP Certificate** | `[X.509 Certificate text]`                                | Paste the certificate from Google |
+
+6. Configure the attribute mappings:
+
+   | Field                    | Value           | Notes                                      |
+   | ------------------------ | --------------- | ------------------------------------------ |
+   | **Email Attribute**      | `email`         | Maps to user email                         |
+   | **First Name Attribute** | `firstName`     | Maps to user first name                    |
+   | **Last Name Attribute**  | `lastName`      | Maps to user last name                     |
+   | **Role Attribute**       | `[Leave empty]` | Optional; map to send `OWNER`, `ADMIN`, `EMPLOYEE`, or `VIEWER` |
+
+7. Configure user settings:
+
+   | Field           | Value     | Notes                                             |
+   | --------------- | --------- | ------------------------------------------------- |
+   | **Auto Signup** | `Enabled` | Allows new users to sign up automatically via SSO |
+
+8. Click **Save Configuration** (the configuration will be created but not yet enabled)
+9. **Copy the SAML Configuration ID** - you'll see a unique configuration ID (e.g., `saml_config_1a2b3c4d`) that you'll need for updating the Start URL in Google Workspace
+
+</Steps>
+
+## Update Google Workspace Start URL
+
+Now that you have the SAML configuration ID from Probo:
+
+<Steps>
+
+1. Return to Google Admin Console
+2. Go to **Apps** → **Web and mobile apps** → **Probo**
+3. Click **SAML attribute mapping**
+4. Update the **Start URL** field with your SAML configuration ID (e.g., `saml_config_1a2b3c4d`)
+5. Click **Save**
+
+</Steps>
+
+This enables IdP-initiated login flows, allowing users to click on Probo from their Google Workspace app launcher.
+
+## Troubleshooting
+
+### "App isn't verified" Error
+
+- **Cause**: Google Workspace app not enabled for users
+- **Solution**: Enable the app for all users or specific organizational units in Google Admin Console
+
+### "Access blocked" Error
+
+- **Cause**: User not in allowed organizational units
+- **Solution**: Check Google Workspace user access settings and ensure users are in the correct organizational units
+
+### "Invalid SAML Response" Error
+
+- **Cause**: Incorrect ACS URL or Entity ID configuration
+- **Solution**: Verify URLs match exactly between Google Workspace and Probo:
+  - ACS URL: `https://your-probo-domain.com/api/connect/v1/saml/2.0/consume`
+  - Entity ID: `https://your-probo-domain.com/api/connect/v1/saml/2.0/metadata`
+
+### Attributes Not Mapping
+
+- **Cause**: Incorrect attribute names in Probo configuration
+- **Solution**: Use exact attribute names: `email`, `firstName`, `lastName`
+
+### Debugging Steps
+
+#### Check Google Workspace Logs
+
+1. Go to Google Admin Console → **Reporting** → **Audit and investigation** → **SAML apps**
+2. Look for failed authentication attempts
+3. Check error messages and timestamps for debugging clues
+
+#### Verify Certificate Format
+
+Ensure the certificate is properly formatted without line breaks:
+
+```
+-----BEGIN CERTIFICATE-----
+[Certificate content without line breaks]
+-----END CERTIFICATE-----
+```
+
+#### Test Metadata URL
+
+If using metadata URL, test it in a browser to ensure it returns valid XML:
+
+```
+https://accounts.google.com/o/saml2/idp?idpid=XXXXXXXXX
+```
+
+Should return valid XML metadata response.
+
+## Advanced Configuration
+
+### Custom Attributes
+
+To map additional Google Workspace attributes:
+
+1. In Google Admin Console, go to **Directory** → **Users**
+2. Add custom attributes to user profiles
+3. In Probo SAML configuration, map these custom attributes
+
+### Multiple Domains
+
+To support multiple email domains:
+
+1. Create separate SAML configurations for each domain
+2. Use the same Google Workspace IdP settings
+3. Verify each domain separately
+
+### Organizational Units
+
+Restrict SSO to specific organizational units in Google Workspace:
+
+1. In the Probo app settings, select **Limited** access
+2. Choose specific organizational units
+3. Only users in those units will be able to use SSO

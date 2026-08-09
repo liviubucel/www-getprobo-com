@@ -1,0 +1,164 @@
+---
+import Layout from "../layouts/Layout.astro";
+import YCombinator from "../assets/ycombinator.svg";
+import { Image } from "astro:assets";
+import Button from "../components/ui/Button.svelte";
+import Badges from "../components/Badges.svelte";
+import Logos from "../components/block/Logos.astro";
+import Testimonials from "../components/block/Testimonials.astro";
+import SaleArg from "../components/ui/SaleArg.astro";
+
+import Stories from "../components/block/Stories.astro";
+import ComplianceTrack from "../components/block/ComplianceTrack.astro";
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Probo",
+  alternateName: "Probo Compliance",
+  url: "https://www.probo.com",
+  publisher: {
+    "@type": "Organization",
+    name: "Probo",
+    url: "https://www.probo.com",
+  },
+};
+---
+
+<Layout
+  title="Probo - Compliance done for you"
+  description="Get SOC 2, GDPR, HIPAA, and ISO certified with expert guidance and the job done for you. Open-source compliance platform with no vendor lock-in."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <animated-hero
+    class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+  >
+    <a
+      href="https://www.ycombinator.com/companies/probo"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8"
+    >
+      Backed by
+      <Image src={YCombinator} alt="Logo YCombinator" width={77} height={15} />
+    </a>
+    <h1
+      class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+    >
+      <span class="animate-perspective-in block">Compliance,</span>
+      <span class="animate-perspective-in block delay-50"> Done For You. </span>
+    </h1>
+    <p
+      class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+    >
+      Our compliance officers run your program end-to-end. Stay continuously
+      audit-ready without the overhead or complexity of traditional compliance
+      platforms.
+    </p>
+    <div
+      class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center"
+    >
+      <Button
+        class="animate-perspective-in animation-delay-200"
+        variant="secondary"
+        size="lg"
+        href="/docs/deployment/self-hosting/docker-compose"
+        data-ph-event="deploy_open_source_click">Deploy Open Source</Button
+      >
+      <Button
+        class="animate-perspective-in animation-delay-300"
+        size="lg"
+        rel="nofollow noreferrer"
+        href="/contact">Talk to an expert</Button
+      >
+    </div>
+    <Badges
+      count={10}
+      countMobile={6}
+      client:load
+      border
+      class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
+    />
+    <section class="mt-11 mix-blend-multiply sm:mt-17">
+      <h2
+        class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center"
+      >
+        Trusted by leading teams
+      </h2>
+      <Logos class="animate-slide-in animation-delay-300" constrained />
+    </section>
+  </animated-hero>
+
+  <ComplianceTrack />
+
+  <section class="container py-10 sm:py-20">
+    <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
+      Put compliance on autopilot
+    </h2>
+    <p
+      class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12"
+    >
+      Run your entire compliance program with a blend of expert support and
+      automation. Probo's compliance officers handle the work behind the scenes
+      while the platform keeps everything continuously audit-ready.
+    </p>
+
+    <div
+      class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12"
+    >
+      <SaleArg
+        title="Your dedicated compliance expert"
+        video="/videos/keyshot1.mp4"
+      >
+        <p>
+          A seasoned compliance officer becomes an extension of your team,
+          managing policies, controls, reviews, and assessments on your behalf -
+          real expertise, not ticket threads.
+        </p>
+      </SaleArg>
+
+      <SaleArg
+        title="Compliance that runs in the background"
+        video="/videos/keyshot2.mp4"
+      >
+        <p>
+          Probo automates evidence collection, updates, and approvals, while our
+          team keeps your entire program aligned and audit-ready. You're only
+          notified when something genuinely needs your attention.
+        </p>
+      </SaleArg>
+
+      <SaleArg
+        title="Leverage your compliance for revenue growth"
+        video="/videos/keyshot3.mp4"
+      >
+        <p>
+          Show customers and prospects you're trustworthy. Share a secure,
+          branded trust page that instantly proves your compliance and helps
+          accelerate deals.
+        </p>
+      </SaleArg>
+
+      <SaleArg title="Get stuff done on Slack" video="/videos/keyshot4.mp4">
+        <p>
+          Access documents, trigger workflows, and talk directly with your
+          compliance officer - all without leaving Slack. Support that fits
+          seamlessly into how your team already works.
+        </p>
+      </SaleArg>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <!-- <OpenSource /> -->
+
+  <Stories />
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>

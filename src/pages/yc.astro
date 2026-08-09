@@ -1,0 +1,159 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Logos from "../components/block/Logos.astro";
+import Testimonials from "../components/block/Testimonials.astro";
+import Button from "../components/ui/Button.svelte";
+import Badges from "../components/Badges.svelte";
+import YCImage from "../assets/photos/ycombinator.png";
+import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
+import DealForm from "../components/DealForm.svelte";
+import YCcompany from "../components/YCcompany.astro";
+import { YCombinatorCompanies } from "../content/yc-companies.ts";
+---
+
+<Layout
+  title="From Chaos to Compliance in a few weeks."
+  description="Get SOC 2, GDPR, HIPAA, and ISO certified in just one week. Open-source compliance management platform with no vendor lock-in. Backed by Y Combinator."
+>
+  <section
+    class="container my-10 flex flex-col gap-6 sm:my-20 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="max-w-[424px]">
+      <div class="overflow-hidden">
+        <h1 class="text-h2 animate-perspective-in mb-4 font-medium">
+          From Chaos to Compliance in a few weeks.
+        </h1>
+      </div>
+      <div class="overflow-hidden">
+        <p
+          class="text-muted-foreground animate-perspective-in animation-delay-100 mb-6 text-lg"
+        >
+          Probo is an open-source platform that acts as your in-house compliance
+          team, handling policies, documentation, processes, risk assessments,
+          and more, so you can stay focused on what matters.
+        </p>
+      </div>
+      <DealForm class="flex flex-col gap-3" client:load>
+        <input
+          class="border-border-mid placeholder:text-quaternary animate-perspective-in animation-delay-200 h-12 w-full rounded-lg border px-3"
+          type="email"
+          name="email"
+          required
+          placeholder="Enter your email"
+          aria-label="Enter your email"
+        />
+        <input
+          class="border-border-mid placeholder:text-quaternary animate-perspective-in animation-delay-300 h-12 w-full rounded-lg border px-3"
+          name="link"
+          type="url"
+          required
+          placeholder="Your YC verification link"
+          aria-label="Your YC verification link"
+        />
+        <Button
+          type="submit"
+          size="lg"
+          class="animate-perspective-in animation-delay-350 text-base"
+          >Claim deal</Button
+        >
+        <a
+          href="https://www.ycombinator.com/verify"
+          class="text-tertiary-foreground animate-fade-in animation-delay-450 text-center underline sm:text-start"
+        >
+          Get your verification link
+        </a>
+      </DealForm>
+    </div>
+    <Badges
+      count={9}
+      countMobile={3}
+      client:load
+      class="animate-fade-in animation-delay-150 grid grid-cols-3 sm:w-[380px] sm:gap-10"
+    />
+  </section>
+
+  <section class="container">
+    <h2
+      class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center"
+    >
+      Trusted by leading teams
+    </h2>
+    <Logos class="animate-slide-in animation-delay-300 my-6" constrained />
+  </section>
+
+  <section
+    class="container my-20 flex flex-col gap-10 sm:my-30 sm:flex-row sm:items-center sm:gap-20"
+  >
+    <ResponsiveImage
+      src={YCImage}
+      alt=""
+      mobile={[500, 500]}
+      sm={[500, 660]}
+      class="shadow-image animate-slide-in animation-delay-350 aspect-square w-full max-w-[500px] flex-none rounded-2xl object-cover sm:aspect-500/660 sm:w-[500px]"
+      fetchpriority="high"
+    />
+    <div class="text-muted-foreground space-y-6 text-lg">
+      <h2
+        class="text-h3 text-foreground animate-slide-in animation-delay-450 font-medium"
+      >
+        Our YC Story
+      </h2>
+      <div class="animate-slide-in animation-delay-550">
+        <p>
+          Instead of building yet another “classic SaaS,” we chose a different
+          path: delivering an end-to-end compliance service. We don’t just give
+          companies tools to achieve SOC 2 in record time - we run the
+          compliance for them.
+        </p>
+        <p>
+          That ambition came with a price: time. At one point we were handling
+          more clients in parallel than Bryan and I could realistically support.
+          Bryan even stepped in as a full-time compliance officer. We kept our
+          standards high, even saying no to new clients rather than compromising
+          on quality.
+        </p>
+        <p>
+          Today, things are almost back under control. Our processes are
+          stronger, our team is growing (reach out if you are a CISO or
+          compliance officer), and we are back on track toward our objectives.
+        </p>
+        <p>
+          YC was the best thing that could have happened to us and Probo: Doing
+          things than don’t scale is hard, but it’s worth it!
+        </p>
+        <p>— Antoine Bouchardy, Co-founder & CEO</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container my-20 sm:my-30">
+    <h2 class="text-h3 mb-12 text-center font-medium">
+      YC companies using Probo
+    </h2>
+    <div
+      class="companies-grid grid grid-cols-2 place-items-center sm:grid-cols-4"
+    >
+      {
+        YCombinatorCompanies.map((company) => (
+          <YCcompany
+            logo={company.logo}
+            badge={company.badge}
+            name={company.name}
+            href={company.href}
+            height={company.height}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <Testimonials />
+</Layout>
+
+<style>
+  @media (max-width: 639px) {
+    .companies-grid > *:nth-child(8) ~ * {
+      display: none;
+    }
+  }
+</style>

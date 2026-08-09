@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const entries = (await getCollection("changelog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const dateFormatter = Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<Layout
+  title="Changelog"
+  description="Latest product updates and new features from Probo: access review connectors, cookie banner improvements, and compliance portal updates."
+>
+  <main class="container my-10 max-w-[720px] sm:my-20">
+    <h1 class="text-h2 animate-slide-in mb-3 font-medium">Changelog</h1>
+    <p
+      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-base sm:mb-16"
+    >
+      New updates and improvements to Probo.
+    </p>
+    <ul class="animate-slide-in animation-delay-300 space-y-2">
+      {
+        entries.map((entry) => (
+          <li class="flex items-baseline gap-3">
+            <time class="text-muted-foreground shrink-0 text-sm">
+              {dateFormatter.format(new Date(entry.data.date))}
+            </time>
+            <a href={`/changelog/${entry.id}`} class="hover:underline">
+              {entry.data.title}
+            </a>
+            {entry.data.tags.length > 0 &&
+              entry.data.tags.map((tag) => (
+                <span class="bg-highlight shrink-0 rounded-full px-2 py-0.5 text-xs font-medium">
+                  {tag}
+                </span>
+              ))}
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>

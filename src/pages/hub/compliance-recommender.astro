@@ -1,0 +1,359 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import AntoinePortrait from "../../assets/about/antoine-bourchardy.png";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Compliance Framework Recommender",
+  description:
+    "Find the right security and compliance frameworks for your business. Get a free personalized compliance report based on your industry, business model, and target customers.",
+  url: "https://www.probo.com/hub/compliance-recommender",
+  author: {
+    "@type": "Organization",
+    name: "Probo",
+    url: "https://www.probo.com",
+  },
+};
+
+const features = [
+  { icon: "globe", label: "Industry Analysis" },
+  { icon: "building", label: "Business Model" },
+  { icon: "location", label: "Geographic Coverage" },
+  { icon: "chart", label: "Customer profiles" },
+];
+
+const benefits = [
+  "Prioritized list of recommended frameworks",
+  "Clear explanation for each framework",
+  "Mandatory vs. trust-enhancing insights",
+  "Practical guidance on next steps",
+];
+---
+
+<Layout
+  title="Compliance Framework Recommender for Your Business"
+  description="Enter your website and we'll analyze your business to recommend the most relevant compliance frameworks for your industry and customers."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script async src="https://tally.so/widgets/embed.js"></script>
+
+  <main class="container my-10 sm:my-20">
+    <Breadcrumbs
+      items={[
+        { label: "Hub", href: "/hub" },
+        { label: "Compliance Framework Recommender" },
+      ]}
+      class="mb-6"
+    />
+    <!-- Hero Section -->
+    <div class="mx-auto mb-10 max-w-[800px] text-center sm:mb-16">
+      <div
+        class="animate-slide-in mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-[#ffffff] px-4 py-2 text-xs text-gray-900 shadow-sm"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#f0ff3c]"></span>
+        Free Compliance Framework Assessment
+      </div>
+
+      <h1
+        class="text-h2 sm:text-h1 animate-slide-in animation-delay-100 mb-6 font-medium"
+      >
+        Find the Right Security Standard for
+        <span class="highlight-text">Your Business</span>
+      </h1>
+
+      <p
+        class="animate-slide-in animation-delay-200 mx-auto mb-8 max-w-[700px] text-lg text-gray-700 sm:text-xl"
+      >
+        Enter your website and we'll analyze your business to recommend you the
+        most relevant compliance frameworks.
+      </p>
+
+      <!-- Feature Pills -->
+      <div
+        class="animate-slide-in animation-delay-300 flex flex-wrap items-center justify-center gap-4"
+      >
+        {
+          features.map((feature) => (
+            <div class="text-muted-foreground inline-flex items-center gap-2 text-sm">
+              {feature.icon === "globe" && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              )}
+              {feature.icon === "building" && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                  <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                  <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                  <path d="M10 6h4" />
+                  <path d="M10 10h4" />
+                  <path d="M10 14h4" />
+                  <path d="M10 18h4" />
+                </svg>
+              )}
+              {feature.icon === "location" && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="10" r="3" />
+                  <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
+                </svg>
+              )}
+              {feature.icon === "chart" && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              )}
+              <span>{feature.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="animate-slide-in animation-delay-400 mx-auto max-w-[640px]">
+      <div
+        class="rounded-3xl border border-gray-100 bg-[#ffffff] p-8 shadow-[0_8px_60px_rgba(0,0,0,0.12)] sm:p-10"
+      >
+        <h2
+          class="mb-8 text-center text-2xl font-semibold tracking-[-0.5px] sm:text-[28px]"
+        >
+          Get Your Free Compliance Report
+        </h2>
+
+        <!-- Tally Form Embed -->
+        <div class="tally-form-container">
+          <iframe
+            data-tally-src="https://tally.so/embed/VL5qla?hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="300"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Compliance Framework Assessment"></iframe>
+        </div>
+
+        <!-- Benefits Box -->
+        <div
+          class="mt-8 rounded-2xl bg-gradient-to-br from-[#f0ff3c] to-[#d4e834] p-6 sm:p-8"
+        >
+          <h3 class="mb-4 text-center text-lg font-semibold text-[#141e12]">
+            What you'll receive
+          </h3>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {
+              benefits.map((benefit) => (
+                <div class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#141e12]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#f0ff3c"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <span class="text-sm text-[#141e12]">{benefit}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- We Handle Your Compliance Section -->
+    <section class="mt-20 text-center sm:mt-32">
+      <h2 class="text-h2 sm:text-h1 mb-4 font-medium">
+        We Handle Your
+        <span class="highlight-blue">Compliance.</span>
+      </h2>
+      <p class="mx-auto mb-12 max-w-[500px] text-lg text-gray-900 sm:text-xl">
+        Probo isn't another compliance tool -
+        <br />
+        We're your dedicated compliance team.
+      </p>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- Step 1 -->
+        <div
+          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
+        >
+          <div
+            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
+          >
+            <span class="font-semibold text-[#93c926]">01</span>
+            <span class="font-medium">Talk to Us</span>
+          </div>
+          <p class="text-muted-foreground text-sm">
+            Share your tech stack and process in an onboarding call
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div
+          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
+        >
+          <div
+            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
+          >
+            <span class="font-semibold text-[#93c926]">02</span>
+            <span class="font-medium">We Do the Work</span>
+          </div>
+          <p class="text-muted-foreground text-sm">
+            Our experts handle assessments, docs, and prepare you for audit
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div
+          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
+        >
+          <div
+            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
+          >
+            <span class="font-semibold text-[#93c926]">03</span>
+            <span class="font-medium">You Get Certified</span>
+          </div>
+          <p class="text-muted-foreground text-sm">
+            Achieve SOC 2, ISO 27001, or other frameworks with serious audit
+          </p>
+        </div>
+
+        <!-- Step 4 -->
+        <div
+          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
+        >
+          <div
+            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
+          >
+            <span class="font-semibold text-[#93c926]">04</span>
+            <span class="font-medium">Audit Ready</span>
+          </div>
+          <p class="text-muted-foreground text-sm">
+            Once certified, we run your compliance program in the background.
+          </p>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="mt-12">
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-3 rounded-full bg-[#141e12] px-6 py-3 font-medium text-[#e6ff01] shadow-lg transition-all hover:bg-[#1f2e1a] hover:shadow-xl"
+        >
+          <Image
+            src={AntoinePortrait}
+            alt="Antoine Bouchardy"
+            class="h-10 w-10 rounded-full border-2 border-white/30 object-cover"
+            width={40}
+            height={40}
+          />
+          Book a call with Antoine
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .highlight-text {
+    background: linear-gradient(
+      180deg,
+      transparent 65%,
+      #f0ff3c 65%,
+      #f0ff3c 85%,
+      transparent 85%
+    );
+    display: inline;
+  }
+  .highlight-blue {
+    background: linear-gradient(
+      180deg,
+      transparent 65%,
+      #e6ff01 65%,
+      #e6ff01 85%,
+      transparent 85%
+    );
+    display: inline;
+  }
+</style>
+
+<script>
+  // Initialize Tally embeds
+  declare global {
+    interface Window {
+      Tally?: {
+        loadEmbeds: () => void;
+      };
+    }
+  }
+
+  function initTally() {
+    if (window.Tally) {
+      window.Tally.loadEmbeds();
+    } else {
+      // Wait for Tally script to load
+      setTimeout(initTally, 100);
+    }
+  }
+
+  // Run on initial load
+  initTally();
+
+  // Run on Astro page transitions
+  document.addEventListener("astro:page-load", initTally);
+</script>

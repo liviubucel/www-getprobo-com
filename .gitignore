@@ -1,0 +1,35 @@
+old
+Makefile
+
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# Cloudflare Workers/Pages
+.wrangler/
+.dev.vars
+.vercel
+
+# Claude Code local settings
+.claude/settings.local.json

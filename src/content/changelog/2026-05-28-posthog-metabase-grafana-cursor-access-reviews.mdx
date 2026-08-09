@@ -1,0 +1,23 @@
+---
+title: "Seven New Access Review Connectors"
+description: "Seven new access review connectors land in Probo, plus HTTP Basic auth support and automatic signature request cancellation."
+date: 2026-05-28
+images:
+  - "/changelog/2026-05-28-posthog.jpg"
+  - "/changelog/2026-05-27-metabase-logo2.png"
+  - "/changelog/2026-05-28-posthog.jpg-grafana.png"
+  - "/changelog/2026-05-28-Cursor_logo.svg.png"
+  - "/changelog/2026-05-27-tailscale.png"
+  - "/changelog/2026-05-27-anthropic.png"
+  - "/changelog/2026-05-27-heroku.png"
+imagesLayout: "logos"
+tags: ["Access Review"]
+---
+
+Run an access review against your analytics stack, your internal BI tool, your observability layer, or your AI coding environment. Who has access? Who should?
+
+Probo pulls the member list, you confirm who still needs it.
+
+Connectors now support HTTP Basic auth for API-key connections. If your tool authenticates with a username/password pair rather than a bearer token, that works now.
+
+Pending signature requests are cancelled automatically when a contract ends or a connector is deactivated. No more ghost signature requests sitting open after you've already closed the loop.

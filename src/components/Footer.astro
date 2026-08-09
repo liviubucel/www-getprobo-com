@@ -1,0 +1,106 @@
+---
+import { Image } from "astro:assets";
+import Logo from "../assets/probo-logo.svg";
+import Frameworks from "./block/Frameworks.astro";
+import OpenStatus from "../components/OpenStatus.svelte";
+import Newsletter from "./block/Newsletter.astro";
+import AskAi from "./AskAi.astro";
+import { Toaster } from "svelte-sonner";
+
+const menus = [
+  {
+    label: "Resources",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "Blog", href: "/blog" },
+      { label: "Hub", href: "/hub" },
+      { label: "Stories", href: "/stories" },
+      { label: "Love from Customers ⭐", href: "/love-from-customer" },
+      { label: "Changelog", href: "/changelog" },
+      { label: "Download", href: "/download" },
+      { label: "Docs", href: "/docs" },
+      { label: "GitHub", href: "https://github.com/getprobo/probo" },
+    ],
+  },
+  {
+    label: "Company",
+    items: [
+      { label: "About", href: "/about" },
+      { label: "Careers", href: "/careers" },
+      { label: "Brand", href: "/brand" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/company/getprobo" },
+    ],
+  },
+  {
+    label: "Legal",
+    items: [
+      { label: "Cookie Policy", href: "/cookie-policy" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of service", href: "/terms" },
+      { label: "Security", href: "https://compliance.probo.com" },
+      {
+        label: "Subprocessors",
+        href: "https://compliance.probo.com/subprocessors",
+      },
+    ],
+  },
+];
+type Props = {
+  noFrameworks?: boolean;
+};
+---
+
+{!Astro.props.noFrameworks && <Frameworks />}
+
+<footer class="bg-level-0 space-y-10 py-10 sm:py-20">
+  <div
+    class="container flex grid-cols-[520fr_560fr] flex-col-reverse gap-8 sm:grid"
+  >
+    <div class="text-tertiary-foreground space-y-4 sm:max-w-[320px]">
+      <a href="/" class="block">
+        <Image src={Logo} alt="Logo probo" width={73} height={20} />
+      </a>
+      <Newsletter variant="footer" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 text-xs sm:grid-cols-3">
+      {
+        menus.map((menu) => (
+          <div class="space-y-3">
+            <div class="mb-3 font-medium">{menu.label}</div>
+            <ul class="space-y-3">
+              {menu.items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="text-tertiary-foreground text-sm hover:text-white hover:underline"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              {menu.label === "Legal" && (
+                <li>
+                  <probo-settings-link class="text-tertiary-foreground flex-nowrap text-sm whitespace-nowrap hover:text-white hover:underline">
+                    <a href="#">Cookie Settings</a>
+                  </probo-settings-link>
+                </li>
+              )}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+  <div
+    class="container flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
+  >
+    <p class="text-tertiary-foreground text-xxs flex items-center gap-3">
+      Copyright © 2025-2026 Probo. All rights reserved.
+      <OpenStatus client:visible />
+    </p>
+    <AskAi />
+  </div>
+</footer>
+
+<Toaster richColors position="top-center" client:only="svelte" />

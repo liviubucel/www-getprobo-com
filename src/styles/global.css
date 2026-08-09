@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+@import "./animation.css";
+@import "./splide.css";
+@import "./theme.css";
+
+@media (min-width: 640px) {
+  html,
+  body {
+    --text-quote: 2rem; /* 32px */
+    --text-quote--line-height: 1.25;
+  }
+}
+
+.dark {
+  --color-foreground: #eceeec;
+  --color-muted-foreground: #9aa299;
+  --color-muted: #d6fbc40f;
+  --color-level-0: #151715;
+  --color-highlight: #d6fbc40f;
+  --color-border-mid: #e9fedf1b;
+  --color-border-low: #effee214;
+  --color-tertiary-foreground: #778175;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border-low);
+  }
+
+  button,
+  a {
+    cursor: pointer;
+  }
+
+  hr {
+    height: 1px;
+    border: none;
+    background-color: var(--color-border-low);
+  }
+
+  .embla {
+    overflow: hidden;
+  }
+
+  .embla__container {
+    display: flex;
+  }
+
+  .embla__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+}
+
+.prose {
+  --tw-prose-body: var(--color-muted-foreground);
+  --tw-prose-headings: var(--color-primary);
+  --tw-prose-lead: var(--color-primary);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-primary);
+  --tw-prose-counters: var(--color-primary);
+  --tw-prose-bullets: var(--color-primary);
+  --tw-prose-hr: var(--color-primary);
+  --tw-prose-quotes: var(--color-primary);
+  --tw-prose-quote-borders: var(--color-border-low);
+  --tw-prose-captions: var(--color-primary);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-pre-code: var(--color-primary);
+  --tw-prose-pre-bg: var(--color-primary);
+  --tw-prose-th-borders: var(--color-border-low);
+  --tw-prose-td-borders: var(--color-border-low);
+  --tw-prose-invert-body: var(--color-primary);
+  --tw-prose-invert-headings: var(--color-primary-foreground);
+  --tw-prose-invert-lead: var(--color-primary);
+  --tw-prose-invert-links: var(--color-primary-foreground);
+  --tw-prose-invert-bold: var(--color-primary-foreground);
+  --tw-prose-invert-counters: var(--color-primary);
+  --tw-prose-invert-bullets: var(--color-primary);
+  --tw-prose-invert-hr: var(--color-primary);
+  --tw-prose-invert-quotes: var(--color-primary);
+  --tw-prose-invert-quote-borders: var(--color-border-low);
+  --tw-prose-invert-captions: var(--color-primary);
+  --tw-prose-invert-code: var(--color-primary-foreground);
+  --tw-prose-invert-pre-code: var(--color-primary);
+  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-invert-th-borders: var(--color-border-low);
+  --tw-prose-invert-td-borders: var(--color-border-low);
+}
+
+/* Article images (e.g. blog MDX screenshots): frame so they read as figures, not live UI */
+.prose img {
+  box-sizing: border-box;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border-solid);
+  padding: 0.375rem;
+  background-color: var(--color-level-0);
+  box-shadow:
+    0 0 0 1px rgb(20 30 18 / 0.04),
+    0 1px 2px rgb(20 30 18 / 0.06),
+    0 8px 28px rgb(20 30 18 / 0.08);
+}
+
+.dark .prose img {
+  border-color: var(--color-border-mid);
+  background-color: var(--color-level-0);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.04),
+    0 1px 2px rgb(0 0 0 / 0.35),
+    0 8px 28px rgb(0 0 0 / 0.35);
+}
+
+@utility container {
+  max-width: 1120px;
+  padding-inline: 1.25rem;
+  margin-inline: auto;
+}

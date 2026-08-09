@@ -1,0 +1,145 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import ProboLogo from "../assets/probo-logo.svg";
+import ProboLogoOnly from "../assets/probo-logo-only.svg";
+import ProboWhiteLogo from "../assets/probo_white_logo.svg";
+import { frameworks } from "../content/frameworks.ts";
+import FrameworkBadge from "../components/FrameworkBadge.svelte";
+---
+
+<Layout
+  title="Brand Assets"
+  description="Download Probo's official logos, wordmarks, and compliance badges in SVG and PNG for press mentions, integrations, and partner pages."
+>
+  <main class="container max-w-[920px] py-10 sm:py-20">
+    <h1 class="text-h2 animate-slide-in mb-3 font-medium">Brand Assets</h1>
+    <p
+      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 sm:mb-20"
+    >
+      Official logos, badges, and brand assets for Probo. Feel free to use these
+      in your projects, presentations, or when mentioning Probo.
+    </p>
+
+    <div class="space-y-16">
+      <!-- Logos Section -->
+      <section class="animate-slide-in animation-delay-200">
+        <h2 class="mb-6 text-xl font-medium">Logo</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Full Logo -->
+          <div>
+            <div
+              class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg"
+            >
+              <Image
+                src={ProboLogo}
+                alt="Probo Logo"
+                width={146}
+                height={40}
+                class="h-10 w-auto"
+              />
+            </div>
+            <div class="flex justify-center">
+              <a
+                href="/probo-logo.svg"
+                download
+                class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors"
+              >
+                Download SVG
+              </a>
+            </div>
+          </div>
+
+          <!-- Logo Icon -->
+          <div>
+            <div
+              class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg"
+            >
+              <Image
+                src={ProboLogoOnly}
+                alt="Probo Logo Icon"
+                width={40}
+                height={40}
+                class="h-10 w-auto"
+              />
+            </div>
+            <div class="flex justify-center">
+              <a
+                href="/probo-logo-only.svg"
+                download
+                class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors"
+              >
+                Download SVG
+              </a>
+            </div>
+          </div>
+
+          <!-- Full Logo (white, for dark backgrounds) -->
+          <div>
+            <div
+              class="mb-4 flex h-32 items-center justify-center rounded-lg bg-[#141E12]"
+            >
+              <Image
+                src={ProboWhiteLogo}
+                alt="Probo Logo (white)"
+                width={148}
+                height={41}
+                class="h-10 w-auto"
+              />
+            </div>
+            <div class="flex justify-center">
+              <a
+                href={ProboWhiteLogo.src}
+                download
+                class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors"
+              >
+                Download SVG
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Compliance Badges Section -->
+      <section class="animate-slide-in animation-delay-300">
+        <h2 class="mb-6 text-xl font-medium">Compliance Badges</h2>
+        <p class="text-muted-foreground mb-6 text-sm">
+          Official compliance badges for ISO 27001, SOC 2, GDPR, HIPAA, and
+          more.
+        </p>
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+          {
+            frameworks.map((framework) => (
+              <div>
+                <div class="bg-level-1 mb-4 flex h-40 flex-col items-center justify-center rounded-lg p-6">
+                  <FrameworkBadge
+                    name={framework.badge}
+                    class="mb-3 block size-16 mix-blend-multiply"
+                    client:visible
+                  />
+                  <div class="text-center text-sm">{framework.label}</div>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2">
+                  <a
+                    href={`/frameworks/${framework.badge}.svg`}
+                    download
+                    class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-3 py-1.5 text-xs transition-colors"
+                  >
+                    SVG
+                  </a>
+                  <a
+                    href={`/frameworks/${framework.badge}.json`}
+                    download
+                    class="bg-level-1 text-foreground border-border hover:bg-level-2 inline-block rounded-md border px-3 py-1.5 text-xs transition-colors"
+                  >
+                    JSON
+                  </a>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>

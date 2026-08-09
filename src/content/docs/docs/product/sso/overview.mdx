@@ -1,0 +1,35 @@
+---
+title: Single sign-on
+description: Learn how Probo's SAML SSO authenticates members through SP- and IdP-initiated flows, verifies domain ownership, and enforces sign-in policy.
+---
+
+Probo supports SAML 2.0 single sign-on for organization members. SSO delegates authentication to an identity provider while Probo continues to control organization membership and authorization.
+
+## Authentication flows
+
+- In an **SP-initiated** flow, a user begins at Probo and is redirected to the configured identity provider.
+- In an **IdP-initiated** flow, a user begins from the provider’s application catalog. The RelayState identifies the relevant Probo SAML configuration.
+
+The service-provider metadata, entity ID, and assertion consumer URL are derived from the public Probo origin under `/api/connect/v1/saml/2.0/`. Use the values shown by the deployment rather than copying another organization’s URLs.
+
+## Domain ownership and enforcement
+
+Verify ownership of an email domain before applying its SSO policy. A SAML configuration can be disabled, optional, or required. Roll out optional authentication first, confirm that expected users can sign in, and retain a tested recovery path before requiring SSO.
+
+SSO authenticates a person; it does not provision or remove memberships by itself. Use [SCIM](/docs/product/scim/overview) for lifecycle automation, or enable automatic signup on the SAML configuration when new users should join on first sign-in.
+
+## Membership roles from SAML
+
+You can keep Probo roles under [People](/docs/product/roles-and-permissions), or map them from the identity provider.
+
+Set **Role Attribute** on the SAML configuration to the assertion attribute that carries the Probo role. Accepted values are `OWNER`, `ADMIN`, `EMPLOYEE`, and `VIEWER`. Leave the field empty when owners and admins should assign roles only in Probo. Provider setup pages show where to declare the attribute and map it in Probo.
+
+## Security boundary
+
+- Require signed assertions and verify them against the current identity-provider certificate.
+- Keep the deployment clock synchronized because SAML assertions have narrow validity windows.
+- Use HTTPS and secure cookies. Cross-site SAML POSTs require cookies that modern browsers will only send with the `Secure` attribute.
+- Restrict who can change domains, certificates, and enforcement.
+- Test service-provider and identity-provider initiated login after certificate, URL, or domain changes.
+
+Provider-specific setup pages for [Google Workspace](/docs/product/sso/google-workspace), [Microsoft Entra ID](/docs/product/sso/microsoft-entra-id), and [Okta](/docs/product/sso/okta) are available separately.

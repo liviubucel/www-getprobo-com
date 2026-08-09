@@ -1,0 +1,1409 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ArticleSchema from "../../components/schema/ArticleSchema.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+
+const tableOfContents = [
+  { id: "what-is-nis2", label: "What Is NIS2?" },
+  { id: "nis-to-nis2", label: "From NIS to NIS2" },
+  { id: "sectors-covered", label: "Sectors Covered" },
+  { id: "compliance-requirements", label: "Compliance Requirements" },
+  { id: "incident-reporting", label: "Incident Reporting" },
+  { id: "supply-chain", label: "Supply Chain Security" },
+  { id: "management-accountability", label: "Management Accountability" },
+  { id: "timeline", label: "Timeline and Deadlines" },
+  { id: "compliance-cost", label: "Compliance Cost" },
+  { id: "common-struggles", label: "Common Struggles" },
+  { id: "probo-help", label: "How Probo Helps" },
+];
+---
+
+<Layout
+  title="NIS2 Compliance: The Complete Guide for 2026"
+  description="Everything you need to know about NIS2 compliance in 2026: requirements, costs, deadlines, and how to prepare your organization. Expert guide for tech teams."
+  ogImage="/hub/nis2-compliance-2026.jpg"
+>
+  <ArticleSchema
+    title="NIS2 Compliance: The Complete Guide for 2026"
+    description="Everything you need to know about NIS2 compliance in 2026: requirements, costs, deadlines, and how to prepare your organization. Expert guide for tech teams."
+    url="https://www.probo.com/hub/nis2-compliance"
+    image="https://www.probo.com/hub/nis2-compliance-2026.jpg"
+    datePublished="2026-01-29"
+    dateModified={new Date().toISOString().split("T")[0]}
+  />
+  <main class="container my-10 sm:my-20">
+    <Breadcrumbs
+      items={[
+        { label: "Hub", href: "/hub" },
+        { label: "NIS2 Compliance Guide" },
+      ]}
+      class="mb-6"
+    />
+    <!-- Header -->
+    <header class="mb-12 text-center sm:mb-16">
+      <div class="mb-4 flex items-center justify-center gap-4">
+        <h1
+          class="text-foreground text-[2.5rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[3.5rem]"
+        >
+          <span class="highlight-text">NIS2</span>
+          Compliance
+        </h1>
+        <div class="flex items-center gap-2">
+          <img src="/frameworks/NIS2.svg" alt="NIS2" class="size-12" />
+        </div>
+      </div>
+      <div
+        class="mb-6 inline-flex items-center rounded-full border border-gray-200 bg-white/80 px-5 py-2.5 text-base text-gray-500 shadow-sm backdrop-blur-sm"
+      >
+        The Complete Guide for 2026
+      </div>
+      <p
+        class="text-muted-foreground mx-auto max-w-[800px] text-lg leading-relaxed"
+      >
+        The European Union just redrew the cybersecurity map, and your
+        organization might be standing on new territory.
+      </p>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="mb-12 sm:mb-16">
+      <img
+        src="/hub/nis2-compliance-2026.jpg"
+        alt="NIS2 Compliance Guide 2026"
+        class="mx-auto w-full max-w-[900px] rounded-2xl shadow-lg"
+      />
+    </div>
+
+    <!-- Content with TOC -->
+    <div class="flex flex-col gap-10 lg:flex-row lg:gap-16">
+      <!-- Table of Contents - Sidebar -->
+      <aside class="shrink-0 lg:w-56">
+        <nav class="lg:sticky lg:top-24">
+          <div class="flex flex-col gap-2">
+            {
+              tableOfContents.map((item) => (
+                <button
+                  type="button"
+                  data-section={item.id}
+                  class="toc-link cursor-pointer border-none bg-transparent p-0 text-left text-sm leading-5 text-[#6b716a] transition-colors hover:text-[#141e12]"
+                >
+                  {item.label}
+                </button>
+              ))
+            }
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <article class="max-w-[720px] flex-1">
+        <!-- Introduction -->
+        <section class="mb-12">
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              When GDPR landed in 2018, it sent shockwaves through every company
+              handling EU citizen data. Now, the NIS2 Directive is doing the
+              same for cybersecurity, but this time, the scope is broader, the
+              penalties are steeper, and the technical requirements are far more
+              prescriptive. If you're a CTO, CISO, or compliance officer at a
+              company operating in or serving the EU market, this isn't optional
+              reading. It's your compliance roadmap.
+            </p>
+            <p>
+              Here's the uncomfortable truth: according to recent ITPro
+              research, a significant number of firms are already struggling to
+              comply with NIS2 requirements. The directive's October 2024
+              transposition deadline has passed, member states are actively
+              implementing their national frameworks, and enforcement is ramping
+              up throughout 2026. Whether you're just discovering NIS2 applies
+              to you or you're deep in implementation, this guide breaks down
+              exactly what you need to know, and more importantly, what you need
+              to do.
+            </p>
+            <p>
+              Prefer a concise checklist you can work through section by
+              section? See our{" "}
+              <a
+                href="/hub/nis2-compliance-checklist-tech-companies-2026"
+                class="text-[#5d770d] hover:underline"
+                >NIS2 compliance checklist for tech companies (2026 edition)</a
+              >.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- What Is NIS2? -->
+        <section id="what-is-nis2" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            What Is NIS2? Understanding the Directive's Core Purpose
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              The Network and Information Security Directive 2 (NIS2) represents
+              the EU's most ambitious cybersecurity legislation to date.
+              Published in the Official Journal of the European Union in
+              December 2022, it replaces the original NIS Directive from 2016
+              with a dramatically expanded framework designed to address the
+              evolving threat landscape.
+            </p>
+            <p>
+              At its core, NIS2 aims to achieve a "high common level of
+              cybersecurity" across all EU member states. The European
+              Commission recognized that the original directive's voluntary
+              approach and limited scope left critical gaps in Europe's cyber
+              resilience. As noted in the
+              <a
+                href="https://digital-strategy.ec.europa.eu/en/policies/cybersecurity"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-[#5d770d] hover:underline"
+                >EU Digital Strategy documentation</a
+              > , the directive responds to "the increased digitisation of the internal
+              market" and the "evolving cybersecurity threat landscape" accelerated
+              by the COVID-19 pandemic.
+            </p>
+            <p>
+              But NIS2 isn't just about raising the bar—it's about standardizing
+              it. The original directive allowed too much variation between
+              member states, creating a patchwork of requirements that made
+              compliance a nightmare for organizations operating across borders.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- From NIS to NIS2 -->
+        <section id="nis-to-nis2" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            From NIS to NIS2 — What Actually Changed
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              The jump from NIS to NIS2 isn't incremental—it's transformational.
+              Understanding these changes is critical for scoping your
+              compliance efforts.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Expanded scope and coverage
+              </h3>
+              <p>
+                The original NIS Directive covered approximately 7 sectors. NIS2
+                expands this to 18 sectors, bringing an estimated 160,000+
+                entities under its umbrella. The directive now distinguishes
+                between "essential" and "important" entities, with different
+                supervisory regimes for each.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Harmonized requirements
+              </h3>
+              <p>
+                Where NIS allowed member states significant flexibility, NIS2
+                prescribes specific security measures and incident reporting
+                timelines. This means organizations can no longer rely on "light
+                touch" national implementations.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Stricter penalties
+              </h3>
+              <p>
+                Administrative fines can now reach €10 million or 2% of global
+                annual turnover for essential entities, whichever is higher. For
+                important entities, it's €7 million or 1.4% of turnover.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Personal accountability
+              </h3>
+              <p>
+                Perhaps the most significant shift—NIS2 introduces personal
+                liability for management bodies. Senior executives can now be
+                held personally responsible for compliance failures.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Supply chain focus
+              </h3>
+              <p>
+                The directive explicitly requires organizations to address
+                cybersecurity risks in their supply chains, including direct
+                suppliers and service providers.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Sectors Covered -->
+        <section id="sectors-covered" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            The 18 Sectors Now Covered Under NIS2
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              NIS2 categorizes covered entities into two groups, each with
+              distinct compliance obligations:
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Essential Entities (11 sectors)
+              </h3>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Energy (electricity, oil, gas, hydrogen, district heating)</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Transport (air, rail, water, road)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Banking and financial market infrastructures</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Health (healthcare providers, EU reference laboratories,
+                    R&D, pharmaceuticals, medical devices)</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Drinking water supply and distribution</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Wastewater management</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Digital infrastructure (IXPs, DNS providers, TLD registries,
+                    cloud computing, data centers, CDNs, trust service
+                    providers, electronic communications)</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>ICT service management (B2B)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Public administration (central and regional)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Space</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Important Entities (7 sectors)
+              </h3>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Postal and courier services</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Waste management</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Chemical manufacturing, production, and distribution</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Food production, processing, and distribution</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Manufacturing (medical devices, computers, electronics,
+                    machinery, motor vehicles)</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Digital providers (online marketplaces, search engines,
+                    social networks)</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>Research organizations</span>
+                </li>
+              </ul>
+            </div>
+
+            <p>
+              The size thresholds matter too. Generally, medium-sized
+              enterprises (50+ employees or €10M+ turnover) and large
+              enterprises in these sectors fall within scope. However, some
+              entities are covered regardless of size, including DNS service
+              providers, TLD registries, and qualified trust service providers.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Compliance Requirements -->
+        <section id="compliance-requirements" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            NIS2 Compliance Requirements: What Your Organization Must Do
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              Understanding NIS2's requirements means diving into the technical
+              details. The directive's Article 21 outlines specific
+              cybersecurity risk-management measures that covered entities must
+              implement. This isn't a checkbox exercise—it requires genuine
+              security maturity.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Risk Management Measures (Article 21 Breakdown)
+              </h3>
+              <p class="mb-4">
+                Article 21 mandates an "all-hazards approach" to cybersecurity.
+                According to ENISA's implementation guidance, organizations must
+                implement measures that are "appropriate and proportionate" to
+                their risk exposure. Here's what that means in practice:
+              </p>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    1. Risk analysis and information system security policies
+                  </h4>
+                  <p>
+                    You need documented policies covering your entire
+                    information security program. This includes risk assessment
+                    methodologies, asset inventories, and security governance
+                    frameworks.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    2. Incident handling
+                  </h4>
+                  <p>
+                    Beyond just having an incident response plan, NIS2 requires
+                    tested procedures for detecting, analyzing, containing, and
+                    recovering from security incidents. Regular tabletop
+                    exercises aren't optional—they're expected.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    3. Business continuity and crisis management
+                  </h4>
+                  <p>
+                    This encompasses backup management, disaster recovery, and
+                    crisis management procedures. Your organization must
+                    demonstrate it can maintain essential functions during and
+                    after a cyber incident.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    4. Supply chain security
+                  </h4>
+                  <p>
+                    You must assess and manage cybersecurity risks from direct
+                    suppliers and service providers. This means security
+                    requirements in contracts, vendor assessments, and ongoing
+                    monitoring.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    5. Security in network and information systems acquisition,
+                    development, and maintenance
+                  </h4>
+                  <p>
+                    Secure development practices, vulnerability handling, and
+                    security testing must be embedded in your SDLC.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    6. Policies and procedures for assessing cybersecurity
+                    risk-management effectiveness
+                  </h4>
+                  <p>
+                    Regular audits, penetration testing, and security
+                    assessments are required to validate your controls actually
+                    work.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    7. Basic cyber hygiene practices and cybersecurity training
+                  </h4>
+                  <p>
+                    All staff need security awareness training. Technical teams
+                    need role-specific training. This must be ongoing, not a
+                    one-time exercise.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    8. Cryptography and encryption policies
+                  </h4>
+                  <p>
+                    Where appropriate, you must implement encryption for data at
+                    rest and in transit, with documented key management
+                    procedures.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    9. Human resources security and access control
+                  </h4>
+                  <p>
+                    This covers background checks, access management, privileged
+                    access controls, and procedures for joiners, movers, and
+                    leavers.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    10. Multi-factor authentication and secured communications
+                  </h4>
+                  <p>
+                    MFA is explicitly required "where appropriate," along with
+                    secured voice, video, and text communications within the
+                    organization.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Incident Reporting -->
+        <section id="incident-reporting" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            Incident Reporting Obligations — The 24/72 Hour Rule
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              NIS2's incident reporting requirements are among its most
+              operationally demanding elements. The directive establishes a
+              multi-stage reporting framework that requires significant
+              organizational readiness.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Early warning (24 hours)
+              </h3>
+              <p>
+                Within 24 hours of becoming aware of a significant incident, you
+                must submit an early warning to your national Computer Security
+                Incident Response Team (CSIRT) or competent authority. This must
+                indicate whether the incident is suspected to be caused by
+                unlawful or malicious acts and whether it could have
+                cross-border impact.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Incident notification (72 hours)
+              </h3>
+              <p>
+                Within 72 hours, you must provide an initial assessment
+                including the incident's severity and impact, indicators of
+                compromise where available, and any cross-border implications.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Intermediate report (upon request)
+              </h3>
+              <p>
+                The competent authority may request status updates on your
+                incident handling.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-3 text-lg font-semibold">
+                Final report (one month)
+              </h3>
+              <p>
+                Within one month of the incident notification, or upon
+                conclusion of incident handling if later, you must submit a
+                detailed report including root cause analysis, mitigation
+                measures applied, and cross-border impact assessment.
+              </p>
+            </div>
+
+            <div class="rounded-xl bg-gray-50 p-6">
+              <h4 class="text-foreground mb-3 font-semibold">
+                What constitutes a "significant incident"?
+              </h4>
+              <p class="mb-3">The directive defines it as an incident that:</p>
+              <ul class="ml-0 list-none space-y-2">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Has caused or is capable of causing severe operational
+                    disruption or financial loss</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span>
+                    Has affected or is capable of affecting other natural or
+                    legal persons by causing considerable material or
+                    non-material damage</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Supply Chain Security -->
+        <section id="supply-chain" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            Supply Chain Security Requirements
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              The supply chain provisions in NIS2 reflect hard lessons learned
+              from incidents like SolarWinds and Kaseya. The directive places
+              unprecedented emphasis on third-party risk management.
+            </p>
+
+            <p class="mb-3">Organizations must:</p>
+            <ul class="ml-0 list-none space-y-3">
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Assess supplier security:</strong
+                  >
+                  Evaluate the cybersecurity practices of direct suppliers and service
+                  providers</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Contractual requirements:</strong
+                  >
+                  Include appropriate security clauses in supplier agreements</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground">Ongoing monitoring:</strong>
+                  Continuously monitor supplier security posture, not just at onboarding</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Coordinated vulnerability disclosure:</strong
+                  >
+                  Participate in and support vulnerability disclosure processes</span
+                >
+              </li>
+            </ul>
+
+            <p>
+              This creates cascading compliance obligations. Even if your
+              organization isn't directly covered by NIS2, you may face these
+              requirements through your customers' supply chain obligations.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Management Accountability -->
+        <section id="management-accountability" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            Management Accountability and Personal Liability
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              Here's where NIS2 gets personal—literally. Article 20 requires
+              that "management bodies of essential and important entities
+              approve the cybersecurity risk-management measures" and "oversee
+              its implementation."
+            </p>
+
+            <p class="mb-3">Management bodies must:</p>
+            <ul class="ml-0 list-none space-y-3">
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>Approve cybersecurity risk-management measures</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>Oversee implementation of those measures</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>Undergo specific cybersecurity training</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>Ensure staff receive regular training</span>
+              </li>
+            </ul>
+
+            <p>
+              The consequences for non-compliance are severe. Member states must
+              ensure that competent authorities can hold management personally
+              liable for infringements. This can include temporary bans from
+              exercising managerial functions.
+            </p>
+
+            <p>
+              This represents a fundamental shift in how cybersecurity
+              responsibility is allocated within organizations. CTOs and CISOs
+              can no longer treat compliance as a purely technical matter—it's
+              now a board-level governance issue.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Timeline and Deadlines -->
+        <section id="timeline" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            NIS2 Compliance Timeline and Deadlines
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              Understanding the NIS2 timeline is crucial for planning your
+              compliance program. While the directive entered into force in
+              January 2023, the real implementation work happens at the national
+              level.
+            </p>
+
+            <ul class="ml-0 list-none space-y-3">
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>
+                  Member states were required to transpose NIS2 into national
+                  law by October 2024</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>
+                  National measures began applying to covered entities shortly
+                  thereafter</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>
+                  Throughout 2025-2026, national authorities are conducting
+                  registration, supervision, and enforcement activities</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span>
+                  A European Commission review of the directive's functioning is
+                  scheduled for October 2027</span
+                >
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Compliance Cost -->
+        <section id="compliance-cost" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            NIS2 Compliance Cost: What to Budget For
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              Let's address the question every CTO and CFO wants answered: what
+              will NIS2 compliance actually cost? The answer depends
+              significantly on your organization's current security maturity,
+              size, and sector.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Cost Breakdown by Company Size
+              </h3>
+              <p class="mb-4">
+                Compliance costs vary dramatically based on several key factors
+                that organizations should carefully evaluate when budgeting:
+              </p>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    Small-to-medium enterprises (50-250 employees)
+                  </h4>
+                  <ul class="mt-2 ml-0 list-none space-y-2">
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Key cost drivers include policy development, technical
+                        controls implementation, and training programs</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Organizations with existing security frameworks will see
+                        lower initial investments</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        The availability of in-house expertise versus reliance
+                        on external consultants significantly impacts costs</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Cloud-native companies often face lower infrastructure
+                        remediation costs than those with legacy on-premises
+                        systems</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    Mid-market companies (250-1,000 employees)
+                  </h4>
+                  <ul class="mt-2 ml-0 list-none space-y-2">
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Key cost drivers include security tooling, dedicated
+                        compliance personnel, and third-party assessments</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        The complexity of your technology stack and number of
+                        business units affects implementation scope</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Geographic distribution across multiple EU member states
+                        increases coordination costs</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Existing certifications like ISO 27001 or SOC 2 can
+                        reduce gap remediation efforts substantially</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="text-foreground font-semibold">
+                    Large enterprises (1,000+ employees)
+                  </h4>
+                  <ul class="mt-2 ml-0 list-none space-y-2">
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Key cost drivers include enterprise security platforms,
+                        compliance teams, external audits, and supply chain
+                        management</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        The number and criticality of suppliers requiring
+                        assessment dramatically affects supply chain security
+                        costs</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        Regulatory classification as "essential" versus
+                        "important" entity determines supervisory intensity and
+                        associated costs</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-muted-foreground">•</span>
+                      <span>
+                        M&A activity and organizational complexity create
+                        additional integration challenges</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Factors that influence costs across all organization sizes
+              </h3>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Current security maturity:</strong
+                    >
+                    Organizations already aligned with frameworks like ISO 27001 or
+                    NIST CSF will have significantly lower gap remediation costs</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Technical debt:</strong>
+                    Legacy systems lacking modern security capabilities require substantial
+                    investment to bring into compliance</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Industry sector:</strong>
+                    Highly regulated sectors like healthcare and finance may already
+                    have overlapping controls, while less regulated sectors face steeper
+                    climbs</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Internal expertise:</strong
+                    >
+                    Organizations with established security teams can handle more
+                    work internally, while others must budget for consultants and
+                    managed services</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Tool consolidation:</strong
+                    >
+                    Companies with fragmented security tooling face higher integration
+                    and management costs than those with consolidated platforms</span
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <p>
+              These cost structures align with what we see in comparable
+              frameworks. Organizations familiar with
+              <a href="/hub/soc2" class="text-[#5d770d] hover:underline"
+                >SOC 2 compliance costs</a
+              >
+              or
+              <a
+                href="/hub/iso27001-certification-cost"
+                class="text-[#5d770d] hover:underline"
+                >ISO 27001 certification investments</a
+              >
+              will recognize similar patterns, though NIS2's prescriptive requirements
+              often push costs toward the higher end of comparable frameworks.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Hidden Costs Most Organizations Miss
+              </h3>
+              <p class="mb-4">
+                Beyond the obvious line items, several hidden costs catch
+                organizations off guard:
+              </p>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Technical debt remediation:</strong
+                    >
+                    Many organizations discover their existing infrastructure can't
+                    support NIS2 requirements. Legacy systems lacking MFA capabilities,
+                    unpatched software, and inadequate logging create significant
+                    remediation costs.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Supply chain compliance:</strong
+                    >
+                    Assessing and monitoring supplier security isn't free. Organizations
+                    report spending 15-25% of their NIS2 budget on supply chain security
+                    activities.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Incident response readiness:</strong
+                    >
+                    Building genuine incident response capability—including 24/7 monitoring,
+                    forensics capabilities, and tested playbooks—often exceeds initial
+                    estimates.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Ongoing training:</strong>
+                    NIS2's training requirements extend beyond one-time awareness
+                    programs. Budget for continuous education, specialized training
+                    for technical teams, and management-level cybersecurity education.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Opportunity cost:</strong>
+                    Compliance projects consume significant IT and security team bandwidth.
+                    Factor in the cost of delayed projects and stretched resources.</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- Common Struggles -->
+        <section id="common-struggles" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            Why Firms Are Struggling to Comply (And How to Avoid Their Mistakes)
+          </h2>
+          <div class="text-muted-foreground space-y-6 leading-relaxed">
+            <p>
+              Recent ITPro research paints a concerning picture: many
+              organizations are struggling to meet NIS2 requirements despite the
+              directive's extended implementation timeline. Understanding why
+              helps you avoid the same pitfalls.
+            </p>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                The Technical Debt Problem
+              </h3>
+              <p class="mb-4">
+                Years of underinvestment in security infrastructure are coming
+                due. Organizations facing NIS2 compliance often discover:
+              </p>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Insufficient logging and monitoring:</strong
+                    >
+                    NIS2's incident detection requirements demand comprehensive visibility.
+                    Many organizations lack adequate SIEM capabilities or centralized
+                    log management.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Inadequate access controls:</strong
+                    >
+                    The directive's requirements for MFA and privileged access management
+                    expose gaps in identity infrastructure.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Undocumented systems:</strong
+                    >
+                    You can't protect what you don't know exists. Asset inventory
+                    gaps make risk assessment impossible.</span
+                  >
+                </li>
+              </ul>
+              <p class="mt-4">
+                The solution isn't just buying new tools—it's systematically
+                addressing technical debt while building compliant processes.
+                This requires executive sponsorship and realistic timelines.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Resource Constraints in SMEs
+              </h3>
+              <p class="mb-4">
+                Small and medium enterprises face particular challenges:
+              </p>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Limited security expertise:</strong
+                    >
+                    Many SMEs lack dedicated security personnel, let alone compliance
+                    specialists</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Budget constraints:</strong
+                    >
+                    Competing priorities make it difficult to fund comprehensive compliance
+                    programs</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Vendor overwhelm:</strong>
+                    The compliance tool market is noisy, making it hard to identify
+                    appropriate solutions</span
+                  >
+                </li>
+              </ul>
+              <p class="mt-4">
+                For SMEs, the key is finding right-sized solutions. Enterprise
+                GRC platforms designed for Fortune 500 companies aren't
+                appropriate for a 75-person SaaS company.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-foreground mb-4 text-lg font-semibold">
+                Cross-Border Complexity Challenges
+              </h3>
+              <p class="mb-4">
+                Organizations operating across multiple EU member states face
+                additional complexity:
+              </p>
+              <ul class="ml-0 list-none space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Varying national requirements:</strong
+                    >
+                    Despite harmonization, member states have discretion in certain
+                    areas</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground"
+                      >Multiple competent authorities:</strong
+                    >
+                    Understanding which authority has jurisdiction—and their specific
+                    expectations—requires careful analysis</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-muted-foreground">•</span>
+                  <span
+                    ><strong class="text-foreground">Language barriers:</strong>
+                    Guidance documents and regulatory communications often appear
+                    first (or only) in local languages</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-border-low mb-12" />
+
+        <!-- How Probo Helps -->
+        <section id="probo-help" class="mb-12 scroll-mt-24">
+          <h2
+            class="text-foreground mb-6 text-2xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]"
+          >
+            How Probo Simplifies Your NIS2 Journey
+          </h2>
+          <div class="text-muted-foreground space-y-4 leading-relaxed">
+            <p>
+              Navigating NIS2 compliance doesn't have to consume your team's
+              time and energy. Probo manages the entire compliance process for
+              you hands-off, combining dedicated expert guidance with powerful
+              automated compliance software to get you compliant faster and with
+              less stress.
+            </p>
+            <p class="text-foreground font-medium">
+              Here's what's included when you partner with Probo:
+            </p>
+            <ul class="ml-0 list-none space-y-4">
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Dedicated Compliance Expert</strong
+                  > : Direct access to compliance experts whenever you need guidance.
+                  No more guessing or searching for answers—your expert is just a
+                  message away.</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground">Onboarding Meeting</strong> : An
+                  onboarding meeting with your dedicated expert to understand your
+                  full context, tech stack, and specific compliance needs from day
+                  one.</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Policies & Risk Assessment</strong
+                  > : Probo handles all necessary documentation templates and risk
+                  analysis for you. No more starting from scratch or wondering if
+                  your policies meet the directive's requirements.</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Implementation Support</strong
+                  > : We guide you through implementing the technical and organizational
+                  controls required by Article 21, ensuring your security measures
+                  are appropriate and proportionate to your risk profile.</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground">Quarterly Follow-ups</strong> :
+                  Ongoing support to maintain your compliance posture. NIS2 requires
+                  continuous improvement—Probo ensures you stay compliant through
+                  regulatory changes and evolving threats.</span
+                >
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-muted-foreground">•</span>
+                <span
+                  ><strong class="text-foreground"
+                    >Access to Probo Compliance Platform</strong
+                  > : A centralized workspace to manage all compliance activities,
+                  with automated evidence collection and audit-ready documentation
+                  that keeps everything organized and accessible.</span
+                >
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section
+          class="rounded-2xl bg-gradient-to-br from-[#e4f7c7] to-[#d0e8b3] p-10 sm:p-12"
+        >
+          <div class="text-center">
+            <h3
+              class="mb-8 text-2xl font-semibold text-[#141e12] sm:text-[1.75rem]"
+            >
+              Ready to Tackle NIS2?
+            </h3>
+            <a
+              href="/contact"
+              class="group inline-flex items-center gap-2 rounded-full bg-[#141e12] px-6 py-3.5 font-medium shadow-lg transition-all hover:gap-3 hover:bg-[#1f2e1a] hover:shadow-xl"
+              style="color: white;"
+            >
+              Book a meeting
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="transition-transform group-hover:translate-x-0.5"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .toc-link.active {
+    color: #5d770d;
+    font-weight: 500;
+  }
+  .highlight-text {
+    background: linear-gradient(
+      180deg,
+      transparent 65%,
+      #f0ff3c 65%,
+      #f0ff3c 85%,
+      transparent 85%
+    );
+    display: inline;
+  }
+</style>
+
+<script>
+  const sectionIds = [
+    "what-is-nis2",
+    "nis-to-nis2",
+    "sectors-covered",
+    "compliance-requirements",
+    "incident-reporting",
+    "supply-chain",
+    "management-accountability",
+    "timeline",
+    "compliance-cost",
+    "common-struggles",
+    "probo-help",
+  ];
+
+  const tocLinks = document.querySelectorAll(".toc-link");
+
+  // Function to scroll to a specific section
+  function scrollToSection(id: string) {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 100;
+      const elementPosition = element.offsetTop - offset;
+      window.scrollTo({ top: elementPosition, behavior: "smooth" });
+    }
+  }
+
+  // Handle scroll to update active section
+  function handleScroll() {
+    const sections = sectionIds.map((id) => document.getElementById(id));
+    const scrollPosition = window.scrollY + 200;
+
+    let activeId = sectionIds[0];
+
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const section = sections[i];
+      if (section && section.offsetTop <= scrollPosition) {
+        activeId = sectionIds[i];
+        break;
+      }
+    }
+
+    // Update active class on TOC links
+    tocLinks.forEach((link) => {
+      const linkSection = link.getAttribute("data-section");
+      if (linkSection === activeId) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  }
+
+  // Add click handlers to TOC buttons
+  tocLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      const sectionId = link.getAttribute("data-section");
+      if (sectionId) {
+        scrollToSection(sectionId);
+      }
+    });
+  });
+
+  // Listen to scroll events
+  window.addEventListener("scroll", handleScroll);
+
+  // Initial call to set active section on page load
+  handleScroll();
+</script>

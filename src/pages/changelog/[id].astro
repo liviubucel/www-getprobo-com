@@ -1,0 +1,145 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Prose from "../../components/Prose.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { getCanonicalUrl } from "../../lib/i18n.ts";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("changelog");
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const mediaUrls =
+  entry.data.images ?? (entry.data.image ? [entry.data.image] : []);
+const isLogoLayout = entry.data.imagesLayout === "logos";
+const isVideoMedia = (url: string) => /\.(mp4|webm)$/i.test(url);
+const dateFormatter = Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const changelogImage = mediaUrls.find((url) => !isVideoMedia(url));
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: entry.data.title,
+  description: entry.data.description,
+  image: changelogImage
+    ? `https://www.probo.com${changelogImage}`
+    : "https://www.probo.com/og.png",
+  datePublished: entry.data.date.toISOString(),
+  dateModified: entry.data.date.toISOString(),
+  author: {
+    "@type": "Organization",
+    name: "Probo",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Probo",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.probo.com/probo-logo.svg",
+    },
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": getCanonicalUrl(Astro.url),
+  },
+};
+---
+
+<Layout
+  title={`${entry.data.title} — Changelog`}
+  description={entry.data.description}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <main class="container my-10 max-w-[720px] sm:my-20">
+    <Breadcrumbs
+      items={[
+        { label: "Changelog", href: "/changelog" },
+        { label: entry.data.title },
+      ]}
+      class="animate-fade-in animation-delay-100 mb-4"
+    />
+    <a
+      href="/changelog"
+      class="text-quaternary animate-fade-in animation-delay-200 mb-4 flex items-center gap-2"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+        ><path
+          fill="#C3C8C2"
+          fill-rule="evenodd"
+          d="M18.566 10.234a.8.8 0 0 1 0 1.132L13.93 16l4.635 4.634a.8.8 0 0 1-1.132 1.132l-5.2-5.2a.8.8 0 0 1 0-1.132l5.2-5.2a.8.8 0 0 1 1.132 0Z"
+          clip-rule="evenodd"></path></svg
+      >
+      Back to Changelog
+    </a>
+
+    <div class="text-muted-foreground animate-fade-in animation-delay-100 mb-3">
+      {dateFormatter.format(new Date(entry.data.date))}
+    </div>
+
+    {
+      entry.data.tags.length > 0 && (
+        <div class="animate-fade-in animation-delay-100 mb-5 flex gap-2">
+          {entry.data.tags.map((tag) => (
+            <span class="bg-highlight rounded-full px-2.5 py-0.5 text-xs font-medium">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    <h1 class="text-h3 sm:text-h2 animate-slide-in mb-4 font-medium">
+      {entry.data.title}
+    </h1>
+    <p
+      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-lg"
+    >
+      {entry.data.description}
+    </p>
+
+    {
+      mediaUrls.length > 0 &&
+        (isLogoLayout ? (
+          <div class="animate-slide-in animation-delay-200 mb-10 flex flex-wrap items-center gap-6">
+            {mediaUrls.map((url) => (
+              <img src={url} alt={entry.data.title} class="h-12 w-auto" />
+            ))}
+          </div>
+        ) : (
+          <div class="mb-10 flex flex-col gap-6">
+            {mediaUrls.map((url) =>
+              isVideoMedia(url) ? (
+                <video
+                  src={url}
+                  controls
+                  playsinline
+                  class="shadow-image animate-slide-in animation-delay-200 w-full rounded-lg"
+                />
+              ) : (
+                <img
+                  src={url}
+                  alt={entry.data.title}
+                  class="shadow-image animate-slide-in animation-delay-200 mx-auto max-h-[600px] w-auto max-w-full rounded-lg object-contain"
+                />
+              ),
+            )}
+          </div>
+        ))
+    }
+
+    <Prose class="animate-slide-in animation-delay-200">
+      <Content />
+    </Prose>
+  </main>
+</Layout>

@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const positions = await getCollection("jobs", ({ data }) => !data.draft);
+---
+
+<Layout
+  title="Careers - Join Probo"
+  description="Join Probo and help make compliance simple for every company. See our open positions and what it's like to work with the team."
+>
+  <main>
+    <section class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
+      <h1 class="text-h2 animate-slide-in mb-3 font-medium">Careers</h1>
+      <p
+        class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 max-w-2xl sm:mb-12"
+      >
+        We're building the future of compliance. Join our team and help make
+        compliance simple and accessible for every company.
+      </p>
+
+      {
+        positions.length > 0 ? (
+          <div class="animate-slide-in animation-delay-200 flex flex-col gap-4">
+            <h2 class="text-muted-foreground mb-1">Open positions</h2>
+            {positions.map((position) => (
+              <a
+                href={`/careers/${position.id}`}
+                class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
+              >
+                <div>
+                  <h3 class="font-medium">{position.data.title}</h3>
+                  <p class="text-muted-foreground text-sm">
+                    {position.data.location} · {position.data.type}
+                  </p>
+                </div>
+                <span class="text-muted-foreground">→</span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="animate-slide-in animation-delay-200 border-border-low rounded-lg border p-10 text-center">
+            <p class="text-muted-foreground mb-4">
+              There are no open positions at the moment. However, we're always
+              looking for talented people.
+            </p>
+            <p>
+              Send us your resume at{" "}
+              <a href="mailto:careers@probo.com" class="text-primary underline">
+                careers@probo.com
+              </a>
+            </p>
+          </div>
+        )
+      }
+
+      <div
+        class="animate-slide-in animation-delay-300 border-border-low mt-10 rounded-lg border p-10 text-center"
+      >
+        <p class="text-muted-foreground mb-4">
+          Don't see the right role? We're always looking for talented people.
+        </p>
+        <p>
+          Send us your resume at{" "}
+          <a href="mailto:careers@probo.com" class="text-primary underline">
+            careers@probo.com
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>
