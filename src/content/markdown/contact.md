@@ -1,9 +1,11 @@
-# Contact Probo
+# Contact ZebraByte
 
-Talk to a compliance expert.
+Discută cu ZebraByte despre securitate cibernetică, GDPR/privacy, NIS2, audit readiness, Secure Managed Hosting, accesibilitate digitală sau platforma open-source de compliance.
 
-To get in touch, visit [probo.com/contact](https://www.probo.com/contact) or reach out through:
+- Email: contact@zebrabyte.ro
+- Telefon: +40 316 302 226
+- Portal clienți: https://portal.zebrabyte.ro
 
-- [LinkedIn](https://linkedin.com/company/getprobo)
-- [Discord](https://discord.com/invite/8qfdJYfvpY)
-- [Twitter](https://twitter.com/getprobo)
+Pentru incidente active, descrie pe scurt simptomele observate și impactul. Nu include parole, token-uri, chei API sau alte secrete în formularul de contact.
+
+[Deschide formularul de contact](/contact)
