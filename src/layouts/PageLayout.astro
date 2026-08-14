@@ -6,10 +6,15 @@ interface Props {
   title: string;
   subtitle: string;
   description: string;
+  noIndex?: boolean;
 }
 ---
 
-<Layout title={Astro.props.title} description={Astro.props.description}>
+<Layout
+  title={Astro.props.title}
+  description={Astro.props.description}
+  noIndex={Astro.props.noIndex}
+>
   <div class="container max-w-[720px] py-10 sm:py-20">
     <div class="text-muted-foreground animate-slide-in mb-5">
       {Astro.props.subtitle}
