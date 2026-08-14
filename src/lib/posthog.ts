@@ -9,14 +9,31 @@ const ANALYTICS_CATEGORY = "analytics";
 
 export function configurePosthogFromBanner(_config: BannerConfig) {
   if (initialized) return;
+
+  const apiKey = import.meta.env.PUBLIC_POSTHOG_API_KEY;
+  const apiHost = import.meta.env.PUBLIC_POSTHOG_API_HOST;
+  const uiHost = import.meta.env.PUBLIC_POSTHOG_UI_HOST || "https://us.posthog.com";
+
+  // Preserve the Probo PostHog integration, but never send ZebraByte analytics
+  // through the upstream Probo proxy. Tracking only starts when a ZebraByte-owned
+  // project key and API host are explicitly configured.
+  if (!apiKey || !apiHost) {
+    if (import.meta.env.DEV) {
+      console.info(
+        "[posthog] Disabled: configure PUBLIC_POSTHOG_API_KEY and PUBLIC_POSTHOG_API_HOST for ZebraByte.",
+      );
+    }
+    return;
+  }
+
   initialized = true;
 
   const consent = getConsent();
   const analyticsAllowed = consent.getAll()[ANALYTICS_CATEGORY] === true;
 
-  posthog.init(import.meta.env.PUBLIC_POSTHOG_API_KEY, {
-    api_host: "https://t.probo.com",
-    ui_host: "https://us.posthog.com",
+  posthog.init(apiKey, {
+    api_host: apiHost,
+    ui_host: uiHost,
     defaults: "2026-01-30",
     cookieless_mode: analyticsAllowed ? "on_reject" : "always",
     opt_out_capturing_by_default: !analyticsAllowed,
@@ -42,11 +59,8 @@ export function configurePosthogFromBanner(_config: BannerConfig) {
   loadToolbarFromCache();
 }
 
-// Stable anonymous distinct_id for feature-flag consistency.
-// Consent-gated: only reads/writes localStorage once analytics is allowed,
-// since localStorage access is terminal-equipment access under GDPR/ePrivacy.
 function identifyStableAnonId() {
-  const KEY = "probo_distinct_id";
+  const KEY = "zebrabyte_distinct_id";
   let id: string | null = null;
   try {
     id = localStorage.getItem(KEY);
@@ -60,9 +74,6 @@ function identifyStableAnonId() {
   posthog.identify(id);
 }
 
-// PostHog Toolbar persistence across Astro ClientRouter view transitions.
-// The `#__posthog=...` payload only exists on the first full load; cache it and
-// re-inject after each body swap, since the swap destroys the toolbar overlay.
 let toolbarPayload: string | null = null;
 
 export function captureToolbarPayloadFromHash() {
