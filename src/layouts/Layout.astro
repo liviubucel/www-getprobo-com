@@ -18,6 +18,8 @@ const seoTitle = title
   ? `${title} | ZebraByte`
   : "Cyber Security & Compliance | ZebraByte";
 const canonical = getCanonicalUrl(Astro.url);
+const isUpstreamPortalArchive = Astro.url.pathname === "/products/compliance-portal";
+const effectiveNoIndex = Boolean(noIndex || isUpstreamPortalArchive);
 ---
 
 <!doctype html>
@@ -59,11 +61,11 @@ const canonical = getCanonicalUrl(Astro.url);
     <meta name="creator" content="ZebraByte" />
     <meta
       name="robots"
-      content={noIndex ? "noindex, nofollow" : "index, follow"}
+      content={effectiveNoIndex ? "noindex, nofollow" : "index, follow"}
     />
     <meta
       name="googlebot"
-      content={noIndex
+      content={effectiveNoIndex
         ? "noindex, nofollow"
         : "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}
     />
@@ -140,6 +142,16 @@ const canonical = getCanonicalUrl(Astro.url);
       Sari la conținutul principal
     </a>
     <Header />
+    {
+      isUpstreamPortalArchive && (
+        <div class="bg-highlight border-b px-5 py-3 text-center text-sm">
+          Aceasta este pagina originală Probo păstrată ca referință upstream în timpul migrării și nu reprezintă claims sau clienți ZebraByte. Vezi{" "}
+          <a href="/compliance-portal" class="font-medium underline underline-offset-4">
+            Compliance Portal ZebraByte
+          </a>.
+        </div>
+      )
+    }
     <div id="main-content" tabindex="-1">
       <slot />
     </div>
