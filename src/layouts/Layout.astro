@@ -20,6 +20,10 @@ const seoTitle = title
 const canonical = getCanonicalUrl(Astro.url);
 const isUpstreamPortalArchive = Astro.url.pathname === "/products/compliance-portal";
 const effectiveNoIndex = Boolean(noIndex || isUpstreamPortalArchive);
+const upstreamCookieBannerEnabled =
+  import.meta.env.PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER === "true" &&
+  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_ID) &&
+  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL);
 ---
 
 <!doctype html>
@@ -156,9 +160,14 @@ const effectiveNoIndex = Boolean(noIndex || isUpstreamPortalArchive);
       <slot />
     </div>
     <Footer noFrameworks={Astro.props.noFrameworks} />
-    <probo-cookie-banner
-      banner-id={import.meta.env.PUBLIC_COOKIE_BANNER_ID}
-      base-url={import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL}
-      position="bottom-right"></probo-cookie-banner>
+    {
+      upstreamCookieBannerEnabled && (
+        <probo-cookie-banner
+          banner-id={import.meta.env.PUBLIC_COOKIE_BANNER_ID}
+          base-url={import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL}
+          position="bottom-right"
+        />
+      )
+    }
   </body>
 </html>
