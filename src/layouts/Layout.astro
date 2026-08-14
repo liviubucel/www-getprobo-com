@@ -14,12 +14,62 @@ interface Props {
   description?: string;
   ogImage?: string;
 }
+
 const seoTitle = title
   ? `${title} | ZebraByte`
   : "Cyber Security & Compliance | ZebraByte";
 const canonical = getCanonicalUrl(Astro.url);
-const isUpstreamPortalArchive = Astro.url.pathname === "/products/compliance-portal";
-const effectiveNoIndex = Boolean(noIndex || isUpstreamPortalArchive);
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+
+const isUpstreamPortalArchive = pathname === "/products/compliance-portal";
+const isUpstreamBlogArchive = pathname.startsWith("/blog/");
+const isUpstreamChangelogArchive = pathname.startsWith("/changelog/");
+const isUpstreamHubArchive = pathname.startsWith("/hub/");
+const isUpstreamStoryArchive =
+  pathname.startsWith("/stories/") &&
+  !pathname.startsWith("/stories/zebrabyte-");
+const isUpstreamCareerArchive =
+  pathname.startsWith("/careers/") &&
+  !pathname.startsWith("/careers/zebrabyte-");
+
+const isPreservedUpstreamArchive =
+  isUpstreamPortalArchive ||
+  isUpstreamBlogArchive ||
+  isUpstreamChangelogArchive ||
+  isUpstreamHubArchive ||
+  isUpstreamStoryArchive ||
+  isUpstreamCareerArchive;
+
+const effectiveNoIndex = Boolean(noIndex || isPreservedUpstreamArchive);
+
+const upstreamArchiveHome = isUpstreamPortalArchive
+  ? "/compliance-portal"
+  : isUpstreamBlogArchive
+    ? "/blog"
+    : isUpstreamChangelogArchive
+      ? "/changelog"
+      : isUpstreamHubArchive
+        ? "/hub"
+        : isUpstreamStoryArchive
+          ? "/stories"
+          : isUpstreamCareerArchive
+            ? "/careers"
+            : "/";
+
+const upstreamArchiveHomeLabel = isUpstreamPortalArchive
+  ? "Compliance Portal ZebraByte"
+  : isUpstreamBlogArchive
+    ? "Blog ZebraByte"
+    : isUpstreamChangelogArchive
+      ? "Changelog"
+      : isUpstreamHubArchive
+        ? "ZebraByte Hub"
+        : isUpstreamStoryArchive
+          ? "Studii de caz"
+          : isUpstreamCareerArchive
+            ? "Cariere ZebraByte"
+            : "ZebraByte";
+
 const upstreamCookieBannerEnabled =
   import.meta.env.PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER === "true" &&
   Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_ID) &&
@@ -147,12 +197,16 @@ const upstreamCookieBannerEnabled =
     </a>
     <Header />
     {
-      isUpstreamPortalArchive && (
+      isPreservedUpstreamArchive && (
         <div class="bg-highlight border-b px-5 py-3 text-center text-sm">
-          Aceasta este pagina originală Probo păstrată ca referință upstream în timpul migrării și nu reprezintă claims sau clienți ZebraByte. Vezi{" "}
-          <a href="/compliance-portal" class="font-medium underline underline-offset-4">
-            Compliance Portal ZebraByte
-          </a>.
+          Material original Probo păstrat ca referință upstream. Nu reprezintă automat
+          claims, clienți, autori sau release-uri ZebraByte.{" "}
+          <a
+            href={upstreamArchiveHome}
+            class="font-medium underline underline-offset-4"
+          >
+            {upstreamArchiveHomeLabel}
+          </a>
         </div>
       )
     }
