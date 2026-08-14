@@ -1,0 +1,24 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<a
+  href="/"
+  class:list={[
+    "inline-flex items-center gap-2 text-primary no-underline",
+    className,
+  ]}
+  aria-label="ZebraByte — pagina principală"
+>
+  <span
+    aria-hidden="true"
+    class="grid size-7 place-items-center rounded-md bg-primary text-[11px] font-semibold tracking-[-0.04em] text-white"
+  >
+    ZB
+  </span>
+  <span class="text-[17px] font-semibold tracking-[-0.035em]">ZebraByte</span>
+</a>
