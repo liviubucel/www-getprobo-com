@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">ZebraByte — Cyber Security & Compliance</title>
+  <desc id="desc">ZebraByte social sharing image for cyber security, privacy and compliance.</desc>
+  <rect width="1200" height="630" fill="#f8faf4"/>
+  <circle cx="1045" cy="-20" r="390" fill="#e6ff03" opacity="0.72"/>
+  <circle cx="1025" cy="20" r="260" fill="#f8faf4" opacity="0.62"/>
+  <g transform="translate(82 78)">
+    <rect width="58" height="58" rx="13" fill="#141e12"/>
+    <path d="M14 14h30v8L26 36h18v8H14v-8l18-14H14z" fill="#fff"/>
+    <text x="78" y="42" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="700" fill="#141e12">ZebraByte</text>
+  </g>
+  <text x="82" y="280" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700" fill="#141e12">Cyber Security</text>
+  <text x="82" y="354" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700" fill="#141e12">&amp; Compliance</text>
+  <text x="82" y="430" font-family="Arial, Helvetica, sans-serif" font-size="25" fill="#667061">Security · Privacy · GDPR · NIS2 · ISO 27001 · GRC</text>
+  <line x1="82" y1="502" x2="1118" y2="502" stroke="#d9ded3"/>
+  <text x="82" y="556" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#141e12">zebrabyte.ro</text>
+</svg>
