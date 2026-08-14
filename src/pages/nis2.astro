@@ -1,0 +1,205 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const workstreams = [
+  {
+    title: "Scope & obligations mapping",
+    description:
+      "Analizăm activitatea, dimensiunea, serviciile și contextul organizației pentru a înțelege dacă și cum poate intra în sfera NIS2 și a cadrului național aplicabil. Clasificarea juridică finală se validează atunci când este necesar cu specialistul juridic competent.",
+  },
+  {
+    title: "Cyber risk management",
+    description:
+      "Construim un registru de risc și un program de măsuri care leagă amenințările de active, procese, furnizori, controale și responsabilități clare.",
+  },
+  {
+    title: "Incident handling & reporting readiness",
+    description:
+      "Definim trierea, escaladarea, comunicarea și păstrarea dovezilor pentru incidente, astfel încât organizația să poată reacționa și îndeplini obligațiile de notificare aplicabile.",
+  },
+  {
+    title: "Business continuity & resilience",
+    description:
+      "Revizuim backup, disaster recovery, continuitatea serviciilor și scenariile de recuperare, inclusiv dependențele critice care pot bloca operațiunile.",
+  },
+  {
+    title: "Supply-chain security",
+    description:
+      "Inventariem furnizorii și serviciile critice, evaluăm riscul third-party și stabilim cerințe, review-uri și dovezi pentru relațiile care pot afecta securitatea organizației.",
+  },
+  {
+    title: "Identity, vulnerability & security hygiene",
+    description:
+      "Legăm accesul, MFA, patching-ul, vulnerability management, hardening-ul, logging-ul, criptografia și training-ul într-un program urmărit continuu.",
+  },
+];
+
+const phases = [
+  {
+    step: "01",
+    title: "Readiness assessment",
+    text: "Stabilim scope-ul tehnic, procesele critice, gap-urile și obligațiile care trebuie validate pentru organizație.",
+  },
+  {
+    step: "02",
+    title: "Remediation plan",
+    text: "Transformăm constatările într-un backlog prioritizat de măsuri tehnice, organizaționale și de governance.",
+  },
+  {
+    step: "03",
+    title: "Implementation",
+    text: "Ajutăm la implementarea controalelor, politicilor, responsabilităților, furnizorilor și workflow-urilor de incident management.",
+  },
+  {
+    step: "04",
+    title: "Continuous evidence",
+    text: "Menținem evaluările și dovezile actualizate pentru review-uri, audituri, supraveghere și schimbări de infrastructură.",
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "NIS2 Readiness & Cyber Security Program",
+  provider: {
+    "@type": "Organization",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
+  },
+  areaServed: "Romania",
+  serviceType: "NIS2 readiness, cyber risk management and continuous evidence",
+  url: "https://www.zebrabyte.ro/nis2",
+};
+---
+
+<Layout
+  title="NIS2 Readiness & Cyber Security"
+  description="NIS2 readiness ZebraByte pentru organizații din România: scope assessment, cyber risk management, incident readiness, supply-chain security, resilience și evidence."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+        NIS2 · România · Cyber Risk
+      </div>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        NIS2 trebuie să existe în operațiuni, nu doar în documentație.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
+        ZebraByte ajută organizațiile să transforme cerințele NIS2 într-un program
+        tehnic și de governance: risc, incidente, continuitate, supply chain,
+        identitate, vulnerabilități și dovezi care pot fi revizuite continuu.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/contact" size="lg">Solicită un NIS2 readiness assessment</Button>
+        <Button href="/cyber-security" variant="secondary" size="lg">Vezi Cyber Security</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {workstreams.map((item) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h2 class="text-h5 mb-3 font-medium">{item.title}</h2>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-180 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Program, nu checklist</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la evaluare la evidence continuu</h2>
+          <p class="text-muted-foreground text-lg">
+            Fluxul păstrează logica Probo: evaluarea și controalele ajung în același
+            sistem în care sunt urmărite task-urile, riscurile, furnizorii și dovezile.
+          </p>
+        </div>
+
+        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {phases.map((phase) => (
+            <article class="bg-level-0 p-6 sm:p-8">
+              <div class="text-muted-foreground mb-6 text-sm font-medium">{phase.step}</div>
+              <h3 class="text-h5 mb-3 font-medium">{phase.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{phase.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-20">
+        <div>
+          <h2 class="text-h3 mb-4 font-medium">Cadrul din România</h2>
+          <p class="text-muted-foreground mb-5 leading-relaxed">
+            Directiva (UE) 2022/2555 — NIS2 — a fost transpusă în România prin OUG
+            nr. 155/2024 privind cadrul de securitate cibernetică al rețelelor și
+            sistemelor informatice din spațiul cibernetic național civil. Ordonanța
+            a fost aprobată cu modificări și completări prin Legea nr. 124/2025, iar
+            DNSC a adoptat ulterior norme privind supravegherea, verificarea și
+            controlul. Cadrul a continuat să fie modificat legislativ și în 2026.
+          </p>
+          <p class="text-muted-foreground leading-relaxed">
+            Din acest motiv, pagina este orientativă și operațională. Pentru o
+            interpretare juridică definitivă a încadrării sau a unei obligații
+            specifice, folosim forma legislativă în vigoare și, după caz, specialist juridic.
+          </p>
+        </div>
+
+        <div class="space-y-3 rounded-2xl border p-6 sm:p-8">
+          <h3 class="text-h5 mb-4 font-medium">Surse oficiale</h3>
+          <a
+            href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block font-medium underline underline-offset-4"
+          >
+            Directiva (UE) 2022/2555 — EUR-Lex
+          </a>
+          <a
+            href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/293121"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block font-medium underline underline-offset-4"
+          >
+            OUG nr. 155/2024 — Portal Legislativ
+          </a>
+          <a
+            href="https://legislatie.just.ro/Public/DetaliiDocument/305129"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block font-medium underline underline-offset-4"
+          >
+            Normele DNSC publicate în 2025 — Portal Legislativ
+          </a>
+          <a
+            href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/312027"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block font-medium underline underline-offset-4"
+          >
+            Legea nr. 123/2026 — Portal Legislativ
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t bg-level-0 py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+          Începe cu gap-urile care schimbă riscul real al organizației.
+        </h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
+          Evaluăm situația actuală, prioritizăm măsurile și construim un program pe
+          care îl poți menține după prima evaluare.
+        </p>
+        <Button href="/contact" size="lg">Discută despre NIS2</Button>
+      </div>
+    </section>
+  </main>
+</Layout>
