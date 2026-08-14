@@ -10,9 +10,6 @@ import { docsSidebar } from "./src/lib/docs-sidebar.ts";
 import { generateMarkdown } from "./tools/generateMarkdown";
 import { generateSecurityTxt } from "./tools/generateSecurityTxt";
 
-// Post-enforce fallback: when vite-plugin-svelte cannot resolve a Svelte
-// virtual CSS module (e.g. during dev re-optimization), return empty CSS so
-// @tailwindcss/vite does not receive the raw .svelte source and crash.
 function svelteVirtualCssFallback() {
   const filter = /[?&]svelte&type=style&lang\.css$/;
   /** @param {string} id */
@@ -26,9 +23,8 @@ function svelteVirtualCssFallback() {
   };
 }
 
-// https://astro.build/config
 export default defineConfig({
-  site: "https://www.probo.com",
+  site: "https://www.zebrabyte.ro",
   compressHTML: true,
   prefetch: false,
   trailingSlash: "never",
@@ -71,7 +67,6 @@ export default defineConfig({
         ContentPanel: "./src/components/docs/ContentPanel.astro",
         Footer: "./src/components/docs/Footer.astro",
         Head: "./src/components/docs/Head.astro",
-        Footer: "./src/components/docs/Footer.astro",
         PageFrame: "./src/components/docs/PageFrame.astro",
         PageTitle: "./src/components/docs/PageTitle.astro",
         Search: "./src/components/docs/Search.astro",
@@ -82,11 +77,11 @@ export default defineConfig({
         PageSidebar: "./src/components/docs/PageSidebar.astro",
       },
       disable404Route: true,
-      title: "Probo Documentation",
+      title: "ZebraByte Documentation",
       logo: {
-        replacesTitle: true,
-        src: "./src/assets/probo-logo.svg",
-        alt: "Probo Logo",
+        replacesTitle: false,
+        src: "./src/assets/zebrabyte-mark.svg",
+        alt: "ZebraByte",
       },
       defaultLocale: "root",
       customCss: ["./src/styles/starlight.css"],
@@ -94,17 +89,22 @@ export default defineConfig({
       pagination: false,
       editLink: {
         baseUrl:
-          "https://github.com/getprobo/getprobo.com/edit/v2/src/content/docs/docs/",
+          "https://github.com/liviubucel/www-getprobo-com/edit/zebrabyte-repositioning/src/content/docs/docs/",
       },
       social: [
         {
           icon: "github",
-          label: "GitHub",
+          label: "ZebraByte website source",
+          href: "https://github.com/liviubucel/www-getprobo-com",
+        },
+        {
+          icon: "github",
+          label: "Upstream Probo project",
           href: "https://github.com/getprobo/probo",
         },
         {
           icon: "discord",
-          label: "Discord",
+          label: "Upstream Probo Discord",
           href: "https://discord.com/invite/8qfdJYfvpY",
         },
       ],
@@ -116,39 +116,23 @@ export default defineConfig({
     svelte(),
     sitemap({
       filter(page) {
-        if (page.endsWith("/yc") || page.endsWith("/yc/")) {
-          return false;
-        }
-        if (page.includes("/404")) {
-          return false;
-        }
-        if (page.includes("/whats-next")) {
-          return false;
-        }
-        if (page.includes("/feedback")) {
-          return false;
-        }
-        if (page.includes("/welcome")) {
-          return false;
-        }
-        if (page.includes("/static")) {
-          return false;
-        }
-        if (page.includes("/orderform")) {
-          return false;
-        }
-        if (page.includes("/blog/page/1")) {
-          return false;
-        }
+        if (page.endsWith("/yc") || page.endsWith("/yc/")) return false;
+        if (page.includes("/404")) return false;
+        if (page.includes("/whats-next")) return false;
+        if (page.includes("/feedback")) return false;
+        if (page.includes("/welcome")) return false;
+        if (page.includes("/static")) return false;
+        if (page.includes("/orderform")) return false;
+        if (page.includes("/blog/page/1")) return false;
         return true;
       },
       serialize(item) {
-        if (item.url === "https://www.probo.com") {
+        if (item.url === "https://www.zebrabyte.ro") {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "weekly"
           );
           item.priority = 1.0;
-        } else if (item.url === "https://www.probo.com/docs") {
+        } else if (item.url === "https://www.zebrabyte.ro/docs") {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "weekly"
           );
