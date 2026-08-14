@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const areas = [
+  {
+    title: "WCAG assessment",
+    description:
+      "Verificăm barierele reale din interfață și structură, cu accent pe navigare, contrast, formulare, semantică și utilizarea cu tehnologii asistive.",
+  },
+  {
+    title: "Remediation guidance",
+    description:
+      "Transformăm constatările în recomandări clare pentru design și development, prioritizate după impact și ușurința de remediere.",
+  },
+  {
+    title: "Accessibility tooling",
+    description:
+      "Păstrăm și instrumentele ZebraByte pentru accesibilitate ca strat complementar, fără să prezentăm un widget ca substitut pentru remedierea corectă a site-ului.",
+  },
+];
+---
+
+<Layout
+  title="Accesibilitate digitală"
+  description="Accesibilitate digitală ZebraByte: evaluare WCAG, recomandări de remediere și instrumente pentru experiențe digitale mai incluzive."
+>
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <p class="text-muted-foreground mb-5 text-sm font-medium uppercase tracking-[0.14em]">
+        Digital Accessibility
+      </p>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Accesibilitatea trebuie construită în produs, nu adăugată la final.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg text-balance">
+        Evaluăm experiența digitală din perspectiva WCAG și ajutăm echipele să
+        remedieze problemele reale de utilizare. Instrumentele automate pot ajuta,
+        dar nu înlocuiesc codul, designul și conținutul accesibil.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button size="lg" href="/contact">Solicită o evaluare</Button>
+        <Button
+          size="lg"
+          variant="secondary"
+          href="https://accesibilitate.zebrabyte.ro"
+        >Instrumente de accesibilitate</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-3">
+        {
+          areas.map((area) => (
+            <article class="bg-level-0 p-6 sm:p-9">
+              <h2 class="text-h4 mb-3 font-medium">{area.title}</h2>
+              <p class="text-muted-foreground leading-relaxed">{area.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-8 sm:grid-cols-2 sm:items-center">
+        <h2 class="text-h3 sm:text-h2 font-medium text-balance">
+          Accesibilitatea intră în aceeași disciplină de risk & compliance.
+        </h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Pentru organizațiile care tratează serios guvernanța digitală,
+          accesibilitatea poate fi urmărită împreună cu privacy, securitate și alte
+          obligații de conformitate, cu responsabilități și dovezi clare.
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>
