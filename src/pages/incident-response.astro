@@ -1,0 +1,148 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const phases = [
+  {
+    step: "01",
+    title: "Triage",
+    description:
+      "Stabilim ce s-a întâmplat, ce sisteme sunt afectate, ce acces sau date pot fi expuse și care este impactul operațional imediat.",
+  },
+  {
+    step: "02",
+    title: "Containment",
+    description:
+      "Reducem propagarea și accesul atacatorului fără să distrugem inutil dovezile care pot fi necesare pentru investigație și decizii ulterioare.",
+  },
+  {
+    step: "03",
+    title: "Eradication & recovery",
+    description:
+      "Eliminăm persistența și cauzele tehnice identificate, restaurăm serviciile controlat și verificăm că sistemele pot reveni în producție în condiții mai sigure.",
+  },
+  {
+    step: "04",
+    title: "Lessons learned",
+    description:
+      "Documentăm timeline-ul, cauzele, acțiunile și măsurile de reducere a riscului pentru ca incidentul să producă îmbunătățiri concrete în programul de securitate.",
+  },
+];
+
+const help = [
+  "website compromis sau injectat cu malware",
+  "conturi sau email compromise",
+  "acces neautorizat și credential theft",
+  "ransomware sau comportament suspect pe endpoint-uri",
+  "expunere accidentală de date sau configurații",
+  "atac asupra aplicațiilor și infrastructurii publice",
+  "suspiciuni privind accesul unui furnizor sau third party",
+  "pregătirea documentării tehnice necesare pentru evaluarea incidentului",
+];
+---
+
+<Layout
+  title="Incident Response"
+  description="Incident Response ZebraByte pentru website-uri, conturi, infrastructură și incidente de securitate: triage, containment, recovery și măsuri post-incident."
+>
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+        Incident Response
+      </div>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Ai un incident activ? Prioritatea este să limitezi impactul și să păstrezi controlul.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
+        ZebraByte ajută la triere, containment, recuperare și la transformarea
+        incidentului într-un plan concret de remediere. Nu recomandăm „curățarea rapidă”
+        înainte de a înțelege ce s-a întâmplat și ce dovezi trebuie păstrate.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/contact" size="lg">Contactează ZebraByte</Button>
+        <Button href="/cyber-security" variant="secondary" size="lg">Programul Cyber Security</Button>
+      </div>
+      <p class="text-muted-foreground mx-auto mt-5 max-w-150 text-sm">
+        Nu trimite parole, recovery codes, private keys, token-uri sau alte secrete prin formularul public.
+      </p>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-180 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Proces</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Răspuns structurat, nu improvizație.</h2>
+        </div>
+
+        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {phases.map((phase) => (
+            <article class="bg-level-0 p-6 sm:p-8">
+              <div class="text-muted-foreground mb-6 text-sm font-medium">{phase.step}</div>
+              <h3 class="text-h5 mb-3 font-medium">{phase.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{phase.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Situații</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
+            Când merită escaladat imediat.
+          </h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu orice alertă este un incident major, dar pierderea timpului în primele
+            ore poate face investigația și recuperarea mult mai dificile. Dacă există
+            acces neautorizat, impact operațional sau risc pentru date, situația trebuie
+            tratată metodic.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border p-6 sm:p-8">
+          <ul class="space-y-3">
+            {help.map((item) => (
+              <li class="text-muted-foreground flex gap-3 leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y bg-level-0 py-16 sm:py-24">
+      <div class="container grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 mb-4 font-medium">După recuperare</h2>
+          <p class="text-muted-foreground leading-relaxed">
+            Incident response nu se termină când website-ul sau serviciul revine online.
+            Constatările trebuie transformate în hardening, access controls, patching,
+            monitoring, backup/recovery și ownership clar.
+          </p>
+        </div>
+        <div>
+          <h2 class="text-h3 mb-4 font-medium">Compliance & privacy</h2>
+          <p class="text-muted-foreground leading-relaxed">
+            Dacă incidentul implică date personale sau o organizație aflată sub un
+            cadru de reglementare, documentarea tehnică trebuie corelată cu procesul de
+            privacy/compliance și cu obligațiile de notificare care se aplică situației.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium text-balance">
+        Dacă incidentul este activ, descrie simptomele și impactul observat.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
+        Formularul ZebraByte are o categorie dedicată incidentelor și ajunge prin infrastructura noastră de contact securizată cu Turnstile.
+      </p>
+      <Button href="/contact" size="lg">Deschide formularul de incident</Button>
+    </section>
+  </main>
+</Layout>
