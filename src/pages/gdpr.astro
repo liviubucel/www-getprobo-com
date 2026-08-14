@@ -1,0 +1,161 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const workstreams = [
+  {
+    title: "Data mapping & RoPA",
+    description:
+      "Clarificăm ce date personale sunt prelucrate, de ce, unde circulă, cine are acces și ce furnizori sunt implicați. Registrul activităților de prelucrare devine o sursă operațională, nu un document uitat.",
+  },
+  {
+    title: "Privacy risk & DPIA",
+    description:
+      "Identificăm prelucrările cu risc ridicat și structurăm evaluările de impact, măsurile de reducere a riscului, responsabilitățile și dovezile necesare pentru decizii documentate.",
+  },
+  {
+    title: "Policies, notices & procedures",
+    description:
+      "Aliniem politicile și procedurile cu modul real de lucru: privacy notices, retention, rights requests, incident workflows, vendor management și responsabilități interne.",
+  },
+  {
+    title: "Technical & organisational measures",
+    description:
+      "Legăm GDPR de securitatea efectivă: access control, MFA, logging, backup, encryption, hardening, vulnerability management și alte măsuri relevante riscului.",
+  },
+  {
+    title: "Processors & subprocessors",
+    description:
+      "Centralizăm furnizorii, rolurile de operator/persoană împuternicită, DPA-urile, transferurile și riscurile third-party într-un flux care poate fi revizuit periodic.",
+  },
+  {
+    title: "Continuous evidence",
+    description:
+      "Politicile, evaluările și aprobările sunt menținute împreună cu dovezile operaționale, astfel încât programul să poată demonstra ce face organizația, nu doar ce declară.",
+  },
+];
+
+const outcomes = [
+  "inventar clar al prelucrărilor și fluxurilor de date",
+  "roluri și responsabilități documentate",
+  "procese pentru drepturile persoanelor vizate",
+  "DPIA și evaluări de risc unde sunt necesare",
+  "evidență centralizată pentru furnizori și DPA-uri",
+  "aliniere între privacy și controalele de cyber security",
+  "program revizuibil și actualizabil în platformă",
+];
+
+const regulationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "GDPR & Privacy Program",
+  provider: {
+    "@type": "Organization",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
+  },
+  areaServed: "EU",
+  serviceType: "GDPR readiness, privacy governance and technical security alignment",
+  url: "https://www.zebrabyte.ro/gdpr",
+};
+---
+
+<Layout
+  title="GDPR & Privacy"
+  description="Program GDPR și privacy ZebraByte: data mapping, RoPA, DPIA, politici, vendor management, măsuri tehnice și dovezi menținute continuu."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(regulationSchema)} />
+
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+        GDPR · Privacy · Security
+      </div>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        GDPR care reflectă cum funcționează organizația în realitate.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
+        Construim programul de privacy în jurul datelor, proceselor și riscurilor
+        reale. Documentația, furnizorii și cerințele GDPR sunt legate de măsurile
+        tehnice de securitate și de dovezile pe care organizația le poate demonstra.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/contact" size="lg">Discută despre GDPR</Button>
+        <Button href="/compliance-portal" variant="secondary" size="lg">Vezi Compliance Portal</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {workstreams.map((item) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h2 class="text-h5 mb-3 font-medium">{item.title}</h2>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Privacy by design</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
+            Nu separăm „GDPR-ul” de cybersecurity.
+          </h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Riscul pentru datele personale nu poate fi gestionat doar prin politici.
+            Privacy governance trebuie să fie conectat la access control, identitate,
+            logging, protecția aplicațiilor, vulnerabilități, backup și incident response.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
+          <h3 class="text-h5 mb-5 font-medium">Ce construim împreună</h3>
+          <ul class="space-y-3">
+            {outcomes.map((outcome) => (
+              <li class="text-muted-foreground flex gap-3 leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto max-w-180">
+        <h2 class="text-h3 mb-4 font-medium">Cadrul legal</h2>
+        <p class="text-muted-foreground mb-5 leading-relaxed">
+          GDPR este Regulamentul (UE) 2016/679 privind protecția persoanelor fizice
+          în ceea ce privește prelucrarea datelor cu caracter personal și libera
+          circulație a acestor date. Serviciul ZebraByte ajută la organizarea și
+          implementarea programului de privacy; nu înlocuiește consultanța juridică
+          atunci când o interpretare legală specifică este necesară.
+        </p>
+        <a
+          href="https://eur-lex.europa.eu/legal-content/RO/TXT/?uri=CELEX:32016R0679"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium underline underline-offset-4"
+        >
+          Regulamentul (UE) 2016/679 — EUR-Lex
+        </a>
+      </div>
+    </section>
+
+    <section class="border-t bg-level-0 py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium text-balance">
+          Privacy devine mai ușor de administrat când dovezile sunt în același loc.
+        </h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
+          Putem porni cu un gap assessment și transforma rezultatul într-un program
+          urmărit în platformă, împreună cu măsurile tehnice relevante.
+        </p>
+        <Button href="/contact" size="lg">Începe cu o evaluare</Button>
+      </div>
+    </section>
+  </main>
+</Layout>
