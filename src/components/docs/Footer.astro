@@ -4,26 +4,26 @@ import Icon from "../Icon.astro";
 
 const links = [
   {
-    label: "Chat with Probo developers on",
-    action: "Discord.",
+    label: "Discută cu comunitatea proiectului upstream pe",
+    action: "Discord Probo.",
     href: "https://discord.com/invite/8qfdJYfvpY",
     icon: "terminal-window",
   },
   {
-    label: "Check out our",
-    action: "changelog.",
+    label: "Vezi",
+    action: "changelog-ul.",
     href: "/changelog",
     icon: "notepad",
   },
   {
-    label: "Questions?",
-    action: "Contact Sales.",
+    label: "Ai nevoie de ajutor?",
+    action: "Contactează ZebraByte.",
     href: "/contact",
     icon: "question",
   },
   {
-    label: "LLM?",
-    action: "Read llms.txt.",
+    label: "Pentru agenți AI:",
+    action: "llms.txt.",
     href: "/llms.txt",
     icon: "sparkle",
   },
@@ -34,7 +34,7 @@ const links = [
   <slot />
 </DefaultFooter>
 
-<footer class="docs-help-footer" aria-label="Documentation help">
+<footer class="docs-help-footer" aria-label="Ajutor documentație">
   <ul>
     {
       links.map((link) => (
