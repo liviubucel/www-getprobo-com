@@ -6,6 +6,11 @@ import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
 import { Toaster } from "svelte-sonner";
 
+const upstreamCookieBannerEnabled =
+  import.meta.env.PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER === "true" &&
+  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_ID) &&
+  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL);
+
 const menus = [
   {
     label: "Resurse",
@@ -82,10 +87,10 @@ type Props = {
                   </a>
                 </li>
               ))}
-              {menu.label === "Legal" && (
+              {menu.label === "Legal" && upstreamCookieBannerEnabled && (
                 <li>
                   <probo-settings-link class="text-tertiary-foreground flex-nowrap text-sm whitespace-nowrap hover:text-white hover:underline">
-                    <a href="#">Cookie Settings</a>
+                    <a href="#">Setări cookie</a>
                   </probo-settings-link>
                 </li>
               )}
