@@ -1,15 +1,18 @@
-# About Probo
+# Despre ZebraByte
 
-The people and vision powering Probo.
+ZebraByte combină securitatea cibernetică, privacy, compliance, automatizarea și infrastructura securizată într-un singur program orientat spre risc.
 
-## Mission
+## Misiune
 
-We're transforming compliance from a complex burden into an intuitive journey. Our platform makes compliance straightforward and cost-effective, empowering businesses of all sizes to meet regulatory requirements with confidence.
+Vrem să scoatem securitatea și conformitatea din zona de proiecte separate, rapoarte uitate și documente făcute doar pentru audit. Riscul tehnic, controalele, dovezile și obligațiile de conformitate trebuie urmărite împreună și menținute continuu.
 
-## Links
+## Discipline
 
-- [Homepage](/)
-- [Contact](/contact)
-- [GitHub](https://github.com/getprobo/probo)
-- [LinkedIn](https://linkedin.com/company/getprobo)
-- [Discord](https://discord.com/invite/8qfdJYfvpY)
+- Cyber Security
+- Privacy & Compliance
+- Secure Infrastructure
+- Digital Accessibility
+- Automation
+- Security Governance
+
+Platforma păstrează capabilitățile open-source ale proiectului Probo acolo unde acestea sunt utile și le integrează în poziționarea mai largă ZebraByte.
