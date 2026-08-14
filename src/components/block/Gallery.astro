@@ -1,29 +1,34 @@
 ---
-import YCombinator from "../../assets/photos/ycombinator.png";
-import SelfDrivingCar from "../../assets/photos/self-driving-car.png";
-import Conference from "../../assets/photos/conference.png";
-import ProboAds from "../../assets/photos/probo-ads.png";
-import Bryan from "../../assets/photos/bryan.png";
-import Image from "astro/components/Image.astro";
 import clsx from "clsx";
 
-const photos = [YCombinator, Bryan, Conference, ProboAds, SelfDrivingCar];
+const panels = [
+  { title: "Cyber Security", subtitle: "Assess · Harden · Monitor" },
+  { title: "Privacy", subtitle: "GDPR · Data governance" },
+  { title: "Compliance", subtitle: "NIS2 · ISO 27001 · GRC" },
+  { title: "Accessibility", subtitle: "WCAG · Remediation" },
+  { title: "Infrastructure", subtitle: "Secure hosting · Resilience" },
+];
 ---
 
 <section class="grid grid-cols-2 sm:grid-cols-4">
   {
-    photos.map((photo, k) => (
-      <Image
-        layout="constrained"
-        src={photo}
-        alt="A photo of Probo"
-        width={960 / (k === 0 ? 1 : 2)}
-        height={1200 / (k === 0 ? 1 : 2)}
+    panels.map((panel, k) => (
+      <article
         class={clsx(
-          "aspect-square h-auto w-full object-cover sm:aspect-480/600",
+          "bg-active relative flex aspect-square h-auto w-full flex-col justify-end overflow-hidden border-r border-b p-6 sm:aspect-480/600 sm:p-8",
           k === 0 && "col-span-2 sm:row-span-2",
         )}
-      />
+      >
+        <div
+          class="absolute inset-0 opacity-50"
+          style={`background-image: radial-gradient(circle at ${25 + k * 13}% ${20 + k * 9}%, rgba(0,0,0,0.09), transparent 42%);`}
+          aria-hidden="true"
+        />
+        <div class="relative z-10">
+          <h3 class="text-h4 font-medium">{panel.title}</h3>
+          <p class="text-muted-foreground mt-2">{panel.subtitle}</p>
+        </div>
+      </article>
     ))
   }
 </section>
