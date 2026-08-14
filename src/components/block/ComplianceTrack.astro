@@ -6,32 +6,30 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
   <h2
     class="text-h3 sm:text-h2 intersect-once intersect:animate-slide-in mb-3 text-center font-medium"
   >
-    From chaos to confidence
+    De la risc neclar la control continuu
   </h2>
   <p
     class="text-muted-foreground intersect-once intersect:animate-slide-in motion-delay-100 mx-auto mb-10 max-w-180 text-center text-lg sm:mb-16"
   >
-    Our compliance officers handle the entire journey for you - from setup and
-    risk assessments to audit coordination and ongoing monitoring - so you can
-    stay focused on building.
+    ZebraByte leagă partea tehnică de securitate de privacy și compliance: evaluăm
+    mediul, implementăm controalele, pregătim dovezile și menținem programul activ
+    după audit.
   </p>
   <compliance-track class="flex flex-col gap-6 sm:flex-row sm:gap-16">
-    <ComplianceTrackItem position="01" title="Set up and plan">
-      We start by reviewing your environment, completing the risk and vendor
-      assessments, identifying gaps, and defining the right path forward. Then
-      we create a compliance program tailored to how your team actually
-      operates.
+    <ComplianceTrackItem position="01" title="Evaluare și plan">
+      Începem cu infrastructura, aplicațiile, datele, furnizorii și obligațiile de
+      conformitate. Identificăm riscurile și gap-urile, apoi construim un plan
+      realist, prioritizat după impact.
     </ComplianceTrackItem>
-    <ComplianceTrackItem position="02" title="Implementation & audit">
-      Evidence collection is automated through the platform, and our team
-      prepares every document and manages all communication with your auditor.
-      You only join the essential calls, and we guide you through them with full
-      preparation.
+    <ComplianceTrackItem position="02" title="Implementare și audit readiness">
+      Punem în practică măsurile tehnice și organizaționale, centralizăm politicile
+      și dovezile și pregătim organizația pentru evaluări, audituri și cerințe ale
+      clienților sau partenerilor.
     </ComplianceTrackItem>
-    <ComplianceTrackItem position="03" title="Stay compliant">
-      Once certified, we run your compliance program in the background -
-      monitoring, updating controls, refreshing evidence, and maintaining
-      assessments - so you remain continuously audit-ready with no extra effort.
+    <ComplianceTrackItem position="03" title="Monitorizare continuă">
+      După implementare, programul nu se oprește. Urmărim controalele, actualizăm
+      evaluările și dovezile și intervenim când apare un risc nou sau o schimbare
+      relevantă în infrastructură ori legislație.
     </ComplianceTrackItem>
   </compliance-track>
 </section>
@@ -55,7 +53,6 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
                 this.children[step - 1]?.setAttribute("data-active", "true");
               }
 
-              // Update the UI
               this.children[step - 1]?.setAttribute("data-active", "true");
             };
             this.timer = setTimeout(tick, 1000);
@@ -89,7 +86,7 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
     50% {
       transform: scale(0.5);
     }
-    0% {
+    100% {
       transform: scale(1);
     }
   }
