@@ -1,13 +1,11 @@
 ---
-import { Image } from "astro:assets";
-import Logo from "../assets/probo-logo.svg";
-import WhiteLogo from "../assets/probo_white_logo.svg";
+import ZebraByteLogo from "./ZebraByteLogo.astro";
 import HeaderMenu from "./HeaderMenu.astro";
 import Button from "./ui/Button.svelte";
 import MobileMenu from "./MobileMenu.astro";
-import GithubStars from "./GithubStars.astro";
 import Icon from "./Icon.astro";
 import { directMenuItems, menuGroups } from "../content/menu";
+
 type Props = {
   hideBurger?: boolean;
   docsChrome?: boolean;
@@ -32,25 +30,12 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
         : "container",
     ]}
   >
-    <a class="mr-auto" href="/" transition:name="header-logo">
-      <Image
-        src={Logo}
-        alt="Probo"
-        width={73}
-        height={20}
-        class="logo-light block"
-      />
-      <Image
-        src={WhiteLogo}
-        alt="Probo"
-        width={73}
-        height={20}
-        class="logo-dark hidden"
-      />
-    </a>
+    <ZebraByteLogo class="mr-auto" />
+
     <nav
       class="hidden items-center gap-2.25 lg:flex"
       transition:name="header-nav"
+      aria-label="Navigație principală"
     >
       <HeaderMenu groups={menuGroups} />
       <Button
@@ -58,28 +43,26 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
         href={directMenuItems[0].href}
         class="text-sm leading-tight"
       >
-        <div class="flex items-center gap-1.5">
-          <Icon name="github-logo" size={17} />
-          <div class="mt-0.5">Star</div>
-        </div>
-        <hr class="bg-border-solid h-full w-[1px]" />
-        <GithubStars class="mt-0.5 block" />
+        Portal clienți
       </Button>
     </nav>
-    <div transition:name="header-compliant">
+
+    <div transition:name="header-cta">
       <Button
         href="/contact"
-        class="ml-auto h-9 px-4 whitespace-nowrap lg:ml-4 lg:h-8 lg:px-3"
+        class="ml-auto h-9 px-4 whitespace-nowrap lg:ml-3 lg:h-8 lg:px-3"
       >
-        Get compliant
+        Solicită evaluare
       </Button>
     </div>
+
     <slot />
+
     {
       !hideBurger && (
         <burger-menu
           class="group ml-3 grid size-9 place-items-center lg:hidden"
-          aria-label="Open mobile menu"
+          aria-label="Deschide meniul"
           aria-expanded="false"
           aria-controls="mobile-menu"
         >
@@ -90,16 +73,6 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     }
   </div>
 </header>
-
-<style>
-  :global(html[data-theme="dark"]) .logo-light {
-    display: none;
-  }
-
-  :global(html[data-theme="dark"]) .logo-dark {
-    display: block;
-  }
-</style>
 
 <MobileMenu id="mobile-menu" />
 
@@ -139,7 +112,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       this.setAttribute("aria-expanded", String(expanded));
       this.setAttribute(
         "aria-label",
-        expanded ? "Close mobile menu" : "Open mobile menu",
+        expanded ? "Închide meniul" : "Deschide meniul",
       );
       if (expanded) {
         document.body.style.setProperty("overflow", "hidden");
@@ -175,15 +148,13 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
 
     syncClosedState = () => {
       this.setAttribute("aria-expanded", "false");
-      this.setAttribute("aria-label", "Open mobile menu");
+      this.setAttribute("aria-label", "Deschide meniul");
       document.body.style.removeProperty("overflow");
     };
 
     onScroll = () => {
       const isScrolled = document.documentElement.scrollTop > 10;
-      if (isScrolled === this.scrolled) {
-        return;
-      }
+      if (isScrolled === this.scrolled) return;
       this.closest("header")?.setAttribute(
         "data-scrolled",
         isScrolled.toString(),
