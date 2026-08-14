@@ -1,0 +1,185 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const workstreams = [
+  {
+    title: "ISMS scope & context",
+    description:
+      "Definim scope-ul, contextul organizației, părțile interesate și limitele sistemului de management astfel încât programul să reflecte business-ul și infrastructura reală.",
+  },
+  {
+    title: "Asset & risk management",
+    description:
+      "Construim inventarul relevant, identificăm amenințările și vulnerabilitățile și documentăm tratamentul riscului, ownership-ul și criteriile de acceptare.",
+  },
+  {
+    title: "Controls & Statement of Applicability",
+    description:
+      "Mapăm controalele relevante la riscuri și cerințe, documentăm aplicabilitatea și menținem o Statement of Applicability care poate fi justificată prin dovezi reale.",
+  },
+  {
+    title: "Policies & operational evidence",
+    description:
+      "Politicile sunt conectate la procesele tehnice și la evidence: access reviews, patching, backup, logging, vulnerability management, incident handling și supplier reviews.",
+  },
+  {
+    title: "Internal audit readiness",
+    description:
+      "Pregătim organizația pentru verificarea internă a ISMS-ului, urmărim neconformitățile și acțiunile corective și centralizăm materialele necesare review-urilor.",
+  },
+  {
+    title: "Management review & continual improvement",
+    description:
+      "Stabilim indicatorii, review-urile și mecanismul de îmbunătățire continuă pentru ca ISMS-ul să rămână activ după implementarea inițială.",
+  },
+];
+
+const distinction = [
+  {
+    title: "ZebraByte",
+    text: "Ajută la readiness, designul ISMS, implementarea controalelor, evidence, remediation și operarea continuă a programului.",
+  },
+  {
+    title: "Organizația ta",
+    text: "Deține deciziile, riscul, responsabilitățile și operarea efectivă a sistemului de management al securității informației.",
+  },
+  {
+    title: "Certification body",
+    text: "Evaluează independent ISMS-ul și, atunci când cerințele sunt îndeplinite, emite certificarea. ZebraByte nu se prezintă drept organism de certificare.",
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "ISO/IEC 27001 Readiness",
+  provider: {
+    "@type": "Organization",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
+  },
+  serviceType: "ISO/IEC 27001 ISMS readiness and continuous compliance support",
+  url: "https://www.zebrabyte.ro/iso-27001",
+};
+---
+
+<Layout
+  title="ISO/IEC 27001 Readiness"
+  description="ISO/IEC 27001 readiness ZebraByte: ISMS scope, risk management, controls, Statement of Applicability, evidence, internal audit readiness și continual improvement."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+        ISO/IEC 27001:2022 · ISMS · Readiness
+      </div>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Construiește un ISMS care poate fi operat, demonstrat și îmbunătățit.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
+        ZebraByte ajută la pregătirea pentru ISO/IEC 27001 prin risk management,
+        controale, politici, evidence și procese continue. Obiectivul nu este un
+        dosar pentru audit, ci un sistem de management care rămâne activ după audit.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/contact" size="lg">Solicită un readiness assessment</Button>
+        <Button href="/compliance-portal" variant="secondary" size="lg">Vezi platforma</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {workstreams.map((item) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h2 class="text-h5 mb-3 font-medium">{item.title}</h2>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-180 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Roluri clare</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Readiness nu înseamnă că ZebraByte „emite ISO”.</h2>
+          <p class="text-muted-foreground text-lg">
+            Separăm explicit consultanța și implementarea de certificarea independentă.
+          </p>
+        </div>
+
+        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border lg:grid-cols-3">
+          {distinction.map((item) => (
+            <article class="bg-level-0 p-6 sm:p-8">
+              <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Platform + expert</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
+            Evidence-ul trebuie să urmărească realitatea tehnică.
+          </h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Folosim modelul GRC păstrat din Probo pentru a lega controls, risks,
+            measures, tasks, vendors și evidence. ZebraByte adaugă partea de security
+            engineering și managed execution, astfel încât constatările tehnice să nu
+            rămână separate de programul ISMS.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border p-6 sm:p-8">
+          <h3 class="text-h5 mb-4 font-medium">Ce urmărești continuu</h3>
+          <ul class="text-muted-foreground space-y-3 leading-relaxed">
+            <li>• risk register și tratamentele aprobate</li>
+            <li>• controale, ownership și evidence</li>
+            <li>• Statement of Applicability</li>
+            <li>• suppliers și third-party risk</li>
+            <li>• findings, corrective actions și tasks</li>
+            <li>• internal audit și management review</li>
+            <li>• schimbări relevante în infrastructură și procese</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y bg-level-0 py-16 sm:py-20">
+      <div class="container mx-auto max-w-180">
+        <h2 class="text-h3 mb-4 font-medium">Standardul</h2>
+        <p class="text-muted-foreground mb-5 leading-relaxed">
+          ISO/IEC 27001:2022 este standardul internațional de cerințe pentru un
+          information security management system (ISMS). ISO îl descrie ca un cadru
+          pentru stabilirea, implementarea, menținerea și îmbunătățirea continuă a
+          unui sistem de management al securității informației.
+        </p>
+        <a
+          href="https://www.iso.org/standard/27001"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium underline underline-offset-4"
+        >
+          ISO/IEC 27001 — pagina oficială ISO
+        </a>
+      </div>
+    </section>
+
+    <section class="container py-16 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Pregătirea pentru audit începe cu un ISMS pe care echipa îl poate folosi.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
+        Putem începe cu un gap assessment și transforma rezultatul într-un program
+        urmărit continuu în platformă.
+      </p>
+      <Button href="/contact" size="lg">Discută despre ISO 27001</Button>
+    </section>
+  </main>
+</Layout>
