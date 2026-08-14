@@ -116,14 +116,43 @@ export default defineConfig({
     svelte(),
     sitemap({
       filter(page) {
-        if (page.endsWith("/yc") || page.endsWith("/yc/")) return false;
-        if (page.includes("/404")) return false;
-        if (page.includes("/whats-next")) return false;
-        if (page.includes("/feedback")) return false;
-        if (page.includes("/welcome")) return false;
-        if (page.includes("/static")) return false;
-        if (page.includes("/orderform")) return false;
-        if (page.includes("/blog/page/1")) return false;
+        const pathname = new URL(page).pathname.replace(/\/+$/, "") || "/";
+
+        if (pathname === "/yc") return false;
+        if (pathname.includes("/404")) return false;
+        if (pathname.startsWith("/whats-next")) return false;
+        if (pathname.startsWith("/feedback")) return false;
+        if (pathname.startsWith("/welcome")) return false;
+        if (pathname.startsWith("/static")) return false;
+        if (pathname.startsWith("/orderform")) return false;
+        if (pathname.startsWith("/newsletter/rezultat")) return false;
+
+        // Preserved upstream Probo archives remain accessible but are deliberately
+        // excluded from ZebraByte's sitemap to avoid duplicate or misleading SEO.
+        if (pathname === "/products/compliance-portal") return false;
+        if (pathname.startsWith("/blog/")) return false;
+        if (pathname.startsWith("/changelog/")) return false;
+        if (pathname.startsWith("/hub/")) return false;
+        if (
+          pathname.startsWith("/stories/") &&
+          !pathname.startsWith("/stories/zebrabyte-")
+        )
+          return false;
+        if (
+          pathname.startsWith("/careers/") &&
+          !pathname.startsWith("/careers/zebrabyte-")
+        )
+          return false;
+
+        // Redirect/temporary legal routes are not useful sitemap targets.
+        if (
+          pathname === "/privacy" ||
+          pathname === "/cookie-policy" ||
+          pathname === "/terms"
+        )
+          return false;
+
+        if (pathname === "/blog/page/1") return false;
         return true;
       },
       serialize(item) {
@@ -137,12 +166,7 @@ export default defineConfig({
             "weekly"
           );
           item.priority = 0.9;
-        } else if (item.url.includes("/blog/")) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "weekly"
-          );
-          item.priority = 0.8;
-        } else if (item.url.includes("/hub")) {
+        } else if (item.url === "https://www.zebrabyte.ro/hub") {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "weekly"
           );
@@ -160,11 +184,11 @@ export default defineConfig({
             "monthly"
           );
           item.priority = 0.7;
-        } else if (item.url.includes("/changelog")) {
+        } else if (item.url === "https://www.zebrabyte.ro/changelog") {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "weekly"
           );
-          item.priority = 0.7;
+          item.priority = 0.6;
         } else if (item.url.includes("/stories")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "monthly"
@@ -175,16 +199,6 @@ export default defineConfig({
             "monthly"
           );
           item.priority = 0.6;
-        } else if (
-          item.url.includes("/privacy") ||
-          item.url.includes("/terms") ||
-          item.url.includes("/cookie-policy") ||
-          item.url.includes("/subprocessors")
-        ) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "yearly"
-          );
-          item.priority = 0.3;
         } else {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
             "monthly"
