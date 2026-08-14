@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Button from "../../components/ui/Button.svelte";
+
+const status = Astro.url.searchParams.get("status");
+const content =
+  status === "confirmed"
+    ? {
+        title: "Abonare confirmată",
+        description: "Adresa ta a fost confirmată și este acum abonată la newsletter-ul ZebraByte.",
+      }
+    : status === "unsubscribed"
+      ? {
+          title: "Dezabonare finalizată",
+          description: "Adresa a fost eliminată din lista newsletter-ului ZebraByte.",
+        }
+      : {
+          title: "Link invalid sau expirat",
+          description: "Linkul nu mai este valid. Poți reveni pe site și iniția din nou abonarea.",
+        };
+---
+
+<Layout title={content.title} description={content.description} noIndex>
+  <main class="container py-20 sm:py-32">
+    <div class="mx-auto max-w-160 rounded-2xl border p-8 text-center sm:p-12">
+      <img src="/favicon.svg" alt="ZebraByte" width="52" height="52" class="mx-auto mb-6 size-13" />
+      <h1 class="text-h3 sm:text-h2 mb-4 font-medium">{content.title}</h1>
+      <p class="text-muted-foreground mb-8 text-lg">{content.description}</p>
+      <Button href="/" size="lg">Înapoi la ZebraByte</Button>
+    </div>
+  </main>
+</Layout>
