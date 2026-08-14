@@ -8,8 +8,9 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
-    title: "Probo Changelog",
-    description: "New updates and improvements to Probo.",
+    title: "ZebraByte Changelog",
+    description:
+      "Platform updates, including the preserved upstream Probo history and future ZebraByte changes.",
     site: context.site!,
     items: entries.map((entry) => ({
       title: entry.data.title,
