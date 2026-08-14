@@ -2,27 +2,32 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 
-const positions = await getCollection("jobs", ({ data }) => !data.draft);
+// Keep the original Probo jobs collection mechanism, but do not publish upstream
+// Probo vacancies as ZebraByte vacancies. ZebraByte roles use the `zebrabyte-`
+// content id prefix when added to this collection.
+const positions = (await getCollection("jobs", ({ data }) => !data.draft)).filter(
+  (position) => position.id.startsWith("zebrabyte-"),
+);
 ---
 
 <Layout
-  title="Careers - Join Probo"
-  description="Join Probo and help make compliance simple for every company. See our open positions and what it's like to work with the team."
+  title="Cariere ZebraByte"
+  description="Alătură-te ZebraByte și lucrează la intersecția dintre securitate cibernetică, privacy, compliance, open source și infrastructură securizată."
 >
   <main>
     <section class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
-      <h1 class="text-h2 animate-slide-in mb-3 font-medium">Careers</h1>
+      <h1 class="text-h2 animate-slide-in mb-3 font-medium">Cariere</h1>
       <p
         class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 max-w-2xl sm:mb-12"
       >
-        We're building the future of compliance. Join our team and help make
-        compliance simple and accessible for every company.
+        Construim un mod mai practic de a gestiona securitatea și conformitatea:
+        expertiză tehnică, automatizare și open source într-un singur program.
       </p>
 
       {
         positions.length > 0 ? (
           <div class="animate-slide-in animation-delay-200 flex flex-col gap-4">
-            <h2 class="text-muted-foreground mb-1">Open positions</h2>
+            <h2 class="text-muted-foreground mb-1">Poziții deschise</h2>
             {positions.map((position) => (
               <a
                 href={`/careers/${position.id}`}
@@ -41,13 +46,14 @@ const positions = await getCollection("jobs", ({ data }) => !data.draft);
         ) : (
           <div class="animate-slide-in animation-delay-200 border-border-low rounded-lg border p-10 text-center">
             <p class="text-muted-foreground mb-4">
-              There are no open positions at the moment. However, we're always
-              looking for talented people.
+              Nu avem momentan o poziție publicată. Păstrăm însă deschis canalul
+              pentru oameni foarte buni în security engineering, GRC, privacy și
+              platform engineering.
             </p>
             <p>
-              Send us your resume at{" "}
-              <a href="mailto:careers@probo.com" class="text-primary underline">
-                careers@probo.com
+              Trimite-ne profilul tău la{" "}
+              <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">
+                contact@zebrabyte.ro
               </a>
             </p>
           </div>
@@ -58,12 +64,13 @@ const positions = await getCollection("jobs", ({ data }) => !data.draft);
         class="animate-slide-in animation-delay-300 border-border-low mt-10 rounded-lg border p-10 text-center"
       >
         <p class="text-muted-foreground mb-4">
-          Don't see the right role? We're always looking for talented people.
+          Nu vezi rolul potrivit? Ne interesează colaborările cu oameni care pot
+          aduce competență reală în securitate, conformitate și automatizare.
         </p>
         <p>
-          Send us your resume at{" "}
-          <a href="mailto:careers@probo.com" class="text-primary underline">
-            careers@probo.com
+          Scrie-ne la{" "}
+          <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">
+            contact@zebrabyte.ro
           </a>
         </p>
       </div>
