@@ -1,42 +1,62 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import DownloadAgent from "../components/DownloadAgent.svelte";
-import ProboLogo from "../assets/probo-logo-only.svg";
 ---
 
 <Layout
-  title="Download Probo Agent"
-  description="Download the latest Probo Agent for macOS, Linux, Windows, or FreeBSD to enroll devices and continuously verify device posture."
+  title="Endpoint Posture Agent"
+  description="Descarcă agentul open-source pentru macOS, Linux, Windows sau FreeBSD folosit de platformă pentru enrollment și verificarea continuă a posturei dispozitivelor."
   noFrameworks
 >
   <main>
     <animated-hero class="relative block overflow-hidden py-16 sm:py-28">
       <section class="container">
         <div class="mx-auto flex max-w-xl flex-col items-center text-center">
-          <Image
-            src={ProboLogo}
-            alt="Probo"
-            width={80}
-            height={80}
-            class="animate-slide-in mb-8 size-20"
+          <img
+            src="/favicon.svg"
+            alt="ZebraByte"
+            width="80"
+            height="80"
+            class="animate-slide-in mb-8 size-20 rounded-xl"
           />
+
+          <p
+            class="text-muted-foreground animate-slide-in animation-delay-50 mb-4 text-sm font-medium uppercase tracking-[0.12em]"
+          >
+            Open-source endpoint posture
+          </p>
+
           <h1
             class="text-h2 animate-slide-in animation-delay-100 mb-4 font-medium"
           >
-            Download Probo Agent
+            Download Endpoint Agent
           </h1>
+
           <p
-            class="text-muted-foreground animate-slide-in animation-delay-200 mb-10 max-w-xl"
+            class="text-muted-foreground animate-slide-in animation-delay-200 mb-5 max-w-xl"
           >
-            Available for macOS, Linux, Windows, and FreeBSD.
-            <br />
-            See the
+            Disponibil pentru macOS, Linux, Windows și FreeBSD. Agentul permite
+            enrollment-ul dispozitivelor și verificarea continuă a posturei în
+            platforma de compliance.
+          </p>
+
+          <div
+            class="bg-active text-muted-foreground animate-slide-in animation-delay-200 mb-10 rounded-lg border px-4 py-3 text-sm leading-relaxed"
+          >
+            Componenta binară distribuită aici este în prezent agentul open-source
+            Probo din upstream. Păstrăm compatibilitatea originală până când există
+            un release ZebraByte separat și verificat; nu rebotezăm un binar pe care
+            nu l-am recompilat.
+          </div>
+
+          <p class="text-muted-foreground mb-8 text-sm">
+            Vezi
             <a
               href="/docs/product/probo-agent/overview"
-              class="underline underline-offset-4">Probo Agent docs</a
-            > for install and enrollment.
+              class="underline underline-offset-4">documentația tehnică a agentului</a
+            > pentru instalare și enrollment.
           </p>
+
           <div class="animate-slide-in animation-delay-300 w-full">
             <DownloadAgent client:load />
           </div>
