@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import Logo from "../../assets/probo-logo-only.svg";
+import Logo from "../../assets/zebrabyte-mark.svg";
 import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
@@ -9,17 +9,18 @@ import Button from "../../components/ui/Button.svelte";
   <div class="container">
     <Image
       src={Logo}
-      alt="Logo probo"
+      alt="ZebraByte"
       width={48}
       height={48}
       class="mx-auto mb-6"
     />
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
-      Managed frameworks
+      Framework-uri și standarde gestionate în platformă
     </h2>
-    <p class="text-muted-foreground mb-12 text-center text-lg">
-      Not seeing the one you are looking for?<br />
-      Reach out, we likely do it as well.
+    <p class="text-muted-foreground mx-auto mb-12 max-w-180 text-center text-lg">
+      Platforma poate organiza controale, dovezi și activități pentru mai multe
+      framework-uri de securitate și conformitate. Afișarea unui badge indică
+      suportul în platformă, nu o certificare deținută automat de ZebraByte.
     </p>
 
     <Badges
@@ -35,7 +36,7 @@ import Button from "../../components/ui/Button.svelte";
       size="lg"
       class="mx-auto flex w-max"
     >
-      Get compliant
+      Discută despre conformitate
     </Button>
   </div>
 </div>
