@@ -1,5 +1,5 @@
-const defaultCount = 1300; // Default value if the GitHub API is unavailable
-let count = 0; // Cached count value (to avoid multiple API calls)
+const defaultCount = 0; // Safe fallback if the GitHub API is unavailable
+let count = -1; // Cached count; -1 means not loaded yet
 
 // Mimics GitHub's star count formatting: 999, 1k, 1.1k, 10k, 1.1M
 function formatStars(value: number): string {
@@ -17,17 +17,18 @@ function formatStars(value: number): string {
 }
 
 export async function getStarsCount(): Promise<string> {
-  // To prevent reaching the GitHub API limit during development, return a default value
   if (import.meta.env.DEV) {
     return formatStars(defaultCount);
   }
-  // Use the cached value
-  if (count) {
+
+  if (count >= 0) {
     return formatStars(count);
   }
 
   try {
-    const response = await fetch("https://api.github.com/repos/getprobo/probo");
+    const response = await fetch(
+      "https://api.github.com/repos/liviubucel/www-getprobo-com",
+    );
     if (!response.ok) {
       count = defaultCount;
       return formatStars(count);
@@ -42,7 +43,7 @@ export async function getStarsCount(): Promise<string> {
     count = defaultCount;
   }
 
-  if (!count) {
+  if (count < 0) {
     count = defaultCount;
   }
 
