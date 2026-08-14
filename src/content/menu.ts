@@ -12,6 +12,7 @@ export type MenuIconName =
   | "quotes"
   | "shield-check"
   | "users-three";
+
 export type MenuItem = {
   label: string;
   description: string;
@@ -38,158 +39,126 @@ export type MenuGroup = {
 
 export const menuGroups: MenuGroup[] = [
   {
-    label: "Products",
+    label: "Securitate",
     items: [
       {
-        label: "Compliance Officer Service",
-        description: "Expert-led compliance, end to end",
-        href: "/",
-        icon: "handshake",
-      },
-      {
-        label: "Compliance Portal",
-        description: "Share security documents securely",
-        href: "/products/compliance-portal",
+        label: "Securitate cibernetică",
+        description: "Evaluare, hardening, monitorizare și răspuns la incidente",
+        href: "/cyber-security",
         icon: "shield-check",
       },
       {
-        label: "Open-source platform",
-        description: "Deploy Probo on your own infrastructure",
-        href: "/docs/deployment/self-hosting/docker-compose",
+        label: "Audit de securitate",
+        description: "Riscuri, vulnerabilități și plan clar de remediere",
+        href: "/cyber-audit",
+        icon: "compass",
+      },
+      {
+        label: "Hosting web securizat",
+        description: "Găzduire administrată pentru proiecte care cer protecție reală",
+        href: "/secure-hosting",
         icon: "code",
       },
     ],
     feature: {
-      eyebrow: "New on Probo",
-      title: "Compliance Portal",
-      href: "/products/compliance-portal",
+      eyebrow: "Evaluare",
+      title: "Începe cu o imagine clară a riscului",
+      href: "/cyber-audit",
       asset: "/navigation/browser.svg",
-      alt: "Compliance Portal preview",
+      alt: "Previzualizare evaluare de securitate ZebraByte",
       variant: "product",
     },
   },
   {
-    label: "Resources",
+    label: "Conformitate",
     items: [
       {
-        label: "Probo stories",
-        description: "How teams get compliant with Probo",
-        href: "/stories",
-        icon: "quotes",
-      },
-      {
-        label: "Blog",
-        description: "Ideas and guidance from the Probo team",
-        href: "/blog",
-        icon: "article",
-      },
-      {
-        label: "Guides & tools",
-        description: "Practical compliance guides and free tools",
-        href: "/hub",
-        icon: "compass",
-      },
-      {
-        label: "Love from Customers",
-        description: "What customers say about working with Probo",
-        href: "/love-from-customer",
-        icon: "heart",
-      },
-      {
-        label: "Changelog",
-        description: "Latest product updates",
-        href: "/changelog",
-        icon: "clock-counter-clockwise",
-      },
-      {
-        label: "Download",
-        description: "Get the Probo Agent",
-        href: "/download",
-        icon: "code",
-      },
-    ],
-    feature: {
-      eyebrow: "Customer stories",
-      title: "How Ahrefs became ISO 27001 certified in 3 months",
-      href: "/stories/ahrefs-iso",
-      asset: "/navigation/ahrefs.webp",
-      alt: "Ahrefs team collaborating in their office",
-      variant: "story",
-    },
-  },
-  {
-    label: "Company",
-    items: [
-      {
-        label: "About",
-        description: "The people and vision powering Probo",
-        href: "/about",
-        icon: "users-three",
-      },
-      {
-        label: "Careers",
-        description: "Join the team building Probo",
-        href: "/careers",
-        icon: "briefcase",
-      },
-      {
-        label: "Brand assets",
-        description: "Official logos and visual resources",
-        href: "/brand",
-        icon: "paint-brush",
-      },
-      {
-        label: "Security",
-        description: "Review our security and compliance posture",
-        href: "https://compliance.probo.com",
+        label: "GDPR & Privacy",
+        description: "Audit, implementare și guvernanța protecției datelor",
+        href: "/gdpr",
         icon: "shield-check",
       },
+      {
+        label: "NIS2 & Cyber Governance",
+        description: "Gap analysis, măsuri tehnice, politici și pregătire continuă",
+        href: "/nis2",
+        icon: "book-open-text",
+      },
+      {
+        label: "Accesibilitate digitală",
+        description: "WCAG, audit și remediere pentru experiențe digitale incluzive",
+        href: "/accessibility",
+        icon: "users-three",
+      },
     ],
     feature: {
-      eyebrow: "The Complete Guide",
-      title: "What is SOC 2?",
-      href: "/hub/soc2",
+      eyebrow: "Cyber + Compliance",
+      title: "Conformitate construită pe controale tehnice reale",
+      href: "/compliance",
       asset: "/navigation/frameworks.svg",
-      alt: "ISO 27001, SOC 2 Type II, and HIPAA framework cards",
+      alt: "Cadru de conformitate și securitate ZebraByte",
       variant: "guide",
     },
   },
   {
-    label: "Docs",
-    href: "/docs",
-    showLabel: false,
+    label: "Resurse",
     items: [
       {
-        label: "Overview",
-        description: "Understand Probo and its core concepts",
+        label: "Ghiduri & instrumente",
+        description: "Resurse practice pentru securitate și conformitate",
+        href: "/hub",
+        icon: "compass",
+      },
+      {
+        label: "Blog",
+        description: "Analize, explicații și actualizări din teren",
+        href: "/blog",
+        icon: "article",
+      },
+      {
+        label: "Documentație",
+        description: "Cum funcționează instrumentele și serviciile ZebraByte",
         href: "/docs",
         icon: "book-open-text",
       },
+    ],
+    feature: {
+      eyebrow: "Knowledge base",
+      title: "Securitate și conformitate explicate practic",
+      href: "/hub",
+      asset: "/navigation/browser.svg",
+      alt: "Ghiduri ZebraByte",
+      variant: "guide",
+    },
+  },
+  {
+    label: "Companie",
+    items: [
       {
-        label: "Product",
-        description: "Explore Probo's GRC capabilities",
-        href: "/docs/product",
+        label: "Despre ZebraByte",
+        description: "Abordarea noastră pentru securitate și risc digital",
+        href: "/about",
+        icon: "users-three",
+      },
+      {
+        label: "Contact",
+        description: "Discută cu echipa despre proiectul tău",
+        href: "/contact",
+        icon: "handshake",
+      },
+      {
+        label: "Trust Center",
+        description: "Postura de securitate și informații de încredere",
+        href: "https://trust.zebrabyte.ro",
         icon: "shield-check",
-      },
-      {
-        label: "Developers",
-        description: "Explore GraphQL, CLI, MCP, n8n, and webhooks",
-        href: "/docs/developers",
-        icon: "code",
-      },
-      {
-        label: "Deployment",
-        description: "Probo Cloud, self-hosting, and configuration",
-        href: "/docs/deployment",
-        icon: "compass",
       },
     ],
     feature: {
-      eyebrow: "Documentation",
-      title: "Understand and operate Probo",
-      href: "/docs",
+      eyebrow: "ZebraByte",
+      title: "Security-first, compliance-ready",
+      href: "/about",
       asset: "/navigation/browser.svg",
-      alt: "Probo documentation preview",
+      alt: "ZebraByte",
       variant: "product",
     },
   },
@@ -197,9 +166,9 @@ export const menuGroups: MenuGroup[] = [
 
 export const directMenuItems: MenuItem[] = [
   {
-    label: "GitHub",
-    description: "Explore our open-source compliance tools",
-    href: "https://github.com/getprobo/probo",
-    icon: "github-logo",
+    label: "Portal clienți",
+    description: "Accesează serviciile și contul ZebraByte",
+    href: "https://portal.zebrabyte.ro",
+    icon: "shield-check",
   },
 ];
