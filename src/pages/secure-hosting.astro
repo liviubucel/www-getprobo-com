@@ -1,0 +1,73 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const pillars = [
+  {
+    title: "Managed security",
+    description:
+      "Hostingul este administrat cu accent pe hardening, actualizări, protecția aplicației și reducerea suprafeței de atac, nu doar pe spațiu și trafic.",
+  },
+  {
+    title: "Monitoring & recovery",
+    description:
+      "Urmărim disponibilitatea și semnalele relevante de securitate și păstrăm procese clare pentru backup, restaurare și recuperare după incidente.",
+  },
+  {
+    title: "Security-first operations",
+    description:
+      "Configurările și schimbările sunt tratate ca parte din postura de securitate a aplicației, cu control mai strict decât într-un produs de hosting de volum.",
+  },
+];
+---
+
+<Layout
+  title="Secure Managed Hosting"
+  description="Hosting web securizat și administrat ZebraByte pentru organizații care vor infrastructură operată cu priorități reale de securitate."
+>
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <p class="text-muted-foreground mb-5 text-sm font-medium uppercase tracking-[0.14em]">
+        Secure Managed Hosting
+      </p>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Hosting pentru proiecte unde securitatea este parte din produs.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg text-balance">
+        Nu poziționăm hostingul ca produs generic de volum. Îl păstrăm pentru
+        organizațiile care vor infrastructură administrată împreună cu protecție,
+        hardening și suport tehnic orientat spre risc.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button size="lg" href="/contact">Discută despre infrastructură</Button>
+        <Button size="lg" variant="secondary" href="/cyber-security">Cyber Security</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-3">
+        {
+          pillars.map((pillar) => (
+            <article class="bg-level-0 p-6 sm:p-9">
+              <h2 class="text-h4 mb-3 font-medium">{pillar.title}</h2>
+              <p class="text-muted-foreground leading-relaxed">{pillar.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container mx-auto max-w-180 text-center">
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">
+          Infrastructura rămâne conectată la programul de securitate.
+        </h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Hostingul securizat poate fi gestionat împreună cu vulnerability management,
+          protecția website-ului, email/domain security și cerințele de conformitate,
+          astfel încât infrastructura să nu devină un siloz separat de restul programului.
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>
