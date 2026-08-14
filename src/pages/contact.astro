@@ -1,31 +1,170 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 ---
 
 <Layout
-  title="Contact us"
-  description="Get in touch with Probo's compliance experts for a demo, pricing questions, or help scoping SOC 2, ISO 27001, or GDPR compliance."
+  title="Contact ZebraByte"
+  description="Discută cu ZebraByte despre securitate cibernetică, GDPR, NIS2, secure managed hosting, accesibilitate sau platforma de compliance."
 >
   <main>
     <animated-hero class="relative block overflow-hidden py-10 sm:py-20">
       <section class="container">
-        <h1 class="text-h2 animate-slide-in mb-10 text-center font-medium">
-          Talk to a compliance expert
-        </h1>
-        <iframe
-          id="tally-form"
-          data-tally-src="https://tally.so/embed/nrxk9v?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&hideBranding=1"
-          loading="lazy"
-          width="100%"
-          height="729"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          title="Probo can handle compliance for you"></iframe>
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <p class="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-[0.14em]">
+            Contact
+          </p>
+          <h1 class="text-h2 animate-slide-in mb-4 font-medium text-balance">
+            Discută cu un expert ZebraByte
+          </h1>
+          <p class="text-muted-foreground animate-slide-in animation-delay-100 text-lg text-balance">
+            Spune-ne ce vrei să securizezi, ce obligații de conformitate ai sau unde
+            ai nevoie de ajutor. Pornim de la contextul real, nu de la un pachet generic.
+          </p>
+        </div>
+
+        <div class="mx-auto grid max-w-240 gap-8 lg:grid-cols-[1fr_1.6fr] lg:gap-12">
+          <aside class="space-y-6 lg:pt-2">
+            <div class="rounded-xl border p-6">
+              <h2 class="mb-3 font-medium">Contact direct</h2>
+              <div class="text-muted-foreground space-y-2 text-sm">
+                <p><a class="hover:underline" href="mailto:contact@zebrabyte.ro">contact@zebrabyte.ro</a></p>
+                <p><a class="hover:underline" href="tel:+40316302226">+40 316 302 226</a></p>
+              </div>
+            </div>
+
+            <div class="rounded-xl border p-6">
+              <h2 class="mb-3 font-medium">Pentru incidente urgente</h2>
+              <p class="text-muted-foreground text-sm leading-relaxed">
+                Dacă ai un incident activ, selectează „Incident / urgență de securitate”
+                în formular și descrie pe scurt ce observi. Nu include parole, chei API
+                sau alte secrete în mesaj.
+              </p>
+            </div>
+
+            <div class="rounded-xl border p-6">
+              <h2 class="mb-3 font-medium">Portal clienți</h2>
+              <p class="text-muted-foreground mb-3 text-sm leading-relaxed">
+                Clienții existenți pot continua direct în portalul ZebraByte.
+              </p>
+              <a
+                class="text-sm font-medium underline underline-offset-4"
+                href="https://portal.zebrabyte.ro"
+              >
+                Deschide portalul
+              </a>
+            </div>
+          </aside>
+
+          <form id="contact-form" class="space-y-5 rounded-2xl border p-5 sm:p-8">
+            <div class="grid gap-5 sm:grid-cols-2">
+              <label class="space-y-2 text-sm font-medium">
+                <span>Nume *</span>
+                <input
+                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                  type="text"
+                  name="name"
+                  maxlength="100"
+                  autocomplete="name"
+                  required
+                />
+              </label>
+
+              <label class="space-y-2 text-sm font-medium">
+                <span>Email *</span>
+                <input
+                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                  type="email"
+                  name="email"
+                  maxlength="254"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+
+              <label class="space-y-2 text-sm font-medium">
+                <span>Telefon</span>
+                <input
+                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                  type="tel"
+                  name="phone"
+                  maxlength="20"
+                  autocomplete="tel"
+                />
+              </label>
+
+              <label class="space-y-2 text-sm font-medium">
+                <span>Companie</span>
+                <input
+                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                  type="text"
+                  name="company"
+                  maxlength="150"
+                  autocomplete="organization"
+                />
+              </label>
+            </div>
+
+            <label class="block space-y-2 text-sm font-medium">
+              <span>Cu ce te putem ajuta?</span>
+              <select
+                class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                name="service"
+              >
+                <option value="">Selectează</option>
+                <option>Cyber Security</option>
+                <option>GDPR & Privacy</option>
+                <option>NIS2 & Compliance</option>
+                <option>Secure Managed Hosting</option>
+                <option>Accesibilitate digitală</option>
+                <option>Incident / urgență de securitate</option>
+                <option>Platformă open-source</option>
+                <option>Altceva</option>
+              </select>
+            </label>
+
+            <label class="block space-y-2 text-sm font-medium">
+              <span>Mesaj *</span>
+              <textarea
+                class="bg-level-0 min-h-36 w-full resize-y rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                name="message"
+                maxlength="5000"
+                required
+              ></textarea>
+            </label>
+
+            <label class="flex items-start gap-3 text-sm">
+              <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+              <span class="text-muted-foreground">
+                Sunt de acord ca datele furnizate să fie folosite pentru a răspunde
+                solicitării mele, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.
+              </span>
+            </label>
+
+            <div
+              class="cf-turnstile"
+              data-sitekey={turnstileSiteKey}
+              data-theme="auto"
+            ></div>
+
+            <div id="contact-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+
+            <button
+              id="contact-submit"
+              type="submit"
+              class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Trimite mesajul
+            </button>
+          </form>
+        </div>
       </section>
     </animated-hero>
   </main>
 </Layout>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
   import { AnimatedHero } from "../lib/elements/hero";
@@ -33,33 +172,50 @@ import Layout from "../layouts/Layout.astro";
 
   customElementDefine("animated-hero", () => AnimatedHero);
 
-  // Load Tally form on page load (including client-side navigation)
-  function loadTallyForm() {
-    const iframe = document.getElementById("tally-form") as HTMLIFrameElement;
-    if (!iframe || iframe.src) return;
+  const setupContactForm = () => {
+    const form = document.querySelector<HTMLFormElement>("#contact-form");
+    const status = document.querySelector<HTMLElement>("#contact-status");
+    const submit = document.querySelector<HTMLButtonElement>("#contact-submit");
 
-    const tallySrc = iframe.dataset.tallySrc;
-    if (!tallySrc) return;
+    if (!form || !status || !submit || form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
 
-    const w = "https://tally.so/widgets/embed.js";
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submit.disabled = true;
+      status.classList.add("hidden");
 
-    if (typeof (window as any).Tally !== "undefined") {
-      iframe.src = tallySrc;
-      (window as any).Tally.loadEmbeds();
-    } else if (!document.querySelector(`script[src="${w}"]`)) {
-      const s = document.createElement("script");
-      s.src = w;
-      s.onload = () => {
-        iframe.src = tallySrc;
-        if (typeof (window as any).Tally !== "undefined") {
-          (window as any).Tally.loadEmbeds();
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          body: new FormData(form),
+        });
+        const payload = (await response.json()) as {
+          success?: boolean;
+          error?: string;
+        };
+
+        status.classList.remove("hidden");
+        if (!response.ok || !payload.success) {
+          status.textContent = payload.error || "Mesajul nu a putut fi trimis.";
+          return;
         }
-      };
-      document.body.appendChild(s);
-    } else {
-      iframe.src = tallySrc;
-    }
-  }
 
-  document.addEventListener("astro:page-load", loadTallyForm);
+        status.textContent = "Mesajul a fost trimis. Mulțumim!";
+        form.reset();
+        const turnstile = (window as Window & {
+          turnstile?: { reset: () => void };
+        }).turnstile;
+        turnstile?.reset();
+      } catch {
+        status.classList.remove("hidden");
+        status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  };
+
+  document.addEventListener("astro:page-load", setupContactForm);
+  setupContactForm();
 </script>
