@@ -1,97 +1,75 @@
 ---
-import { Image } from "astro:assets";
-import BryanPortrait from "../../assets/about/bryan-frimin.png";
-import AntoinePortrait from "../../assets/about/antoine-bourchardy.png";
-import LudovicPortrait from "../../assets/about/ludovic-vielle.jpeg";
-import SachaPortrait from "../../assets/about/sacha-al-himdani.png";
-import ArthurPortrait from "../../assets/about/arthur-mayoux.jpeg";
-import EmilePortrait from "../../assets/about/emile-re.jpeg";
-
-const founders = [
+const leads = [
   {
-    img: AntoinePortrait,
-    alt: "Antoine Bourchardy",
-    name: "Antoine Bourchardy",
-    role: "Co-founder & CEO",
-    bio: "ISO 27001 auditor with experience in compliance assessment and implementation. Passionate about making compliance accessible and straightforward.",
+    name: "Cyber Security",
+    role: "Security engineering & incident response",
+    bio: "Evaluare tehnică, hardening, vulnerability management, protecția aplicațiilor și suport pentru incidente, conectate direct la riscul de business.",
   },
   {
-    img: BryanPortrait,
-    alt: "Bryan Frimin",
-    name: "Bryan Frimin",
-    role: "Co-founder & CTO",
-    bio: "YC alumnus and engineer who managed SOC2/ISO27001 compliance at his previous startup. Experienced in building scalable solutions for complex problems.",
+    name: "Privacy & Compliance",
+    role: "GDPR, NIS2 & audit readiness",
+    bio: "Politici, controale, risk management și dovezi menținute într-un program continuu, nu într-un set static de documente.",
   },
 ];
 
-const employees = [
+const disciplines = [
+  ...leads,
   {
-    img: SachaPortrait,
-    alt: "Sacha Al Himdani",
-    name: "Sacha Al Himdani",
-    role: "Founding Engineer",
+    name: "Secure Infrastructure",
+    role: "Managed hosting & platform security",
   },
   {
-    img: ArthurPortrait,
-    alt: "Arthur Mayoux",
-    name: "Arthur Mayoux",
-    role: "Biz Ops",
+    name: "Digital Accessibility",
+    role: "WCAG assessment & remediation",
   },
   {
-    img: EmilePortrait,
-    alt: "Émile Ré",
-    name: "Émile Ré",
-    role: "Founding Engineer",
+    name: "Automation",
+    role: "Integrations, evidence & workflows",
   },
   {
-    img: LudovicPortrait,
-    alt: "Ludovic Vielle",
-    name: "Ludovic Vielle",
-    role: "Founding Engineer",
+    name: "Security Governance",
+    role: "Controls, vendors & continuous improvement",
   },
 ];
-
-const team = [...founders, ...employees];
 ---
 
 <section class="container py-10 sm:py-20">
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Founders</h2>
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Cum lucrăm</h2>
   <div class="flex flex-col gap-10 sm:flex-row sm:gap-20">
     {
-      founders.map((f) => (
-        <article class="space-y-2">
-          <Image
-            densities={[1, 2]}
-            src={f.img}
-            alt={f.alt}
-            width={102}
-            height={102}
-            class="mb-4 rounded-lg sm:mb-8"
-          />
-          <h3 class="font-medium">{f.name}</h3>
-          <div>{f.role}</div>
-          <p class="text-lg">{f.bio}</p>
+      leads.map((item) => (
+        <article class="space-y-2 sm:flex-1">
+          <div class="bg-active mb-4 grid size-20 place-items-center rounded-lg border text-lg font-medium sm:mb-8">
+            {item.name
+              .split(" ")
+              .map((part) => part[0])
+              .join("")
+              .slice(0, 2)}
+          </div>
+          <h3 class="font-medium">{item.name}</h3>
+          <div>{item.role}</div>
+          <p class="text-lg">{item.bio}</p>
         </article>
       ))
     }
   </div>
+
   <hr class="my-10 sm:my-30" />
 
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Our team</h2>
-  <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Discipline conectate într-un singur program</h2>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
     {
-      team.map((item) => (
+      disciplines.map((item) => (
         <article class="space-y-2">
-          <Image
-            densities={[1, 2]}
-            src={item.img}
-            alt={item.alt}
-            width={102}
-            height={102}
-            class="mb-4 rounded-lg sm:mb-8"
-          />
+          <div class="bg-level-1 mb-4 grid size-18 place-items-center rounded-lg border text-sm font-medium sm:mb-8">
+            {item.name
+              .split(" ")
+              .map((part) => part[0])
+              .join("")
+              .slice(0, 2)}
+          </div>
           <h3 class="font-medium">{item.name}</h3>
-          <div>{item.role}</div>
+          <div class="text-muted-foreground">{item.role}</div>
         </article>
       ))
     }
