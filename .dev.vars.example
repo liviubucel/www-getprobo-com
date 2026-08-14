@@ -1,6 +1,22 @@
-# n8n webhook URL for YC Deal form submissions
-N8N_YC_DEAL_WEBHOOK_URL=https://your-n8n.com/webhook/yc-deal
+# ZebraByte local Worker secrets / server-side development variables
+# Copy to .dev.vars for `wrangler dev`. Never commit real secret values.
 
-# Basic auth credentials for webhook calls
+# Required for /api/contact and /api/newsletter/subscribe
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# Legacy upstream Probo YC deal route — retained for compatibility.
+# Only configure these if /api/yc-deal is intentionally used.
+N8N_YC_DEAL_WEBHOOK_URL=https://your-n8n.com/webhook/yc-deal
 WEBHOOK_AUTH_USERNAME=your-username
 WEBHOOK_AUTH_PASSWORD=your-password
+
+# EMAIL, NEWSLETTER KV, destination addresses and public Turnstile site key are
+# declared as Cloudflare bindings/vars in wrangler.jsonc.
+#
+# Frontend/build-time optional variables are documented separately in README:
+# - PUBLIC_POSTHOG_API_KEY
+# - PUBLIC_POSTHOG_API_HOST
+# - PUBLIC_POSTHOG_UI_HOST
+# - PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER
+# - PUBLIC_COOKIE_BANNER_ID
+# - PUBLIC_COOKIE_BANNER_API_BASE_URL
