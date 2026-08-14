@@ -11,5 +11,20 @@
   },
   "observability": {
     "enabled": true
+  },
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ],
+  "vars": {
+    "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAABBpDfopxKwUIKF_",
+    "CONTACT_TO_EMAIL": "info@zebrabyte.ro",
+    "CONTACT_FROM_EMAIL": "noreply@zebrabyte.ro"
+  },
+  "secrets": {
+    "required": [
+      "TURNSTILE_SECRET_KEY"
+    ]
   }
 }
