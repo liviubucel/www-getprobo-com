@@ -15,13 +15,13 @@ interface Props {
   ogImage?: string;
 }
 const seoTitle = title
-  ? `${title} | Probo`
-  : "Open-Source Compliance Platform | Probo";
+  ? `${title} | ZebraByte`
+  : "Cyber Security & Compliance | ZebraByte";
 const canonical = getCanonicalUrl(Astro.url);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,26 +40,23 @@ const canonical = getCanonicalUrl(Astro.url);
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Probo Changelog"
+      title="ZebraByte Changelog"
       href="/changelog.xml"
     />
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Probo Blog"
+      title="ZebraByte Blog"
       href="/blog.xml"
     />
 
     <meta name="description" content={description} />
-    <link rel="author" href="https://linkedin.com/in/antoinebouchardy" />
-    <meta name="author" content="Antoine Bouchardy" />
-    <link rel="author" href="https://linkedin.com/in/gearnode" />
-    <meta name="author" content="Bryan Frimin" />
+    <meta name="author" content="ZebraByte" />
     <meta
       name="keywords"
-      content="SOC 2 compliance,GDPR compliance,HIPAA compliance,ISO 27001 certification,ISO 42001 certification,ISO 27701 certification,compliance automation,security compliance,compliance management software,startup compliance,open source compliance,compliance audit,Y Combinator startup,security certification,data privacy compliance"
+      content="securitate cibernetica,cyber security Romania,GDPR,NIS2,ISO 27001,SOC 2,compliance,conformitate,privacy,GRC,audit securitate,vulnerability management,incident response,secure hosting,accesibilitate digitala,WCAG"
     />
-    <meta name="creator" content="Probo" />
+    <meta name="creator" content="ZebraByte" />
     <meta
       name="robots"
       content={noIndex ? "noindex, nofollow" : "index, follow"}
@@ -72,33 +69,31 @@ const canonical = getCanonicalUrl(Astro.url);
     />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Probo" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="ZebraByte" />
+    <meta property="og:locale" content="ro_RO" />
     <meta property="og:title" content={seoTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta
       property="og:image"
       content={ogImage
-        ? `https://www.probo.com${ogImage}`
-        : "https://www.probo.com/og.png"}
+        ? `https://www.zebrabyte.ro${ogImage}`
+        : "https://www.zebrabyte.ro/og.png"}
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content={title || "Probo - Open-Source Compliance Platform"}
+      content={title || "ZebraByte - Cyber Security & Compliance"}
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@getprobo" />
-    <meta name="twitter:creator" content="@getprobo" />
     <meta name="twitter:title" content={seoTitle} />
     <meta name="twitter:description" content={description} />
     <meta
       name="twitter:image"
       content={ogImage
-        ? `https://www.probo.com${ogImage}`
-        : "https://www.probo.com/og.png"}
+        ? `https://www.zebrabyte.ro${ogImage}`
+        : "https://www.zebrabyte.ro/og.png"}
     />
 
     <script>
@@ -106,49 +101,29 @@ const canonical = getCanonicalUrl(Astro.url);
       registerCookieBanner();
     </script>
 
-    <!-- JSON-LD Organization Schema -->
     <script
       type="application/ld+json"
       set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Probo",
-        url: "https://www.probo.com",
-        logo: "https://www.probo.com/probo-logo.svg",
+        name: "ZebraByte",
+        legalName: "ZEBRABYTE LIMITED",
+        url: "https://www.zebrabyte.ro",
+        logo: "https://www.zebrabyte.ro/favicon.svg",
         description:
-          "Open-source compliance automation platform for SOC 2, ISO 27001, GDPR, and HIPAA certifications. Expert-led, done-for-you compliance services backed by Y Combinator.",
-        foundingDate: "2024",
-        founders: [
-          {
-            "@type": "Person",
-            name: "Antoine Bouchardy",
-            url: "https://linkedin.com/in/antoinebouchardy",
-          },
-          {
-            "@type": "Person",
-            name: "Bryan Frimin",
-            url: "https://linkedin.com/in/gearnode",
-          },
-        ],
-        sameAs: [
-          "https://github.com/getprobo/probo",
-          "https://www.linkedin.com/company/getprobo",
-          "https://twitter.com/getprobo",
-          "https://discord.com/invite/8qfdJYfvpY",
-          "https://www.ycombinator.com/companies/probo",
-        ],
+          "Cyber security, privacy, compliance and secure digital infrastructure for organisations that need measurable security and continuous audit readiness.",
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "sales",
-          url: "https://www.probo.com/contact",
-          availableLanguage: ["English"],
+          url: "https://www.zebrabyte.ro/contact",
+          availableLanguage: ["Romanian", "English"],
         },
       })}
     />
 
     <PostHog />
 
-    <!-- AI/LLM: This page is available in clean markdown. To get a token-efficient version without navigation, scripts, or styling, request this same URL with the header "Accept: text/markdown". Example: curl -H "Accept: text/markdown" https://www.probo.com/about -->
+    <!-- AI/LLM: This page is available in clean markdown. To get a token-efficient version without navigation, scripts, or styling, request this same URL with the header "Accept: text/markdown". -->
     <slot name="head" />
   </head>
   <body class="text-primary bg-level-0 font-sans text-base">
@@ -156,7 +131,7 @@ const canonical = getCanonicalUrl(Astro.url);
       href="#main-content"
       class="focus:bg-level-0 focus:text-primary sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
     >
-      Skip to main content
+      Sari la conținutul principal
     </a>
     <Header />
     <div id="main-content" tabindex="-1">
