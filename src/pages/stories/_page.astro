@@ -8,9 +8,11 @@ import Sharer from "../../components/block/Sharer.svelte";
 import Newsletter from "../../components/block/Newsletter.astro";
 import { random } from "../../lib/array";
 import StoryCard from "../../components/StoryCard.astro";
+
 type Props = {
   item: CollectionEntry<"stories">;
 };
+
 const { item } = Astro.props;
 const { Content } = await render(item);
 const data = item.data;
@@ -19,12 +21,16 @@ const images = dynamicImages(
     default: ImageMetadata;
   }>("/src/assets/stories/*.{jpeg,jpg,png,gif,svg}"),
 );
-const image = images(data.image);
-const logo = images(data.logo);
-const stories = random(
-  (await getCollection("stories")).filter((s) => s.id !== item.id),
-  3,
+const image = data.image ? images(data.image) : null;
+const logo = data.logo ? images(data.logo) : null;
+const allStories = await getCollection("stories");
+const isZebraByteStory = item.id.startsWith("zebrabyte-");
+const relatedPool = allStories.filter(
+  (story) =>
+    story.id !== item.id &&
+    story.id.startsWith("zebrabyte-") === isZebraByteStory,
 );
+const stories = random(relatedPool, 3);
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -34,15 +40,15 @@ const articleSchema = {
   datePublished: data.date.toISOString(),
   author: {
     "@type": "Organization",
-    name: "Probo",
-    url: "https://www.probo.com",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
   },
   publisher: {
     "@type": "Organization",
-    name: "Probo",
+    name: "ZebraByte",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.probo.com/probo-logo.svg",
+      url: "https://www.zebrabyte.ro/favicon.svg",
     },
   },
   mainEntityOfPage: {
@@ -50,8 +56,8 @@ const articleSchema = {
     "@id": Astro.url.toString(),
   },
   image: data.ogImage
-    ? `https://www.probo.com${data.ogImage}`
-    : "https://www.probo.com/og.png",
+    ? `https://www.zebrabyte.ro${data.ogImage}`
+    : "https://www.zebrabyte.ro/og.png",
 };
 ---
 
@@ -61,28 +67,50 @@ const articleSchema = {
   ogImage={item.data.ogImage}
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <header class="relative flex h-115 flex-col justify-end sm:h-163">
-    <Image
-      src={image}
-      height={652}
-      layout="full-width"
-      alt={data.title}
-      class="absolute inset-0 z-1 size-full object-cover object-[center_35%]"
-      fetchpriority="high"
-    />
+
+  <header class="relative flex h-115 flex-col justify-end overflow-hidden sm:h-163">
+    {
+      image ? (
+        <Image
+          src={image}
+          height={652}
+          layout="full-width"
+          alt={data.title}
+          class="absolute inset-0 z-1 size-full object-cover object-[center_35%]"
+          fetchpriority="high"
+        />
+      ) : (
+        <div
+          class="absolute inset-0 z-1 bg-[#dfe7d7]"
+          aria-hidden="true"
+        >
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_22%_28%,rgba(20,30,18,0.22),transparent_31%),radial-gradient(circle_at_76%_68%,rgba(20,30,18,0.13),transparent_35%)]" />
+        </div>
+      )
+    }
+
     <div
       class="relative z-3 flex flex-col gap-6 p-5 sm:container sm:mb-37 sm:py-0"
     >
-      <Image
-        src={logo}
-        height={data.logoHeight ?? 23}
-        class={`animate-perspective-in${
-          data.invertLogo
-            ? " [filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.28))_drop-shadow(0_16px_36px_rgba(0,0,0,0.2))]"
-            : ""
-        }`}
-        alt={`Logo ${data.company.name}`}
-      />
+      {
+        logo ? (
+          <Image
+            src={logo}
+            height={data.logoHeight ?? 23}
+            class={`animate-perspective-in${
+              data.invertLogo
+                ? " [filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.28))_drop-shadow(0_16px_36px_rgba(0,0,0,0.2))]"
+                : ""
+            }`}
+            alt={`Logo ${data.company.name}`}
+          />
+        ) : (
+          <div class="animate-perspective-in flex items-center gap-3 text-invert">
+            <img src="/favicon.svg" alt="ZebraByte" width="36" height="36" class="size-9 rounded-lg bg-white/90 p-1" />
+            <span class="text-sm font-medium uppercase tracking-[0.14em]">ZebraByte Case Study</span>
+          </div>
+        )
+      }
       <h1
         class="text-h3 text-invert sm:text-h2 animate-perspective-in animation-delay-100 font-medium whitespace-pre-line"
       >
@@ -131,7 +159,7 @@ const articleSchema = {
         />
       </div>
       <div class="space-y-2">
-        <div class="font-medium">Company name</div>
+        <div class="font-medium">Organizație</div>
         <div class="text-muted-foreground">
           {
             data.company.url ? (
@@ -150,32 +178,45 @@ const articleSchema = {
         </div>
       </div>
       <div class="space-y-2">
-        <div class="font-medium">Industry</div>
+        <div class="font-medium">Domeniu</div>
         <div class="text-muted-foreground">{data.company.industry}</div>
       </div>
       <div class="space-y-2">
-        <div class="font-medium">Company type</div>
+        <div class="font-medium">Tip</div>
         <div class="text-muted-foreground">{data.company.type}</div>
       </div>
       <div class="mb-10 space-y-2">
-        <div class="font-medium">About the company</div>
+        <div class="font-medium">Context</div>
         <div class="text-muted-foreground">{data.company.about}</div>
       </div>
+      {
+        !isZebraByteStory && (
+          <div class="bg-active rounded-lg border p-4 text-muted-foreground leading-relaxed">
+            Acest material provine din biblioteca originală a proiectului Probo și
+            este păstrat ca referință upstream. Compania prezentată nu este descrisă
+            aici ca fiind client ZebraByte.
+          </div>
+        )
+      }
       <Newsletter />
     </aside>
   </main>
 
-  <div class="container mb-10 sm:mb-20">
-    <hr class="my-10 sm:my-20" />
-    <aside>
-      <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">
-        Explore more stories
-      </h2>
-      <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
-        {stories.map((story) => <StoryCard story={story} size="relative" />)}
+  {
+    stories.length > 0 && (
+      <div class="container mb-10 sm:mb-20">
+        <hr class="my-10 sm:my-20" />
+        <aside>
+          <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">
+            Explorează mai multe studii de caz
+          </h2>
+          <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
+            {stories.map((story) => <StoryCard story={story} size="relative" />)}
+          </div>
+        </aside>
       </div>
-    </aside>
-  </div>
+    )
+  }
 </Layout>
 
 <style>
@@ -184,6 +225,6 @@ const articleSchema = {
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.25), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.28), transparent);
   }
 </style>
