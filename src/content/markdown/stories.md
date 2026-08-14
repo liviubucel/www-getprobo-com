@@ -1,21 +1,15 @@
-# Customer Stories
+# Studii de caz ZebraByte
 
-Inspiring stories from real Probo customers.
+ZebraByte publică studii de caz numai atunci când rezultatele pot fi descrise fără a inventa metrici, certificări sau relații comerciale.
 
-## Vybe — SOC 2
+## Website compromis → recuperare și migrare securizată
 
-From Fast to Enterprise-Ready: Vybe's SOC 2 Journey with Probo. Learn how Vybe, an AI-powered internal tools platform, achieved SOC 2 certification with Probo.
+Un client a ajuns la ZebraByte cu un website afectat de malware și erori. Intervenția a inclus curățarea compromiterii, securizarea aplicației și migrarea pe infrastructură administrată ZebraByte. În feedback-ul public ulterior, clientul a raportat că site-ul funcționează corect și că nu a mai întâmpinat probleme de același tip.
 
-- [Read the full story](/stories/vybe-soc2)
+[Vezi studiul de caz](/stories/zebrabyte-malware-recovery)
 
-## Lucis — ISO 27001
+## Biblioteca upstream Probo
 
-How Lucis Made Security a Default, Not a Tradeoff. Learn how Lucis achieved ISO 27001 certification while maintaining hyper-growth.
+Păstrăm separat studiile de caz originale Probo pentru continuitatea și valoarea educațională a proiectului open-source. Companiile prezentate în acele materiale nu sunt descrise ca fiind clienți ZebraByte.
 
-- [Read the full story](/stories/lucis-iso)
-
-## Ahrefs — ISO 27001
-
-How Ahrefs became ISO 27001 certified in 3 months. 80% reduction in audit prep time and six-figure savings compared to traditional consulting.
-
-- [Read the full story](/stories/ahrefs-iso)
+[Vezi toate studiile de caz](/stories)
