@@ -12,6 +12,12 @@
   "observability": {
     "enabled": true
   },
+  "kv_namespaces": [
+    {
+      "binding": "NEWSLETTER",
+      "id": "a3474e304aeb47168fb65edfaad5ead1"
+    }
+  ],
   "send_email": [
     {
       "name": "EMAIL"
@@ -20,7 +26,8 @@
   "vars": {
     "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAABBpDfopxKwUIKF_",
     "CONTACT_TO_EMAIL": "info@zebrabyte.ro",
-    "CONTACT_FROM_EMAIL": "noreply@zebrabyte.ro"
+    "CONTACT_FROM_EMAIL": "noreply@zebrabyte.ro",
+    "NEWSLETTER_FROM_EMAIL": "newsletter@zebrabyte.ro"
   },
   "secrets": {
     "required": [
