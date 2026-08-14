@@ -1,11 +1,13 @@
 ---
 title: Get started
-description: Probo documentation hub covering the compliance platform's product areas, developer interfaces, and Cloud or self-hosted deployment options.
+description: ZebraByte documentation hub for the open-source compliance platform, product areas, developer interfaces and Cloud or self-hosted deployment options.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-Probo is an open-source governance, risk, and compliance platform for engineering, security, and compliance teams. Use these docs to understand the product model, operate a compliance program, automate records, and choose a deployment.
+ZebraByte uses and extends an open-source governance, risk and compliance platform for engineering, security and compliance teams. The platform core documented here is derived from the MIT-licensed Probo project. We preserve upstream technical names where compatibility matters and layer ZebraByte security, privacy and managed-service workflows around that core.
+
+Use these docs to understand the product model, operate a compliance program, automate records and choose a deployment.
 
 ## Choose your path
 
@@ -19,7 +21,7 @@ Start with the path that matches your role.
   />
   <LinkCard
     title="Cloud customer"
-    description="Review Probo Cloud regions, shared responsibility, and first-organization setup"
+    description="Review Cloud deployment, shared responsibility, and first-organization setup"
     href="/docs/deployment/cloud"
   />
   <LinkCard
@@ -29,17 +31,17 @@ Start with the path that matches your role.
   />
   <LinkCard
     title="Integrator"
-    description="Automate Probo through GraphQL, the CLI, MCP, n8n, and webhooks"
+    description="Automate the platform through GraphQL, the CLI, MCP, n8n, and webhooks"
     href="/docs/developers"
   />
 </CardGrid>
 
-## Explore Probo
+## Explore the platform
 
 <CardGrid>
   <LinkCard
     title="Product overview"
-    description="Understand Probo's scope, users, interfaces, and deployment options"
+    description="Understand the platform scope, users, interfaces, and deployment options"
     href="/docs/product/getting-started/product-overview"
   />
   <LinkCard
@@ -49,19 +51,19 @@ Start with the path that matches your role.
   />
   <LinkCard
     title="Developers"
-    description="Automate Probo through GraphQL, the CLI, MCP, n8n, and webhooks"
+    description="Automate through GraphQL, the CLI, MCP, n8n, and webhooks"
     href="/docs/developers"
   />
   <LinkCard
     title="Deployment"
-    description="Compare Probo Cloud and self-hosting, then review configuration and operations"
+    description="Compare managed Cloud and self-hosting, then review configuration and operations"
     href="/docs/deployment"
   />
 </CardGrid>
 
 ## Core product areas
 
-Probo connects the records used throughout a compliance program instead of treating them as isolated checklists.
+The platform connects the records used throughout a compliance program instead of treating them as isolated checklists.
 
 <CardGrid>
   <LinkCard
@@ -106,22 +108,52 @@ Probo connects the records used throughout a compliance program instead of treat
   />
 </CardGrid>
 
-## More resources
+## ZebraByte
 
 <CardGrid>
   <LinkCard
-    title="GitHub repository"
-    description="Browse the source, contribute to Probo, or follow development"
+    title="Cyber Security"
+    description="Security assessment, hardening, continuous security and incident support"
+    href="/cyber-security"
+  />
+  <LinkCard
+    title="Secure Managed Hosting"
+    description="Security-first infrastructure operated as part of the security program"
+    href="/secure-hosting"
+  />
+  <LinkCard
+    title="Digital Accessibility"
+    description="WCAG assessment, remediation guidance and accessibility tooling"
+    href="/accessibility"
+  />
+  <LinkCard
+    title="Contact ZebraByte"
+    description="Discuss security, privacy, compliance or platform deployment"
+    href="/contact"
+  />
+</CardGrid>
+
+## Upstream resources
+
+<CardGrid>
+  <LinkCard
+    title="Probo upstream repository"
+    description="Browse the MIT-licensed upstream source and follow core platform development"
     href="https://github.com/getprobo/probo"
   />
   <LinkCard
-    title="Report an issue"
-    description="Report a bug or request a feature"
+    title="Report an upstream issue"
+    description="Report a core Probo bug or request an upstream feature"
     href="https://github.com/getprobo/probo/issues"
   />
   <LinkCard
-    title="Community"
-    description="Get help and talk with the Probo community on Discord"
+    title="Upstream community"
+    description="Talk with the original Probo open-source community on Discord"
     href="https://discord.gg/8qfdJYfvpY"
+  />
+  <LinkCard
+    title="ZebraByte website source"
+    description="Follow the ZebraByte website and documentation adaptation"
+    href="https://github.com/liviubucel/www-getprobo-com"
   />
 </CardGrid>
