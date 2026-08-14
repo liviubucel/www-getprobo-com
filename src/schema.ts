@@ -3,6 +3,7 @@ import { frameworks } from "./content/frameworks.ts";
 
 export const StorySchema = z.object({
   title: z.string(),
+  description: z.string().optional(),
   date: z.date(),
   impacts: z
     .array(
@@ -12,15 +13,18 @@ export const StorySchema = z.object({
       }),
     )
     .min(1),
-  image: z.string(),
+  // Legacy/upstream Probo stories use full photographic assets. ZebraByte stories
+  // may intentionally use the native generated visual fallback instead.
+  image: z.string().optional(),
   previewImage: z.string().optional(),
   trailer: z.string().optional(),
-  framework: z.enum(frameworks.map((f) => f.label) as any),
-  logo: z.string(),
+  framework: z.enum(frameworks.map((f) => f.label) as any).optional(),
+  logo: z.string().optional(),
   logoHeight: z.number().optional(),
   logoLightBg: z.string().optional(),
   invertLogo: z.boolean().optional(),
   logoPosition: z.enum(["top-left", "bottom-left"]).optional(),
+  ogImage: z.string().optional(),
   company: z.object({
     name: z.string(),
     url: z.string().url().optional(),
