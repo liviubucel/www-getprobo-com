@@ -5,12 +5,17 @@
 
   type Props = {
     src: string;
-    label: string;
+    label?: string;
     class?: string;
     loop?: boolean;
   };
 
-  const { src, label, class: className, loop = true }: Props = $props();
+  const {
+    src,
+    label = "Animated illustration",
+    class: className,
+    loop = true,
+  }: Props = $props();
 
   let animation = $state<AnimationItem | null>(null);
   let loadingPromise: Promise<void> | null = null;
