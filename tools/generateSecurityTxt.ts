@@ -20,10 +20,10 @@ export function generateSecurityTxt(): AstroIntegration {
         expires.setUTCFullYear(expires.getUTCFullYear() + 1);
 
         const content = [
-          "Contact: mailto:security@probo.com",
+          "Contact: mailto:contact@zebrabyte.ro",
           `Expires: ${expires.toISOString().replace(/\.\d+Z$/, "Z")}`,
-          "Canonical: https://www.probo.com/.well-known/security.txt",
-          "Preferred-Languages: en",
+          "Canonical: https://www.zebrabyte.ro/.well-known/security.txt",
+          "Preferred-Languages: ro, en",
           "",
         ].join("\n");
 
