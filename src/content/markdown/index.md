@@ -1,39 +1,30 @@
-# Probo — Compliance, Done For You
+# ZebraByte — Cyber Security & Compliance
 
-Our compliance officers run your program end-to-end. Stay continuously audit-ready without the overhead or complexity of traditional compliance platforms.
+ZebraByte combină securitatea cibernetică, privacy, compliance și infrastructura securizată într-un program continuu, susținut de o experiență de platformă open-source.
 
-- [Deploy Open Source](/docs/deployment/self-hosting/docker-compose)
-- [Talk to an expert](/contact)
+## Securitate și conformitate, gestionate pentru tine
 
-## Trusted by leading teams
+Evaluăm riscul, implementăm măsurile tehnice și organizaționale, centralizăm dovezile și menținem controalele relevante în timp. Obiectivul nu este un raport care rămâne într-un folder, ci o organizație care poate demonstra ce controale are și de ce funcționează.
 
-Ahrefs, Typebot, Tinfoil Security, Vybe, Lucis, and more.
+## Capabilități
 
-## Your dedicated compliance expert
+- **Cyber Security** — assessment, hardening, vulnerability management, protecția aplicațiilor și suport pentru incidente.
+- **Privacy & Compliance** — GDPR, NIS2, ISO 27001 readiness, risk management, politici și audit readiness.
+- **Compliance Platform** — controls, evidence, risks, vendors, workflows, portal și integrări.
+- **Secure Managed Hosting** — infrastructură administrată cu securitatea ca parte din operare.
+- **Digital Accessibility** — evaluare WCAG, remediation guidance și tooling complementar.
 
-A seasoned compliance officer becomes an extension of your team, managing policies, controls, reviews, and assessments on your behalf — real expertise, not ticket threads.
+## Open source
 
-## Compliance that runs in the background
-
-Probo automates evidence collection, updates, and approvals, while our team keeps your entire program aligned and audit-ready. You're only notified when something genuinely needs your attention.
-
-## Leverage your compliance for revenue growth
-
-Show customers and prospects you're trustworthy. Share a secure, branded trust page that instantly proves your compliance and helps accelerate deals.
-
-## Get stuff done on Slack
-
-Access documents, trigger workflows, and talk directly with your compliance officer — all without leaving Slack. Support that fits seamlessly into how your team already works.
-
-## Supported Frameworks
-
-SOC 2 Type 1 & 2, ISO 27001, ISO 27701, ISO 42001, GDPR, HIPAA, CCPA, FERPA, CASA, NIS2, DORA.
+Experiența de compliance păstrează și extinde proiectul open-source Probo. Numele tehnice upstream rămân acolo unde sunt necesare pentru compatibilitate sau atribuire corectă; nu sunt prezentate ca dezvoltări originale ZebraByte dacă nu sunt.
 
 ## Links
 
-- [Documentation](/docs)
-- [Blog](/blog)
-- [Customer Stories](/stories)
-- [About](/about)
+- [Cyber Security](/cyber-security)
+- [Secure Managed Hosting](/secure-hosting)
+- [Accesibilitate digitală](/accessibility)
+- [Compliance Portal](/products/compliance-portal)
+- [Docs](/docs)
+- [Hub](/hub)
+- [Studii de caz](/stories)
 - [Contact](/contact)
-- [GitHub](https://github.com/getprobo/probo)
