@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const SITE = "https://www.probo.com";
+const SITE = "https://www.zebrabyte.ro";
 const HOST = new URL(SITE).host;
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY;
 
@@ -90,6 +90,6 @@ if (urls.length === 0) {
   throw new Error("No URLs found in sitemap");
 }
 
-console.log(`Submitting ${urls.length} URLs to IndexNow...`);
+console.log(`Submitting ${urls.length} ZebraByte URLs to IndexNow...`);
 await submitToIndexNow(urls);
-console.log("IndexNow accepted the submission.");
+console.log("IndexNow accepted the ZebraByte submission.");
