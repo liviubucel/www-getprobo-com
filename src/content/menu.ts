@@ -50,7 +50,7 @@ export const menuGroups: MenuGroup[] = [
       {
         label: "Compliance Portal",
         description: "Distribuie în siguranță documente și dovezi de conformitate",
-        href: "/products/compliance-portal",
+        href: "/compliance-portal",
         icon: "shield-check",
       },
       {
@@ -81,7 +81,7 @@ export const menuGroups: MenuGroup[] = [
     feature: {
       eyebrow: "În platforma ZebraByte",
       title: "Compliance Portal",
-      href: "/products/compliance-portal",
+      href: "/compliance-portal",
       asset: "/navigation/browser.svg",
       alt: "Previzualizare Compliance Portal ZebraByte",
       variant: "product",
@@ -98,7 +98,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Blog",
-        description: "Analize și ghiduri de la echipa ZebraByte",
+        description: "Analize ZebraByte și arhiva editorială upstream Probo",
         href: "/blog",
         icon: "article",
       },
@@ -116,23 +116,23 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Changelog",
-        description: "Cele mai recente îmbunătățiri ale platformei și serviciilor",
+        description: "Istoricul platformei și viitoarele îmbunătățiri ZebraByte",
         href: "/changelog",
         icon: "clock-counter-clockwise",
       },
       {
         label: "Download",
-        description: "Descarcă ZebraByte Agent",
+        description: "Descarcă endpoint posture agent-ul open-source",
         href: "/download",
         icon: "code",
       },
     ],
     feature: {
-      eyebrow: "Customer stories",
-      title: "Cum construiești un program ISO 27001 care funcționează în practică",
-      href: "/stories/ahrefs-iso",
-      asset: "/navigation/ahrefs.webp",
-      alt: "Echipă colaborând într-un program de conformitate",
+      eyebrow: "ZebraByte case study",
+      title: "De la website compromis la infrastructură securizată",
+      href: "/stories/zebrabyte-malware-recovery",
+      asset: "/navigation/browser.svg",
+      alt: "Studiu de caz ZebraByte privind recuperarea și securizarea unui website",
       variant: "story",
     },
   },
@@ -141,7 +141,7 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Despre",
-        description: "Echipa și viziunea din spatele ZebraByte",
+        description: "Viziunea și disciplinele din spatele ZebraByte",
         href: "/about",
         icon: "users-three",
       },
@@ -153,7 +153,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Brand assets",
-        description: "Logo-uri și resurse vizuale oficiale ZebraByte",
+        description: "Identitatea și resursele vizuale ZebraByte",
         href: "/brand",
         icon: "paint-brush",
       },
@@ -223,7 +223,7 @@ export const menuGroups: MenuGroup[] = [
 export const directMenuItems: MenuItem[] = [
   {
     label: "GitHub",
-    description: "Explorează platforma open-source ZebraByte",
+    description: "Sursa website-ului ZebraByte și upstream-ul open-source",
     href: "https://github.com/liviubucel/www-getprobo-com",
     icon: "github-logo",
   },
