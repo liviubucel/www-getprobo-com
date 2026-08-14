@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const capabilities = [
+  {
+    title: "Security assessment",
+    description:
+      "Evaluăm suprafața expusă, configurațiile, aplicațiile, domeniile și controalele existente pentru a identifica riscurile reale, nu doar problemele cosmetice.",
+  },
+  {
+    title: "Hardening & remediation",
+    description:
+      "Transformăm constatările în acțiuni: configurare defensivă, reducerea suprafeței de atac, protecția aplicațiilor și prioritizarea patch-urilor și vulnerabilităților.",
+  },
+  {
+    title: "Continuous security",
+    description:
+      "Monitorizăm schimbările relevante, vulnerabilitățile și controalele astfel încât securitatea să rămână un proces continuu, nu o verificare făcută o singură dată.",
+  },
+  {
+    title: "Incident support",
+    description:
+      "Când apare un incident, ajutăm la triere, containment, recuperare și la stabilirea măsurilor necesare pentru a reduce riscul de recurență.",
+  },
+];
+---
+
+<Layout
+  title="Cyber Security"
+  description="Servicii de securitate cibernetică ZebraByte: evaluare, hardening, vulnerability management, monitorizare și suport pentru incidente."
+>
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <p class="text-muted-foreground mb-5 text-sm font-medium uppercase tracking-[0.14em]">
+        ZebraByte Cyber Security
+      </p>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Securitate cibernetică gestionată, nu doar un raport.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg text-balance">
+        Identificăm riscurile, implementăm măsurile tehnice și menținem controalele
+        relevante în timp. Security engineering și compliance lucrează împreună,
+        nu în două proiecte separate.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button size="lg" href="/contact">Discută cu un expert</Button>
+        <Button size="lg" variant="secondary" href="/hub">Vezi ghidurile</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-28">
+      <div class="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2">
+        {
+          capabilities.map((capability) => (
+            <article class="bg-level-0 p-6 sm:p-10">
+              <h2 class="text-h4 mb-3 font-medium">{capability.title}</h2>
+              <p class="text-muted-foreground text-lg leading-relaxed">
+                {capability.description}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-8 sm:grid-cols-2 sm:items-center">
+        <div>
+          <p class="text-muted-foreground mb-3">Security + Compliance</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">
+            Controalele din documente trebuie să existe și în infrastructură.
+          </h2>
+        </div>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Abordarea ZebraByte conectează măsurile tehnice cu cerințele GDPR, NIS2,
+          ISO 27001 și cu procesul de audit readiness. Astfel, dovezile reflectă
+          realitatea operațională și pot fi menținute continuu în platformă.
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>
