@@ -17,65 +17,75 @@ const newsletter = tv({
 });
 
 const props = Astro.props;
-
-// Listmonk posts back into a hidden iframe so the visitor never leaves the
-// site; the name has to be unique since this component can render twice on
-// the same page (e.g. footer + inline blog post widget).
-const iframeName = `newsletter-frame-${crypto.randomUUID()}`;
-const PROBO_NEWSLETTER_LIST_UUID = "d1e033d7-270d-4cf0-af1e-3782f4d49b49";
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 ---
 
 <newsletter-form>
   <div class={newsletter(Astro.props)}>
-    <form
-      class={clsx(props.variant !== "footer" && "@sm:flex items-center gap-20")}
-      method="post"
-      action="https://lists.probo.com/subscription/form"
-      target={iframeName}
-    >
+    <form class={clsx(props.variant !== "footer" && "@sm:flex @sm:items-start gap-10")}>
       <div
         class={clsx(
-          "mb-6 @sm:max-w-65 @sm:mb-0",
+          "mb-5 @sm:max-w-72 @sm:mb-0",
           props.variant === "footer" ? "text-sm" : "text-lg font-medium",
         )}
       >
-        Sign up for our newsletter to get actionable insights about compliance,
-        right to your inbox.
+        Primește analize și ghiduri ZebraByte despre cyber security, privacy și compliance.
       </div>
-      <div class="space-y-3">
-        <input type="hidden" name="nonce" value="" />
-        <input type="hidden" name="l" value={PROBO_NEWSLETTER_LIST_UUID} />
+
+      <div class="min-w-0 flex-1 space-y-3">
         <input
           class={clsx(
-            "border-border-mid placeholder:text-quaternary w-full rounded-lg border px-3 bg-secondary ",
-            props.variant === "footer" ? "h-8" : "h-11 sm:h-8",
+            "border-border-mid placeholder:text-quaternary bg-secondary w-full rounded-lg border px-3",
+            props.variant === "footer" ? "h-9" : "h-11 sm:h-10",
           )}
           name="email"
           type="email"
+          maxlength="254"
           required
-          placeholder="Enter your email"
-          aria-label="Your email"
+          autocomplete="email"
+          placeholder="Email"
+          aria-label="Adresa de email"
         />
-        <Button
-          type="submit"
-          class={clsx(
-            "w-full text-base sm:w-max",
-            props.variant === "footer" ? "h-9 w-max" : "h-11 sm:h-8",
-          )}>Subscribe</Button
-        >
+
+        <label class="text-muted-foreground flex items-start gap-2 text-xs leading-relaxed">
+          <input class="mt-0.5" type="checkbox" name="consent" value="yes" required />
+          <span>
+            Sunt de acord cu prelucrarea adresei pentru newsletter. Abonarea se confirmă prin email și poate fi retrasă oricând.
+          </span>
+        </label>
+
+        <div
+          class="cf-turnstile max-w-full overflow-hidden"
+          data-sitekey={turnstileSiteKey}
+          data-theme="auto"
+          data-size="flexible"
+        ></div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <Button
+            type="submit"
+            class={clsx(
+              "text-base",
+              props.variant === "footer" ? "h-9 w-max" : "h-11 sm:h-10",
+            )}
+          >
+            Abonează-mă
+          </Button>
+          <span class="text-muted-foreground hidden text-xs" data-status aria-live="polite"></span>
+        </div>
       </div>
     </form>
-    <p
+
+    <div
       class={clsx(
         "hidden",
         props.variant === "footer" ? "text-sm" : "text-lg font-medium",
       )}
       data-success
     >
-      You're subscribed — thanks for signing up!
-    </p>
+      Verifică inbox-ul pentru linkul de confirmare. Abonarea devine activă numai după confirmare.
+    </div>
   </div>
-  <iframe name={iframeName} hidden></iframe>
 </newsletter-form>
 
 <script>
@@ -83,27 +93,48 @@ const PROBO_NEWSLETTER_LIST_UUID = "d1e033d7-270d-4cf0-af1e-3782f4d49b49";
 
   class NewsletterForm extends HTMLElement {
     connectedCallback() {
-      const form = this.querySelector("form");
-      const success = this.querySelector("[data-success]");
-      const iframe = this.querySelector("iframe");
-      if (!form || !success || !iframe) return;
+      const form = this.querySelector("form") as HTMLFormElement | null;
+      const success = this.querySelector<HTMLElement>("[data-success]");
+      const status = this.querySelector<HTMLElement>("[data-status]");
+      const button = form?.querySelector("button") as HTMLButtonElement | null;
+      if (!form || !success || !status || !button) return;
 
-      const button = form.querySelector("button") as HTMLButtonElement;
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = "Se trimite...";
+        status.classList.add("hidden");
+        status.textContent = "";
 
-      form.addEventListener("submit", () => {
-        if (button) {
-          button.disabled = true;
-          button.textContent = "Subscribing...";
+        try {
+          const response = await fetch("/api/newsletter/subscribe", {
+            method: "POST",
+            body: new FormData(form),
+          });
+          const payload = (await response.json()) as {
+            success?: boolean;
+            error?: string;
+            alreadySubscribed?: boolean;
+          };
+
+          if (!response.ok || !payload.success) {
+            status.textContent = payload.error || "Abonarea nu a putut fi procesată.";
+            status.classList.remove("hidden");
+            return;
+          }
+
+          form.hidden = true;
+          success.classList.remove("hidden");
+          if (payload.alreadySubscribed) {
+            success.textContent = "Adresa este deja abonată la newsletter-ul ZebraByte.";
+          }
+        } catch {
+          status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+          status.classList.remove("hidden");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Abonează-mă";
         }
-
-        iframe.addEventListener(
-          "load",
-          () => {
-            form.hidden = true;
-            success.classList.remove("hidden");
-          },
-          { once: true },
-        );
       });
     }
   }
