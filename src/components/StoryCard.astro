@@ -15,6 +15,7 @@ interface Props {
     data: StoryData;
   };
 }
+
 const { story, size = "default" } = Astro.props;
 const images = dynamicImages(
   import.meta.glob<{
@@ -61,8 +62,11 @@ const card = tv({
     size: "default",
   },
 });
+
 const isDark = size === "home";
-const framework = frameworks.find((f) => f.label === story.data.framework);
+const framework = story.data.framework
+  ? frameworks.find((f) => f.label === story.data.framework)
+  : undefined;
 const classNames = card(Astro.props);
 const imageSizes = (function (): [[number, number], [number, number]] {
   switch (Astro.props.size) {
@@ -83,6 +87,7 @@ const imageSizes = (function (): [[number, number], [number, number]] {
       ];
   }
 })();
+
 const badge = isDark
   ? (framework?.badgeDark ?? framework?.badge)
   : framework?.badge;
@@ -93,7 +98,7 @@ const url =
     ? story.id.replace("/", "/stories/")
     : `stories/${story.id}`);
 
-const heroLogo = images(story.data.logo);
+const heroLogo = story.data.logo ? images(story.data.logo) : null;
 const logoFilter =
   "[filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.28))_drop-shadow(0_16px_36px_rgba(0,0,0,0.2))]";
 const lh = story.data.logoHeight ?? 23;
@@ -109,7 +114,6 @@ const floatingHeroLogoImg = `block w-auto max-w-[min(100%,18rem)] ${logoSizeClas
 
 const imageGradientOverlay =
   "pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(0,0,0,0.25)] to-transparent";
-
 const heroLogoPosition =
   story.data.logoPosition === "top-left"
     ? "absolute top-4 left-4 z-10 max-w-[calc(100%-2rem)] sm:top-5 sm:left-5 sm:max-w-[calc(100%-2.5rem)]"
@@ -129,6 +133,11 @@ const mediaRadius =
     : size === "home"
       ? "rounded-2xl"
       : "rounded-xl";
+
+const fallbackMediaClass = clsx(
+  classNames.image(),
+  "relative overflow-hidden bg-[#dfe7d7]",
+);
 ---
 
 <a href={url} class={classNames.base()}>
@@ -161,7 +170,7 @@ const mediaRadius =
             </div>
           </div>
         </story-trailer-video>
-      ) : (
+      ) : story.data.image ? (
         <ResponsiveImage
           src={images(story.data.previewImage ?? story.data.image)}
           mobileSrc={images(story.data.image)}
@@ -170,18 +179,31 @@ const mediaRadius =
           sm={imageSizes[1]}
           alt={story.data.title}
         />
+      ) : (
+        <div class={fallbackMediaClass} aria-hidden="true">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_24%_28%,rgba(20,30,18,0.18),transparent_32%),radial-gradient(circle_at_78%_72%,rgba(20,30,18,0.12),transparent_34%)]" />
+          <div class="absolute inset-x-5 bottom-5 z-[2] sm:inset-x-8 sm:bottom-8">
+            <span class="text-[#141e12] text-xs font-medium uppercase tracking-[0.14em]">
+              ZebraByte Case Study
+            </span>
+          </div>
+        </div>
       )
     }
-    <div class:list={[imageGradientOverlay, mediaRadius]} aria-hidden="true">
-    </div>
-    <div class={heroLogoPosition}>
-      <Image
-        src={heroLogo}
-        alt={`${story.data.company?.name || story.data.title} logo`}
-        class={floatingHeroLogoImg}
-      />
-    </div>
+    <div class:list={[imageGradientOverlay, mediaRadius]} aria-hidden="true" />
+    {
+      heroLogo && (
+        <div class={heroLogoPosition}>
+          <Image
+            src={heroLogo}
+            alt={`${story.data.company?.name || story.data.title} logo`}
+            class={floatingHeroLogoImg}
+          />
+        </div>
+      )
+    }
   </div>
+
   {
     size === "default" ? (
       <div class={classNames.body()}>
@@ -266,9 +288,7 @@ const mediaRadius =
     connectedCallback() {
       this.video = this.querySelector("video");
       this.card = this.closest("a");
-      if (!this.video || !this.card) {
-        return;
-      }
+      if (!this.video || !this.card) return;
 
       this.card.addEventListener("pointerenter", this.onEnter);
       this.card.addEventListener("pointerleave", this.onLeave);
@@ -280,27 +300,18 @@ const mediaRadius =
     }
 
     private setPlaying(playing: boolean) {
-      if (playing) {
-        this.setAttribute("data-playing", "");
-      } else {
-        this.removeAttribute("data-playing");
-      }
+      if (playing) this.setAttribute("data-playing", "");
+      else this.removeAttribute("data-playing");
     }
 
-    private onPlaying = () => {
-      this.setPlaying(true);
-    };
+    private onPlaying = () => this.setPlaying(true);
 
     private onEnter = () => {
       const video = this.video;
-      if (!video || !this.canHover()) {
-        return;
-      }
+      if (!video || !this.canHover()) return;
 
       const src = video.dataset.src;
-      if (src && video.getAttribute("src") !== src) {
-        video.src = src;
-      }
+      if (src && video.getAttribute("src") !== src) video.src = src;
 
       void video.play().catch(() => {
         // Autoplay can be blocked; poster still shows.
@@ -309,10 +320,7 @@ const mediaRadius =
 
     private onLeave = () => {
       const video = this.video;
-      if (!video) {
-        return;
-      }
-
+      if (!video) return;
       video.pause();
       this.setPlaying(false);
     };
