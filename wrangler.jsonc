@@ -18,11 +18,6 @@
       "id": "a3474e304aeb47168fb65edfaad5ead1"
     }
   ],
-  "send_email": [
-    {
-      "name": "EMAIL"
-    }
-  ],
   "vars": {
     "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAABBpDfopxKwUIKF_",
     "CONTACT_TO_EMAIL": "info@zebrabyte.ro",
