@@ -1,5 +1,6 @@
 import app from "./index";
 import { isEnglishPath, stripEnglishPrefix } from "./i18n";
+import { localizeDateMarkup } from "./i18n-dates";
 import {
   localizePlainText,
   normalizeRomanianMarkup,
@@ -62,6 +63,8 @@ async function localizeResponse(
   } else {
     localized = await localizePlainText(source, locale, env);
   }
+
+  localized = localizeDateMarkup(localized, locale);
 
   const headers = new Headers(response.headers);
   headers.set("Content-Language", locale);
