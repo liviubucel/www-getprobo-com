@@ -1,0 +1,45 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import Logos from "../components/block/Logos.astro";
+import Testimonials from "../components/block/Testimonials.astro";
+import WallCard from "../components/WallCard.astro";
+
+const posts = (await getCollection("wall"))
+  .filter((p) => import.meta.env.DEV || !p.data.draft)
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    const ao = a.data.order ?? Number.POSITIVE_INFINITY;
+    const bo = b.data.order ?? Number.POSITIVE_INFINITY;
+    if (ao !== bo) return ao - bo;
+    return (b.data.followers ?? 0) - (a.data.followers ?? 0);
+  });
+---
+
+<Layout
+  title="Open-source customer archive"
+  description="Preserved Probo customer wall, logos and testimonials from the upstream platform."
+  noIndex
+>
+  <main class="py-16 sm:py-24">
+    <section class="container mb-12 text-center">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Open-source heritage · noindex</p>
+      <h1 class="text-h2 mb-4 font-medium">Probo customer archive</h1>
+      <p class="text-muted-foreground mx-auto max-w-3xl text-lg">
+        Aceste logo-uri, postări și testimoniale sunt păstrate din proiectul upstream Probo. Nu sunt prezentate drept clienți ZebraByte.
+      </p>
+    </section>
+
+    <section class="pb-12"><Logos /></section>
+
+    <section class="container pb-16 sm:pb-24">
+      {posts.length > 0 && (
+        <div class="gap-5 sm:columns-2 lg:columns-3">
+          {posts.map((post) => <WallCard post={post} />)}
+        </div>
+      )}
+    </section>
+
+    <Testimonials />
+  </main>
+</Layout>
