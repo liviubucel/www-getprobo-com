@@ -3,8 +3,8 @@
 
   type PublicStatus = "operational" | "degraded" | "outage" | "no_data" | "unknown";
 
-  const STATUS_API = "https://status-page.zebrabyte-uk.workers.dev/api/status";
-  const STATUS_PAGE = "https://status-page.zebrabyte-uk.workers.dev/";
+  const STATUS_API = "https://status.zebrabyte.ro/api/status";
+  const STATUS_PAGE = "https://status.zebrabyte.ro/";
 
   let status = $state<PublicStatus>("unknown");
 
