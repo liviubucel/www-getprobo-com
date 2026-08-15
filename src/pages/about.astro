@@ -1,109 +1,77 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import AboutImg from "../assets/about.png";
-import KeyFigures from "../components/block/KeyFigures.astro";
-import Team from "../components/block/Team.astro";
-import Gallery from "../components/block/Gallery.astro";
-import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
+import ZebraByteLogo from "../components/ZebraByteLogo.astro";
 ---
 
 <Layout
-  title="Despre ZebraByte & Probo"
-  description="ZebraByte extinde experiența open-source Probo cu securitate cibernetică, privacy, compliance, accessibility și infrastructură securizată, păstrând integral istoria vizuală upstream."
+  title="Despre ZebraByte"
+  description="ZebraByte combină managed compliance, cyber security și infrastructură security-first într-un singur program pentru organizații care vor securitate măsurabilă și audit readiness continuă."
 >
   <main>
-    <section class="container my-10 sm:mt-20 sm:mb-30">
-      <div class="mb-8 rounded-xl border bg-active p-5 sm:p-6">
-        <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.14em]">Upstream Probo · preserved intact</p>
-        <p class="text-sm leading-relaxed">
-          Secțiunea originală About de mai jos este păstrată cu fotografia, titlul, subtitlul și misiunea Probo. ZebraByte este adăugat separat după ea, nu în locul ei.
+    <section class="container py-16 sm:py-28">
+      <div class="max-w-4xl">
+        <div class="mb-8"><ZebraByteLogo class="scale-125 origin-left" /></div>
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZEBRABYTE LIMITED</p>
+        <h1 class="text-h2 sm:text-h1 mb-6 font-medium text-balance">Security și compliance trebuie să funcționeze împreună.</h1>
+        <p class="text-muted-foreground max-w-3xl text-xl leading-relaxed">
+          ZebraByte este o companie security-first. Construim și operăm programe de managed compliance,
+          cyber security și infrastructură securizată pentru organizații care vor să reducă riscul real,
+          nu doar să completeze checklist-uri.
         </p>
       </div>
-
-      <h1 class="text-h2 animate-slide-in mb-3 font-medium">About</h1>
-      <p
-        class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 sm:mb-12"
-      >
-        The people and vision powering Probo.
-      </p>
-      <ResponsiveImage
-        src={AboutImg}
-        class="animate-slide-in animation-delay-200 mb-10 aspect-square rounded-lg object-cover sm:mb-30 sm:aspect-1080/606"
-        mobile={[640, 640]}
-        sm={[1080, 607]}
-        alt="The Probo team"
-        fetchpriority="high"
-      />
-      <h2
-        class="text-muted-foreground animate-slide-in animation-delay-300 mb-1"
-      >
-        Mission
-      </h2>
-      <p class="text-quote animate-slide-in animation-delay-400">
-        We're transforming compliance from a complex burden into an intuitive
-        journey. Our platform makes compliance straightforward and
-        cost-effective, empowering businesses of all sizes to meet regulatory
-        requirements with confidence.
-      </p>
     </section>
 
-    <section class="container pb-10 sm:pb-20">
-      <div class="grid gap-8 rounded-2xl border p-6 sm:grid-cols-[0.75fr_1.25fr] sm:p-10">
+    <section class="bg-active py-12 sm:py-20">
+      <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
-          <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
-          <h2 class="text-h3 font-medium">Extindem experiența, nu o înlocuim.</h2>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Misiune</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">Un singur program, de la control la implementare.</h2>
         </div>
         <div class="space-y-5 text-lg leading-relaxed">
           <p>
-            ZebraByte adaugă peste această bază securitate cibernetică, privacy,
-            NIS2 și ISO 27001 readiness, accesibilitate digitală, secure managed
-            hosting și servicii operaționale de securitate.
+            Platforma de compliance gestionează riscuri, controale, evidence, politici și audit readiness.
+            Echipa de cyber security poate implementa și verifica măsurile tehnice care susțin acele controale:
+            hardening, website și email security, vulnerability management, incident response și secure managed hosting.
           </p>
           <p class="text-muted-foreground">
-            Scopul este ca documentația, controalele și dovezile din platformă să
-            rămână conectate la infrastructura și riscul real al organizației, fără
-            să pierdem componentele, imaginile, materialele și istoricul proiectului
-            Probo din care pornește această experiență.
+            Astfel, compliance-ul nu rămâne o colecție de documente, iar security nu funcționează fără governance și ownership.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Cum lucrăm</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Platformă, expert dedicat și engineering.</h2>
+        <p class="text-muted-foreground text-lg">
+          Nu vindem un catalog generic de servicii IT. Ne concentrăm pe servicii care reduc riscul, susțin controalele și mențin organizația pregătită pentru audit și incidente.
+        </p>
+      </div>
+
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2 lg:grid-cols-3">
+        {[
+          ["Managed Compliance", "Un expert coordonează programul end-to-end, iar platforma automatizează evidence, approvals și follow-up."],
+          ["Cyber Security", "Assessment, hardening, application security, email security, vulnerability management și incident readiness."],
+          ["Secure Infrastructure", "Hosting administrat security-first, cu controale tehnice, backup, monitoring și change management."],
+          ["Open-source control", "Platforma păstrează opțiuni de self-hosting, integrări și acces la cod pentru a reduce vendor lock-in-ul."],
+          ["Evidence over promises", "Controalele trebuie susținute de dovezi verificabile, ownership și remediere urmărită."],
+          ["Direct responsibility", "Scope-ul are owner clar și este urmărit până la rezultat, fără fragmentare între furnizori."],
+        ].map(([title, description]) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h3 class="mb-3 text-xl font-medium">{title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{description}</p>
+          </article>
+        ))}
       </div>
     </section>
 
     <section class="container pb-16 sm:pb-24">
-      <div class="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Povestea ZebraByte</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">De la hosting la security-first operations.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Website-ul ZebraByte anterior documentează evoluția brandului din VREAUHOST către ZebraByte și mutarea accentului de la simpla găzduire web către securitate cibernetică, infrastructură administrată și protecția organizațiilor care depind de servicii digitale.
-          </p>
-          <p class="text-muted-foreground mt-5 text-lg leading-relaxed">
-            ZebraByte operează din Regatul Unit și deservește și piața din România. În noul website păstrăm această istorie, dar organizăm oferta în jurul riscului, securității, privacy și compliance, nu în jurul unui catalog generic de servicii IT.
-          </p>
-        </div>
-
-        <div class="grid gap-3 sm:grid-cols-2">
-          {[
-            ["Security before convenience", "Deciziile de infrastructură și produs sunt evaluate în primul rând prin impactul asupra securității și datelor."],
-            ["Long-term ownership", "Preferăm relații în care cunoaștem infrastructura și putem menține controalele, nu intervenții izolate fără context."],
-            ["Documented compliance", "Privacy și compliance trebuie susținute de documente, evidence și controale verificabile, nu doar de promisiuni comerciale."],
-            ["Transparent communication", "Schimbările, incidentele și riscurile trebuie comunicate clar, cu ownership și pași de remediere expliciți."],
-            ["Direct responsibility", "Un scope tehnic trebuie să aibă un owner clar, nu să se piardă între furnizori, reselleri și ticket queues."],
-            ["Open-source transparency", "Probo rămâne atribuit vizibil ca upstream; nu ascundem originea componentelor open-source pe care le păstrăm."],
-          ].map(([title, description]) => (
-            <article class="rounded-xl border p-5 sm:p-6">
-              <h3 class="mb-2 font-medium">{title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{description}</p>
-            </article>
-          ))}
-        </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <a href="/managed-compliance" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Compliance</p><h2 class="mb-2 text-xl font-medium">Managed Compliance</h2><p class="text-muted-foreground">Program gestionat end-to-end și continuu audit-ready.</p></a>
+        <a href="/cyber-security" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Security</p><h2 class="mb-2 text-xl font-medium">Cyber Security</h2><p class="text-muted-foreground">Controale tehnice și security operations.</p></a>
+        <a href="/secure-hosting" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Infrastructure</p><h2 class="mb-2 text-xl font-medium">Secure Managed Hosting</h2><p class="text-muted-foreground">Infrastructură administrată doar în model security-first.</p></a>
       </div>
     </section>
-
-    <KeyFigures />
-
-    <Team />
-
-    <Gallery />
   </main>
 </Layout>
