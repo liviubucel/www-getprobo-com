@@ -2,83 +2,30 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 
-const positions = await getCollection("jobs", ({ data }) => !data.draft);
-const zebraBytePositions = positions.filter((position) =>
-  position.id.startsWith("zebrabyte-"),
+const allPositions = await getCollection("jobs");
+const zebraBytePositions = allPositions.filter(
+  (position) => !position.data.draft && position.id.startsWith("zebrabyte-"),
+);
+const roleLibrary = allPositions.filter(
+  (position) => !position.id.startsWith("zebrabyte-"),
 );
 ---
 
 <Layout
-  title="Careers - Join Probo"
-  description="Join Probo and help make compliance simple for every company. See our open positions and what it's like to work with the team."
+  title="Careers - Join ZebraByte"
+  description="Explore open ZebraByte positions and role profiles across compliance, security, engineering and operations."
 >
   <main>
     <section class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
       <h1 class="text-h2 animate-slide-in mb-3 font-medium">Careers</h1>
-      <p
-        class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 max-w-2xl sm:mb-12"
-      >
-        We're building the future of compliance. Join our team and help make
-        compliance simple and accessible for every company.
+      <p class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 max-w-2xl sm:mb-16">
+        Construim produse și servicii la intersecția dintre compliance, cyber security,
+        engineering și operations. Aici publicăm rolurile deschise și profilurile de rol
+        pe care vrem să le păstrăm în talent network.
       </p>
 
-      {
-        positions.length > 0 ? (
-          <div class="animate-slide-in animation-delay-200 flex flex-col gap-4">
-            <h2 class="text-muted-foreground mb-1">Open positions</h2>
-            {positions.map((position) => (
-              <a
-                href={`/careers/${position.id}`}
-                class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
-              >
-                <div>
-                  <h3 class="font-medium">{position.data.title}</h3>
-                  <p class="text-muted-foreground text-sm">
-                    {position.data.location} · {position.data.type}
-                  </p>
-                </div>
-                <span class="text-muted-foreground">→</span>
-              </a>
-            ))}
-          </div>
-        ) : (
-          <div class="animate-slide-in animation-delay-200 border-border-low rounded-lg border p-10 text-center">
-            <p class="text-muted-foreground mb-4">
-              There are no open positions at the moment. However, we're always
-              looking for talented people.
-            </p>
-            <p>
-              Send us your resume at{" "}
-              <a href="mailto:careers@probo.com" class="text-primary underline">
-                careers@probo.com
-              </a>
-            </p>
-          </div>
-        )
-      }
-
-      <div
-        class="animate-slide-in animation-delay-300 border-border-low mt-10 rounded-lg border p-10 text-center"
-      >
-        <p class="text-muted-foreground mb-4">
-          Don't see the right role? We're always looking for talented people.
-        </p>
-        <p>
-          Send us your resume at{" "}
-          <a href="mailto:careers@probo.com" class="text-primary underline">
-            careers@probo.com
-          </a>
-        </p>
-      </div>
-    </section>
-
-    <section class="border-t py-16 sm:py-24">
-      <div class="container max-w-[720px]">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte extension</p>
-        <h2 class="text-h3 mb-4 font-medium">Cariere ZebraByte</h2>
-        <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
-          Pagina Careers Probo de mai sus este păstrată integral. ZebraByte își publică separat rolurile pentru security engineering, GRC/privacy, platform engineering și infrastructură.
-        </p>
+      <section class="animate-slide-in animation-delay-200 mb-14">
+        <h2 class="text-h4 mb-4 font-medium">Open positions</h2>
         {
           zebraBytePositions.length > 0 ? (
             <div class="flex flex-col gap-4">
@@ -98,13 +45,49 @@ const zebraBytePositions = positions.filter((position) =>
               ))}
             </div>
           ) : (
-            <div class="rounded-lg border p-6">
-              <p class="text-muted-foreground mb-3">Nu există momentan un rol ZebraByte publicat.</p>
-              <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">contact@zebrabyte.ro</a>
+            <div class="border-border-low rounded-lg border p-8">
+              <p class="text-muted-foreground mb-3">
+                Nu avem momentan un rol ZebraByte confirmat ca deschis.
+              </p>
+              <p class="text-sm">
+                Poți trimite un profil sau CV la{" "}
+                <a href="mailto:contact@zebrabyte.ro?subject=Careers%20-%20Talent%20Network" class="text-primary underline underline-offset-4">
+                  contact@zebrabyte.ro
+                </a>.
+              </p>
             </div>
           )
         }
-      </div>
+      </section>
+
+      {
+        roleLibrary.length > 0 && (
+          <section class="animate-slide-in animation-delay-300">
+            <div class="mb-5">
+              <h2 class="text-h4 mb-2 font-medium">Role library</h2>
+              <p class="text-muted-foreground text-sm leading-relaxed">
+                Profiluri de rol păstrate în biblioteca Careers. Acestea descriu tipul de muncă și competențele relevante, dar nu reprezintă automat vacancy-uri ZebraByte deschise în acest moment.
+              </p>
+            </div>
+            <div class="flex flex-col gap-4">
+              {roleLibrary.map((position) => (
+                <a
+                  href={`/careers/${position.id}`}
+                  class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
+                >
+                  <div>
+                    <h3 class="font-medium">{position.data.title}</h3>
+                    <p class="text-muted-foreground text-sm">
+                      Role profile · {position.data.type}
+                    </p>
+                  </div>
+                  <span class="text-muted-foreground">→</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
     </section>
   </main>
 </Layout>
