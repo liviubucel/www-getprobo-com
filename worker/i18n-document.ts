@@ -1,6 +1,8 @@
 import { stripEnglishPrefix, toEnglishPath } from "./i18n";
 import type { TargetLocale } from "./i18n-ai";
 
+const PUBLIC_ORIGIN = "https://www.zebrabyte.ro";
+
 function escapeHtmlAttribute(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -12,8 +14,8 @@ function normalizePublicPath(pathname: string): string {
   return path || "/";
 }
 
-function absoluteUrl(origin: string, pathname: string): string {
-  const url = new URL(origin);
+function absoluteUrl(pathname: string): string {
+  const url = new URL(PUBLIC_ORIGIN);
   url.pathname = pathname;
   url.search = "";
   url.hash = "";
@@ -39,8 +41,8 @@ export function finalizeHtmlLocale(
 ): string {
   const rootPath = normalizePublicPath(requestUrl.pathname);
   const englishPath = toEnglishPath(rootPath);
-  const romanianCanonical = absoluteUrl(requestUrl.origin, rootPath);
-  const englishCanonical = absoluteUrl(requestUrl.origin, englishPath);
+  const romanianCanonical = absoluteUrl(rootPath);
+  const englishCanonical = absoluteUrl(englishPath);
   const currentCanonical = locale === "en" ? englishCanonical : romanianCanonical;
 
   let result = html;
