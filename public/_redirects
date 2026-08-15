@@ -5,6 +5,17 @@
 /compliance-guides/iso27001 /hub/iso27001 301
 /wall-of-trust /love-from-customer 301
 /blog/page/1 /blog 301
+
+# ZebraByte branded aliases for preserved comparison pages
+/hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
+/hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
+
+# ZebraByte public route for the preserved device-agent documentation
+/docs/product/probo-agent /docs/product/device-agent 301
+/docs/product/probo-agent/* /docs/product/device-agent/:splat 301
+/docs/product/device-agent /docs/product/probo-agent/overview 200
+/docs/product/device-agent/* /docs/product/probo-agent/:splat 200
+
 /fr / 301
 /fr/about /about 301
 /fr/blog /blog 301
@@ -38,9 +49,9 @@
 /docs/configuration /docs/deployment/configuration 301
 /docs/configuration/* /docs/deployment/configuration/:splat 301
 /docs/product/probo-agent/contributing /docs/developers/api/agent/contributing 301
-/docs/product/probo-agent/installation /docs/product/probo-agent/macos 301
-/docs/product/probo-agent/desktop-install /docs/product/probo-agent/macos 301
-/docs/product/probo-agent/server-install /docs/product/probo-agent/linux 301
+/docs/product/probo-agent/installation /docs/product/device-agent/macos 301
+/docs/product/probo-agent/desktop-install /docs/product/device-agent/macos 301
+/docs/product/probo-agent/server-install /docs/product/device-agent/linux 301
 /docs/product/access-review/infrastructure-security /docs/deployment/infrastructure-security 301
 /docs/product/access-review/clerk /docs/product/access-review/directory 301
 /docs/developers/api/mcp/tools/assets /docs/developers/api/mcp/tools/catalog/assets-and-data 301
