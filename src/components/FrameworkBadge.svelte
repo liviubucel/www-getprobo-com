@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { browserT } from "../lib/browser-i18n";
+
   const {
     name,
     class: className,
@@ -10,7 +12,7 @@
 <img
   src={`/frameworks/${assetName}.svg?v=3`}
   class={className}
-  alt={`${name} framework badge`}
+  alt={`${name} ${browserT("badge de conformitate", "framework badge")}`}
   width="64"
   height="64"
   loading={priority ? "eager" : "lazy"}
