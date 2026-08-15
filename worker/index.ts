@@ -2,15 +2,23 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const strictEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
 const phoneRegex = /^[+]?[\d\s().-]{6,20}$/;
 const ycVerifyRegex = /^https:\/\/www\.ycombinator\.com\/verify\/.+$/;
+const agentReleasesUrl =
+  "https://api.github.com/repos/getprobo/probo/releases?per_page=30";
+const agentTagPrefix = /^probo-agent\/v/;
 
 const validContactServices = new Set([
-  "Cyber Security",
+  "Managed Compliance",
+  "SOC 2",
+  "ISO/IEC 27001",
   "GDPR & Privacy",
   "NIS2 & Compliance",
-  "Secure Managed Hosting",
-  "Accesibilitate digitală",
+  "Cyber Security",
+  "Security Assessment",
+  "Website Security",
+  "Email Security",
   "Incident / urgență de securitate",
-  "Platformă open-source",
+  "Secure Managed Hosting",
+  "Accessibility",
   "Altceva",
 ]);
 
@@ -63,6 +71,33 @@ interface Env {
   WEBHOOK_AUTH_PASSWORD: string;
 }
 
+type GithubAgentAsset = {
+  name: string;
+  browser_download_url: string;
+  size: number;
+};
+
+type GithubAgentRelease = {
+  tag_name: string;
+  draft: boolean;
+  prerelease: boolean;
+  assets: GithubAgentAsset[];
+};
+
+type PublicAgentAsset = {
+  id: string;
+  os: "macos" | "linux" | "windows" | "freebsd";
+  arch: "x86_64" | "arm64" | "universal";
+  format: "pkg" | "tar.gz" | "zip";
+  size: number;
+  url: string;
+};
+
+type AgentReleaseSnapshot = {
+  version: string;
+  assets: Array<{ source: GithubAgentAsset; public: PublicAgentAsset }>;
+};
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -81,6 +116,14 @@ export default {
 
     if (url.pathname === "/api/newsletter/unsubscribe" && request.method === "GET") {
       return handleNewsletterUnsubscribe(request, env);
+    }
+
+    if (url.pathname === "/api/device-agent/latest" && request.method === "GET") {
+      return handleDeviceAgentLatest(url.origin);
+    }
+
+    if (url.pathname === "/api/device-agent/download" && request.method === "GET") {
+      return handleDeviceAgentDownload(request);
     }
 
     if (url.pathname === "/api/yc-deal" && request.method === "POST") {
@@ -137,6 +180,164 @@ export default {
     });
   },
 };
+
+async function handleDeviceAgentLatest(origin: string): Promise<Response> {
+  try {
+    const release = await fetchLatestAgentRelease(origin);
+    return new Response(
+      JSON.stringify({
+        version: release.version,
+        assets: release.assets.map((asset) => asset.public),
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "public, max-age=300, s-maxage=300",
+          "X-Content-Type-Options": "nosniff",
+        },
+      },
+    );
+  } catch (error) {
+    console.error("device agent release lookup failed:", error);
+    return jsonResponse(
+      { success: false, error: "Release information is temporarily unavailable." },
+      502,
+    );
+  }
+}
+
+async function handleDeviceAgentDownload(request: Request): Promise<Response> {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id") || "";
+  if (!/^\d{1,3}$/.test(id)) {
+    return jsonResponse({ success: false, error: "Invalid download." }, 400);
+  }
+
+  try {
+    const release = await fetchLatestAgentRelease(url.origin);
+    const asset = release.assets.find((entry) => entry.public.id === id);
+    if (!asset) {
+      return jsonResponse({ success: false, error: "Download not found." }, 404);
+    }
+
+    const upstream = await fetch(asset.source.browser_download_url, {
+      redirect: "follow",
+      headers: {
+        Accept: "application/octet-stream",
+        "User-Agent": "ZebraByte-Website",
+      },
+    });
+
+    if (!upstream.ok || !upstream.body) {
+      console.error("device agent download failed:", upstream.status);
+      return jsonResponse(
+        { success: false, error: "Download is temporarily unavailable." },
+        502,
+      );
+    }
+
+    const headers = new Headers();
+    headers.set(
+      "Content-Type",
+      upstream.headers.get("Content-Type") || "application/octet-stream",
+    );
+    const contentLength = upstream.headers.get("Content-Length");
+    if (contentLength) headers.set("Content-Length", contentLength);
+    headers.set(
+      "Content-Disposition",
+      `attachment; filename="${brandedAgentFilename(release.version, asset.public)}"`,
+    );
+    headers.set("Cache-Control", "public, max-age=3600");
+    headers.set("X-Content-Type-Options", "nosniff");
+
+    return new Response(upstream.body, { status: 200, headers });
+  } catch (error) {
+    console.error("device agent download proxy failed:", error);
+    return jsonResponse(
+      { success: false, error: "Download is temporarily unavailable." },
+      502,
+    );
+  }
+}
+
+async function fetchLatestAgentRelease(
+  origin: string,
+): Promise<AgentReleaseSnapshot> {
+  const response = await fetch(agentReleasesUrl, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      "User-Agent": "ZebraByte-Website",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`release lookup failed (${response.status})`);
+  }
+
+  const releases = (await response.json()) as GithubAgentRelease[];
+  const release = releases.find(
+    (item) =>
+      agentTagPrefix.test(item.tag_name) && !item.draft && !item.prerelease,
+  );
+  if (!release) throw new Error("no compatible device agent release found");
+
+  const version = release.tag_name.replace(agentTagPrefix, "");
+  const parsed = release.assets
+    .map((asset) => ({ asset, meta: parseAgentAsset(asset.name) }))
+    .filter(
+      (entry): entry is { asset: GithubAgentAsset; meta: Omit<PublicAgentAsset, "id" | "size" | "url"> } =>
+        entry.meta !== null,
+    );
+
+  return {
+    version,
+    assets: parsed.map(({ asset, meta }, index) => ({
+      source: asset,
+      public: {
+        ...meta,
+        id: String(index),
+        size: asset.size,
+        url: `${origin}/api/device-agent/download?id=${index}`,
+      },
+    })),
+  };
+}
+
+function parseAgentAsset(
+  name: string,
+): Omit<PublicAgentAsset, "id" | "size" | "url"> | null {
+  if (/^probo-agent_[^/]+_darwin\.pkg$/i.test(name)) {
+    return { os: "macos", arch: "universal", format: "pkg" };
+  }
+
+  const match = name.match(
+    /^probo-agent_(Darwin|Linux|Windows|Freebsd)_(x86_64|arm64)\.(tar\.gz|zip)$/,
+  );
+  if (!match) return null;
+
+  const [, sourceOs, sourceArch, format] = match;
+  const osMap = {
+    Darwin: "macos",
+    Linux: "linux",
+    Windows: "windows",
+    Freebsd: "freebsd",
+  } as const;
+
+  return {
+    os: osMap[sourceOs as keyof typeof osMap],
+    arch: sourceArch as "x86_64" | "arm64",
+    format: format as "tar.gz" | "zip",
+  };
+}
+
+function brandedAgentFilename(
+  version: string,
+  asset: PublicAgentAsset,
+): string {
+  const os = asset.os === "macos" ? "macOS" : asset.os;
+  const arch = asset.arch === "universal" ? "universal" : asset.arch;
+  return `zebrabyte-device-agent_${version}_${os}_${arch}.${asset.format}`;
+}
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
   try {
