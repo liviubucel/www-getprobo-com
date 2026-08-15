@@ -1,44 +1,38 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import Logos from "../components/block/Logos.astro";
 import StoryCard from "../components/StoryCard.astro";
 import { sortStoriesForListing } from "../lib/stories.ts";
 
-const stories = sortStoriesForListing(
-  (await getCollection("stories")).filter((story) =>
-    story.id.startsWith("zebrabyte-"),
-  ),
-);
+const stories = sortStoriesForListing(await getCollection("stories"));
 ---
 
 <Layout
-  title="Studii de caz"
-  description="Studii de caz ZebraByte despre securitate, compliance și infrastructură security-first."
+  title="Customer stories & case studies"
+  description="Case studies and real-world compliance stories available in the ZebraByte resource library."
 >
   <main class="my-10 sm:my-20">
     <div class="container">
       <h1 class="text-h2 sm:text-h1 mb-3 overflow-hidden text-center font-medium">
-        <span class="animate-perspective-in inline-block">Studii de</span>{" "}
-        <span class="animate-perspective-in animation-delay-100 inline-block">caz</span>
+        <span class="animate-perspective-in inline-block">Customer</span>{" "}
+        <span class="animate-perspective-in animation-delay-100 inline-block">Stories</span>
       </h1>
-      <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-10 max-w-180 text-center text-base sm:mb-14">
-        Situații documentate din activitatea ZebraByte, cu accent pe probleme, intervenții și rezultate verificabile.
+      <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto max-w-2xl text-center text-base">
+        Case studies, compliance journeys and practical examples from the platform library.
+      </p>
+      <p class="text-muted-foreground animate-perspective-in animation-delay-250 mx-auto mt-3 max-w-2xl text-center text-xs">
+        Organizations shown in the reference library are presented for the context of each case study and are not automatically represented as ZebraByte customers.
       </p>
     </div>
 
-    <section class="container">
-      {
-        stories.length > 0 ? (
-          <div class="animate-slide-in animation-delay-250 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
-            {stories.map((item) => <StoryCard story={item} />)}
-          </div>
-        ) : (
-          <div class="mx-auto max-w-2xl rounded-2xl border bg-active p-8 text-center sm:p-12">
-            <h2 class="text-h4 mb-3 font-medium">Mai multe studii de caz sunt în pregătire.</h2>
-            <p class="text-muted-foreground">Publicăm doar proiecte pe care le putem documenta corect și fără a expune informații confidențiale.</p>
-          </div>
-        )
-      }
-    </section>
+    <div class="animate-slide-in animation-delay-300 my-6">
+      <p class="text-muted-foreground mb-2 text-center text-xs font-medium uppercase tracking-[0.12em]">Organizations featured in the library</p>
+      <Logos constrained />
+    </div>
+
+    <div class="animate-slide-in animation-delay-250 container grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+      {stories.map((item) => <StoryCard story={item} />)}
+    </div>
   </main>
 </Layout>
