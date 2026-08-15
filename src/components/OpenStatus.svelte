@@ -33,6 +33,7 @@
 
   let label = $derived(dictionary[status].label);
   let color = $derived(dictionary[status].color);
+  let live = $derived(status === "operational" || status === "degraded" || status === "outage");
 
   onMount(() => {
     let stopped = false;
@@ -71,9 +72,17 @@
   target="_blank"
   aria-label={`ZebraByte service status: ${label}`}
 >
-  <span
-    class="relative inline-flex h-2 w-2 rounded-full"
-    style:background-color={color}
-  ></span>
+  <span class="relative inline-flex h-2.5 w-2.5 shrink-0 items-center justify-center" aria-hidden="true">
+    {#if live}
+      <span
+        class="absolute inline-flex h-full w-full rounded-full opacity-30 motion-safe:animate-ping"
+        style:background-color={color}
+      ></span>
+    {/if}
+    <span
+      class="relative inline-flex h-2 w-2 rounded-full"
+      style:background-color={color}
+    ></span>
+  </span>
   {label}
 </a>
