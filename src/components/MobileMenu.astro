@@ -1,5 +1,5 @@
 ---
-import { directMenuItems, menuGroups } from "../content/menu.ts";
+import { menuGroups } from "../content/menu.ts";
 import Icon from "./Icon.astro";
 import MenuIcon from "./MenuIcon.astro";
 
@@ -134,43 +134,6 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
           </details>
         ))
       }
-
-      <details data-mobile-section class="group/mobile">
-        <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
-          <span>Acces clienți</span>
-          <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
-            <Icon name="caret-down" size={17} />
-          </span>
-        </summary>
-
-        <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
-          {directMenuItems.map((item) => (
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
-            >
-              <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
-                <MenuIcon name={item.icon} />
-              </span>
-              <span class="min-w-0 flex-1 pt-0.5">
-                <span class="block text-[14px] leading-5 font-semibold">
-                  {item.label}
-                </span>
-                <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
-                  {item.description}
-                </span>
-              </span>
-              <Icon
-                name="caret-right"
-                size={16}
-                class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
-              />
-            </a>
-          ))}
-        </div>
-      </details>
     </div>
 
     <div class="mt-4 grid gap-2.5">
