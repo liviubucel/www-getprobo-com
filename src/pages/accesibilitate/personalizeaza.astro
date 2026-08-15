@@ -1,0 +1,284 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Personalizare Widget Accesibilitate Web"
+  description="Configurează poziția, culoarea, dimensiunea, offset-ul și setările de voce ale widgetului ZebraByte și generează codul de instalare."
+>
+  <main class="container max-w-7xl py-12 sm:py-20">
+    <header class="mb-12 text-center">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-5 w-max rounded-lg border px-2 py-1 text-xs font-medium">Personalizare Widget</div>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Configurează widgetul și exportă codul</h1>
+      <p class="text-muted-foreground mx-auto max-w-2xl text-lg leading-relaxed">
+        Am păstrat configuratorul ZebraByte: poziție, offset, dimensiune, culoare, icon și setări Text-to-Speech. Modificările actualizează instant previzualizarea și codul generat.
+      </p>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-12 lg:items-start">
+      <section class="rounded-2xl border p-6 lg:col-span-5 sm:p-8" aria-labelledby="config-title">
+        <h2 id="config-title" class="mb-2 text-2xl font-medium">Setări</h2>
+        <p class="text-muted-foreground mb-7 text-sm">Alege valorile potrivite pentru site-ul tău.</p>
+
+        <form id="config-form" class="space-y-7">
+          <fieldset class="space-y-5">
+            <legend class="mb-3 text-sm font-medium">Aspect</legend>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <label class="space-y-2 text-sm">
+                <span class="text-muted-foreground block">Poziție</span>
+                <select id="position" class="w-full rounded-lg border bg-level-0 px-3 py-2.5">
+                  <option value="bottom-right">Dreapta jos</option>
+                  <option value="bottom-left">Stânga jos</option>
+                  <option value="top-right">Dreapta sus</option>
+                  <option value="top-left">Stânga sus</option>
+                </select>
+              </label>
+
+              <label class="space-y-2 text-sm">
+                <span class="text-muted-foreground block">Culoare accent</span>
+                <div class="flex items-center gap-3">
+                  <input id="accentColor" type="color" value="#1976d2" class="size-10 cursor-pointer rounded-lg border bg-transparent" />
+                  <span id="color-label" class="font-mono text-xs">#1976D2</span>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <span class="text-muted-foreground mb-2 block text-sm">Icon</span>
+              <div class="grid grid-cols-4 gap-2">
+                <label class="cursor-pointer">
+                  <input class="peer sr-only" type="radio" name="icon" value="default" checked />
+                  <span class="peer-checked:bg-active grid h-12 place-items-center rounded-xl border text-lg">◉</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input class="peer sr-only" type="radio" name="icon" value="icon-2" />
+                  <span class="peer-checked:bg-active grid h-12 place-items-center rounded-xl border text-lg">人</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input class="peer sr-only" type="radio" name="icon" value="icon-3" />
+                  <span class="peer-checked:bg-active grid h-12 place-items-center rounded-xl border text-lg">♿</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input class="peer sr-only" type="radio" name="icon" value="icon-4" />
+                  <span class="peer-checked:bg-active grid h-12 place-items-center rounded-xl border text-lg">◌</span>
+                </label>
+              </div>
+            </div>
+
+            <label class="block space-y-2 text-sm">
+              <span class="flex justify-between"><span class="text-muted-foreground">Offset X</span><output id="offsetX-value">24px</output></span>
+              <input id="offsetX" type="range" min="0" max="120" step="1" value="24" class="w-full" />
+            </label>
+            <label class="block space-y-2 text-sm">
+              <span class="flex justify-between"><span class="text-muted-foreground">Offset Y</span><output id="offsetY-value">24px</output></span>
+              <input id="offsetY" type="range" min="0" max="120" step="1" value="24" class="w-full" />
+            </label>
+            <label class="block space-y-2 text-sm">
+              <span class="flex justify-between"><span class="text-muted-foreground">Dimensiune buton</span><output id="size-value">52px</output></span>
+              <input id="size" type="range" min="24" max="96" step="1" value="52" class="w-full" />
+            </label>
+          </fieldset>
+
+          <fieldset class="space-y-5 border-t pt-6">
+            <legend class="mb-3 text-sm font-medium">Text-to-Speech</legend>
+            <label class="space-y-2 text-sm">
+              <span class="text-muted-foreground block">Voce</span>
+              <select id="voice" class="w-full rounded-lg border bg-level-0 px-3 py-2.5">
+                <option value="">Vocea implicită a browserului</option>
+              </select>
+            </label>
+            <label class="block space-y-2 text-sm">
+              <span class="flex justify-between"><span class="text-muted-foreground">Viteză</span><output id="rate-value">1.0</output></span>
+              <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1" class="w-full" />
+            </label>
+            <label class="block space-y-2 text-sm">
+              <span class="flex justify-between"><span class="text-muted-foreground">Tonalitate</span><output id="pitch-value">1.0</output></span>
+              <input id="pitch" type="range" min="0" max="2" step="0.1" value="1" class="w-full" />
+            </label>
+            <button id="test-voice" type="button" class="w-full rounded-lg border px-4 py-2.5 text-sm font-medium hover:bg-active">Redă exemplu voce</button>
+            <p id="voice-status" class="text-muted-foreground min-h-5 text-center text-xs" aria-live="polite"></p>
+          </fieldset>
+
+          <div class="border-t pt-5">
+            <button id="reset-defaults" type="button" class="text-muted-foreground text-sm underline underline-offset-4">Resetare la valori implicite</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="space-y-8 lg:col-span-7">
+        <div class="rounded-2xl border p-6 sm:p-8">
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-muted-foreground mb-1 text-xs uppercase tracking-[0.12em]">Live preview</p>
+              <h2 class="text-2xl font-medium">Previzualizare izolată</h2>
+            </div>
+            <span class="rounded-full bg-active px-3 py-1 text-xs">Interactive</span>
+          </div>
+
+          <div id="preview" class="relative min-h-[420px] overflow-hidden rounded-xl border bg-active p-8">
+            <div class="mx-auto max-w-md space-y-4 rounded-xl bg-level-0 p-6 shadow-sm">
+              <div class="h-4 w-2/3 rounded bg-border"></div>
+              <div class="h-3 w-full rounded bg-border-low"></div>
+              <div class="h-3 w-5/6 rounded bg-border-low"></div>
+              <div class="h-24 rounded-lg bg-active"></div>
+              <div class="h-3 w-3/4 rounded bg-border-low"></div>
+            </div>
+            <button id="preview-button" type="button" aria-label="Previzualizare buton accesibilitate" class="absolute grid place-items-center rounded-full text-white shadow-lg transition-all">♿</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border p-6 sm:p-8">
+          <p class="text-muted-foreground mb-1 text-xs uppercase tracking-[0.12em]">Generated code</p>
+          <h2 class="mb-3 text-2xl font-medium">Cod de instalare</h2>
+          <p class="text-muted-foreground mb-5 text-sm">Copiază fragmentul rezultat și inserează-l înainte de <code>&lt;/body&gt;</code>.</p>
+          <pre class="overflow-x-auto rounded-xl bg-[#141e12] p-5 text-xs text-white"><code id="generated-code"></code></pre>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button id="copy-code" type="button" class="bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium">Copiază codul</button>
+            <a href="https://accesibilitate.zebrabyte.ro/dist/zbt.js" download="zbt.js" class="rounded-lg border px-4 py-2.5 text-sm font-medium">Descarcă zbt.js</a>
+          </div>
+          <p id="copy-status" class="text-muted-foreground mt-3 min-h-5 text-xs" aria-live="polite"></p>
+        </div>
+
+        <div class="rounded-2xl border bg-active p-6 text-sm leading-relaxed">
+          Widgetul este un strat complementar. Configurarea lui nu înlocuiește remedierea semanticii HTML, contrastului, focusului, formularelor sau altor probleme WCAG identificate prin audit.
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const defaults = {
+    position: "bottom-right",
+    accentColor: "#1976d2",
+    offsetX: "24",
+    offsetY: "24",
+    size: "52",
+    icon: "default",
+    voice: "",
+    rate: "1",
+    pitch: "1",
+  };
+
+  function initConfigurator() {
+    const form = document.querySelector<HTMLFormElement>("#config-form");
+    if (!form || form.dataset.bound === "true") return;
+    form.dataset.bound = "true";
+
+    const position = document.querySelector<HTMLSelectElement>("#position")!;
+    const color = document.querySelector<HTMLInputElement>("#accentColor")!;
+    const offsetX = document.querySelector<HTMLInputElement>("#offsetX")!;
+    const offsetY = document.querySelector<HTMLInputElement>("#offsetY")!;
+    const size = document.querySelector<HTMLInputElement>("#size")!;
+    const voiceSelect = document.querySelector<HTMLSelectElement>("#voice")!;
+    const rate = document.querySelector<HTMLInputElement>("#rate")!;
+    const pitch = document.querySelector<HTMLInputElement>("#pitch")!;
+    const previewButton = document.querySelector<HTMLButtonElement>("#preview-button")!;
+    const generated = document.querySelector<HTMLElement>("#generated-code")!;
+
+    const selectedIcon = () =>
+      document.querySelector<HTMLInputElement>('input[name="icon"]:checked')?.value ?? "default";
+
+    const iconGlyph = (value: string) => ({ default: "◉", "icon-2": "人", "icon-3": "♿", "icon-4": "◌" }[value] ?? "♿");
+
+    const setCorner = () => {
+      previewButton.style.top = "auto";
+      previewButton.style.right = "auto";
+      previewButton.style.bottom = "auto";
+      previewButton.style.left = "auto";
+      const x = `${offsetX.value}px`;
+      const y = `${offsetY.value}px`;
+      if (position.value.includes("bottom")) previewButton.style.bottom = y;
+      else previewButton.style.top = y;
+      if (position.value.includes("right")) previewButton.style.right = x;
+      else previewButton.style.left = x;
+    };
+
+    const update = () => {
+      document.querySelector("#color-label")!.textContent = color.value.toUpperCase();
+      document.querySelector("#offsetX-value")!.textContent = `${offsetX.value}px`;
+      document.querySelector("#offsetY-value")!.textContent = `${offsetY.value}px`;
+      document.querySelector("#size-value")!.textContent = `${size.value}px`;
+      document.querySelector("#rate-value")!.textContent = Number(rate.value).toFixed(1);
+      document.querySelector("#pitch-value")!.textContent = Number(pitch.value).toFixed(1);
+
+      previewButton.style.backgroundColor = color.value;
+      previewButton.style.width = `${size.value}px`;
+      previewButton.style.height = `${size.value}px`;
+      previewButton.textContent = iconGlyph(selectedIcon());
+      setCorner();
+
+      const attrs = [
+        `data-acc-position="${position.value}"`,
+        `data-acc-offset-x="${offsetX.value}"`,
+        `data-acc-offset-y="${offsetY.value}"`,
+        `data-acc-size="${size.value}"`,
+        `data-acc-color="${color.value}"`,
+        `data-acc-icon="${selectedIcon()}"`,
+        `data-acc-tts-rate="${rate.value}"`,
+        `data-acc-tts-pitch="${pitch.value}"`,
+      ];
+      if (voiceSelect.value) attrs.push(`data-acc-tts-voice="${voiceSelect.value.replaceAll('"', '&quot;')}"`);
+      generated.textContent = `<script src="https://accesibilitate.zebrabyte.ro/dist/zbt.js" ${attrs.join(" ")} defer><\/script>`;
+    };
+
+    const fillVoices = () => {
+      const previous = voiceSelect.value;
+      voiceSelect.innerHTML = '<option value="">Vocea implicită a browserului</option>';
+      window.speechSynthesis?.getVoices().forEach((voice) => {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+      });
+      voiceSelect.value = previous;
+    };
+    fillVoices();
+    if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = fillVoices;
+
+    form.addEventListener("input", update);
+    form.addEventListener("change", update);
+
+    document.querySelector<HTMLButtonElement>("#test-voice")?.addEventListener("click", () => {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance("Acesta este un exemplu pentru widgetul de accesibilitate ZebraByte.");
+      utterance.rate = Number(rate.value);
+      utterance.pitch = Number(pitch.value);
+      if (voiceSelect.value) {
+        const voice = window.speechSynthesis.getVoices().find((item) => item.name === voiceSelect.value);
+        if (voice) utterance.voice = voice;
+      }
+      document.querySelector("#voice-status")!.textContent = "Redare exemplu...";
+      utterance.onend = () => (document.querySelector("#voice-status")!.textContent = "");
+      window.speechSynthesis.speak(utterance);
+    });
+
+    document.querySelector<HTMLButtonElement>("#copy-code")?.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(generated.textContent ?? "");
+      const status = document.querySelector("#copy-status")!;
+      status.textContent = "Cod copiat în clipboard.";
+      setTimeout(() => (status.textContent = ""), 1800);
+    });
+
+    document.querySelector<HTMLButtonElement>("#reset-defaults")?.addEventListener("click", () => {
+      position.value = defaults.position;
+      color.value = defaults.accentColor;
+      offsetX.value = defaults.offsetX;
+      offsetY.value = defaults.offsetY;
+      size.value = defaults.size;
+      rate.value = defaults.rate;
+      pitch.value = defaults.pitch;
+      voiceSelect.value = defaults.voice;
+      const icon = document.querySelector<HTMLInputElement>(`input[name="icon"][value="${defaults.icon}"]`);
+      if (icon) icon.checked = true;
+      update();
+    });
+
+    update();
+  }
+
+  initConfigurator();
+  document.addEventListener("astro:after-swap", initConfigurator);
+</script>
