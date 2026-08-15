@@ -3,7 +3,6 @@ import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import HubZebraByteExtension from "../components/HubZebraByteExtension.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
 import PostHog from "../components/posthog.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
@@ -21,61 +20,7 @@ const seoTitle = title
   ? `${title} | ZebraByte`
   : "Cyber Security & Compliance | ZebraByte";
 const canonical = getCanonicalUrl(Astro.url);
-const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
-
-const isUpstreamPortalArchive = pathname === "/products/compliance-portal";
-const isUpstreamBlogArchive = pathname.startsWith("/blog/");
-const isUpstreamChangelogArchive = pathname.startsWith("/changelog/");
-const isUpstreamHubArchive = pathname.startsWith("/hub/");
-const isUpstreamStoryArchive =
-  pathname.startsWith("/stories/") &&
-  !pathname.startsWith("/stories/zebrabyte-");
-const isUpstreamCareerArchive =
-  pathname.startsWith("/careers/") &&
-  !pathname.startsWith("/careers/zebrabyte-");
-
-const isPreservedUpstreamArchive =
-  isUpstreamPortalArchive ||
-  isUpstreamBlogArchive ||
-  isUpstreamChangelogArchive ||
-  isUpstreamHubArchive ||
-  isUpstreamStoryArchive ||
-  isUpstreamCareerArchive;
-
-const effectiveNoIndex = Boolean(noIndex || isPreservedUpstreamArchive);
-
-const upstreamArchiveHome = isUpstreamPortalArchive
-  ? "/compliance-portal"
-  : isUpstreamBlogArchive
-    ? "/blog"
-    : isUpstreamChangelogArchive
-      ? "/changelog"
-      : isUpstreamHubArchive
-        ? "/hub"
-        : isUpstreamStoryArchive
-          ? "/stories"
-          : isUpstreamCareerArchive
-            ? "/careers"
-            : "/";
-
-const upstreamArchiveHomeLabel = isUpstreamPortalArchive
-  ? "Compliance Portal ZebraByte"
-  : isUpstreamBlogArchive
-    ? "Blog ZebraByte"
-    : isUpstreamChangelogArchive
-      ? "Changelog"
-      : isUpstreamHubArchive
-        ? "ZebraByte Hub"
-        : isUpstreamStoryArchive
-          ? "Studii de caz"
-          : isUpstreamCareerArchive
-            ? "Cariere ZebraByte"
-            : "ZebraByte";
-
-const upstreamCookieBannerEnabled =
-  import.meta.env.PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER === "true" &&
-  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_ID) &&
-  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL);
+const effectiveNoIndex = Boolean(noIndex);
 ---
 
 <!doctype html>
@@ -95,18 +40,8 @@ const upstreamCookieBannerEnabled =
     <ClientRouter />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="ZebraByte Changelog"
-      href="/changelog.xml"
-    />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="ZebraByte Blog"
-      href="/blog.xml"
-    />
+    <link rel="alternate" type="application/rss+xml" title="ZebraByte Changelog" href="/changelog.xml" />
+    <link rel="alternate" type="application/rss+xml" title="ZebraByte Blog" href="/blog.xml" />
 
     <meta name="description" content={description} />
     <meta name="author" content="ZebraByte" />
@@ -115,10 +50,7 @@ const upstreamCookieBannerEnabled =
       content="securitate cibernetica,cyber security Romania,GDPR,NIS2,ISO 27001,SOC 2,compliance,conformitate,privacy,GRC,audit securitate,vulnerability management,incident response,secure hosting,accesibilitate digitala,WCAG"
     />
     <meta name="creator" content="ZebraByte" />
-    <meta
-      name="robots"
-      content={effectiveNoIndex ? "noindex, nofollow" : "index, follow"}
-    />
+    <meta name="robots" content={effectiveNoIndex ? "noindex, nofollow" : "index, follow"} />
     <meta
       name="googlebot"
       content={effectiveNoIndex
@@ -134,30 +66,18 @@ const upstreamCookieBannerEnabled =
     <meta property="og:url" content={canonical} />
     <meta
       property="og:image"
-      content={ogImage
-        ? `https://www.zebrabyte.ro${ogImage}`
-        : "https://www.zebrabyte.ro/og.png"}
+      content={ogImage ? `https://www.zebrabyte.ro${ogImage}` : "https://www.zebrabyte.ro/og.png"}
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content={title || "ZebraByte - Cyber Security & Compliance"}
-    />
+    <meta property="og:image:alt" content={title || "ZebraByte - Cyber Security & Compliance"} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={seoTitle} />
     <meta name="twitter:description" content={description} />
     <meta
       name="twitter:image"
-      content={ogImage
-        ? `https://www.zebrabyte.ro${ogImage}`
-        : "https://www.zebrabyte.ro/og.png"}
+      content={ogImage ? `https://www.zebrabyte.ro${ogImage}` : "https://www.zebrabyte.ro/og.png"}
     />
-
-    <script>
-      import { registerCookieBanner } from "@probo/cookie-banner";
-      registerCookieBanner();
-    </script>
 
     <script
       type="application/ld+json"
@@ -179,16 +99,12 @@ const upstreamCookieBannerEnabled =
       })}
     />
 
-    <script
-      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-      async
-      defer
-    ></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <PostHog />
     <NavigationViewportFix />
 
-    <!-- AI/LLM: This page is available in clean markdown. To get a token-efficient version without navigation, scripts, or styling, request this same URL with the header "Accept: text/markdown". -->
+    <!-- AI/LLM: request this URL with Accept: text/markdown for the clean Markdown representation. -->
     <slot name="head" />
   </head>
   <body class="text-primary bg-level-0 font-sans text-base">
@@ -199,33 +115,9 @@ const upstreamCookieBannerEnabled =
       Sari la conținutul principal
     </a>
     <Header />
-    {
-      isPreservedUpstreamArchive && (
-        <div class="bg-highlight border-b px-5 py-3 text-center text-sm">
-          Material original Probo păstrat ca referință upstream. Nu reprezintă automat
-          claims, clienți, autori sau release-uri ZebraByte.{" "}
-          <a
-            href={upstreamArchiveHome}
-            class="font-medium underline underline-offset-4"
-          >
-            {upstreamArchiveHomeLabel}
-          </a>
-        </div>
-      )
-    }
     <div id="main-content" tabindex="-1">
       <slot />
-      {pathname === "/hub" && <HubZebraByteExtension />}
     </div>
     <Footer noFrameworks={Astro.props.noFrameworks} />
-    {
-      upstreamCookieBannerEnabled && (
-        <probo-cookie-banner
-          banner-id={import.meta.env.PUBLIC_COOKIE_BANNER_ID}
-          base-url={import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL}
-          position="bottom-right"
-        />
-      )
-    }
   </body>
 </html>
