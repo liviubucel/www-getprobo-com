@@ -4,26 +4,24 @@ import StoryCard from "../StoryCard.astro";
 import Slider from "../ui/Slider.svelte";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
-const stories = sortStoriesForListing(await getCollection("stories")).filter(
-  (story) => story.id.startsWith("zebrabyte-"),
-);
+const stories = sortStoriesForListing(await getCollection("stories"));
 ---
 
 <section class="stories dark bg-level-0 text-foreground overflow-hidden">
   <div class="container py-10 sm:py-30">
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
-      Studii de caz
+      Case studies
     </h2>
     <p class="text-muted-foreground mx-auto mb-6 max-w-140 text-center text-lg">
-      Situații reale în care securitatea, infrastructura și remedierea au fost
-      tratate ca un singur program, nu ca servicii izolate.
+      We help companies design and scale their cybersecurity compliance programs
+      so they can focus on what they are best at - their business.
     </p>
 
     <a
       href="/stories"
       class="group mb-10 flex items-center justify-center gap-1.5 text-lg font-medium sm:mb-12"
     >
-      Toate studiile de caz
+      All case studies
       <svg
         width="16"
         height="16"
@@ -46,35 +44,30 @@ const stories = sortStoriesForListing(await getCollection("stories")).filter(
       </svg>
     </a>
 
-    {
-      stories.length > 0 ? (
-        <div class="slider mx-auto">
-          <Slider
-            client:load
-            withOverflow
-            navigateOnClick
-            options={{
-              perPage: 1,
-              updateOnMove: true,
-              gap: 24,
-              pagination: false,
-              breakpoints: {
-                640: {
-                  gap: 16,
-                },
-              },
-            }}
-          >
-            {stories.map((story) => <StoryCard size="home" story={story} />)}
-          </Slider>
-        </div>
-      ) : (
-        <div class="mx-auto max-w-160 rounded-xl border p-8 text-center text-muted-foreground">
-          Studiile de caz ZebraByte sunt în curs de documentare. Biblioteca originală
-          Probo rămâne disponibilă separat în pagina Stories.
-        </div>
-      )
-    }
+    <div class="slider mx-auto">
+      <Slider
+        client:load
+        withOverflow
+        navigateOnClick
+        options={{
+          perPage: 1,
+          updateOnMove: true,
+          gap: 24,
+          pagination: false,
+          breakpoints: {
+            640: {
+              gap: 16,
+            },
+          },
+        }}
+      >
+        {stories.map((story) => <StoryCard size="home" story={story} />)}
+      </Slider>
+    </div>
+
+    <p class="text-muted-foreground mx-auto mt-8 max-w-160 text-center text-xs leading-relaxed">
+      Original Probo case studies remain in the slider with their original media and attribution. ZebraByte-authored case studies are added to the same collection and are identified separately on their detail pages.
+    </p>
   </div>
 </section>
 
