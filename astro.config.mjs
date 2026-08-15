@@ -109,6 +109,17 @@ export default defineConfig({
         if (pathname.startsWith("/newsletter/rezultat")) return false;
         if (pathname === "/blog/page/1") return false;
 
+        // Compatibility routes remain available, but only the ZebraByte-branded
+        // canonical routes are advertised to search engines.
+        if (pathname === "/probo-newsletter") return false;
+        if (pathname.startsWith("/docs/product/probo-agent")) return false;
+        if (pathname === "/hub/probo-vs-vanta") return false;
+        if (pathname === "/hub/probo-vs-fractional-ciso") return false;
+
+        // Archive/reference pages are intentionally available but noindex.
+        if (pathname === "/platform-heritage") return false;
+        if (pathname === "/platform-customer-archive") return false;
+
         return true;
       },
       serialize(item) {
