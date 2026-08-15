@@ -1,4 +1,6 @@
 ---
+import { publicBrandText, publicBrandUrl } from "../../lib/public-brand.ts";
+
 interface Props {
   title: string;
   description: string;
@@ -12,7 +14,7 @@ const {
   title,
   description,
   url,
-  image = "https://www.probo.com/og.png",
+  image = "https://www.zebrabyte.ro/og.png",
   datePublished,
   dateModified,
 } = Astro.props;
@@ -20,28 +22,28 @@ const {
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: title,
-  description,
-  image,
+  headline: publicBrandText(title),
+  description: publicBrandText(description),
+  image: publicBrandUrl(image),
   author: {
     "@type": "Organization",
-    name: "Probo",
-    url: "https://www.probo.com",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
   },
   publisher: {
     "@type": "Organization",
-    name: "Probo",
-    url: "https://www.probo.com",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.probo.com/probo-logo.svg",
+      url: "https://www.zebrabyte.ro/favicon.svg",
     },
   },
   datePublished,
   dateModified: dateModified ?? datePublished,
   mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": url,
+    "@id": publicBrandUrl(url),
   },
 };
 ---
