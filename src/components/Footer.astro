@@ -4,6 +4,7 @@ import ZebraByteLogo from "./ZebraByteLogo.astro";
 import ProboLogo from "../assets/probo-logo.svg";
 import Frameworks from "./block/Frameworks.astro";
 import OpenStatus from "../components/OpenStatus.svelte";
+import ZebraByteStatus from "../components/ZebraByteStatus.svelte";
 import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
 import { Toaster } from "svelte-sonner";
@@ -168,10 +169,14 @@ type Props = {
       </div>
 
       <div class="flex flex-col items-start gap-4 sm:items-end">
-        <p class="text-tertiary-foreground text-xxs flex items-center gap-3">
+        <p class="text-tertiary-foreground text-xxs">
           Copyright © 2023-2026 ZebraByte. All rights reserved.
-          <OpenStatus client:visible />
         </p>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-tertiary-foreground text-xxs">Probo upstream</span>
+          <OpenStatus client:visible />
+          <ZebraByteStatus />
+        </div>
         <AskAi />
       </div>
     </div>
