@@ -61,6 +61,29 @@ const solutions = [
     href: "/accessibility",
   },
 ];
+
+const securityOperations = [
+  {
+    label: "Security Assessment",
+    href: "/security-assessment",
+    description: "Website, domeniu, email și servicii expuse, cu raport și plan de remediere.",
+  },
+  {
+    label: "Website Security",
+    href: "/website-security",
+    description: "WAF, DDoS, malware monitoring, TLS hardening și recovery.",
+  },
+  {
+    label: "Email Security",
+    href: "/email-security",
+    description: "SPF, DKIM, DMARC, anti-spoofing, phishing/BEC și account hardening.",
+  },
+  {
+    label: "Incident Response",
+    href: "/incident-response",
+    description: "Triage, containment, eradication, recovery și lessons learned.",
+  },
+];
 ---
 
 <Layout
@@ -133,6 +156,26 @@ const solutions = [
           </a>
         ))
       }
+    </div>
+  </section>
+
+  <section class="bg-active py-10 sm:py-16">
+    <div class="container">
+      <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">Security operations</p>
+          <h2 class="text-h3 font-medium">Intră direct în serviciul tehnic de care ai nevoie.</h2>
+        </div>
+        <a href="/cyber-security" class="text-muted-foreground text-sm underline underline-offset-4">Vezi Cyber Security complet →</a>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {securityOperations.map((item) => (
+          <a href={item.href} class="bg-level-0 hover:bg-subtle rounded-xl border p-5 transition-colors sm:p-6">
+            <h3 class="mb-2 font-medium">{item.label}</h3>
+            <p class="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
