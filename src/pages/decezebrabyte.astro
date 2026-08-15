@@ -1,0 +1,117 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const principles = [
+  {
+    title: "Security-first infrastructure",
+    description:
+      "Hostingul, aplicațiile, emailul și identitatea sunt tratate ca părți ale aceleiași suprafețe de atac. Hardening-ul și recovery-ul nu sunt opțiuni ascunse adăugate după incident.",
+  },
+  {
+    title: "Privacy by design",
+    description:
+      "Reducem colectarea inutilă, separăm clar scopurile și conectăm privacy governance la sistemele și furnizorii care procesează efectiv datele.",
+  },
+  {
+    title: "Compliance connected to reality",
+    description:
+      "GDPR, NIS2 și ISO 27001 readiness au valoare doar dacă politicile și dovezile reflectă controalele care există realmente în infrastructură.",
+  },
+  {
+    title: "Direct technical ownership",
+    description:
+      "Pentru proiectele administrate, responsabilitatea tehnică trebuie să fie clară: cine schimbă configurația, cine investighează incidentul și cine validează recovery-ul.",
+  },
+  {
+    title: "Open-source foundations",
+    description:
+      "Păstrăm transparent platforma și experiența Probo upstream, inclusiv documentația și instrumentele open-source, în loc să ascundem proveniența tehnologiei.",
+  },
+  {
+    title: "Evidence, not slogans",
+    description:
+      "Preferăm rapoarte, controale, configurații, loguri și procese verificabile în locul afirmațiilor generale că un produs este pur și simplu «secure» sau «compliant».",
+  },
+];
+---
+
+<Layout
+  title="De ce ZebraByte"
+  description="De ce ZebraByte: securitate, privacy, compliance, infrastructură administrată și ownership tehnic într-un program conectat."
+>
+  <main>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <p class="text-muted-foreground animate-perspective-in mb-5 text-sm font-medium uppercase tracking-[0.14em]">Why ZebraByte</p>
+        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-230 font-medium text-balance">
+          Securitatea și conformitatea nu trebuie să fie două proiecte separate.
+        </h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
+          ZebraByte leagă infrastructura, aplicațiile, identitatea, privacy și compliance într-un singur program. Păstrăm ce este valoros din experiența Probo și adăugăm execuția tehnică necesară în afara platformei de compliance.
+        </p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button href="/contact" size="lg">Discută cu noi</Button>
+          <Button href="https://trust.zebrabyte.ro" variant="secondary" size="lg">Trust Center</Button>
+        </div>
+      </div>
+    </animated-hero>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto mb-12 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Principii</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Cum luăm deciziile tehnice.</h2>
+        <p class="text-muted-foreground text-lg">Pagina ZebraByte anterioară punea accent pe privacy, security-first infrastructure și compliance readiness. Păstrăm aceste idei, dar eliminăm marketingul neverificabil și le exprimăm prin rezultate și responsabilități concrete.</p>
+      </div>
+
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {principles.map((principle) => (
+          <article class="bg-level-0 min-h-64 p-6 sm:p-8">
+            <h3 class="mb-3 text-xl font-medium">{principle.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{principle.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-10 lg:grid-cols-2 lg:items-start">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">One program</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">De la assessment la operare continuă.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Putem începe punctual și putem crește scope-ul doar unde există valoare: assessment, remediation, managed security, compliance evidence și infrastructură administrată.</p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border bg-level-0">
+          {[
+            ["01", "Assess", "Înțelegem activele, datele, furnizorii și riscurile reale."],
+            ["02", "Prioritize", "Separăm problemele critice de backlog-ul care poate fi planificat."],
+            ["03", "Implement", "Aplicăm măsurile tehnice și organizaționale necesare."],
+            ["04", "Evidence", "Centralizăm controalele și dovezile care demonstrează starea reală."],
+            ["05", "Operate", "Monitorizăm schimbările, vulnerabilitățile și procesele recurente."],
+          ].map(([number, title, text]) => (
+            <div class="grid grid-cols-[48px_110px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
+              <span class="text-muted-foreground text-sm">{number}</span>
+              <strong class="font-medium">{title}</strong>
+              <span class="text-muted-foreground text-sm leading-relaxed">{text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <a href="/cyber-security" class="rounded-xl border p-6 hover:bg-subtle"><strong>Cyber Security</strong><p class="text-muted-foreground mt-2 text-sm">Assessment, hardening, email/website security și incident response.</p></a>
+        <a href="/gdpr" class="rounded-xl border p-6 hover:bg-subtle"><strong>Privacy & GDPR</strong><p class="text-muted-foreground mt-2 text-sm">Governance conectat la datele și sistemele reale.</p></a>
+        <a href="/compliance-portal" class="rounded-xl border p-6 hover:bg-subtle"><strong>Compliance Platform</strong><p class="text-muted-foreground mt-2 text-sm">Evidence, controls, documents, approvals și workflows.</p></a>
+        <a href="/secure-hosting" class="rounded-xl border p-6 hover:bg-subtle"><strong>Secure Infrastructure</strong><p class="text-muted-foreground mt-2 text-sm">Hosting, migration, hardening, backup și recovery.</p></a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
