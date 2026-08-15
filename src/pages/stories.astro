@@ -9,29 +9,29 @@ const stories = sortStoriesForListing(await getCollection("stories"));
 ---
 
 <Layout
-  title="Customer stories & case studies"
-  description="Case studies and real-world compliance stories available in the ZebraByte resource library."
+  title="Customer stories"
+  description="Real Probo customers share how they got SOC 2 and ISO 27001 certified faster, without hiring a dedicated compliance team."
 >
   <main class="my-10 sm:my-20">
     <div class="container">
-      <h1 class="text-h2 sm:text-h1 mb-3 overflow-hidden text-center font-medium">
-        <span class="animate-perspective-in inline-block">Customer</span>{" "}
-        <span class="animate-perspective-in animation-delay-100 inline-block">Stories</span>
+      <h1
+        class="text-h2 sm:text-h1 mb-3 overflow-hidden text-center font-medium"
+      >
+        <span class="animate-perspective-in inline-block">Customer</span>
+        <span class="animate-perspective-in animation-delay-100 inline-block"
+          >Stories</span
+        >
       </h1>
-      <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto max-w-2xl text-center text-base">
-        Case studies, compliance journeys and practical examples from the platform library.
-      </p>
-      <p class="text-muted-foreground animate-perspective-in animation-delay-250 mx-auto mt-3 max-w-2xl text-center text-xs">
-        Organizations shown in the reference library are presented for the context of each case study and are not automatically represented as ZebraByte customers.
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-200 text-center text-base"
+      >
+        Inspiring stories, real Probo customers
       </p>
     </div>
-
-    <div class="animate-slide-in animation-delay-300 my-6">
-      <p class="text-muted-foreground mb-2 text-center text-xs font-medium uppercase tracking-[0.12em]">Organizations featured in the library</p>
-      <Logos constrained />
-    </div>
-
-    <div class="animate-slide-in animation-delay-250 container grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+    <Logos class="animate-slide-in animation-delay-300 my-6" constrained />
+    <div
+      class="animate-slide-in animation-delay-250 container grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6"
+    >
       {stories.map((item) => <StoryCard story={item} />)}
     </div>
   </main>
