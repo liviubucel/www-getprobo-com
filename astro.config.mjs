@@ -109,6 +109,11 @@ export default defineConfig({
         if (pathname.startsWith("/newsletter/rezultat")) return false;
         if (pathname === "/blog/page/1") return false;
 
+        // Accessibility management lives inside ZebraByte Compliance. Only the
+        // canonical public presentation/install page is advertised.
+        if (pathname === "/accesibilitate") return false;
+        if (pathname.startsWith("/accesibilitate/")) return false;
+
         // Compatibility routes remain available, but only the ZebraByte-branded
         // canonical routes are advertised to search engines.
         if (pathname === "/probo-newsletter") return false;
