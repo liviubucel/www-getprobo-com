@@ -17,7 +17,7 @@ For a token-efficient Markdown version of a supported page, request its canonica
 - [ISO/IEC 27001](https://www.zebrabyte.ro/iso-27001): ISMS, risk treatment, controls and audit readiness.
 - [GDPR & Privacy](https://www.zebrabyte.ro/gdpr): Privacy governance, evidence and technical measures.
 - [NIS2 Readiness](https://www.zebrabyte.ro/nis2): Governance, risk management, resilience and incident readiness.
-- [Accessibility](https://www.zebrabyte.ro/accessibility): Free accessibility tooling, WCAG assessment guidance and remediation tracking inside the compliance model.
+- [Accessibility](https://www.zebrabyte.ro/accessibility): Accessibility is managed as part of ZebraByte Compliance. The standard website widget can be installed publicly at no charge; personalization, audit, remediation, administration and evidence tracking require Compliance platform access.
 
 ## Cyber Security
 
@@ -45,7 +45,6 @@ For a token-efficient Markdown version of a supported page, request its canonica
 - [GDPR Scanner](https://gdpr-scan.zebrabyte.ro)
 - [Network Test](https://net-scan.zebrabyte.ro)
 - [SSL Tools](https://ssl-gratis.zebrabyte.ro)
-- [Accessibility tools](https://www.zebrabyte.ro/accessibility)
 
 ## Company
 
