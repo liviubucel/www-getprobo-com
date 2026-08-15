@@ -77,6 +77,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                     alt={group.feature.alt}
                     loading="lazy"
                     decoding="async"
+                    data-mobile-feature-image
                     class:list={[
                       "absolute inset-0 size-full",
                       group.feature.variant === "story" && "object-cover",
@@ -166,6 +167,25 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
 </dialog>
 
 <script>
+  const warmedFeatureUrls = new Set<string>();
+
+  const warmImage = (image: HTMLImageElement | null) => {
+    if (!image) return;
+    const src = image.currentSrc || image.src;
+    if (!src || warmedFeatureUrls.has(src)) return;
+
+    warmedFeatureUrls.add(src);
+    const preload = new Image();
+    preload.decoding = "async";
+    preload.src = src;
+  };
+
+  const warmMenuArtwork = (dialog: HTMLDialogElement) => {
+    dialog
+      .querySelectorAll<HTMLImageElement>("[data-mobile-feature-image]")
+      .forEach((image) => warmImage(image));
+  };
+
   const bindMobileNavigation = () => {
     document
       .querySelectorAll<HTMLDialogElement>("[data-mobile-navigation]")
@@ -179,9 +199,23 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
           ),
         );
 
+        const observer = new MutationObserver(() => {
+          if (dialog.open) warmMenuArtwork(dialog);
+        });
+        observer.observe(dialog, { attributes: true, attributeFilter: ["open"] });
+
         sections.forEach((section) => {
           section.addEventListener("toggle", () => {
             if (!section.open) return;
+
+            // Force the featured artwork into the HTTP cache before the user
+            // reaches the card. The image itself remains unchanged.
+            warmImage(
+              section.querySelector<HTMLImageElement>(
+                "[data-mobile-feature-image]",
+              ),
+            );
+
             sections.forEach((other) => {
               if (other !== section) other.open = false;
             });
