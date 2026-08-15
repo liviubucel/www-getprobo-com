@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Logos from "../components/block/Logos.astro";
-import Testimonials from "../components/block/Testimonials.astro";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 import Button from "../components/ui/Button.svelte";
 import Badges from "../components/Badges.svelte";
 import YCImage from "../assets/photos/ycombinator.png";
@@ -12,8 +12,8 @@ import { YCombinatorCompanies } from "../content/yc-companies.ts";
 ---
 
 <Layout
-  title="From Chaos to Compliance in a few weeks."
-  description="Get SOC 2, GDPR, HIPAA, and ISO certified in just one week. Open-source compliance management platform with no vendor lock-in. Backed by Y Combinator."
+  title="YC Startup Compliance Deal"
+  description="A ZebraByte compliance onboarding offer for eligible Y Combinator startups, verified through the official YC verification flow. This promotion does not imply Y Combinator affiliation or endorsement."
 >
   <section
     class="container my-10 flex flex-col gap-6 sm:my-20 sm:flex-row sm:items-center sm:justify-between"
@@ -21,16 +21,12 @@ import { YCombinatorCompanies } from "../content/yc-companies.ts";
     <div class="max-w-[424px]">
       <div class="overflow-hidden">
         <h1 class="text-h2 animate-perspective-in mb-4 font-medium">
-          From Chaos to Compliance in a few weeks.
+          From chaos to compliance in a few weeks.
         </h1>
       </div>
       <div class="overflow-hidden">
-        <p
-          class="text-muted-foreground animate-perspective-in animation-delay-100 mb-6 text-lg"
-        >
-          Probo is an open-source platform that acts as your in-house compliance
-          team, handling policies, documentation, processes, risk assessments,
-          and more, so you can stay focused on what matters.
+        <p class="text-muted-foreground animate-perspective-in animation-delay-100 mb-6 text-lg">
+          ZebraByte combines managed compliance, platform workflows and security expertise to help startup teams move from scattered requirements to an operational compliance program.
         </p>
       </div>
       <DealForm class="flex flex-col gap-3" client:load>
@@ -62,6 +58,9 @@ import { YCombinatorCompanies } from "../content/yc-companies.ts";
         >
           Get your verification link
         </a>
+        <p class="text-muted-foreground animate-fade-in animation-delay-500 text-xs leading-relaxed">
+          This is a ZebraByte promotional offer for eligible startups. It does not imply affiliation with, endorsement by, or investment from Y Combinator.
+        </p>
       </DealForm>
     </div>
     <Badges
@@ -73,81 +72,60 @@ import { YCombinatorCompanies } from "../content/yc-companies.ts";
   </section>
 
   <section class="container">
-    <h2
-      class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center"
-    >
-      Trusted by leading teams
+    <h2 class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center">
+      Organizations featured across the compliance reference library
     </h2>
     <Logos class="animate-slide-in animation-delay-300 my-6" constrained />
   </section>
 
-  <section
-    class="container my-20 flex flex-col gap-10 sm:my-30 sm:flex-row sm:items-center sm:gap-20"
-  >
+  <section class="container my-20 flex flex-col gap-10 sm:my-30 sm:flex-row sm:items-center sm:gap-20">
     <ResponsiveImage
       src={YCImage}
-      alt=""
+      alt="Startup program"
       mobile={[500, 500]}
       sm={[500, 660]}
       class="shadow-image animate-slide-in animation-delay-350 aspect-square w-full max-w-[500px] flex-none rounded-2xl object-cover sm:aspect-500/660 sm:w-[500px]"
       fetchpriority="high"
     />
     <div class="text-muted-foreground space-y-6 text-lg">
-      <h2
-        class="text-h3 text-foreground animate-slide-in animation-delay-450 font-medium"
-      >
-        Our YC Story
+      <h2 class="text-h3 text-foreground animate-slide-in animation-delay-450 font-medium">
+        Built for startup constraints
       </h2>
-      <div class="animate-slide-in animation-delay-550">
+      <div class="animate-slide-in animation-delay-550 space-y-4">
         <p>
-          Instead of building yet another “classic SaaS,” we chose a different
-          path: delivering an end-to-end compliance service. We don’t just give
-          companies tools to achieve SOC 2 in record time - we run the
-          compliance for them.
+          Fast-moving startups often hit compliance requirements at exactly the moment their product and sales teams have the least spare capacity. Enterprise questionnaires, SOC 2 requests, privacy reviews and security evidence can quickly become a second operating system for the company.
         </p>
         <p>
-          That ambition came with a price: time. At one point we were handling
-          more clients in parallel than Bryan and I could realistically support.
-          Bryan even stepped in as a full-time compliance officer. We kept our
-          standards high, even saying no to new clients rather than compromising
-          on quality.
+          The ZebraByte model is designed to reduce that overhead: a managed compliance program, structured evidence and controls, plus technical security work where remediation is required.
         </p>
         <p>
-          Today, things are almost back under control. Our processes are
-          stronger, our team is growing (reach out if you are a CISO or
-          compliance officer), and we are back on track toward our objectives.
+          Eligible YC companies can use the verification flow on this page to request the startup deal. Eligibility and commercial terms are confirmed by ZebraByte before activation.
         </p>
-        <p>
-          YC was the best thing that could have happened to us and Probo: Doing
-          things than don’t scale is hard, but it’s worth it!
-        </p>
-        <p>— Antoine Bouchardy, Co-founder & CEO</p>
       </div>
     </div>
   </section>
 
   <section class="container my-20 sm:my-30">
-    <h2 class="text-h3 mb-12 text-center font-medium">
-      YC companies using Probo
+    <h2 class="text-h3 mb-4 text-center font-medium">
+      YC companies in the reference library
     </h2>
-    <div
-      class="companies-grid grid grid-cols-2 place-items-center sm:grid-cols-4"
-    >
-      {
-        YCombinatorCompanies.map((company) => (
-          <YCcompany
-            logo={company.logo}
-            badge={company.badge}
-            name={company.name}
-            href={company.href}
-            height={company.height}
-          />
-        ))
-      }
+    <p class="text-muted-foreground mx-auto mb-12 max-w-2xl text-center text-sm">
+      These logos are retained as part of the platform's startup/compliance reference library. Their presence does not, by itself, represent a ZebraByte customer relationship or endorsement.
+    </p>
+    <div class="companies-grid grid grid-cols-2 place-items-center sm:grid-cols-4">
+      {YCombinatorCompanies.map((company) => (
+        <YCcompany
+          logo={company.logo}
+          badge={company.badge}
+          name={company.name}
+          href={company.href}
+          height={company.height}
+        />
+      ))}
     </div>
   </section>
 
-  <Testimonials />
+  <ZebraByteTestimonials />
 </Layout>
 
 <style>
