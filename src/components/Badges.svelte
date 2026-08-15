@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { scale } from "svelte/transition";
   import { onDestroy } from "svelte";
   import { frameworks } from "../content/frameworks.ts";
   import { windowWidth } from "../lib/window.ts";
@@ -7,9 +6,28 @@
   import { useIntersectionObserver } from "../lib/runes/useIntersectionObserver.svelte.ts";
   import clsx from "clsx";
 
-  import("./FrameworkBadge.svelte");
-
   const duration = 5000;
+  const preferredOrder = [
+    "SOC2_TYPE1",
+    "ISO27001",
+    "ISO42001",
+    "CCPA",
+    "JetDePierre",
+    "ISO27701",
+    "HIPAA",
+    "FERPA",
+    "CASA",
+    "SOC2_TYPE2",
+    "SOC3",
+  ];
+
+  const orderedFrameworks = [
+    ...preferredOrder
+      .map((badge) => frameworks.find((framework) => framework.badge === badge))
+      .filter((framework): framework is (typeof frameworks)[number] => Boolean(framework)),
+    ...frameworks.filter((framework) => !preferredOrder.includes(framework.badge)),
+  ];
+
   let {
     count,
     class: className,
@@ -21,56 +39,112 @@
     class: string;
     border?: boolean;
   } = $props();
+
   let timer: ReturnType<typeof setTimeout> | null = null;
+  let destroyed = false;
+  let rotationGeneration = 0;
   let innerWidth = $state(windowWidth());
   let isMobile = $derived(innerWidth < 640);
+  let targetCount = $derived(isMobile && countMobile ? countMobile : count);
   let intersection = useIntersectionObserver({ threshold: 0 });
-  let visibleFrameworks = $state(
-    frameworks.sort(() => Math.random() - 0.5).slice(0, count),
-  );
+  let visibleFrameworks = $state(orderedFrameworks.slice(0, count));
 
-  // Reset the visibleFrameworks list when count changes, otherwise the list will be updated by the tick
-  $effect(() => {
-    visibleFrameworks = frameworks.slice(
-      0,
-      isMobile && countMobile ? countMobile : count,
-    );
-  });
+  const badgeSrc = (badge: string) =>
+    `/frameworks/${badge.replaceAll(" ", "")}.svg?v=3`;
 
-  const tick = () => {
-    // Pick one random available framework
-    const availableFrameworks = frameworks.filter(
-      (framework) =>
-        !visibleFrameworks.map((f) => f.badge).includes(framework.badge),
-    );
-    if (availableFrameworks.length === 0) {
-      return;
-    }
-    const randomFramework =
-      availableFrameworks[
-        Math.floor(Math.random() * availableFrameworks.length)
-      ];
-    const randomIndex = Math.floor(Math.random() * visibleFrameworks.length);
-    visibleFrameworks[randomIndex] = randomFramework;
+  const preloadFramework = (framework: (typeof frameworks)[number]) =>
+    new Promise<boolean>((resolve) => {
+      if (typeof Image === "undefined") {
+        resolve(true);
+        return;
+      }
+
+      const image = new Image();
+      image.decoding = "async";
+      image.onload = async () => {
+        try {
+          await image.decode?.();
+        } catch {
+          // The resource is already loaded; decode() support varies by browser.
+        }
+        resolve(true);
+      };
+      image.onerror = () => resolve(false);
+      image.src = badgeSrc(framework.badge);
+    });
+
+  const preloadRemainingFrameworks = () => {
+    if (typeof Image === "undefined") return;
+    orderedFrameworks.forEach((framework) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = badgeSrc(framework.badge);
+    });
+  };
+
+  const scheduleNext = () => {
+    if (destroyed) return;
+    if (timer) clearTimeout(timer);
     timer = setTimeout(tick, duration);
   };
 
-  // Enable the timer only when the badges are visible
-  $effect(() => {
-    if (intersection.observed) {
-      timer = setTimeout(tick, duration);
+  const tick = async () => {
+    const generation = ++rotationGeneration;
+    const visibleBadges = new Set(visibleFrameworks.map((framework) => framework.badge));
+    const availableFrameworks = orderedFrameworks.filter(
+      (framework) => !visibleBadges.has(framework.badge),
+    );
+
+    if (availableFrameworks.length === 0 || visibleFrameworks.length === 0) {
+      scheduleNext();
+      return;
     }
+
+    const randomFramework =
+      availableFrameworks[Math.floor(Math.random() * availableFrameworks.length)];
+    const randomIndex = Math.floor(Math.random() * visibleFrameworks.length);
+
+    // Never remove the current badge until the replacement is fully available.
+    const loaded = await preloadFramework(randomFramework);
+    if (destroyed || generation !== rotationGeneration) return;
+
+    if (loaded) {
+      visibleFrameworks = visibleFrameworks.map((framework, index) =>
+        index === randomIndex ? randomFramework : framework,
+      );
+    }
+
+    scheduleNext();
+  };
+
+  // Server and browser start from the same deterministic list. This prevents
+  // hydration mismatches while keeping the live rotation after load.
+  $effect(() => {
+    visibleFrameworks = orderedFrameworks.slice(0, targetCount);
+    rotationGeneration += 1;
+  });
+
+  $effect(() => {
+    if (!intersection.observed) return;
+
+    // Warm all tiny SVGs once the grid is close to/inside the viewport so
+    // future rotations are instant instead of briefly displaying an empty cell.
+    preloadRemainingFrameworks();
+    scheduleNext();
+
     return () => {
+      rotationGeneration += 1;
       if (timer) {
         clearTimeout(timer);
+        timer = null;
       }
     };
   });
 
   onDestroy(() => {
-    if (timer) {
-      clearTimeout(timer);
-    }
+    destroyed = true;
+    rotationGeneration += 1;
+    if (timer) clearTimeout(timer);
   });
 
   const columns = $derived(isMobile ? 3 : 5);
@@ -86,13 +160,11 @@
       )}
     >
       {#key framework.badge}
-        <div
-          class="transition-all duration-1000 col-1 row-1 space-y-3 size-25 aspect-square mix-blend-multiply"
-          transition:scale={{ duration: 750 }}
-        >
+        <div class="col-1 row-1 size-25 space-y-3 aspect-square mix-blend-multiply">
           <FrameworkBadge
             name={framework.badge}
             class="block size-16 mx-auto"
+            priority={true}
           />
           <div class="whitespace-nowrap text-xxs">{framework.label}</div>
         </div>
