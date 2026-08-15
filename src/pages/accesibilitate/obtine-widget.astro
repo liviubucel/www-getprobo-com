@@ -1,0 +1,73 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Instalare Widget de Accesibilitate Web"
+  description="Adaugă widgetul ZebraByte printr-un singur script sau descarcă-l pentru self-hosting."
+>
+  <main class="container max-w-4xl py-12 sm:py-20">
+    <header class="mb-12 text-center">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-5 w-max rounded-lg border px-2 py-1 text-xs font-medium">Instalare Widget</div>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Adaugă widgetul în 4 pași simpli</h1>
+      <p class="text-muted-foreground mx-auto max-w-2xl text-lg">Fără cont obligatoriu pentru snippet-ul public. Adaugi scriptul, publici și verifici integrarea.</p>
+    </header>
+
+    <div class="space-y-5">
+      {[
+        ["01", "Deschide template-ul global", "Găsește layout-ul sau template-ul în care poți insera cod înainte de eticheta de închidere </body>. În WordPress poate fi făcut prin tema copil, un mecanism de snippets sau integrarea administrată."],
+        ["02", "Adaugă scriptul", "Copiază scriptul ZebraByte de mai jos și încarcă-l cu atributul defer."],
+        ["03", "Salvează și publică", "Publică modificarea prin fluxul normal al site-ului și păstrează o cale clară de rollback pentru modificări în producție."],
+        ["04", "Verifică integrarea", "Reîncarcă pagina și confirmă că butonul apare, poate fi folosit din tastatură și nu intră în conflict cu alte elemente sau politici CSP."],
+      ].map(([number, title, text]) => (
+        <article class="grid gap-4 rounded-2xl border p-6 sm:grid-cols-[60px_1fr] sm:p-8">
+          <div class="text-muted-foreground text-sm">{number}</div>
+          <div>
+            <h2 class="mb-2 text-xl font-medium">{title}</h2>
+            <p class="text-muted-foreground leading-relaxed">{text}</p>
+            {number === "02" && (
+              <div class="mt-5 flex items-center gap-3 rounded-xl bg-active p-4">
+                <code class="min-w-0 flex-1 overflow-x-auto text-xs">&lt;script src="https://accesibilitate.zebrabyte.ro/dist/zbt.js" defer&gt;&lt;/script&gt;</code>
+                <button type="button" data-copy class="rounded-lg border px-3 py-2 text-xs">Copiază</button>
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <section class="mt-12 rounded-2xl border p-6 text-center sm:p-8">
+      <p class="text-muted-foreground mb-2 text-xs uppercase tracking-[0.12em]">Self-host</p>
+      <h2 class="mb-3 text-2xl font-medium">Servește scriptul din infrastructura ta</h2>
+      <p class="text-muted-foreground mx-auto mb-6 max-w-xl">Descarcă fișierul și folosește o cale locală dacă vrei control complet asupra hostingului scriptului și a politicilor CSP.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="https://accesibilitate.zebrabyte.ro/dist/zbt.js" download="zbt.js" class="bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium">Descarcă zbt.js</a>
+        <a href="/accesibilitate/personalizeaza" class="rounded-lg border px-5 py-3 text-sm font-medium">Personalizează înainte</a>
+      </div>
+    </section>
+
+    <section class="mt-12 grid gap-3 sm:grid-cols-3">
+      <a href="/accesibilitate/audit" class="rounded-xl border p-5 hover:bg-subtle"><strong>Audit</strong><p class="text-muted-foreground mt-2 text-sm">Rulează dev mode și verifică problemele.</p></a>
+      <a href="/accesibilitate/faq" class="rounded-xl border p-5 hover:bg-subtle"><strong>FAQ</strong><p class="text-muted-foreground mt-2 text-sm">Limitări, WCAG, privacy și instalare.</p></a>
+      <a href="/accesibilitate/disclaimer" class="rounded-xl border p-5 hover:bg-subtle"><strong>Disclaimer</strong><p class="text-muted-foreground mt-2 text-sm">Ce poate și ce nu poate face un overlay.</p></a>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  function initCopy() {
+    document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
+      if (button.dataset.bound === "true") return;
+      button.dataset.bound = "true";
+      button.addEventListener("click", async () => {
+        const code = button.parentElement?.querySelector("code")?.textContent?.trim();
+        if (!code) return;
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Copiat";
+        setTimeout(() => (button.textContent = "Copiază"), 1400);
+      });
+    });
+  }
+  initCopy();
+  document.addEventListener("astro:after-swap", initCopy);
+</script>
