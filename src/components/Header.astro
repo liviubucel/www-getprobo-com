@@ -2,6 +2,7 @@
 import ZebraByteLogo from "./ZebraByteLogo.astro";
 import HeaderMenu from "./HeaderMenu.astro";
 import AccountMenu from "./AccountMenu.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 import Button from "./ui/Button.svelte";
 import MobileMenu from "./MobileMenu.astro";
 import Icon from "./Icon.astro";
@@ -43,6 +44,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     </nav>
 
     <div class="ml-auto hidden items-center gap-2 xl:ml-3 xl:flex" transition:name="header-actions">
+      <LanguageSwitcher />
       <Button href="/contact" class="h-8 px-3 whitespace-nowrap">
         Discută cu un expert
       </Button>
@@ -54,6 +56,8 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     {
       !hideBurger && (
         <div class="ml-auto flex items-center gap-1 xl:hidden">
+          <LanguageSwitcher compact />
+
           <a
             href="https://portal.zebrabyte.ro"
             target="_blank"
@@ -144,10 +148,17 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
         this.hideTimer = null;
       }
 
+      const english = document.documentElement.lang === "en";
       this.setAttribute("aria-expanded", String(expanded));
       this.setAttribute(
         "aria-label",
-        expanded ? "Închide meniul" : "Deschide meniul",
+        expanded
+          ? english
+            ? "Close menu"
+            : "Închide meniul"
+          : english
+            ? "Open menu"
+            : "Deschide meniul",
       );
 
       if (expanded) {
