@@ -16,15 +16,17 @@ export async function getStaticPaths() {
 }
 const { post } = Astro.props;
 const { Content } = await render(post);
-const dateFormatter = Intl.DateTimeFormat("en-US", {
+const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   year: "numeric",
   month: "long",
   day: "numeric",
 });
 
 const articleImage = post.data.ogImage
-  ? `https://www.probo.com${post.data.ogImage}`
-  : "https://www.probo.com/og.png";
+  ? new URL(post.data.ogImage, "https://www.zebrabyte.ro").toString()
+  : post.data.titleImage
+    ? new URL(post.data.titleImage, "https://www.zebrabyte.ro").toString()
+    : "https://www.zebrabyte.ro/og.png";
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -40,10 +42,10 @@ const articleSchema = {
   },
   publisher: {
     "@type": "Organization",
-    name: "Probo",
+    name: "ZebraByte",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.probo.com/probo-logo.svg",
+      url: "https://www.zebrabyte.ro/og.png",
     },
   },
   mainEntityOfPage: {
@@ -85,12 +87,12 @@ const faqSchema = post.data.faqs
   <meta
     slot="head"
     property="article:modified_time"
-    content={post.data.date.toISOString()}
+    content={(post.data.dateModified ?? post.data.date).toISOString()}
   />
   <meta
     slot="head"
     property="article:author"
-    content="https://www.probo.com/about"
+    content="https://www.zebrabyte.ro/about"
   />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {
@@ -114,10 +116,10 @@ const faqSchema = post.data.faqs
           d="M18.566 10.234a.8.8 0 0 1 0 1.132L13.93 16l4.635 4.634a.8.8 0 0 1-1.132 1.132l-5.2-5.2a.8.8 0 0 1 0-1.132l5.2-5.2a.8.8 0 0 1 1.132 0Z"
           clip-rule="evenodd"></path></svg
       >
-      Back to Blog
+      Înapoi la Blog
     </a>
     <div class="text-muted-foreground animate-fade-in animation-delay-100 mb-5">
-      {dateFormatter.format(new Date(post.data.date))}, by {
+      {dateFormatter.format(new Date(post.data.date))}, de {
         post.data.author.name
       }
     </div>
