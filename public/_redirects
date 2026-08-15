@@ -10,11 +10,15 @@
 /hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
 /hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
 
-# ZebraByte public route for the preserved device-agent documentation
-/docs/product/probo-agent /docs/product/device-agent 301
+# Preserve old technical URLs while the public documentation uses Device Agent.
+/docs/product/probo-agent/contributing /docs/developers/api/agent/contributing 301
+/docs/product/probo-agent/installation /docs/product/device-agent/macos 301
+/docs/product/probo-agent/desktop-install /docs/product/device-agent/macos 301
+/docs/product/probo-agent/server-install /docs/product/device-agent/linux 301
+/docs/product/probo-agent /docs/product/device-agent/overview 301
 /docs/product/probo-agent/* /docs/product/device-agent/:splat 301
-/docs/product/device-agent /docs/product/probo-agent/overview 200
-/docs/product/device-agent/* /docs/product/probo-agent/:splat 200
+/md/docs/product/probo-agent /md/docs/product/device-agent/overview.md 301
+/md/docs/product/probo-agent/* /md/docs/product/device-agent/:splat 301
 
 /fr / 301
 /fr/about /about 301
@@ -48,10 +52,6 @@
 /docs/developers/api/n8n/graphql /docs/developers/api/n8n/resources/execute 301
 /docs/configuration /docs/deployment/configuration 301
 /docs/configuration/* /docs/deployment/configuration/:splat 301
-/docs/product/probo-agent/contributing /docs/developers/api/agent/contributing 301
-/docs/product/probo-agent/installation /docs/product/device-agent/macos 301
-/docs/product/probo-agent/desktop-install /docs/product/device-agent/macos 301
-/docs/product/probo-agent/server-install /docs/product/device-agent/linux 301
 /docs/product/access-review/infrastructure-security /docs/deployment/infrastructure-security 301
 /docs/product/access-review/clerk /docs/product/access-review/directory 301
 /docs/developers/api/mcp/tools/assets /docs/developers/api/mcp/tools/catalog/assets-and-data 301
