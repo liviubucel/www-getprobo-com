@@ -14,6 +14,28 @@ export function publicBrandText(value: string | undefined | null): string {
       /\bReal Probo customers share how they got SOC 2 and ISO 27001 certified faster, without hiring a dedicated compliance team\.?/gi,
       "Case studies from the platform reference library explore SOC 2, ISO 27001 and practical compliance programs.",
     )
+    .replace(
+      /Compare the top 5 compliance automation tools for 2026\. Discover why open[- ]source Probo ranks #1 and how its(?: hands-on)? service eliminates the DIY compliance burden\.?/gi,
+      "Compare leading compliance automation approaches for 2026, including software-led tools and managed compliance services.",
+    )
+    .replace(
+      /it's why we're ranking Probo as the #1 compliance automation tool this year\./gi,
+      "it's why managed compliance deserves to be evaluated alongside software-only automation tools.",
+    )
+    .replace(/#1 Probo — Open Source with Full Hands-On Service/gi, "ZebraByte — Managed Compliance with Full Hands-On Service")
+    .replace(/#1 Probo\b/gi, "ZebraByte managed compliance")
+    .replace(/The Probo Difference: You Don't Even Need to Use the Tool/gi, "The Managed Compliance Difference: You Don't Need to Run the Tool Alone")
+    .replace(/Minimal \(2-3 hrs\/month\)/gi, "Low (scope-dependent)")
+    .replace(
+      /Honest comparison of 7 Vanta alternatives for compliance automation\. Probo is the only open-source,?\s*(?:free-tier )?option with a dedicated compliance officer included\.?/gi,
+      "Honest comparison of 7 Vanta alternatives covering software-led and managed-compliance operating models.",
+    )
+    .replace(/7 Platforms Compared Honestly \(Including a Free One\)/gi, "7 Platforms Compared Honestly")
+    .replace(/Vanta Alternatives in 2026: 7 Platforms Compared Honestly \(Including a Free One\)/gi, "Vanta Alternatives in 2026: 7 Platforms Compared Honestly")
+    .replace(/\bSOC 2 Type 1 vs Type 2: Which Certification Do You Need\?/gi, "SOC 2 Type 1 vs Type 2: Which Report Do You Need?")
+    .replace(/\bachieving SOC 2 certification\b/gi, "SOC 2 readiness and reporting")
+    .replace(/\bSOC 2 certification\b/gi, "SOC 2 report")
+    .replace(/\bSOC 2 certificate\b/gi, "SOC 2 report")
     .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
     .replace(/\bprobo-agent\b/g, "zebrabyte-device-agent")
     .replace(/\bProbo vs Vanta\b/gi, "ZebraByte vs Vanta")
