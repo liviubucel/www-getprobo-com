@@ -1,11 +1,15 @@
 ---
-export async function getStaticPaths(param: { routePattern: string }) {
-  const stories = await getCollection("stories");
+export async function getStaticPaths() {
+  const stories = (await getCollection("stories")).filter((item) =>
+    item.id.startsWith("zebrabyte-"),
+  );
+
   return stories.map((item) => ({
     params: { id: item.id },
     props: { item },
   }));
 }
+
 import Page from "./_page.astro";
 import { getCollection } from "astro:content";
 ---
