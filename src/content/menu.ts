@@ -77,7 +77,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Accesibilitate · Gratuit",
-        description: "Widget gratuit; administrare completă din Compliance",
+        description: "Widget gratuit; administrare completă din platformă",
         href: "/accessibility",
         icon: "sparkle",
       },
@@ -101,26 +101,26 @@ export const menuGroups: MenuGroup[] = [
         icon: "magnifying-glass",
       },
       {
-        label: "Securitate website",
-        description: "WAF, DDoS, malware și hardening",
+        label: "Securitate site web",
+        description: "WAF, DDoS, malware și întărire de securitate",
         href: "/website-security",
         icon: "monitor",
       },
       {
         label: "Securitate email",
-        description: "SPF, DKIM, DMARC și anti-spoofing",
+        description: "SPF, DKIM, DMARC și protecție anti-spoofing",
         href: "/email-security",
         icon: "shield-check",
       },
       {
         label: "Răspuns la incidente",
-        description: "Triage, izolare, remediere și recuperare",
+        description: "Evaluare, izolare, remediere și recuperare",
         href: "/incident-response",
         icon: "clock-counter-clockwise",
       },
       {
         label: "Hosting securizat administrat",
-        description: "Infrastructură administrată security-first",
+        description: "Infrastructură administrată cu securitatea pe primul plan",
         href: "/secure-hosting",
         icon: "terminal-window",
       },
@@ -139,7 +139,7 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Blog",
-        description: "Analize despre conformitate, privacy și securitate",
+        description: "Analize despre conformitate, confidențialitate și securitate",
         href: "/blog",
         icon: "article",
       },
@@ -151,7 +151,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Instrumente gratuite",
-        description: "Tool-uri pentru securitate și conformitate",
+        description: "Instrumente pentru securitate și conformitate",
         href: "/tools",
         icon: "sparkle",
       },
@@ -225,7 +225,7 @@ export const menuGroups: MenuGroup[] = [
     ],
     feature: {
       eyebrow: "Despre ZebraByte",
-      title: "Cyber security și conformitate, într-un singur program",
+      title: "Securitate cibernetică și conformitate, într-un singur program",
       href: "/about",
       asset: "/og-zebrabyte.svg",
       alt: "ZebraByte",
@@ -245,7 +245,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Produs",
-        description: "Compliance, risk, privacy și audit workflows",
+        description: "Conformitate, riscuri, confidențialitate și audit",
         href: "/docs/product",
         icon: "shield-check",
       },
@@ -256,7 +256,7 @@ export const menuGroups: MenuGroup[] = [
         icon: "code",
       },
       {
-        label: "Deployment",
+        label: "Implementare",
         description: "Cloud, self-hosting, configurare și operațiuni",
         href: "/docs/deployment",
         icon: "terminal-window",
@@ -288,7 +288,7 @@ export const menuGroups: MenuGroup[] = [
 export const directMenuItems: MenuItem[] = [
   {
     label: "Platforma ZebraByte",
-    description: "Compliance, riscuri, controale și dovezi",
+    description: "Conformitate, riscuri, controale și dovezi",
     href: "https://app.zebrabyte.ro",
     icon: "shield-check",
   },
