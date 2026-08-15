@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
+import SaleArg from "../components/ui/SaleArg.astro";
 
 const pillars = [
   {
@@ -18,56 +19,153 @@ const pillars = [
     description:
       "Configurările și schimbările sunt tratate ca parte din postura de securitate a aplicației, cu control mai strict decât într-un produs de hosting de volum.",
   },
+  {
+    title: "Application protection",
+    description:
+      "TLS, edge controls, WAF, reguli defensive și protecția origin-ului sunt gestionate împreună cu aplicația, nu lăsate exclusiv în responsabilitatea clientului.",
+  },
+  {
+    title: "Migration & validation",
+    description:
+      "Pregătim mediul nou, copiem și verificăm aplicația înainte de schimbarea traficului, apoi păstrăm un plan de rollback/recovery pentru perioada de tranziție.",
+  },
+  {
+    title: "Compliance context",
+    description:
+      "Infrastructura poate furniza evidence pentru controls relevante din GDPR, NIS2 sau ISO 27001 readiness fără a transforma hostingul într-o promisiune automată de certificare.",
+  },
+];
+
+const workloads = [
+  "WordPress și alte CMS-uri",
+  "magazine online",
+  "aplicații web și API-uri",
+  "site-uri statice și front-end-uri moderne",
+  "proiecte care procesează date confidențiale",
+  "servicii care au nevoie de recovery și ownership continuu",
+];
+
+const migration = [
+  { step: "01", title: "Inventory", text: "Aplicație, DNS, email, baze de date, storage, integrări și dependențe externe." },
+  { step: "02", title: "Prepare", text: "Construim mediul țintă, hardening-ul și controalele de acces înainte de mutarea traficului." },
+  { step: "03", title: "Copy & test", text: "Copiem datele și testăm aplicația separat de producție, inclusiv funcțiile care pot fi afectate de DNS sau caching." },
+  { step: "04", title: "Cutover", text: "Mutăm traficul controlat, urmărim erorile și păstrăm un plan clar pentru rollback dacă apare o problemă." },
+  { step: "05", title: "Operate", text: "Monitoring, backup, patching și security controls continuă după migrare, nu se încheie la schimbarea DNS-ului." },
 ];
 ---
 
 <Layout
   title="Secure Managed Hosting"
-  description="Hosting web securizat și administrat ZebraByte pentru organizații care vor infrastructură operată cu priorități reale de securitate."
+  description="Secure Managed Hosting ZebraByte pentru WordPress, e-commerce și aplicații web: hardening, WAF, monitoring, backup/recovery, migrare controlată și operațiuni security-first."
 >
   <main>
-    <section class="container py-16 text-center sm:py-28">
-      <p class="text-muted-foreground mb-5 text-sm font-medium uppercase tracking-[0.14em]">
-        Secure Managed Hosting
-      </p>
-      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
-        Hosting pentru proiecte unde securitatea este parte din produs.
-      </h1>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg text-balance">
-        Nu poziționăm hostingul ca produs generic de volum. Îl păstrăm pentru
-        organizațiile care vor infrastructură administrată împreună cu protecție,
-        hardening și suport tehnic orientat spre risc.
-      </p>
-      <div class="flex flex-col justify-center gap-3 sm:flex-row">
-        <Button size="lg" href="/contact">Discută despre infrastructură</Button>
-        <Button size="lg" variant="secondary" href="/cyber-security">Cyber Security</Button>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <p class="text-muted-foreground animate-perspective-in mb-5 text-sm font-medium uppercase tracking-[0.14em]">Secure Managed Hosting</p>
+        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-230 font-medium text-balance">Hosting pentru proiecte unde securitatea este parte din produs.</h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
+          Nu poziționăm hostingul ca produs generic de volum. Îl păstrăm pentru organizațiile care vor infrastructură administrată împreună cu protecție, hardening, recovery și suport tehnic orientat spre risc.
+        </p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button size="lg" href="/contact">Discută despre infrastructură</Button>
+          <Button size="lg" variant="secondary" href="/website-security">Vezi Website Security</Button>
+        </div>
       </div>
-    </section>
+    </animated-hero>
 
-    <section class="container pb-16 sm:pb-28">
-      <div class="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-3">
-        {
-          pillars.map((pillar) => (
-            <article class="bg-level-0 p-6 sm:p-9">
-              <h2 class="text-h4 mb-3 font-medium">{pillar.title}</h2>
-              <p class="text-muted-foreground leading-relaxed">{pillar.description}</p>
-            </article>
-          ))
-        }
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto mb-12 max-w-180 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Managed platform</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Infrastructura nu este separată de programul de securitate.</h2>
+        <p class="text-muted-foreground text-lg">Hostingul poate fi operat împreună cu vulnerability management, website security, email/domain security și cerințele de compliance.</p>
+      </div>
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {pillars.map((pillar) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h3 class="text-h5 mb-3 font-medium">{pillar.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{pillar.description}</p>
+          </article>
+        ))}
       </div>
     </section>
 
     <section class="bg-active py-16 sm:py-24">
-      <div class="container mx-auto max-w-180 text-center">
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">
-          Infrastructura rămâne conectată la programul de securitate.
-        </h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Hostingul securizat poate fi gestionat împreună cu vulnerability management,
-          protecția website-ului, email/domain security și cerințele de conformitate,
-          astfel încât infrastructura să nu devină un siloz separat de restul programului.
-        </p>
+      <div class="container grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Workloads</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Pentru aplicații care au nevoie de ownership după deploy.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Nu toate proiectele au nevoie de managed hosting. Îl folosim când disponibilitatea, recovery-ul și securitatea operațională justifică administrarea continuă.</p>
+        </div>
+        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
+          <ul class="grid gap-4 sm:grid-cols-2">
+            {workloads.map((workload) => (
+              <li class="flex gap-3 text-muted-foreground leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{workload}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mb-12 max-w-180">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Migration</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Migrarea este un proiect de risc, nu un copy/paste.</h2>
+        <p class="text-muted-foreground text-lg">Păstrăm procesul controlat și verificăm aplicația înainte de cutover, fără să promitem „zero downtime” indiferent de arhitectură.</p>
+      </div>
+      <div class="space-y-3">
+        {migration.map((item) => (
+          <div class="grid grid-cols-[52px_1fr] gap-4 rounded-xl border p-5 sm:p-6">
+            <span class="text-muted-foreground text-sm font-medium">{item.step}</span>
+            <div>
+              <h3 class="mb-2 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-24">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-180 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Probo operating model</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Păstrăm vizualurile și modelul continuu Probo și în infrastructură.</h2>
+          <p class="text-muted-foreground text-lg">Evidence, ownership și workflow-urile rămân conectate la schimbările tehnice care se întâmplă în producție.</p>
+        </div>
+        <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
+          <SaleArg title="Schimbări urmărite și controlate" video="/videos/keyshot1.mp4">
+            <p>Configurările importante și acțiunile de securitate pot fi urmărite în același model de ownership și evidence pe care Probo îl folosește pentru compliance.</p>
+          </SaleArg>
+          <SaleArg title="Recovery ca parte din control" video="/videos/keyshot2.mp4">
+            <p>Backup-ul nu este suficient dacă restaurarea nu este gândită. Menținem procesul de recovery ca parte din postura operațională.</p>
+          </SaleArg>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-4 sm:grid-cols-3">
+        <a href="/website-security" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Website Security</h3><p class="text-muted-foreground text-sm">WAF, DDoS, malware și hardening.</p></a>
+        <a href="/security-assessment" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Security Assessment</h3><p class="text-muted-foreground text-sm">Evaluează mediul înainte sau după migrare.</p></a>
+        <a href="/incident-response" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Incident Response</h3><p class="text-muted-foreground text-sm">Recovery și containment când apare un incident.</p></a>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Vrei să mutăm aplicația într-un mediu gestionat?</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Trimite-ne stack-ul actual, furnizorul și cerințele de disponibilitate. Stabilim dacă managed hosting este într-adevăr opțiunea potrivită.</p>
+        <Button href="/contact" size="lg">Discută despre migrare și hosting</Button>
       </div>
     </section>
   </main>
 </Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
