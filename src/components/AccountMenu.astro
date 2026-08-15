@@ -34,7 +34,7 @@ import { directMenuItems } from "../content/menu";
   <div
     id="client-access-panel"
     data-account-panel
-    class="pointer-events-none absolute top-full right-0 z-[70] mt-3 w-[340px] origin-top-right translate-y-[-6px] scale-[0.985] opacity-0 transition duration-180"
+    class="pointer-events-none absolute top-full right-0 z-[70] mt-3 w-[340px] origin-top-right translate-y-[-6px] scale-[0.985] opacity-0 transition duration-200"
     hidden
   >
     <div class="bg-secondary overflow-hidden rounded-2xl border shadow-[0_16px_32px_rgba(20,30,18,0.16)]">
@@ -137,7 +137,7 @@ import { directMenuItems } from "../content/menu";
       );
       window.setTimeout(() => {
         if (this.panel && !this.open) this.panel.hidden = true;
-      }, 180);
+      }, 200);
     }
 
     toggle = (event: Event) => {
