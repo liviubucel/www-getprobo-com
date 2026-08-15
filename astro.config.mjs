@@ -87,27 +87,6 @@ export default defineConfig({
       customCss: ["./src/styles/starlight.css"],
       lastUpdated: true,
       pagination: false,
-      editLink: {
-        baseUrl:
-          "https://github.com/liviubucel/www-getprobo-com/edit/zebrabyte-repositioning/src/content/docs/docs/",
-      },
-      social: [
-        {
-          icon: "github",
-          label: "ZebraByte website source",
-          href: "https://github.com/liviubucel/www-getprobo-com",
-        },
-        {
-          icon: "github",
-          label: "Upstream Probo project",
-          href: "https://github.com/getprobo/probo",
-        },
-        {
-          icon: "discord",
-          label: "Upstream Probo Discord",
-          href: "https://discord.com/invite/8qfdJYfvpY",
-        },
-      ],
       sidebar: docsSidebar,
     }),
     generateMarkdown(),
@@ -127,9 +106,14 @@ export default defineConfig({
         if (pathname.startsWith("/orderform")) return false;
         if (pathname.startsWith("/newsletter/rezultat")) return false;
 
-        // Preserved upstream Probo archives remain accessible but are deliberately
-        // excluded from ZebraByte's sitemap to avoid duplicate or misleading SEO.
+        // Internal/legacy material retained in source but not promoted as ZebraByte content.
         if (pathname === "/products/compliance-portal") return false;
+        if (pathname === "/platform-heritage") return false;
+        if (pathname === "/platform-customer-archive") return false;
+        if (pathname === "/probo-newsletter") return false;
+        if (pathname.startsWith("/docs/deployment")) return false;
+        if (pathname.startsWith("/docs/product/probo-agent")) return false;
+
         if (pathname.startsWith("/blog/")) return false;
         if (pathname.startsWith("/changelog/")) return false;
         if (pathname.startsWith("/hub/")) return false;
@@ -144,7 +128,6 @@ export default defineConfig({
         )
           return false;
 
-        // Redirect/temporary legal routes are not useful sitemap targets.
         if (
           pathname === "/privacy" ||
           pathname === "/cookie-policy" ||
@@ -157,52 +140,28 @@ export default defineConfig({
       },
       serialize(item) {
         if (item.url === "https://www.zebrabyte.ro") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "weekly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 1.0;
         } else if (item.url === "https://www.zebrabyte.ro/docs") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "weekly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 0.9;
         } else if (item.url === "https://www.zebrabyte.ro/hub") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "weekly"
-          );
-          item.priority = 0.8;
-        } else if (
-          item.url.includes("/docs/deployment/configuration") ||
-          item.url.includes("/docs/deployment/self-hosting")
-        ) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "monthly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 0.8;
         } else if (item.url.includes("/docs")) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "monthly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.7;
         } else if (item.url === "https://www.zebrabyte.ro/changelog") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "weekly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 0.6;
         } else if (item.url.includes("/stories")) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "monthly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.7;
         } else if (item.url.includes("/about")) {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "monthly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.6;
         } else {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ (
-            "monthly"
-          );
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.5;
         }
 
