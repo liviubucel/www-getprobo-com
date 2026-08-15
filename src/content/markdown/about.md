@@ -1,6 +1,6 @@
 # Despre ZebraByte
 
-ZebraByte combină securitatea cibernetică, privacy, compliance, automatizarea și infrastructura securizată într-un singur program orientat spre risc.
+ZebraByte combină managed compliance, securitate cibernetică și infrastructură security-first într-un singur program orientat spre risc.
 
 ## Misiune
 
@@ -8,11 +8,14 @@ Vrem să scoatem securitatea și conformitatea din zona de proiecte separate, ra
 
 ## Discipline
 
+- Managed Compliance
+- SOC 2 readiness
+- ISO/IEC 27001 readiness
+- GDPR & Privacy
+- NIS2 readiness
+- Accessibility compliance și instrumente gratuite
 - Cyber Security
-- Privacy & Compliance
-- Secure Infrastructure
-- Digital Accessibility
-- Automation
+- Secure Managed Hosting
 - Security Governance
 
-Platforma păstrează capabilitățile open-source ale proiectului Probo acolo unde acestea sunt utile și le integrează în poziționarea mai largă ZebraByte.
+ZebraByte nu este poziționat ca furnizor generic de servicii IT. Oferta publică este construită în jurul compliance-ului gestionat și al securității tehnice care susține controalele organizației.
