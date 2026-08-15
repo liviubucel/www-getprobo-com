@@ -1,0 +1,79 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+import SaleArg from "../components/ui/SaleArg.astro";
+import Badges from "../components/Badges.svelte";
+---
+
+<Layout
+  title="SOC 2 Readiness"
+  description="SOC 2 readiness gestionat de ZebraByte: scoping, risk assessment, controls, evidence, remediation și audit preparation într-un program continuu."
+>
+  <main>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
+        Managed Compliance · SOC 2
+      </div>
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
+        <span class="animate-perspective-in block">SOC 2 readiness,</span>
+        <span class="animate-perspective-in block delay-50"> gestionat cap-coadă.</span>
+      </h1>
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
+        Construim programul de controale, organizăm evidence-ul, urmărim remediation și pregătim organizația pentru audit fără să transformăm SOC 2 într-un proiect separat de securitatea reală.
+      </p>
+      <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/managed-compliance">Managed Compliance</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută cu un expert</Button>
+      </div>
+      <Badges count={10} countMobile={6} client:load border class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5" />
+    </animated-hero>
+
+    <section class="container py-10 sm:py-20">
+      <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">De la scope la audit readiness</h2>
+      <p class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12">
+        Programul este construit în jurul mediului tău real, al riscurilor și al controalelor pe care organizația le poate opera și demonstra.
+      </p>
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["01", "Scope & risk", "Stabilim sistemele, procesele, furnizorii și riscurile relevante pentru program."],
+          ["02", "Controls", "Definim controale cu owner clar și le legăm de procesele și măsurile tehnice existente."],
+          ["03", "Evidence", "Centralizăm dovezile și urmărim gap-urile, reviews și approvals într-un flux continuu."],
+          ["04", "Audit preparation", "Pregătim materialele și acțiunile necesare pentru ca auditul să nu înceapă cu reconstrucția programului."],
+        ].map(([step, title, text]) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <p class="text-muted-foreground mb-8 text-sm">{step}</p>
+            <h3 class="mb-3 text-xl font-medium">{title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-12">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Compliance-ul trebuie susținut de security.</h2>
+          <p class="text-muted-foreground text-lg">Când un control cere o măsură tehnică, ZebraByte poate lega remediation de security assessment, hardening, email security, application protection și infrastructură securizată.</p>
+        </div>
+        <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
+          <SaleArg title="Expert dedicat" video="/videos/keyshot1.mp4"><p>Un owner clar coordonează programul, evidence-ul, reviews și acțiunile necesare.</p></SaleArg>
+          <SaleArg title="Evidence continuu" video="/videos/keyshot2.mp4"><p>Nu reconstruim dovezile înainte de audit; le menținem în ritmul normal al programului.</p></SaleArg>
+          <SaleArg title="Trust și customer reviews" video="/videos/keyshot3.mp4"><p>Compliance Portal ajută la distribuirea controlată a documentelor și informațiilor de trust.</p></SaleArg>
+          <SaleArg title="Security conectat la controls" video="/videos/keyshot4.mp4"><p>Remediation tehnică și risk treatment rămân legate de programul de compliance.</p></SaleArg>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">SOC 2 ca program continuu, nu ca sprint înainte de audit.</h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Putem începe cu un readiness assessment și continua cu implementarea și operarea programului.</p>
+      <Button href="/contact" size="lg">Discută despre SOC 2</Button>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
