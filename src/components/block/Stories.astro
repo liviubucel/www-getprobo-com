@@ -4,7 +4,11 @@ import StoryCard from "../StoryCard.astro";
 import Slider from "../ui/Slider.svelte";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
-const stories = sortStoriesForListing(await getCollection("stories"));
+const stories = sortStoriesForListing(
+  (await getCollection("stories")).filter((story) =>
+    story.id.startsWith("zebrabyte-"),
+  ),
+);
 ---
 
 <section class="stories dark bg-level-0 text-foreground overflow-hidden">
@@ -13,15 +17,14 @@ const stories = sortStoriesForListing(await getCollection("stories"));
       Case studies
     </h2>
     <p class="text-muted-foreground mx-auto mb-6 max-w-140 text-center text-lg">
-      We help companies design and scale their cybersecurity compliance programs
-      so they can focus on what they are best at - their business.
+      Situații reale în care securitatea, infrastructura și compliance-ul trebuie să funcționeze împreună.
     </p>
 
     <a
       href="/stories"
       class="group mb-10 flex items-center justify-center gap-1.5 text-lg font-medium sm:mb-12"
     >
-      All case studies
+      Vezi toate studiile de caz
       <svg
         width="16"
         height="16"
@@ -64,10 +67,6 @@ const stories = sortStoriesForListing(await getCollection("stories"));
         {stories.map((story) => <StoryCard size="home" story={story} />)}
       </Slider>
     </div>
-
-    <p class="text-muted-foreground mx-auto mt-8 max-w-160 text-center text-xs leading-relaxed">
-      Original Probo case studies remain in the slider with their original media and attribution. ZebraByte-authored case studies are added to the same collection and are identified separately on their detail pages.
-    </p>
   </div>
 </section>
 
