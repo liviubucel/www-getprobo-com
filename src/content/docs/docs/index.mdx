@@ -1,159 +1,104 @@
 ---
-title: Get started
-description: ZebraByte documentation hub for the open-source compliance platform, product areas, developer interfaces and Cloud or self-hosted deployment options.
+title: Documentation
+description: ZebraByte documentation for managed compliance, compliance portal, security workflows and public product capabilities.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-ZebraByte uses and extends an open-source governance, risk and compliance platform for engineering, security and compliance teams. The platform core documented here is derived from the MIT-licensed Probo project. We preserve upstream technical names where compatibility matters and layer ZebraByte security, privacy and managed-service workflows around that core.
+ZebraByte connects managed compliance with the technical security work required to make controls real. This documentation entry point covers the public product and service model without exposing internal deployment or implementation details.
 
-Use these docs to understand the product model, operate a compliance program, automate records and choose a deployment.
-
-## Choose your path
-
-Start with the path that matches your role.
+## Start here
 
 <CardGrid>
   <LinkCard
-    title="Compliance lead"
-    description="Learn the product model, import a framework, and operate the compliance program"
-    href="/docs/product/getting-started"
+    title="Managed Compliance"
+    description="Understand how ZebraByte manages controls, evidence, reviews, remediation and continuous audit readiness"
+    href="/managed-compliance"
   />
   <LinkCard
-    title="Cloud customer"
-    description="Review Cloud deployment, shared responsibility, and first-organization setup"
-    href="/docs/deployment/cloud"
+    title="Compliance Portal"
+    description="Share trust information, documents and evidence in a controlled customer-facing workflow"
+    href="/compliance-portal"
   />
-  <LinkCard
-    title="Self-host operator"
-    description="Deploy with Docker Compose or Kubernetes, then configure the platform"
-    href="/docs/deployment/self-hosting"
-  />
-  <LinkCard
-    title="Integrator"
-    description="Automate the platform through GraphQL, the CLI, MCP, n8n, and webhooks"
-    href="/docs/developers"
-  />
-</CardGrid>
-
-## Explore the platform
-
-<CardGrid>
-  <LinkCard
-    title="Product overview"
-    description="Understand the platform scope, users, interfaces, and deployment options"
-    href="/docs/product/getting-started/product-overview"
-  />
-  <LinkCard
-    title="Product"
-    description="Explore compliance, risk, privacy, audit, trust, identity, consent, and device capabilities"
-    href="/docs/product"
-  />
-  <LinkCard
-    title="Developers"
-    description="Automate through GraphQL, the CLI, MCP, n8n, and webhooks"
-    href="/docs/developers"
-  />
-  <LinkCard
-    title="Deployment"
-    description="Compare managed Cloud and self-hosting, then review configuration and operations"
-    href="/docs/deployment"
-  />
-</CardGrid>
-
-## Core product areas
-
-The platform connects the records used throughout a compliance program instead of treating them as isolated checklists.
-
-<CardGrid>
-  <LinkCard
-    title="Compliance program"
-    description="Frameworks, controls, measures, tasks, evidence, and applicability"
-    href="/docs/product/compliance-program"
-  />
-  <LinkCard
-    title="Risk and third parties"
-    description="Risk registers, threat-based assessments, vendors, services, and subprocessors"
-    href="/docs/product/risk-management"
-  />
-  <LinkCard
-    title="Privacy and trust"
-    description="Processing activities, impact assessments, documents, and the Compliance Portal"
-    href="/docs/product/privacy-management"
-  />
-  <LinkCard
-    title="Identity and access"
-    description="Members, roles, SSO, SCIM, and access-review campaigns"
-    href="/docs/product/identity-and-access"
-  />
-</CardGrid>
-
-## Learn the model
-
-<CardGrid>
-  <LinkCard
-    title="Core concepts"
-    description="See how the main records relate across a compliance program"
-    href="/docs/product/getting-started/core-concepts"
-  />
-  <LinkCard
-    title="Glossary"
-    description="Look up product, security, privacy, and compliance terminology"
-    href="/docs/product/getting-started/glossary"
-  />
-  <LinkCard
-    title="Choose a deployment"
-    description="Compare managed Cloud, Docker Compose, and Kubernetes"
-    href="/docs/product/getting-started/choose-deployment"
-  />
-</CardGrid>
-
-## ZebraByte
-
-<CardGrid>
   <LinkCard
     title="Cyber Security"
-    description="Security assessment, hardening, continuous security and incident support"
+    description="Connect risk and compliance requirements to assessment, hardening, protection and incident readiness"
     href="/cyber-security"
   />
   <LinkCard
     title="Secure Managed Hosting"
-    description="Security-first infrastructure operated as part of the security program"
+    description="Operate infrastructure with hardening, backup, monitoring and controlled changes as part of the security program"
     href="/secure-hosting"
-  />
-  <LinkCard
-    title="Digital Accessibility"
-    description="WCAG assessment, remediation guidance and accessibility tooling"
-    href="/accessibility"
-  />
-  <LinkCard
-    title="Contact ZebraByte"
-    description="Discuss security, privacy, compliance or platform deployment"
-    href="/contact"
   />
 </CardGrid>
 
-## Upstream resources
+## Compliance frameworks
 
 <CardGrid>
   <LinkCard
-    title="Probo upstream repository"
-    description="Browse the MIT-licensed upstream source and follow core platform development"
-    href="https://github.com/getprobo/probo"
+    title="SOC 2"
+    description="Scope, controls, evidence, remediation and audit readiness"
+    href="/soc2"
   />
   <LinkCard
-    title="Report an upstream issue"
-    description="Report a core Probo bug or request an upstream feature"
-    href="https://github.com/getprobo/probo/issues"
+    title="ISO/IEC 27001"
+    description="ISMS, risk treatment, control ownership and audit readiness"
+    href="/iso-27001"
   />
   <LinkCard
-    title="Upstream community"
-    description="Talk with the original Probo open-source community on Discord"
-    href="https://discord.gg/8qfdJYfvpY"
+    title="GDPR & Privacy"
+    description="Privacy governance, evidence and technical measures"
+    href="/gdpr"
   />
   <LinkCard
-    title="ZebraByte website source"
-    description="Follow the ZebraByte website and documentation adaptation"
-    href="https://github.com/liviubucel/www-getprobo-com"
+    title="NIS2"
+    description="Governance, risk management, resilience and incident readiness"
+    href="/nis2"
   />
 </CardGrid>
+
+## Accessibility inside Compliance
+
+Accessibility is not a separate ZebraByte business line. The public accessibility tooling is free, while WCAG findings, remediation and evidence can be tracked as part of the wider compliance program.
+
+<CardGrid>
+  <LinkCard
+    title="Accessibility"
+    description="Free tools, WCAG assessment guidance and remediation workflow"
+    href="/accessibility"
+  />
+  <LinkCard
+    title="Free Tools"
+    description="Security, privacy and compliance tools available from ZebraByte"
+    href="/tools"
+  />
+</CardGrid>
+
+## Security operations
+
+<CardGrid>
+  <LinkCard
+    title="Security Assessment"
+    description="Exposure, configuration and vulnerability review with prioritized remediation"
+    href="/security-assessment"
+  />
+  <LinkCard
+    title="Website Security"
+    description="WAF, DDoS protection, malware monitoring, hardening and recovery"
+    href="/website-security"
+  />
+  <LinkCard
+    title="Email Security"
+    description="SPF, DKIM, DMARC, anti-spoofing and account hardening"
+    href="/email-security"
+  />
+  <LinkCard
+    title="Incident Response"
+    description="Triage, containment, eradication and recovery"
+    href="/incident-response"
+  />
+</CardGrid>
+
+## Need help?
+
+Use [Contact](/contact) to discuss a compliance or security scope, or open the [Trust Center](https://trust.zebrabyte.ro) for ZebraByte security and compliance information.
