@@ -7,7 +7,7 @@ import Badges from "../components/Badges.svelte";
 
 <Layout
   title="Managed Compliance"
-  description="Program de compliance gestionat cap-coadă de ZebraByte: expert dedicat, automatizare, evidence, controale și audit readiness continuă pentru SOC 2, ISO 27001, GDPR, NIS2 și alte framework-uri."
+  description="Program de compliance gestionat cap-coadă de ZebraByte: expert dedicat, automatizare, evidence, controale și audit readiness continuă pentru ISO 27001, GDPR, NIS2, SOC 2 și accessibility."
 >
   <main>
     <section class="container py-16 sm:py-28">
@@ -21,7 +21,7 @@ import Badges from "../components/Badges.svelte";
         </p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
           <Button size="lg" href="/contact">Discută cu un expert</Button>
-          <Button size="lg" variant="secondary" href="/docs/deployment/self-hosting/docker-compose">Vezi platforma open-source</Button>
+          <Button size="lg" variant="secondary" href="/compliance-portal">Vezi Compliance Portal</Button>
         </div>
       </div>
 
@@ -47,8 +47,8 @@ import Badges from "../components/Badges.svelte";
         </div>
         <div class="bg-level-0 p-6 sm:p-8">
           <p class="text-muted-foreground mb-8 text-sm">04</p>
-          <h2 class="mb-3 text-xl font-medium">Fără lock-in</h2>
-          <p class="text-muted-foreground leading-relaxed">Păstrăm modelul open-source al platformei: exportabil, self-hostable și integrabil cu infrastructura existentă.</p>
+          <h2 class="mb-3 text-xl font-medium">Governance integrat</h2>
+          <p class="text-muted-foreground leading-relaxed">Privacy, NIS2, ISO, SOC 2 și accessibility pot fi urmărite în aceeași disciplină de controale, responsabilități și remediation.</p>
         </div>
       </div>
     </section>
@@ -58,9 +58,9 @@ import Badges from "../components/Badges.svelte";
         <div class="mx-auto mb-12 max-w-3xl text-center">
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Platformă + expertiză + security engineering</h2>
           <p class="text-muted-foreground text-lg">
-            Diferența ZebraByte este că programul de compliance poate fi legat direct de
-            măsurile tehnice: hardening, website și email security, vulnerability management,
-            incident response și secure managed hosting.
+            Programul de compliance este legat direct de măsurile tehnice: hardening,
+            website și email security, vulnerability management, incident response și
+            secure managed hosting.
           </p>
         </div>
 
@@ -74,19 +74,20 @@ import Badges from "../components/Badges.svelte";
           <SaleArg title="Trust pentru clienți și parteneri" video="/videos/keyshot3.mp4">
             <p>Documentele și dovezile relevante pot fi distribuite controlat prin Compliance Portal pentru security reviews și procurement.</p>
           </SaleArg>
-          <SaleArg title="Integrare în workflow-ul echipei" video="/videos/keyshot4.mp4">
-            <p>Platforma, integrările și automatizarea păstrează compliance-ul conectat la modul în care organizația lucrează deja.</p>
+          <SaleArg title="Accessibility în același program" video="/videos/keyshot4.mp4">
+            <p>Auditul WCAG, remediation și instrumentele gratuite de accessibility sunt tratate ca parte din compliance, nu ca un produs comercial separat.</p>
           </SaleArg>
         </div>
       </div>
     </section>
 
     <section class="container py-12 sm:py-24">
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
         <a href="/iso-27001" class="bg-subtle rounded-2xl border p-6 hover:bg-active"><h3 class="mb-2 font-medium">ISO/IEC 27001</h3><p class="text-muted-foreground text-sm">ISMS, risk treatment, controls și audit readiness.</p></a>
         <a href="/gdpr" class="bg-subtle rounded-2xl border p-6 hover:bg-active"><h3 class="mb-2 font-medium">GDPR & Privacy</h3><p class="text-muted-foreground text-sm">Privacy governance, evidence și măsuri tehnice.</p></a>
         <a href="/nis2" class="bg-subtle rounded-2xl border p-6 hover:bg-active"><h3 class="mb-2 font-medium">NIS2</h3><p class="text-muted-foreground text-sm">Risk management, governance și incident readiness.</p></a>
         <a href="/compliance-portal" class="bg-subtle rounded-2xl border p-6 hover:bg-active"><h3 class="mb-2 font-medium">Compliance Portal</h3><p class="text-muted-foreground text-sm">Documente și evidence distribuite în siguranță.</p></a>
+        <a href="/accessibility" class="bg-subtle rounded-2xl border p-6 hover:bg-active"><h3 class="mb-2 font-medium">Accessibility</h3><p class="text-muted-foreground text-sm">Instrumente gratuite, WCAG assessment și remediation.</p></a>
       </div>
     </section>
   </main>
