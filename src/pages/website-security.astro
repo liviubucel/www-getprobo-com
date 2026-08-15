@@ -1,0 +1,145 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+import SaleArg from "../components/ui/SaleArg.astro";
+
+const controls = [
+  {
+    title: "Web Application Firewall",
+    description: "Filtrăm trafic malițios și cereri asociate atacurilor comune înainte să ajungă la aplicație, cu reguli adaptate platformei și riscului real.",
+  },
+  {
+    title: "Malware & integrity monitoring",
+    description: "Urmărim modificări suspecte și semnale de malware, astfel încât un compromis să fie observat înainte să devină o problemă persistentă.",
+  },
+  {
+    title: "DDoS & edge protection",
+    description: "Traficul anormal este absorbit și filtrat la edge, reducând presiunea pe origin și păstrând aplicația disponibilă în timpul atacurilor volumetrice.",
+  },
+  {
+    title: "TLS, headers & hardening",
+    description: "Configurăm HTTPS, headere relevante, acces administrativ și setări defensive care reduc suprafața de atac fără să rupă funcționalitatea site-ului.",
+  },
+  {
+    title: "Recovery readiness",
+    description: "Backup-urile, restaurarea și procedurile de recovery sunt tratate ca parte din securitate, nu ca o funcție separată activată abia după incident.",
+  },
+  {
+    title: "Reputation & exposure checks",
+    description: "Urmărim semnale precum blacklist-uri, expuneri publice și schimbări importante care pot afecta reputația domeniului și încrederea utilizatorilor.",
+  },
+];
+
+const risks = [
+  "injectare de cod și acces neautorizat",
+  "malware, backdoor-uri și reinfectare",
+  "brute force și credential abuse",
+  "SQL injection, XSS și atacuri asupra aplicației",
+  "DDoS și epuizarea resurselor origin",
+  "site compromis folosit pentru phishing sau redirect-uri malițioase",
+  "blacklisting și degradarea reputației domeniului",
+  "pierdere de date fără un recovery testat",
+];
+---
+
+<Layout
+  title="Website Security"
+  description="Website Security ZebraByte: WAF, malware protection, DDoS mitigation, TLS hardening, monitoring și recovery pentru WordPress, e-commerce și aplicații web."
+>
+  <main>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Website Security</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Protecția website-ului trebuie să funcționeze înainte, în timpul și după un atac.</h1>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
+          ZebraByte combină WAF, protecție DDoS, monitorizare, hardening și recovery într-un singur serviciu. Poate proteja WordPress, magazine online și aplicații custom chiar dacă infrastructura nu este găzduită la noi.
+        </p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button href="/contact" size="lg">Protejează website-ul</Button>
+          <Button href="/security-assessment" variant="secondary" size="lg">Începe cu un assessment</Button>
+        </div>
+      </div>
+    </animated-hero>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto mb-12 max-w-180 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Controls</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Un strat complet de protecție, nu un singur plugin.</h2>
+        <p class="text-muted-foreground text-lg">Controalele sunt gestionate împreună, astfel încât filtrarea, detecția și recuperarea să nu depindă de produse izolate care nu comunică între ele.</p>
+      </div>
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {controls.map((control) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h3 class="text-h5 mb-3 font-medium">{control.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{control.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Threat model</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Ce încercăm să oprim sau să detectăm.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Nu promitem că orice atac poate fi blocat. Construim straturi de prevenție, detecție și recovery astfel încât un singur control care eșuează să nu însemne automat compromiterea completă.</p>
+        </div>
+        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
+          <ul class="grid gap-4 sm:grid-cols-2">
+            {risks.map((risk) => (
+              <li class="flex gap-3 text-muted-foreground leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{risk}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto mb-12 max-w-180 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Continuous protection</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Păstrăm experiența Probo și pentru securitatea operațională.</h2>
+        <p class="text-muted-foreground text-lg">Aceleași principii de ownership, evidence și lucru continuu din platforma Probo sunt aplicate și controalelor tehnice ZebraByte.</p>
+      </div>
+      <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
+        <SaleArg title="Protecție înainte să ajungă traficul la aplicație" video="/videos/keyshot1.mp4">
+          <p>Folosim edge controls și WAF pentru a reduce traficul malițios înainte să consume resursele aplicației și origin-ului.</p>
+        </SaleArg>
+        <SaleArg title="Evidence și schimbări urmărite în timp" video="/videos/keyshot2.mp4">
+          <p>Schimbările relevante, alertele și acțiunile de remediere pot fi urmărite în același model continuu folosit pentru compliance.</p>
+        </SaleArg>
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-24">
+      <div class="container grid gap-4 sm:grid-cols-3">
+        <a href="/incident-response" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
+          <h3 class="mb-2 font-medium">Site deja compromis?</h3>
+          <p class="text-muted-foreground text-sm">Triage, containment, malware cleanup și recovery.</p>
+        </a>
+        <a href="/secure-hosting" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
+          <h3 class="mb-2 font-medium">Vrei și infrastructura administrată?</h3>
+          <p class="text-muted-foreground text-sm">Mută origin-ul într-un mediu gestionat security-first.</p>
+        </a>
+        <a href="https://scan.zebrabyte.ro" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors" target="_blank" rel="noopener noreferrer">
+          <h3 class="mb-2 font-medium">Scanare rapidă</h3>
+          <p class="text-muted-foreground text-sm">Rulează scannerul web ZebraByte pentru o verificare inițială.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="container py-16 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Securizează aplicația fără să o transformi într-un proiect paralel.</h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Spune-ne platforma, infrastructura și ce probleme ai observat. Configurăm controalele în jurul aplicației reale.</p>
+      <Button href="/contact" size="lg">Discută despre website security</Button>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
