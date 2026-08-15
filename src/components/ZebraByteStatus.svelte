@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { browserT } from "../lib/browser-i18n";
 
   type PublicStatus = "operational" | "degraded" | "outage" | "no_data" | "unknown";
 
@@ -8,15 +9,36 @@
 
   let status = $state<PublicStatus>("unknown");
 
-  const dictionary: Record<PublicStatus, { label: string; color: string; live: boolean }> = {
-    operational: { label: "Toate sistemele sunt operaționale", color: "#22a06b", live: true },
-    degraded: { label: "Performanță degradată", color: "#d49a2a", live: true },
-    outage: { label: "Incident activ", color: "#d64545", live: true },
-    no_data: { label: "Se verifică statusul", color: "#8a8a8a", live: false },
-    unknown: { label: "Status indisponibil", color: "#8a8a8a", live: false },
+  const dictionary: Record<PublicStatus, { label: () => string; color: string; live: boolean }> = {
+    operational: {
+      label: () => browserT("Toate sistemele sunt operaționale", "All systems are operational"),
+      color: "#22a06b",
+      live: true,
+    },
+    degraded: {
+      label: () => browserT("Performanță degradată", "Degraded performance"),
+      color: "#d49a2a",
+      live: true,
+    },
+    outage: {
+      label: () => browserT("Incident activ", "Active incident"),
+      color: "#d64545",
+      live: true,
+    },
+    no_data: {
+      label: () => browserT("Se verifică statusul", "Checking status"),
+      color: "#8a8a8a",
+      live: false,
+    },
+    unknown: {
+      label: () => browserT("Status indisponibil", "Status unavailable"),
+      color: "#8a8a8a",
+      live: false,
+    },
   };
 
   let current = $derived(dictionary[status]);
+  let label = $derived(current.label());
 
   onMount(() => {
     let stopped = false;
@@ -62,13 +84,13 @@
   href={STATUS_PAGE}
   rel="noreferrer"
   target="_blank"
-  aria-label={`Status servicii ZebraByte: ${current.label}`}
+  aria-label={`${browserT("Status servicii ZebraByte", "ZebraByte service status")}: ${label}`}
 >
   <span class="status-dot-wrap" aria-hidden="true" style={`--status-color:${current.color}`}>
     {#if current.live}<span class="status-dot-pulse"></span>{/if}
     <span class="status-dot"></span>
   </span>
-  {current.label}
+  {label}
 </a>
 
 <style>
