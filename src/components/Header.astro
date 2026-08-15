@@ -16,16 +16,17 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
 ---
 
 <header
+  data-site-header
   class:list={[
     "page-header text-primary transition-all",
     docsChrome
       ? "bg-transparent"
-      : "bg-secondary/80 sticky top-0 z-50 border-b backdrop-blur-md",
+      : "bg-secondary/90 sticky top-0 z-50 border-b backdrop-blur-md",
   ]}
 >
   <div
     class:list={[
-      "mx-auto flex items-center py-3 sm:py-4",
+      "mx-auto flex min-h-16 items-center py-2.5 sm:py-3",
       docsChrome
         ? "docs-header-inner w-full max-w-none px-[var(--docs-page-padding-x)]"
         : "container",
@@ -41,14 +42,10 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       <HeaderMenu groups={menuGroups} />
     </nav>
 
-    <div class="ml-auto flex items-center gap-2 xl:ml-3" transition:name="header-actions">
-      <Button
-        href="/contact"
-        class="h-9 px-4 whitespace-nowrap xl:h-8 xl:px-3"
-      >
+    <div class="ml-auto hidden items-center gap-2 xl:ml-3 xl:flex" transition:name="header-actions">
+      <Button href="/contact" class="h-8 px-3 whitespace-nowrap">
         Discută cu un expert
       </Button>
-
       <AccountMenu />
     </div>
 
@@ -56,15 +53,45 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
 
     {
       !hideBurger && (
-        <burger-menu
-          class="group ml-3 grid size-9 place-items-center xl:hidden"
-          aria-label="Deschide meniul"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-        >
-          <Icon name="list" size={16} class="group-aria-expanded:hidden" />
-          <Icon name="x" size={16} class="hidden group-aria-expanded:block" />
-        </burger-menu>
+        <div class="ml-auto flex items-center gap-1 xl:hidden">
+          <a
+            href="https://portal.zebrabyte.ro"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-muted-foreground hover:text-primary grid size-10 place-items-center rounded-lg transition-colors"
+            aria-label="Portal clienți ZebraByte"
+            title="Portal clienți"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="7" r="4" />
+              <path d="M4 21a8 8 0 0 1 16 0" />
+            </svg>
+          </a>
+
+          <burger-menu
+            class="group grid size-10 cursor-pointer place-items-center rounded-lg transition-colors hover:bg-subtle"
+            aria-label="Deschide meniul"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            role="button"
+            tabindex="0"
+          >
+            <span class="relative grid size-6 place-items-center" aria-hidden="true">
+              <Icon name="list" size={22} class="group-aria-expanded:hidden" />
+              <Icon name="x" size={22} class="hidden group-aria-expanded:block" />
+            </span>
+          </burger-menu>
+        </div>
       )
     }
   </div>
@@ -76,54 +103,106 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
   import { customElementDefine } from "../lib/dom";
 
   class BurgerMenu extends HTMLElement {
-    scrolled = null as null | boolean;
-    menu = document.querySelector("#mobile-menu") as HTMLDialogElement | null;
+    menu = document.querySelector("#mobile-menu") as HTMLElement | null;
+    hideTimer: number | null = null;
 
     connectedCallback() {
       this.addEventListener("click", this.toggleExpanded);
+      this.addEventListener("keydown", this.onButtonKeyDown);
       document.addEventListener("keydown", this.closeOnEscape);
       this.menu?.addEventListener("click", this.closeAfterNavigation);
-      this.menu?.addEventListener("close", this.syncClosedState);
-      window.addEventListener("scroll", this.onScroll);
-      this.setExpanded(false);
-      this.onScroll();
+      window.addEventListener("resize", this.closeOnDesktop);
+      this.setExpanded(false, false);
     }
 
     disconnectedCallback() {
       this.removeEventListener("click", this.toggleExpanded);
+      this.removeEventListener("keydown", this.onButtonKeyDown);
       document.removeEventListener("keydown", this.closeOnEscape);
       this.menu?.removeEventListener("click", this.closeAfterNavigation);
-      this.menu?.removeEventListener("close", this.syncClosedState);
-      window.removeEventListener("scroll", this.onScroll);
-      document.body.style.removeProperty("overflow");
+      window.removeEventListener("resize", this.closeOnDesktop);
+      if (this.hideTimer) window.clearTimeout(this.hideTimer);
+      this.unlockPage();
     }
 
-    setExpanded(expanded: boolean) {
+    lockPage() {
+      document.body.style.setProperty("overflow", "hidden");
+      document.documentElement.style.setProperty("overflow", "hidden");
+      this.closest("header")?.classList.add("mobile-menu-open");
+    }
+
+    unlockPage() {
+      document.body.style.removeProperty("overflow");
+      document.documentElement.style.removeProperty("overflow");
+      this.closest("header")?.classList.remove("mobile-menu-open");
+    }
+
+    setExpanded(expanded: boolean, animate = true) {
       if (!this.menu) return;
-      if (expanded && !this.menu.open) {
-        this.menu.showModal();
-      } else if (!expanded && this.menu.open) {
-        this.menu.close();
+      if (this.hideTimer) {
+        window.clearTimeout(this.hideTimer);
+        this.hideTimer = null;
       }
+
       this.setAttribute("aria-expanded", String(expanded));
       this.setAttribute(
         "aria-label",
         expanded ? "Închide meniul" : "Deschide meniul",
       );
+
       if (expanded) {
-        document.body.style.setProperty("overflow", "hidden");
-      } else {
-        document.body.style.removeProperty("overflow");
+        this.menu.hidden = false;
+        this.menu.setAttribute("aria-hidden", "false");
+        this.lockPage();
+
+        requestAnimationFrame(() => {
+          this.menu?.classList.remove(
+            "pointer-events-none",
+            "-translate-y-2",
+            "opacity-0",
+          );
+          this.menu?.classList.add(
+            "pointer-events-auto",
+            "translate-y-0",
+            "opacity-100",
+          );
+        });
+        return;
       }
-      if (expanded) {
-        queueMicrotask(() =>
-          this.menu?.querySelector<HTMLElement>("a")?.focus(),
-        );
+
+      this.unlockPage();
+      this.menu.setAttribute("aria-hidden", "true");
+      this.menu.classList.add(
+        "pointer-events-none",
+        "-translate-y-2",
+        "opacity-0",
+      );
+      this.menu.classList.remove(
+        "pointer-events-auto",
+        "translate-y-0",
+        "opacity-100",
+      );
+
+      if (!animate) {
+        this.menu.hidden = true;
+        return;
       }
+
+      this.hideTimer = window.setTimeout(() => {
+        if (this.menu && this.getAttribute("aria-expanded") !== "true") {
+          this.menu.hidden = true;
+        }
+      }, 180);
     }
 
     toggleExpanded = () =>
       this.setExpanded(this.getAttribute("aria-expanded") !== "true");
+
+    onButtonKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      this.toggleExpanded();
+    };
 
     closeOnEscape = (event: KeyboardEvent) => {
       if (
@@ -142,22 +221,26 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       }
     };
 
-    syncClosedState = () => {
-      this.setAttribute("aria-expanded", "false");
-      this.setAttribute("aria-label", "Deschide meniul");
-      document.body.style.removeProperty("overflow");
-    };
-
-    onScroll = () => {
-      const isScrolled = document.documentElement.scrollTop > 10;
-      if (isScrolled === this.scrolled) return;
-      this.closest("header")?.setAttribute(
-        "data-scrolled",
-        isScrolled.toString(),
-      );
-      this.scrolled = isScrolled;
+    closeOnDesktop = () => {
+      if (
+        window.matchMedia("(min-width: 1280px)").matches &&
+        this.getAttribute("aria-expanded") === "true"
+      ) {
+        this.setExpanded(false, false);
+      }
     };
   }
 
   customElementDefine("burger-menu", () => BurgerMenu);
 </script>
+
+<style>
+  @media (max-width: 1279px) {
+    .page-header.mobile-menu-open {
+      position: fixed;
+      inset: 0 0 auto 0;
+      width: 100%;
+      z-index: 50;
+    }
+  }
+</style>
