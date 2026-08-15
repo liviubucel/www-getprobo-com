@@ -6,32 +6,30 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
   <h2
     class="text-h3 sm:text-h2 intersect-once intersect:animate-slide-in mb-3 text-center font-medium"
   >
-    From chaos to confidence
+    De la haos la control
   </h2>
   <p
     class="text-muted-foreground intersect-once intersect:animate-slide-in motion-delay-100 mx-auto mb-10 max-w-180 text-center text-lg sm:mb-16"
   >
-    Our compliance officers handle the entire journey for you - from setup and
-    risk assessments to audit coordination and ongoing monitoring - so you can
-    stay focused on building.
+    Specialiștii noștri coordonează întregul parcurs — de la configurare și evaluarea
+    riscurilor până la audit și monitorizare continuă — astfel încât echipa ta să rămână
+    concentrată pe activitatea principală.
   </p>
   <compliance-track class="flex flex-col gap-6 sm:flex-row sm:gap-16">
-    <ComplianceTrackItem position="01" title="Set up and plan">
-      We start by reviewing your environment, completing the risk and vendor
-      assessments, identifying gaps, and defining the right path forward. Then
-      we create a compliance program tailored to how your team actually
-      operates.
+    <ComplianceTrackItem position="01" title="Analiză și plan">
+      Începem cu evaluarea mediului, a riscurilor și a furnizorilor, identificăm lacunele și
+      stabilim pașii prioritari. Apoi construim un program de conformitate adaptat modului în
+      care lucrează echipa ta.
     </ComplianceTrackItem>
-    <ComplianceTrackItem position="02" title="Implementation & audit">
-      Evidence collection is automated through the platform, and our team
-      prepares every document and manages all communication with your auditor.
-      You only join the essential calls, and we guide you through them with full
-      preparation.
+    <ComplianceTrackItem position="02" title="Implementare și audit">
+      Colectarea dovezilor este automatizată prin platformă, iar echipa noastră pregătește
+      documentele și coordonează comunicarea necesară pentru audit. Participi doar acolo unde
+      este nevoie, cu pregătire și context clar.
     </ComplianceTrackItem>
-    <ComplianceTrackItem position="03" title="Stay compliant">
-      Once certified, we run your compliance program in the background -
-      monitoring, updating controls, refreshing evidence, and maintaining
-      assessments - so you remain continuously audit-ready with no extra effort.
+    <ComplianceTrackItem position="03" title="Conformitate continuă">
+      După finalizarea auditului, programul continuă în fundal: monitorizăm schimbările,
+      actualizăm controalele, reînnoim dovezile și menținem evaluările la zi pentru o pregătire
+      continuă.
     </ComplianceTrackItem>
   </compliance-track>
 </section>
@@ -55,7 +53,6 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
                 this.children[step - 1]?.setAttribute("data-active", "true");
               }
 
-              // Update the UI
               this.children[step - 1]?.setAttribute("data-active", "true");
             };
             this.timer = setTimeout(tick, 1000);
@@ -89,7 +86,7 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
     50% {
       transform: scale(0.5);
     }
-    0% {
+    100% {
       transform: scale(1);
     }
   }
