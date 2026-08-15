@@ -62,3 +62,13 @@
 /docs/developers/api/mcp/tools/tias /docs/developers/api/mcp/tools/catalog/privacy 301
 /docs/developers/api/mcp/tools/users /docs/developers/api/mcp/tools/catalog/identity-and-provisioning 301
 /fr/* /:splat 301
+
+# Legacy ZebraByte URLs - preserve old SEO routes while using the new Probo-based pages
+/accesibilitate /accessibility 301
+/am-fost-atacat-cibernetic /incident-response 301
+/cyber-audit /security-assessment 301
+/securitate-website /website-security 301
+/hosting /secure-hosting 301
+/despre-noi /about 301
+/securitate /cyber-security 301
+/appointment /programare 301
