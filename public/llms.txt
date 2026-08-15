@@ -1,38 +1,68 @@
 # ZebraByte
 
-> ZebraByte combines cyber security, privacy, compliance, accessibility and secure managed infrastructure with an open-source compliance platform derived from Probo.
+> ZebraByte provides managed compliance, cyber security and security-first managed infrastructure through one unified platform and service model.
 
-ZebraByte focuses on practical security and continuous compliance: security assessment, website and email protection, incident response, GDPR/privacy, NIS2, ISO 27001 readiness, secure managed hosting and digital accessibility. The website preserves and extends the Probo experience, including its documentation, Hub, Stories, compliance portal architecture, developer APIs and upstream endpoint agent.
+The commercial brand is ZebraByte. The compliance platform is derived from the open-source Probo project, which remains attributed where technical names, historical material or upstream documentation are relevant. Upstream Probo customers, authors, team members and historical claims must not be interpreted as ZebraByte customers or employees.
 
 ## LLM resources
 
-- [Documentation index for LLMs](https://www.zebrabyte.ro/llms-docs.txt): Links to documentation pages in clean Markdown.
-- [Complete documentation corpus](https://www.zebrabyte.ro/llms-full.txt): Documentation corpus in one text file.
-- [XML sitemap](https://www.zebrabyte.ro/sitemap-index.xml): Discover public pages.
+- [Documentation index for LLMs](https://www.zebrabyte.ro/llms-docs.txt)
+- [Complete documentation corpus](https://www.zebrabyte.ro/llms-full.txt)
+- [XML sitemap](https://www.zebrabyte.ro/sitemap-index.xml)
 
 For a token-efficient Markdown version of a supported page, request its canonical URL with the `Accept: text/markdown` header.
 
-## ZebraByte cyber security
+## Compliance Platform
+
+- [Managed Compliance](https://www.zebrabyte.ro/managed-compliance): Dedicated compliance expertise, controls, evidence, reviews and continuous audit readiness.
+- [Compliance Portal](https://www.zebrabyte.ro/compliance-portal): Controlled trust, document and evidence sharing.
+- [ISO/IEC 27001](https://www.zebrabyte.ro/iso-27001): ISMS, risk treatment, controls and audit readiness.
+- [GDPR & Privacy](https://www.zebrabyte.ro/gdpr): Privacy governance, evidence and technical measures.
+- [NIS2 Readiness](https://www.zebrabyte.ro/nis2): Governance, risk management, resilience and incident readiness.
+- [SOC 2 guide](https://www.zebrabyte.ro/hub/soc2): SOC 2 controls and audit-readiness resources.
+
+## Cyber Security
 
 - [Cyber Security](https://www.zebrabyte.ro/cyber-security): Main security program and operating model.
-- [Security Assessment](https://www.zebrabyte.ro/security-assessment): Review of exposed services, website, domain, email and technical controls with prioritized remediation.
+- [Security Assessment](https://www.zebrabyte.ro/security-assessment): Review of exposed services, website, domain, email, identity and technical controls with prioritized remediation.
 - [Website Security](https://www.zebrabyte.ro/website-security): WAF, DDoS protection, malware monitoring, hardening and recovery.
 - [Email Security](https://www.zebrabyte.ro/email-security): SPF, DKIM, DMARC, anti-spoofing, phishing/BEC controls and account hardening.
 - [Incident Response](https://www.zebrabyte.ro/incident-response): Triage, containment, eradication, recovery and lessons learned.
-- [Secure Managed Hosting](https://www.zebrabyte.ro/secure-hosting): Security-first managed infrastructure.
+- [Secure Managed Hosting](https://www.zebrabyte.ro/secure-hosting): Security-first managed infrastructure, hardening, backups, monitoring and controlled changes.
 
-## ZebraByte compliance and trust
+## Not a generic IT catalogue
 
-- [GDPR & Privacy](https://www.zebrabyte.ro/gdpr): Privacy governance and technical measures.
-- [NIS2 Readiness](https://www.zebrabyte.ro/nis2): Governance, risk, controls, resilience and incident readiness.
-- [ISO/IEC 27001 Readiness](https://www.zebrabyte.ro/iso-27001): ISMS implementation and audit readiness.
-- [Compliance Portal](https://www.zebrabyte.ro/compliance-portal): Trust, NDA, documents, approvals and evidence sharing.
-- [Digital Accessibility](https://www.zebrabyte.ro/accessibility): WCAG assessment and remediation.
-- [Trust Center](https://trust.zebrabyte.ro): ZebraByte security and compliance information.
+ZebraByte does not position generic WordPress maintenance, website migration, email marketing, standalone SSL sales or broad Managed IT as standalone commercial products. Legacy URLs are kept only for compatibility and redirect into relevant security-first services where appropriate.
+
+Accessibility tooling remains available as a complementary resource, not a primary commercial pillar.
+
+## Platform and open source
+
+- [Documentation overview](https://www.zebrabyte.ro/docs)
+- [Open-source deployment](https://www.zebrabyte.ro/docs/deployment/self-hosting)
+- [Docker Compose](https://www.zebrabyte.ro/docs/deployment/self-hosting/docker-compose)
+- [Kubernetes](https://www.zebrabyte.ro/docs/deployment/self-hosting/kubernetes)
+- [Endpoint Agent](https://www.zebrabyte.ro/download): The distributed binary remains technically named Probo Agent until a separate compatible ZebraByte build exists.
+- [Probo Agent docs](https://www.zebrabyte.ro/docs/product/probo-agent/overview)
+- [Developer overview](https://www.zebrabyte.ro/docs/developers)
+- [GraphQL API](https://www.zebrabyte.ro/docs/developers/graphql)
+- [CLI](https://www.zebrabyte.ro/docs/developers/cli/overview)
+- [MCP server](https://www.zebrabyte.ro/docs/developers/api/mcp/overview)
+- [n8n integration](https://www.zebrabyte.ro/docs/developers/api/n8n/overview)
+- [Webhooks](https://www.zebrabyte.ro/docs/developers/api/webhooks/overview)
+
+## Resources
+
+- [Hub](https://www.zebrabyte.ro/hub): Compliance and security guides, tools and comparisons.
+- [Stories](https://www.zebrabyte.ro/stories): ZebraByte case studies plus preserved platform history where clearly attributed.
+- [Customer Reviews](https://www.zebrabyte.ro/love-from-customer): ZebraByte customer feedback.
+- [Free Security Tools](https://www.zebrabyte.ro/tools)
+- [Digital Accessibility](https://www.zebrabyte.ro/accessibility): Complementary WCAG assessment and tooling resources.
+- [Blog](https://www.zebrabyte.ro/blog)
+- [Changelog](https://www.zebrabyte.ro/changelog)
 
 ## Free tools
 
-- [Free Security Tools](https://www.zebrabyte.ro/tools): ZebraByte security and privacy tools hub.
 - [Web Vulnerability Scanner](https://scan.zebrabyte.ro)
 - [Email Security Scan](https://mail-scan.zebrabyte.ro)
 - [GDPR Scanner](https://gdpr-scan.zebrabyte.ro)
@@ -40,73 +70,24 @@ For a token-efficient Markdown version of a supported page, request its canonica
 - [SSL Tools](https://ssl-gratis.zebrabyte.ro)
 - [Compliance Framework Recommender](https://www.zebrabyte.ro/hub/compliance-recommender)
 
-## Platform and open source
-
-- [Documentation overview](https://www.zebrabyte.ro/docs)
-- [Open-source deployment](https://www.zebrabyte.ro/docs/deployment/self-hosting): Self-host the compliance platform.
-- [Docker Compose](https://www.zebrabyte.ro/docs/deployment/self-hosting/docker-compose)
-- [Kubernetes](https://www.zebrabyte.ro/docs/deployment/self-hosting/kubernetes)
-- [Endpoint Agent](https://www.zebrabyte.ro/download): The distributed binary remains the upstream open-source Probo Agent until a separate ZebraByte build exists.
-- [Upstream Probo Agent docs](https://www.zebrabyte.ro/docs/product/probo-agent/overview)
-
-## Resources
-
-- [Hub](https://www.zebrabyte.ro/hub): ZebraByte resources plus the complete original Probo Compliance Guides, Tools, Articles and Comparisons library.
-- [Stories](https://www.zebrabyte.ro/stories): ZebraByte case studies and original Probo stories with their original media and attribution.
-- [Love from Customers](https://www.zebrabyte.ro/love-from-customer): ZebraByte reviews plus the original Probo testimonials, customer logos and wall.
-- [Blog](https://www.zebrabyte.ro/blog): ZebraByte shell with the original Probo editorial archive preserved.
-- [Changelog](https://www.zebrabyte.ro/changelog): Original Probo changelog preserved and future ZebraByte platform updates.
-- [Brand Assets](https://www.zebrabyte.ro/brand): ZebraByte assets plus the complete original Probo logo and framework badge library.
-
-## Compliance guides from the Probo resource center
-
-- [SOC 2 guide](https://www.zebrabyte.ro/hub/soc2)
-- [ISO 27001 guide](https://www.zebrabyte.ro/hub/iso27001)
-- [NIS2 compliance guide](https://www.zebrabyte.ro/hub/nis2-compliance)
-- [SOC 2 vs. ISO 27001](https://www.zebrabyte.ro/hub/which-compliance-framework)
-- [What is compliance software?](https://www.zebrabyte.ro/hub/what-is-compliance-software)
-- [Third-party risk management](https://www.zebrabyte.ro/hub/third-party-risk-management)
-- [Probo vs Vanta](https://www.zebrabyte.ro/hub/probo-vs-vanta)
-
-## Product documentation
-
-- [Product overview](https://www.zebrabyte.ro/docs/product/getting-started/product-overview)
-- [Core concepts](https://www.zebrabyte.ro/docs/product/getting-started/core-concepts)
-- [Identity and access](https://www.zebrabyte.ro/docs/product/identity-and-access)
-- [Access reviews](https://www.zebrabyte.ro/docs/product/access-review/overview)
-- [Compliance Portal docs](https://www.zebrabyte.ro/docs/product/compliance-portal)
-- [Cookie consent](https://www.zebrabyte.ro/docs/product/cookie-banner/overview)
-
-## Developer documentation
-
-- [Developer overview](https://www.zebrabyte.ro/docs/developers)
-- [API fundamentals](https://www.zebrabyte.ro/docs/developers/api-overview)
-- [GraphQL API](https://www.zebrabyte.ro/docs/developers/graphql)
-- [CLI](https://www.zebrabyte.ro/docs/developers/cli/overview)
-- [MCP server](https://www.zebrabyte.ro/docs/developers/api/mcp/overview)
-- [n8n integration](https://www.zebrabyte.ro/docs/developers/api/n8n/overview)
-- [Webhooks](https://www.zebrabyte.ro/docs/developers/api/webhooks/overview)
-
 ## Company
 
-- [About ZebraByte](https://www.zebrabyte.ro/about): ZebraByte mission, disciplines and preserved Probo visual history/team attribution.
-- [Industries](https://www.zebrabyte.ro/industries): Legal, medical, public sector, ecommerce, logistics, education and other sector contexts.
-- [Partnerships](https://www.zebrabyte.ro/partnerships): Agency, developer, integration and white-label partnership models.
-- [Careers](https://www.zebrabyte.ro/careers): ZebraByte roles and preserved upstream Probo job collection.
+- [About ZebraByte](https://www.zebrabyte.ro/about)
+- [Why ZebraByte](https://www.zebrabyte.ro/decezebrabyte)
+- [Industries](https://www.zebrabyte.ro/industries)
+- [Partnerships](https://www.zebrabyte.ro/partnerships)
 - [Contact](https://www.zebrabyte.ro/contact)
 - [Client portal](https://portal.zebrabyte.ro)
-- [GitHub website repository](https://github.com/liviubucel/www-getprobo-com)
+- [Trust Center](https://trust.zebrabyte.ro)
 
-## Upstream Probo preserved in the ZebraByte site
+## Preserved open-source heritage
 
-- [Original Probo Compliance Portal page](https://www.zebrabyte.ro/products/compliance-portal)
-- [Probo Agent documentation](https://www.zebrabyte.ro/docs/product/probo-agent/overview)
-- [Original Probo Stories](https://www.zebrabyte.ro/stories)
-- [Original Probo customer wall](https://www.zebrabyte.ro/love-from-customer)
-- [Original Probo Hub](https://www.zebrabyte.ro/hub)
-- [Probo upstream GitHub](https://github.com/getprobo/probo)
-- [Probo upstream website](https://www.probo.com)
+The repository intentionally retains Probo photos, logos, customer wall, testimonials, stories, blog/changelog history, framework assets, keyshot media and technical documentation instead of deleting them. Material that cannot truthfully be presented as ZebraByte is separated from the primary commercial journey and may be exposed through noindex heritage/archive pages.
+
+- [Platform heritage archive](https://www.zebrabyte.ro/platform-heritage)
+- [Platform customer archive](https://www.zebrabyte.ro/platform-customer-archive)
+- [Upstream Probo GitHub](https://github.com/getprobo/probo)
 
 ## Upstream attribution
 
-The compliance website/platform experience is derived from the MIT-licensed Probo project. Probo visuals, logos, case-study media, authors, technical names, API paths, agent binary names and historical content are intentionally preserved where useful. Upstream organizations and people must not be interpreted as ZebraByte customers or employees unless separately documented as such.
+The compliance platform experience is derived from the MIT-licensed Probo project. Technical upstream names, API identifiers, agent binary names and historical editorial material remain attributed where appropriate. The public commercial identity and offer are ZebraByte.
