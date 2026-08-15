@@ -18,7 +18,7 @@ type Props = {
 
 const { page } = Astro.props;
 
-const dateFormatter = Intl.DateTimeFormat("en-US", {
+const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   year: "numeric",
   month: "long",
   day: "numeric",
@@ -26,15 +26,15 @@ const dateFormatter = Intl.DateTimeFormat("en-US", {
 ---
 
 <Layout
-  title={`Blog, page ${page.currentPage}`}
-  description="More articles about compliance, security certifications, SOC 2, ISO 27001, and building trust from the Probo blog."
+  title={`Blog, pagina ${page.currentPage}`}
+  description="Mai multe articole ZebraByte despre securitate cibernetică, conformitate, GDPR, NIS2, infrastructură și hosting administrat."
 >
   <main class="container my-10 sm:my-20">
     <h1 class="text-h2 mb-3 font-medium">
-      Blog<span class="hidden">, page {page.currentPage}</span>
+      Blog<span class="hidden">, pagina {page.currentPage}</span>
     </h1>
     <p class="text-muted-foreground mb-10 text-base sm:mb-16">
-      The latest news from Probo
+      Analize, ghiduri și noutăți de la ZebraByte
     </p>
     <div
       class="flex flex-col items-start gap-10 sm:grid sm:grid-cols-[1fr_320px] sm:gap-30"
@@ -44,7 +44,7 @@ const dateFormatter = Intl.DateTimeFormat("en-US", {
           page.data.map((post: any) => (
             <article class="border-b pt-6 pb-6 first:pt-0 last:border-b-0 sm:pt-10 sm:pb-10 sm:first:pt-0">
               <div class="text-muted-foreground">
-                {dateFormatter.format(new Date(post.data.date))}, by{" "}
+                {dateFormatter.format(new Date(post.data.date))}, de{" "}
                 {post.data.author.name}
               </div>
               <h2>
