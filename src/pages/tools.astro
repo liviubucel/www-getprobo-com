@@ -1,0 +1,118 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const tools = [
+  {
+    label: "Web Vulnerability Scanner",
+    description: "Verificare rapidă a expunerilor și problemelor evidente ale unui website public.",
+    href: "https://scan.zebrabyte.ro",
+    tag: "Web Security",
+  },
+  {
+    label: "Email Security Scan",
+    description: "Verifică postura domeniului pentru controalele de autentificare și securitate email.",
+    href: "https://mail-scan.zebrabyte.ro",
+    tag: "Email",
+  },
+  {
+    label: "GDPR Scanner",
+    description: "Evaluare automată inițială pentru semnale și configurații relevante de privacy/compliance pe website.",
+    href: "https://gdpr-scan.zebrabyte.ro",
+    tag: "Privacy",
+  },
+  {
+    label: "Network Test",
+    description: "Teste de rețea și conectivitate pentru diagnosticarea rapidă a unor probleme tehnice sau de expunere.",
+    href: "https://net-scan.zebrabyte.ro",
+    tag: "Network",
+  },
+  {
+    label: "SSL Tools",
+    description: "Instrumente pentru certificate și verificări TLS/SSL folosite în configurarea serviciilor web.",
+    href: "https://ssl-gratis.zebrabyte.ro",
+    tag: "TLS",
+  },
+  {
+    label: "Compliance Framework Recommender",
+    description: "Instrumentul original din Probo Hub pentru a orienta organizația către framework-urile de compliance relevante.",
+    href: "/hub/compliance-recommender",
+    tag: "Probo Tool",
+  },
+];
+
+const boundaries = [
+  "Scanările automate sunt un punct de pornire, nu un penetration test și nu o garanție că un sistem este sigur.",
+  "Rezultatele trebuie interpretate în contextul aplicației, infrastructurii și riscului real al organizației.",
+  "Nu testa sisteme pe care nu le deții sau pentru care nu ai autorizare explicită.",
+  "Pentru constatări importante, Security Assessment poate transforma rezultatul într-un plan de remediere verificat.",
+];
+---
+
+<Layout
+  title="Free Security Tools"
+  description="Instrumente gratuite ZebraByte pentru scanare website, securitate email, GDPR, network testing, SSL și alegerea framework-urilor de compliance."
+>
+  <main>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Free Tools</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Verificări rapide înainte să începi un proiect mai mare.</h1>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">Instrumentele ZebraByte oferă o primă vedere asupra website-ului, emailului, rețelei și privacy-ului. Păstrăm în același hub și Compliance Recommender-ul original Probo.</p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button href="#tools" size="lg">Vezi instrumentele</Button>
+          <Button href="/security-assessment" variant="secondary" size="lg">Ai nevoie de analiză umană?</Button>
+        </div>
+      </div>
+    </animated-hero>
+
+    <section id="tools" class="container scroll-mt-24 py-16 sm:py-24">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {tools.map((tool) => (
+          <a
+            href={tool.href}
+            target={tool.href.startsWith("http") ? "_blank" : undefined}
+            rel={tool.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            class="bg-level-0 group min-h-64 rounded-2xl border p-6 transition-all hover:-translate-y-0.5 hover:bg-subtle hover:shadow-lg sm:p-8"
+          >
+            <span class="bg-active mb-12 inline-flex rounded-full px-3 py-1 text-xs font-medium">{tool.tag}</span>
+            <h2 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{tool.label}</h2>
+            <p class="text-muted-foreground leading-relaxed">{tool.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Limits</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un scanner automat nu înțelege singur business risk.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Instrumentele sunt intenționat accesibile și rapide. Când rezultatul contează pentru o decizie, îl legăm de context, ownership și remediation.</p>
+        </div>
+        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
+          <ul class="space-y-4">
+            {boundaries.map((boundary) => (
+              <li class="flex gap-3 text-muted-foreground leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{boundary}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Ai găsit ceva care trebuie investigat?</h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Trimite-ne rezultatul sau domeniul și îl putem include într-un assessment cu scope clar și plan de remediere.</p>
+      <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
