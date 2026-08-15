@@ -4,19 +4,21 @@ import MenuIcon from "./MenuIcon.astro";
 import { directMenuItems } from "../content/menu";
 ---
 
-<client-access-menu class="relative ml-3 hidden xl:block">
+<client-access-menu class="relative ml-2 hidden xl:block">
   <button
     type="button"
     data-account-trigger
-    class="text-primary hover:bg-active flex h-8 items-center gap-2 rounded-lg px-2.5 text-sm font-medium transition-colors"
+    class="text-primary bg-secondary hover:bg-active grid size-8 place-items-center rounded-full border transition-colors"
+    aria-label="Autentificare și acces clienți"
+    title="Autentificare și acces clienți"
     aria-haspopup="true"
     aria-expanded="false"
     aria-controls="client-access-panel"
   >
     <svg
       viewBox="0 0 24 24"
-      width="18"
-      height="18"
+      width="17"
+      height="17"
       fill="none"
       stroke="currentColor"
       stroke-width="1.8"
@@ -27,8 +29,6 @@ import { directMenuItems } from "../content/menu";
       <path d="M20 21a8 8 0 0 0-16 0" />
       <circle cx="12" cy="7" r="4" />
     </svg>
-    <span>Autentificare</span>
-    <Icon name="caret-down" size={13} />
   </button>
 
   <div
@@ -59,7 +59,7 @@ import { directMenuItems } from "../content/menu";
               </span>
               <span class="min-w-0 flex-1">
                 <span class="block font-semibold">{item.label}</span>
-                <span class="text-muted-foreground block truncate text-sm">
+                <span class="text-muted-foreground block text-sm leading-5">
                   {item.description}
                 </span>
               </span>
