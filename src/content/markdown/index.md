@@ -1,59 +1,61 @@
-# ZebraByte — Cyber Security & Compliance
+# ZebraByte — Managed Compliance & Cyber Security
 
-ZebraByte combină securitatea cibernetică, privacy, compliance și infrastructura securizată într-un program continuu, construit peste experiența open-source Probo pe care o păstrăm și o extindem.
+ZebraByte combină managed compliance, platformă open-source, cyber security și infrastructură security-first într-un singur program. Oferta comercială este ZebraByte; Probo rămâne fundația open-source atribuită acolo unde numele sau materialele upstream sunt tehnic relevante.
 
-## Securitate și conformitate, gestionate pentru tine
+## Compliance și securitate, gestionate pentru tine
 
-Evaluăm riscul, implementăm măsurile tehnice și organizaționale, centralizăm dovezile și menținem controalele relevante în timp. Obiectivul nu este un raport care rămâne într-un folder, ci o organizație care poate demonstra ce controale are și de ce funcționează.
+Un compliance officer poate coordona programul end-to-end, în timp ce platforma menține riscurile, controalele, evidence-ul și audit readiness-ul. Echipa de cyber security poate implementa și verifica măsurile tehnice care susțin acele controale.
+
+## Compliance Platform
+
+- **Managed Compliance** — expert dedicat, controls, evidence, reviews și audit readiness continuă.
+- **Compliance Portal** — distribuire controlată de documente, evidence și informații de trust.
+- **Open-source platform** — self-hosting, API, CLI, MCP, n8n, webhooks și integrări, fără vendor lock-in artificial.
+- **ISO/IEC 27001** — ISMS, risk treatment, controls și audit preparation.
+- **GDPR & Privacy** — privacy governance, evidence și măsuri tehnice.
+- **NIS2 Readiness** — risk management, governance, resilience și incident readiness.
+- **SOC 2** — controls, evidence și audit-readiness resources.
 
 ## Cyber Security
 
-- **Security Assessment** — website, domeniu, email și servicii expuse, cu raport și plan de remediere prioritizat.
-- **Website Security** — WAF, DDoS protection, malware monitoring, TLS hardening și recovery.
-- **Email Security** — SPF, DKIM, DMARC, anti-spoofing, anti-phishing/BEC și account hardening.
+- **Security Assessment** — expunere publică, website, domeniu, email, identity și vulnerabilități, cu plan de remediere prioritizat.
+- **Website Security** — WAF, DDoS protection, malware monitoring, hardening și recovery.
+- **Email Security** — SPF, DKIM, DMARC, anti-spoofing, phishing/BEC și account hardening.
 - **Incident Response** — triage, containment, eradication, recovery și lessons learned.
-- **Continuous Security** — hardening, vulnerability management, monitoring și evidence menținut în timp.
+- **Secure Managed Hosting** — infrastructură administrată doar în model security-first, cu hardening, backup, monitoring și change management.
 
-## Privacy & Compliance
+## Ce nu mai este ofertă principală
 
-- **GDPR & Privacy** — governance, măsuri tehnice, evidențe și procese de privacy.
-- **NIS2 Readiness** — risk management, governance, resilience și incident readiness.
-- **ISO/IEC 27001 Readiness** — ISMS, risk treatment, controls și audit preparation.
-- **Compliance Portal** — trust, NDA, documente, approvals și evidence sharing.
+ZebraByte nu mai promovează separat servicii IT generice precum WordPress maintenance, website migration, email marketing, standalone SSL sales sau broad Managed IT. URL-urile legacy sunt păstrate doar pentru compatibilitate și redirectate către serviciile security relevante unde este cazul.
 
-## Platform & Infrastructure
+## Resources
 
-- **Open-source compliance platform** — controls, evidence, risks, vendors, workflows, portal și integrări.
-- **Secure Managed Hosting** — infrastructură administrată cu securitatea ca parte din operare.
-- **Digital Accessibility** — evaluare WCAG și remediation.
-- **Free Tools** — web scan, email scan, GDPR scan, network test, SSL tools și Compliance Recommender.
+- **Free Tools** — instrumente de security și privacy.
+- **Hub** — ghiduri, comparații și resurse pentru compliance și security.
+- **Stories** — studii de caz și materiale de platformă.
+- **Accessibility** — zonă complementară de resurse și tooling WCAG, nu pilon comercial principal.
 
-## Industries & Partnerships
+## Open-source foundation
 
-ZebraByte adaptează programul pentru avocatură/notariat, medical, sector public, e-commerce, imobiliare, HoReCa, logistică, educație, ONG și alte organizații cu profile de risc diferite. Colaborăm și cu agenții, dezvoltatori, consultanți și integratori prin modele de co-delivery, integration sau white-label stabilite explicit.
-
-## Probo este păstrat
-
-Experiența de compliance nu tratează Probo ca pe un simplu schelet. Păstrăm componentele, designul, logo-urile, fotografiile, customer wall-ul, testimonialele, Stories, Hub, Blog, Changelog, Docs, framework badges, Probo Agent și numele tehnice upstream acolo unde sunt reale. Conținutul upstream este atribuit Probo, nu rebotezat fals drept ZebraByte.
+Componentele, documentația, fotografiile, logo-urile, testimonialele și materialele istorice Probo care trebuie păstrate rămân în repository și în arhive atribuite/noindex. Nu sunt prezentate drept clienți, echipă sau istorie ZebraByte.
 
 ## Links
 
+- [Managed Compliance](/managed-compliance)
+- [Compliance Portal](/compliance-portal)
 - [Cyber Security](/cyber-security)
 - [Security Assessment](/security-assessment)
 - [Website Security](/website-security)
 - [Email Security](/email-security)
 - [Incident Response](/incident-response)
+- [Secure Managed Hosting](/secure-hosting)
+- [ISO/IEC 27001](/iso-27001)
 - [GDPR & Privacy](/gdpr)
 - [NIS2 Readiness](/nis2)
-- [ISO/IEC 27001 Readiness](/iso-27001)
-- [Secure Managed Hosting](/secure-hosting)
-- [Accesibilitate digitală](/accessibility)
-- [Compliance Portal](/compliance-portal)
-- [Free Tools](/tools)
 - [Industries](/industries)
-- [Partnerships](/partnerships)
+- [Free Tools](/tools)
 - [Docs](/docs)
 - [Hub](/hub)
 - [Stories](/stories)
-- [Love from Customers](/love-from-customer)
+- [Customer Reviews](/love-from-customer)
 - [Contact](/contact)
