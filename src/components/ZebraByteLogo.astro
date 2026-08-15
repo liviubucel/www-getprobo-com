@@ -1,24 +1,28 @@
 ---
 interface Props {
   class?: string;
+  inverse?: boolean;
 }
 
-const { class: className = "" } = Astro.props;
+const { class: className = "", inverse = false } = Astro.props;
 ---
 
 <a
   href="/"
   class:list={[
-    "inline-flex items-center gap-2 text-primary no-underline",
+    "inline-flex items-center no-underline",
     className,
   ]}
   aria-label="ZebraByte — pagina principală"
 >
-  <span
-    aria-hidden="true"
-    class="grid size-7 place-items-center rounded-md bg-primary text-[11px] font-semibold tracking-[-0.04em] text-white"
-  >
-    ZB
-  </span>
-  <span class="text-[17px] font-semibold tracking-[-0.035em]">ZebraByte</span>
+  <img
+    src="/images/zbt-negru.svg"
+    alt="ZebraByte"
+    width="3242"
+    height="1166"
+    class:list={[
+      "h-7 w-auto max-w-[96px] object-contain sm:h-8 sm:max-w-[108px]",
+      inverse && "brightness-0 invert",
+    ]}
+  />
 </a>
