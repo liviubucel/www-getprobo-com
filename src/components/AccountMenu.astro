@@ -19,15 +19,16 @@ const {
     "relative",
     mobile ? "block" : "ml-2 hidden xl:block",
   ]}
+  data-mobile-account-menu={mobile ? "true" : undefined}
 >
   <button
     type="button"
     data-account-trigger
     class:list={[
-      "text-primary grid size-10 place-items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
+      "text-primary grid size-10 place-items-center transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
       mobile
-        ? "text-muted-foreground hover:text-primary rounded-lg hover:bg-subtle"
-        : "bg-secondary hover:bg-active rounded-full border shadow-[0_1px_2px_rgba(20,30,18,0.04)] transition-[background-color,border-color,box-shadow] hover:shadow-[0_3px_10px_rgba(20,30,18,0.09)]",
+        ? "text-muted-foreground hover:text-primary rounded-lg hover:bg-subtle aria-expanded:bg-subtle aria-expanded:text-primary aria-expanded:ring-1 aria-expanded:ring-current/10"
+        : "bg-secondary hover:bg-active rounded-full border shadow-[0_1px_2px_rgba(20,30,18,0.04)] transition-[background-color,border-color,box-shadow] hover:shadow-[0_3px_10px_rgba(20,30,18,0.09)] aria-expanded:bg-subtle aria-expanded:shadow-[0_3px_10px_rgba(20,30,18,0.10)]",
     ]}
     aria-label="Autentificare și acces clienți"
     title="Acces clienți"
@@ -58,11 +59,20 @@ const {
     class:list={[
       "pointer-events-none z-[80] origin-top-right translate-y-[-6px] scale-[0.985] opacity-0 transition duration-200",
       mobile
-        ? "bg-transparent fixed top-16 right-4 left-4 mt-2"
+        ? "absolute top-full right-[-3rem] mt-3 w-[min(360px,calc(100vw-2rem))]"
         : "absolute top-full right-0 mt-3 w-[340px]",
     ]}
     hidden
   >
+    {
+      mobile && (
+        <span
+          class="bg-secondary absolute -top-[7px] right-[62px] z-10 size-3.5 rotate-45 border-t border-l"
+          aria-hidden="true"
+        />
+      )
+    }
+
     <div
       class:list={[
         "bg-secondary overflow-hidden border shadow-[0_16px_32px_rgba(20,30,18,0.16)]",
@@ -71,6 +81,9 @@ const {
     >
       <div class="border-b px-4 py-3.5">
         <p class="font-semibold">Acces clienți</p>
+        <p class="text-muted-foreground mt-0.5 text-[13px] leading-5">
+          Alege platforma în care vrei să intri.
+        </p>
       </div>
 
       <div class="p-2">
@@ -119,12 +132,14 @@ const {
       this.trigger?.addEventListener("click", this.toggle);
       document.addEventListener("pointerdown", this.onDocumentPointerDown);
       document.addEventListener("keydown", this.onKeyDown);
+      document.addEventListener("zbt:main-menu-open", this.closeFromMainMenu);
     }
 
     disconnectedCallback() {
       this.trigger?.removeEventListener("click", this.toggle);
       document.removeEventListener("pointerdown", this.onDocumentPointerDown);
       document.removeEventListener("keydown", this.onKeyDown);
+      document.removeEventListener("zbt:main-menu-open", this.closeFromMainMenu);
       if (this.hideTimer) window.clearTimeout(this.hideTimer);
     }
 
@@ -139,6 +154,7 @@ const {
       }
 
       if (next) {
+        document.dispatchEvent(new CustomEvent("zbt:account-menu-open", { detail: { source: this } }));
         this.panel.hidden = false;
         requestAnimationFrame(() => {
           if (!this.panel) return;
@@ -179,6 +195,8 @@ const {
       event.stopPropagation();
       this.setOpen(!this.open);
     };
+
+    closeFromMainMenu = () => this.setOpen(false);
 
     onDocumentPointerDown = (event: PointerEvent) => {
       if (this.open && !this.contains(event.target as Node)) this.setOpen(false);
