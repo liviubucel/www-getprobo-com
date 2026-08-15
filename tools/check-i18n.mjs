@@ -66,10 +66,16 @@ for (const marker of [
   "Content-Language",
   "withLocalizedEmailEnv",
   "localizeApiResponse",
-  "lang=${locale}",
+  'params.set("lang", locale)',
   "/en/newsletter/rezultat",
 ]) {
   requireText(apiI18n, marker, "API/email localization");
+}
+
+const explicitLocaleIndex = apiI18n.indexOf('url.searchParams.get("lang")');
+const englishPathIndex = apiI18n.indexOf('if (englishPath) return "en"');
+if (explicitLocaleIndex === -1 || englishPathIndex === -1 || explicitLocaleIndex > englishPathIndex) {
+  failures.push("API locale precedence must honor explicit ?lang= before /en and Accept-Language fallbacks.");
 }
 
 const translator = await read("worker/i18n-ai.ts");
@@ -95,6 +101,7 @@ for (const marker of ["/en", "RO", "EN", "installBrowserI18nObserver"]) {
 }
 
 const browserI18n = await read("src/lib/browser-i18n.ts");
+const browserI18nLower = browserI18n.toLocaleLowerCase();
 for (const marker of [
   "MutationObserver",
   "browserT",
@@ -114,7 +121,7 @@ const hydratedContracts = [
   ["src/components/DealForm.svelte", ["browserT", "getBrowserLocale", "Accept-Language"]],
   ["src/components/DownloadAgent.svelte", ["browserT"]],
   ["src/lib/device-agent-release.ts", ["browserT", "getBrowserLocale", "Accept-Language"]],
-  ["src/components/block/Sharer.svelte", ["browserT", "copied = true"]],
+  ["src/components/block/Sharer.svelte", ["browserT", "copied = true", "onDestroy"]],
   ["src/components/docs/mermaid-init.ts", ["browserT"]],
   ["src/components/docs/MobileMenuToggle.astro", ["browserT", "Deschide meniul documentației", "Open documentation menu"]],
   ["src/components/docs/ThemeToggle.astro", ["Temă luminoasă", "Temă întunecată", "Tema sistemului"]],
@@ -176,7 +183,7 @@ for (const file of sourceFiles) {
     for (const match of source.matchAll(pattern)) {
       const literal = match[1]?.trim();
       if (!literal || !/[A-Za-zĂÂÎȘȚăâîșț]/u.test(literal)) continue;
-      if (!browserI18n.toLocaleLowerCase().includes(literal.toLocaleLowerCase())) {
+      if (!browserI18nLower.includes(literal.toLocaleLowerCase())) {
         uncoveredRuntimeLiterals.push(`${file}: ${JSON.stringify(literal)}`);
       }
     }
