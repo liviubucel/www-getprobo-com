@@ -2,15 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 import Badges from "../components/Badges.svelte";
+import ZebraByteCapabilities from "../components/block/ZebraByteCapabilities.astro";
 import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 import SaleArg from "../components/ui/SaleArg.astro";
+import Stories from "../components/block/Stories.astro";
 import ComplianceTrack from "../components/block/ComplianceTrack.astro";
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "ZebraByte",
-  alternateName: "ZebraByte Cyber Security & Compliance",
+  alternateName: "ZebraByte Managed Compliance & Cyber Security",
   url: "https://www.zebrabyte.ro",
   publisher: {
     "@type": "Organization",
@@ -18,162 +20,142 @@ const websiteSchema = {
     url: "https://www.zebrabyte.ro",
   },
 };
-
-const coreOfferings = [
-  {
-    eyebrow: "Compliance",
-    title: "Managed Compliance",
-    description: "Un compliance officer dedicat rulează programul end-to-end, iar platforma menține controalele și evidence-ul continuu audit-ready.",
-    href: "/managed-compliance",
-  },
-  {
-    eyebrow: "Trust",
-    title: "Compliance Portal",
-    description: "Documente, evidence și informații de trust distribuite controlat către clienți, parteneri și auditori.",
-    href: "/compliance-portal",
-  },
-  {
-    eyebrow: "Protect",
-    title: "Cyber Security",
-    description: "Assessment, hardening, website și email security, vulnerability management și incident readiness într-un program coerent.",
-    href: "/cyber-security",
-  },
-  {
-    eyebrow: "Infrastructure",
-    title: "Secure Managed Hosting",
-    description: "Hosting administrat doar în model security-first: hardening, izolare, backup, monitorizare și change management controlat.",
-    href: "/secure-hosting",
-  },
-  {
-    eyebrow: "Assess",
-    title: "Security Assessment",
-    description: "Evaluăm expunerea publică, configurațiile, identitatea, email-ul și vulnerabilitățile și livrăm un plan prioritizat de remediere.",
-    href: "/security-assessment",
-  },
-  {
-    eyebrow: "Respond",
-    title: "Incident Response",
-    description: "Triage, containment, eradication, recovery și lessons learned pentru incidente care necesită intervenție tehnică structurată.",
-    href: "/incident-response",
-  },
-];
-
-const frameworks = [
-  { title: "ISO/IEC 27001", href: "/iso-27001", text: "ISMS, risk treatment, controls și audit readiness." },
-  { title: "GDPR & Privacy", href: "/gdpr", text: "Privacy governance, evidence și măsuri tehnice." },
-  { title: "NIS2", href: "/nis2", text: "Risk management, governance și incident readiness." },
-  { title: "SOC 2", href: "/hub/soc2", text: "Controale, evidence și pregătire continuă pentru audit." },
-];
 ---
 
 <Layout
   title="Managed Compliance & Cyber Security"
-  description="ZebraByte combină managed compliance, platformă open-source, cyber security și secure managed hosting într-un singur program security-first."
+  description="Managed compliance, cyber security și secure managed hosting într-un singur program ZebraByte, cu controale, evidence și audit readiness menținute continuu."
 >
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
-  <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-    <p class="text-muted-foreground animate-perspective-in animation-delay-100 mx-auto mb-5 w-max rounded-lg border px-3 py-1 text-sm font-medium">
-      Managed Compliance · Cyber Security · Secure Infrastructure
-    </p>
-
-    <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-      <span class="animate-perspective-in block">Compliance și securitate,</span>
-      <span class="animate-perspective-in block delay-50"> gestionate pentru tine.</span>
-    </h1>
-
-    <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-      ZebraByte combină modelul de compliance gestionat end-to-end cu security engineering și infrastructură security-first.
-      Un singur program pentru controale, evidence, audit readiness, protecția aplicațiilor, email security și hosting securizat.
-    </p>
-
-    <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
-      <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/managed-compliance">Explorează Managed Compliance</Button>
-      <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută cu un expert</Button>
+  <animated-hero
+    class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+  >
+    <div
+      class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8"
+    >
+      Managed Compliance · Cyber Security
     </div>
 
-    <Badges count={10} countMobile={6} client:load border class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5" />
+    <h1
+      class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+    >
+      <span class="animate-perspective-in block">Compliance și securitate,</span>
+      <span class="animate-perspective-in block delay-50"> gestionate pentru tine. </span>
+    </h1>
+
+    <p
+      class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+    >
+      Un expert coordonează programul de compliance end-to-end, iar echipa de cyber security
+      leagă controalele de măsurile tehnice reale: protecția aplicațiilor, email security,
+      incident response și infrastructură security-first.
+    </p>
+
+    <div
+      class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center"
+    >
+      <Button
+        class="animate-perspective-in animation-delay-200"
+        variant="secondary"
+        size="lg"
+        href="/managed-compliance"
+      >
+        Managed Compliance
+      </Button>
+      <Button
+        class="animate-perspective-in animation-delay-300"
+        size="lg"
+        rel="nofollow noreferrer"
+        href="/contact"
+      >
+        Discută cu un expert
+      </Button>
+    </div>
+
+    <Badges
+      count={10}
+      countMobile={6}
+      client:load
+      border
+      class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
+    />
+
+    <section class="mt-11 mix-blend-multiply sm:mt-17">
+      <h2 class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center">
+        Security, privacy și compliance într-un singur program
+      </h2>
+      <ZebraByteCapabilities class="animate-slide-in animation-delay-300" constrained />
+    </section>
   </animated-hero>
 
   <ComplianceTrack />
 
   <section class="container py-10 sm:py-20">
-    <div class="mx-auto mb-10 max-w-190 text-center sm:mb-14">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
-      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">O singură ofertă: compliance + cyber security</h2>
-      <p class="text-muted-foreground text-lg">
-        Nu mai separăm platforma de măsurile tehnice care trebuie să susțină conformitatea. Governance, evidence și infrastructura protejată fac parte din același program.
-      </p>
-    </div>
-
-    <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2 lg:grid-cols-3">
-      {
-        coreOfferings.map((offering) => (
-          <a href={offering.href} class="bg-level-0 group min-h-56 p-6 transition-colors hover:bg-subtle sm:p-8">
-            <p class="text-muted-foreground mb-10 text-sm font-medium">{offering.eyebrow}</p>
-            <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{offering.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{offering.description}</p>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="bg-active py-10 sm:py-16">
-    <div class="container">
-      <div class="mx-auto mb-10 max-w-3xl text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Frameworks</p>
-        <h2 class="text-h3 font-medium">Framework-urile sunt parte din program, nu produse IT separate.</h2>
-      </div>
-      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {frameworks.map((item) => (
-          <a href={item.href} class="bg-level-0 hover:bg-subtle rounded-xl border p-5 transition-colors sm:p-6">
-            <h3 class="mb-2 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="container py-10 sm:py-20">
-    <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">Compliance care rulează în fundal. Security care se vede în controale reale.</h2>
-    <p class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12">
-      Păstrăm experiența și automatizarea platformei open-source, dar oferta ZebraByte este una singură: expertiză de compliance conectată direct la securitatea tehnică.
+    <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
+      Pune compliance-ul și securitatea pe autopilot
+    </h2>
+    <p
+      class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12"
+    >
+      Rulează programul cu o combinație de expertiză și automatizare. ZebraByte urmărește
+      controalele, evidence-ul și riscurile, iar măsurile tehnice sunt implementate și
+      menținute în același model operațional.
     </p>
 
-    <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
-      <SaleArg title="Expert dedicat pentru programul de compliance" video="/videos/keyshot1.mp4">
-        <p>Un punct unic de contact coordonează riscurile, politicile, controalele, reviews și pregătirea pentru audit.</p>
+    <div
+      class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12"
+    >
+      <SaleArg
+        title="Expertul tău dedicat pentru compliance"
+        video="/videos/keyshot1.mp4"
+      >
+        <p>
+          Un specialist coordonează politici, controale, risk reviews, vendor reviews,
+          accessibility requirements și pregătirea pentru audit ca extensie a echipei tale.
+        </p>
       </SaleArg>
 
-      <SaleArg title="Evidence și controale menținute continuu" video="/videos/keyshot2.mp4">
-        <p>Automatizarea reduce munca manuală, iar echipa urmărește gap-urile și schimbările care afectează postura de conformitate.</p>
+      <SaleArg
+        title="Compliance care rulează în fundal"
+        video="/videos/keyshot2.mp4"
+      >
+        <p>
+          Evidence collection, approvals și follow-up-urile repetitive sunt automatizate,
+          iar echipa urmărește schimbările care pot afecta postura de conformitate.
+        </p>
       </SaleArg>
 
-      <SaleArg title="Security engineering legat de governance" video="/videos/keyshot3.mp4">
-        <p>Website security, email security, hardening, vulnerability management și hosting securizat susțin direct controalele și risk treatment-ul.</p>
+      <SaleArg
+        title="Transformă controalele în securitate reală"
+        video="/videos/keyshot3.mp4"
+      >
+        <p>
+          Security assessment, website și email security, hardening, vulnerability management
+          și secure managed hosting susțin direct risk treatment-ul și controalele asumate.
+        </p>
       </SaleArg>
 
-      <SaleArg title="Platformă deschisă, integrabilă și self-hostable" video="/videos/keyshot4.mp4">
-        <p>API-urile, automatizarea și opțiunea de self-hosting păstrează controlul asupra datelor și reduc vendor lock-in-ul.</p>
+      <SaleArg
+        title="Lucrează dintr-un singur program"
+        video="/videos/keyshot4.mp4"
+      >
+        <p>
+          Documente, acțiuni, evidence, reviews și integrarea cu workflow-urile echipei rămân
+          centralizate, fără un catalog fragmentat de servicii IT fără legătură între ele.
+        </p>
       </SaleArg>
     </div>
   </section>
 
   <ZebraByteTestimonials />
 
-  <section class="container py-12 sm:py-20">
-    <div class="grid gap-4 sm:grid-cols-3">
-      <a href="/stories" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Case studies</p><h2 class="mb-2 text-xl font-medium">Vezi Stories</h2><p class="text-muted-foreground">Studii de caz și experiențe din platformă.</p></a>
-      <a href="/hub" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Resources</p><h2 class="mb-2 text-xl font-medium">Explorează Hub</h2><p class="text-muted-foreground">Ghiduri pentru compliance, security și privacy.</p></a>
-      <a href="/docs" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Open source</p><h2 class="mb-2 text-xl font-medium">Documentație</h2><p class="text-muted-foreground">Deployment, integrări, API, CLI și self-hosting.</p></a>
-    </div>
-  </section>
+  <Stories />
 </Layout>
 
 <script>
   import { AnimatedHero } from "../lib/elements/hero";
   import { customElementDefine } from "../lib/dom";
+
   customElementDefine("animated-hero", () => AnimatedHero);
 </script>
