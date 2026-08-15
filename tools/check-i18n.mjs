@@ -35,6 +35,16 @@ const wrangler = await read("wrangler.jsonc");
 requireText(wrangler, '"binding": "AI"', "Workers AI binding");
 requireText(wrangler, '"main": "./worker/router.ts"', "Worker router");
 
+const astroConfig = await read("astro.config.mjs");
+for (const marker of [
+  "locales:",
+  "root:",
+  'label: "Română"',
+  'lang: "ro"',
+]) {
+  requireText(astroConfig, marker, "Starlight Romanian root locale");
+}
+
 const router = await read("worker/router.ts");
 for (const marker of [
   "normalizeRomanianMarkup",
@@ -91,8 +101,13 @@ for (const marker of [
   "getBrowserLocale",
   "Copy to clipboard",
   "Failed to copy",
+  "Load more results",
+  "pagefind-ui__result-link",
+  "pageSummary",
+  "zbtLocalizedHref",
+  "pagefindInFlight.delete",
 ]) {
-  requireText(browserI18n, marker, "Browser runtime i18n");
+  requireText(browserI18n, marker, "Browser runtime/Pagefind i18n");
 }
 
 const hydratedContracts = [
@@ -101,6 +116,8 @@ const hydratedContracts = [
   ["src/lib/device-agent-release.ts", ["browserT", "getBrowserLocale", "Accept-Language"]],
   ["src/components/block/Sharer.svelte", ["browserT", "copied = true"]],
   ["src/components/docs/mermaid-init.ts", ["browserT"]],
+  ["src/components/docs/MobileMenuToggle.astro", ["browserT", "Deschide meniul documentației", "Open documentation menu"]],
+  ["src/components/docs/ThemeToggle.astro", ["Temă luminoasă", "Temă întunecată", "Tema sistemului"]],
   ["src/components/ui/Slider.svelte", ["browserT", "i18n:", "Previous slide", "Slide-ul anterior"]],
   ["src/components/LogosScroll.svelte", ["browserT", "i18n:"]],
   ["src/components/block/TestimonialsScroll.svelte", ["browserT", "i18n:"]],
@@ -154,7 +171,6 @@ for (const file of sourceFiles) {
     unlocalizedSplideFiles.push(file);
   }
 
-  if (source.includes("browserT(")) continue;
   for (const pattern of runtimeLiteralPatterns) {
     pattern.lastIndex = 0;
     for (const match of source.matchAll(pattern)) {
@@ -182,19 +198,30 @@ if (uncoveredRuntimeLiterals.length) {
   );
 }
 
+for (const legacyFile of ["src/components/OpenStatus.svelte", "src/lib/probo-agent-release.ts"]) {
+  if (sourceFiles.includes(legacyFile)) failures.push(`Unused legacy localization source still exists: ${legacyFile}`);
+}
+
 const distHtml = (await walk("dist")).filter((file) => file.endsWith(".html"));
 if (distHtml.length === 0) {
   failures.push("No generated HTML found in dist; run this check after astro build.");
 } else {
   let htmlDocuments = 0;
   let oldFrenchLang = 0;
+  let docsDeclaredRomanian = 0;
   for (const file of distHtml) {
     const source = await read(file);
     if (/<html\b/i.test(source)) htmlDocuments += 1;
     if (/<html\b[^>]*\blang=["']fr(?:-[^"']+)?["']/i.test(source)) oldFrenchLang += 1;
+    if (file.includes(`${path.sep}docs${path.sep}`) && /<html\b[^>]*\blang=["']ro["']/i.test(source)) {
+      docsDeclaredRomanian += 1;
+    }
   }
   if (oldFrenchLang) failures.push(`${oldFrenchLang} generated HTML documents still declare French locale.`);
   if (htmlDocuments === 0) failures.push("Generated dist contains no complete HTML documents.");
+  if (distHtml.some((file) => file.includes(`${path.sep}docs${path.sep}`)) && docsDeclaredRomanian === 0) {
+    failures.push("Generated documentation does not declare Romanian as the canonical root locale.");
+  }
   console.log(`[i18n] inspected ${htmlDocuments} generated HTML documents.`);
 }
 
