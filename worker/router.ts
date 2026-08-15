@@ -46,7 +46,8 @@ async function localizeResponse(
   env: WorkerEnv,
 ): Promise<Response> {
   const kind = localizableKind(response);
-  if (!kind || response.status === 204 || response.status === 304) {
+  if (!kind) return response;
+  if (response.status === 204 || response.status === 304) {
     return withContentLanguage(response, locale);
   }
 
@@ -92,7 +93,9 @@ export default {
 
     if (!english) {
       const response = await app.fetch(request, env);
-      if (request.method === "HEAD") return withContentLanguage(response, "ro");
+      if (request.method === "HEAD") {
+        return localizableKind(response) ? withContentLanguage(response, "ro") : response;
+      }
       return localizeResponse(response, "ro", env);
     }
 
@@ -101,7 +104,9 @@ export default {
     const upstreamRequest = new Request(upstreamUrl, request);
     const response = await app.fetch(upstreamRequest, env);
 
-    if (request.method === "HEAD") return withContentLanguage(response, "en");
+    if (request.method === "HEAD") {
+      return localizableKind(response) ? withContentLanguage(response, "en") : response;
+    }
     return localizeResponse(response, "en", env);
   },
 };
