@@ -1,0 +1,161 @@
+---
+import Icon from "./Icon.astro";
+import MenuIcon from "./MenuIcon.astro";
+import { directMenuItems } from "../content/menu";
+---
+
+<client-access-menu class="relative ml-3 hidden lg:block">
+  <button
+    type="button"
+    data-account-trigger
+    class="text-primary hover:bg-active flex h-8 items-center gap-2 rounded-lg px-2.5 text-sm font-medium transition-colors"
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-controls="client-access-panel"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 21a8 8 0 0 0-16 0" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+    <span>Autentificare</span>
+    <Icon name="caret-down" size={13} />
+  </button>
+
+  <div
+    id="client-access-panel"
+    data-account-panel
+    class="pointer-events-none absolute top-full right-0 z-[70] mt-3 w-[340px] origin-top-right translate-y-[-6px] scale-[0.985] opacity-0 transition duration-180"
+    hidden
+  >
+    <div class="bg-secondary overflow-hidden rounded-2xl border shadow-[0_16px_32px_rgba(20,30,18,0.16)]">
+      <div class="border-b px-4 py-3.5">
+        <p class="font-semibold">Acces clienți</p>
+        <p class="text-muted-foreground mt-0.5 text-sm">
+          Intră în platformele ZebraByte asociate contului tău.
+        </p>
+      </div>
+
+      <div class="p-2">
+        {
+          directMenuItems.map((item) => (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center gap-3 rounded-xl p-3 outline-none transition-colors hover:bg-subtle focus-visible:bg-subtle"
+            >
+              <span class="grid size-10 shrink-0 place-items-center rounded-[10px] border bg-secondary">
+                <MenuIcon name={item.icon} />
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block font-semibold">{item.label}</span>
+                <span class="text-muted-foreground block truncate text-sm">
+                  {item.description}
+                </span>
+              </span>
+              <Icon
+                name="caret-right"
+                size={16}
+                class="text-muted-foreground transition-transform group-hover:translate-x-0.5"
+              />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</client-access-menu>
+
+<script>
+  import { customElementDefine } from "../lib/dom";
+
+  class ClientAccessMenu extends HTMLElement {
+    trigger: HTMLButtonElement | null = null;
+    panel: HTMLElement | null = null;
+    open = false;
+
+    connectedCallback() {
+      this.trigger = this.querySelector("[data-account-trigger]");
+      this.panel = this.querySelector("[data-account-panel]");
+      this.trigger?.addEventListener("click", this.toggle);
+      document.addEventListener("pointerdown", this.onDocumentPointerDown);
+      document.addEventListener("keydown", this.onKeyDown);
+    }
+
+    disconnectedCallback() {
+      this.trigger?.removeEventListener("click", this.toggle);
+      document.removeEventListener("pointerdown", this.onDocumentPointerDown);
+      document.removeEventListener("keydown", this.onKeyDown);
+    }
+
+    setOpen(next: boolean) {
+      if (!this.trigger || !this.panel || this.open === next) return;
+      this.open = next;
+      this.trigger.setAttribute("aria-expanded", String(next));
+
+      if (next) {
+        this.panel.hidden = false;
+        requestAnimationFrame(() => {
+          if (!this.panel) return;
+          this.panel.classList.remove(
+            "pointer-events-none",
+            "translate-y-[-6px]",
+            "scale-[0.985]",
+            "opacity-0",
+          );
+          this.panel.classList.add(
+            "pointer-events-auto",
+            "translate-y-0",
+            "scale-100",
+            "opacity-100",
+          );
+        });
+        return;
+      }
+
+      this.panel.classList.add(
+        "pointer-events-none",
+        "translate-y-[-6px]",
+        "scale-[0.985]",
+        "opacity-0",
+      );
+      this.panel.classList.remove(
+        "pointer-events-auto",
+        "translate-y-0",
+        "scale-100",
+        "opacity-100",
+      );
+      window.setTimeout(() => {
+        if (this.panel && !this.open) this.panel.hidden = true;
+      }, 180);
+    }
+
+    toggle = (event: Event) => {
+      event.stopPropagation();
+      this.setOpen(!this.open);
+    };
+
+    onDocumentPointerDown = (event: PointerEvent) => {
+      if (this.open && !this.contains(event.target as Node)) this.setOpen(false);
+    };
+
+    onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || !this.open) return;
+      event.preventDefault();
+      this.setOpen(false);
+      this.trigger?.focus();
+    };
+  }
+
+  customElementDefine("client-access-menu", () => ClientAccessMenu);
+</script>
