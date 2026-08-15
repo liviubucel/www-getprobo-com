@@ -25,12 +25,22 @@ const image = data.image ? images(data.image) : null;
 const logo = data.logo ? images(data.logo) : null;
 const allStories = await getCollection("stories");
 const isZebraByteStory = item.id.startsWith("zebrabyte-");
-const relatedPool = allStories.filter(
-  (story) =>
-    story.id !== item.id &&
-    story.id.startsWith("zebrabyte-") === isZebraByteStory,
+const stories = random(
+  allStories.filter((story) => story.id !== item.id),
+  3,
 );
-const stories = random(relatedPool, 3);
+
+const schemaOrg = isZebraByteStory
+  ? {
+      name: "ZebraByte",
+      url: "https://www.zebrabyte.ro",
+      logo: "https://www.zebrabyte.ro/favicon.svg",
+    }
+  : {
+      name: "Probo",
+      url: "https://www.probo.com",
+      logo: "https://www.probo.com/probo-logo.svg",
+    };
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -40,15 +50,16 @@ const articleSchema = {
   datePublished: data.date.toISOString(),
   author: {
     "@type": "Organization",
-    name: "ZebraByte",
-    url: "https://www.zebrabyte.ro",
+    name: schemaOrg.name,
+    url: schemaOrg.url,
   },
   publisher: {
     "@type": "Organization",
-    name: "ZebraByte",
+    name: schemaOrg.name,
+    url: schemaOrg.url,
     logo: {
       "@type": "ImageObject",
-      url: "https://www.zebrabyte.ro/favicon.svg",
+      url: schemaOrg.logo,
     },
   },
   mainEntityOfPage: {
@@ -56,8 +67,10 @@ const articleSchema = {
     "@id": Astro.url.toString(),
   },
   image: data.ogImage
-    ? `https://www.zebrabyte.ro${data.ogImage}`
-    : "https://www.zebrabyte.ro/og.png",
+    ? `${isZebraByteStory ? "https://www.zebrabyte.ro" : "https://www.probo.com"}${data.ogImage}`
+    : isZebraByteStory
+      ? "https://www.zebrabyte.ro/og.png"
+      : "https://www.probo.com/og.png",
 };
 ---
 
@@ -192,9 +205,9 @@ const articleSchema = {
       {
         !isZebraByteStory && (
           <div class="bg-active rounded-lg border p-4 text-muted-foreground leading-relaxed">
-            Acest material provine din biblioteca originală a proiectului Probo și
-            este păstrat ca referință upstream. Compania prezentată nu este descrisă
-            aici ca fiind client ZebraByte.
+            Studiu de caz original Probo, păstrat complet cu imaginile, logo-ul,
+            rezultatele și atribuirea upstream. Organizația prezentată nu este
+            reclasificată drept client ZebraByte.
           </div>
         )
       }
@@ -208,7 +221,7 @@ const articleSchema = {
         <hr class="my-10 sm:my-20" />
         <aside>
           <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">
-            Explorează mai multe studii de caz
+            Explorează mai multe stories
           </h2>
           <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
             {stories.map((story) => <StoryCard story={story} size="relative" />)}
