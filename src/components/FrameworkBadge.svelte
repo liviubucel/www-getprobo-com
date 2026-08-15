@@ -1,12 +1,14 @@
 <script lang="ts">
   const { name, class: className }: { name: string; class?: string } = $props();
+  const assetName = name.replaceAll(" ", "");
 </script>
 
 <img
-  src={`/frameworks/${name.replaceAll(" ", "")}.svg`}
+  src={`/frameworks/${assetName}.svg?v=2`}
   class={className}
   alt={`${name} framework badge`}
-  loading="lazy"
+  width="64"
+  height="64"
   decoding="async"
   draggable="false"
 />
