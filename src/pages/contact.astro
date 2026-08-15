@@ -113,19 +113,19 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
                 name="service"
               >
                 <option value="">Selectează</option>
-                <option>Managed Compliance</option>
-                <option>SOC 2</option>
-                <option>ISO/IEC 27001</option>
-                <option>GDPR & Privacy</option>
-                <option>NIS2 & Compliance</option>
-                <option>Accessibility</option>
-                <option>Cyber Security</option>
-                <option>Security Assessment</option>
-                <option>Website Security</option>
-                <option>Email Security</option>
-                <option>Incident / urgență de securitate</option>
-                <option>Secure Managed Hosting</option>
-                <option>Altceva</option>
+                <option value="Managed Compliance">Managed Compliance</option>
+                <option value="SOC 2">SOC 2</option>
+                <option value="ISO/IEC 27001">ISO/IEC 27001</option>
+                <option value="GDPR & Privacy">GDPR & Privacy</option>
+                <option value="NIS2 & Compliance">NIS2 & Compliance</option>
+                <option value="Accessibility">Accessibility</option>
+                <option value="Cyber Security">Cyber Security</option>
+                <option value="Security Assessment">Security Assessment</option>
+                <option value="Website Security">Website Security</option>
+                <option value="Email Security">Email Security</option>
+                <option value="Incident / urgență de securitate">Incident / urgență de securitate</option>
+                <option value="Secure Managed Hosting">Secure Managed Hosting</option>
+                <option value="Altceva">Altceva</option>
               </select>
               <span class="text-muted-foreground block text-xs font-normal">
                 Accessibility și instrumentele gratuite sunt gestionate în zona de Compliance, nu ca linie comercială separată.
@@ -175,6 +175,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 <script>
   import { AnimatedHero } from "../lib/elements/hero";
   import { customElementDefine } from "../lib/dom";
+  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
 
   customElementDefine("animated-hero", () => AnimatedHero);
 
@@ -194,6 +195,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       try {
         const response = await fetch("/api/contact", {
           method: "POST",
+          headers: { "Accept-Language": getBrowserLocale() },
           body: new FormData(form),
         });
         const payload = (await response.json()) as {
@@ -203,11 +205,17 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
         status.classList.remove("hidden");
         if (!response.ok || !payload.success) {
-          status.textContent = payload.error || "Mesajul nu a putut fi trimis.";
+          status.textContent = browserT(
+            "Mesajul nu a putut fi trimis.",
+            "The message could not be sent.",
+          );
           return;
         }
 
-        status.textContent = "Mesajul a fost trimis. Mulțumim!";
+        status.textContent = browserT(
+          "Mesajul a fost trimis. Mulțumim!",
+          "Your message has been sent. Thank you!",
+        );
         form.reset();
         const turnstile = (window as Window & {
           turnstile?: { reset: () => void };
@@ -215,7 +223,10 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
         turnstile?.reset();
       } catch {
         status.classList.remove("hidden");
-        status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+        status.textContent = browserT(
+          "A apărut o eroare de rețea. Încearcă din nou.",
+          "A network error occurred. Please try again.",
+        );
       } finally {
         submit.disabled = false;
       }
