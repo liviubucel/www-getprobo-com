@@ -1,4 +1,5 @@
 import type mermaidType from "mermaid";
+import { browserT } from "../../lib/browser-i18n";
 import { mermaidConfig } from "./mermaid-theme.ts";
 
 let mermaidModule: typeof mermaidType | null = null;
@@ -38,14 +39,20 @@ export async function renderMermaidDiagrams(root: ParentNode = document) {
       node.innerHTML = svg;
       node.dataset.processed = "true";
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Unknown rendering error";
+      console.error("Mermaid render failed:", error);
       node.dataset.processed = "true";
       node.textContent = "";
       node.classList.add("mermaid-error");
       const strong = document.createElement("strong");
-      strong.textContent = "Could not render diagram.";
-      node.append(strong, " ", message);
+      strong.textContent = browserT(
+        "Diagrama nu a putut fi afișată.",
+        "Could not render diagram.",
+      );
+      const detail = browserT(
+        "A apărut o eroare la randarea diagramei.",
+        "A diagram rendering error occurred.",
+      );
+      node.append(strong, " ", detail);
     }
   }
 }
