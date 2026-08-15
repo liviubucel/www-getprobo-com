@@ -8,8 +8,8 @@ Un client a ajuns la ZebraByte cu un website afectat de malware și erori. Inter
 
 [Vezi studiul de caz](/stories/zebrabyte-malware-recovery)
 
-## Biblioteca upstream Probo
+## Mai multe studii de caz
 
-Păstrăm separat studiile de caz originale Probo pentru continuitatea și valoarea educațională a proiectului open-source. Companiile prezentate în acele materiale nu sunt descrise ca fiind clienți ZebraByte.
+Publicăm numai proiecte ZebraByte pe care le putem documenta corect și fără a expune informații confidențiale.
 
 [Vezi toate studiile de caz](/stories)
