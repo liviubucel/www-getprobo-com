@@ -19,7 +19,9 @@ const images = dynamicImages(
 );
 
 const framework = frameworks.find((f) => f.label === d.framework);
-const followers = d.followers != null ? String(d.followers) : null;
+const formatCount = (value: number) =>
+  String(value).replace(/\B(?=(\d{3})+(?!\d))/g, "\u202f");
+const followers = d.followers != null ? formatCount(d.followers) : null;
 
 const escapeAttr = (s: string) =>
   s
@@ -157,11 +159,11 @@ const escapeAttr = (s: string) =>
           </span>
         )
       }
-      {d.likes != null && <span>{String(d.likes)}</span>}
+      {d.likes != null && <span>{formatCount(d.likes)}</span>}
       {
         d.comments != null && (
           <span>
-            · {d.comments} comment{d.comments === 1 ? "" : "s"}
+            · {formatCount(d.comments)} comment{d.comments === 1 ? "" : "s"}
           </span>
         )
       }
