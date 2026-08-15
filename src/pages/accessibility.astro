@@ -14,64 +14,154 @@ const areas = [
       "Transformăm constatările în recomandări clare pentru design și development, prioritizate după impact și ușurința de remediere.",
   },
   {
+    title: "Keyboard & focus",
+    description:
+      "Verificăm ordinea de navigare, focus states, controale interactive și fluxuri care trebuie să poată fi operate fără mouse.",
+  },
+  {
+    title: "Content & semantics",
+    description:
+      "Analizăm structura heading-urilor, labels, alternative text, landmarks și relațiile semantice care ajută tehnologiile asistive.",
+  },
+  {
+    title: "Motion & visual comfort",
+    description:
+      "Identificăm animații, contrast, spacing și alte comportamente care pot crea bariere pentru utilizatori cu nevoi vizuale, cognitive sau fotosensibilitate.",
+  },
+  {
     title: "Accessibility tooling",
     description:
-      "Păstrăm și instrumentele ZebraByte pentru accesibilitate ca strat complementar, fără să prezentăm un widget ca substitut pentru remedierea corectă a site-ului.",
+      "Păstrăm instrumentele ZebraByte pentru accesibilitate ca strat complementar, fără să prezentăm un widget ca substitut pentru remedierea corectă a site-ului.",
   },
+];
+
+const widgetFeatures = [
+  "ajustarea dimensiunii și spațierii textului",
+  "moduri de contrast și culoare",
+  "reducerea sau oprirea animațiilor",
+  "reading guide și ajutor pentru concentrare",
+  "focus vizibil și facilitarea navigării cu tastatura",
+  "preferințe salvate local în browser",
+];
+
+const process = [
+  { step: "01", title: "Audit", text: "Identificăm barierele reale în pagini și fluxuri reprezentative, nu doar scorul unui scanner automat." },
+  { step: "02", title: "Prioritize", text: "Separăm problemele care blochează accesul de îmbunătățirile care pot fi planificate în sprinturile următoare." },
+  { step: "03", title: "Remediate", text: "Echipa de design/development primește pași concreți, exemple și criterii de verificare pentru fiecare constatare." },
+  { step: "04", title: "Retest", text: "Reverificăm fluxurile importante după implementare și documentăm ce a fost remediat sau ce risc rămâne." },
+  { step: "05", title: "Maintain", text: "Accessibility intră în procesul de schimbare astfel încât noile pagini și componente să nu reintroducă aceleași bariere." },
 ];
 ---
 
 <Layout
   title="Accesibilitate digitală"
-  description="Accesibilitate digitală ZebraByte: evaluare WCAG, recomandări de remediere și instrumente pentru experiențe digitale mai incluzive."
+  description="Accesibilitate digitală ZebraByte: evaluare WCAG, remediation guidance, retest și widget complementar pentru experiențe digitale mai incluzive."
 >
   <main>
-    <section class="container py-16 text-center sm:py-28">
-      <p class="text-muted-foreground mb-5 text-sm font-medium uppercase tracking-[0.14em]">
-        Digital Accessibility
-      </p>
-      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
-        Accesibilitatea trebuie construită în produs, nu adăugată la final.
-      </h1>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg text-balance">
-        Evaluăm experiența digitală din perspectiva WCAG și ajutăm echipele să
-        remedieze problemele reale de utilizare. Instrumentele automate pot ajuta,
-        dar nu înlocuiesc codul, designul și conținutul accesibil.
-      </p>
-      <div class="flex flex-col justify-center gap-3 sm:flex-row">
-        <Button size="lg" href="/contact">Solicită o evaluare</Button>
-        <Button
-          size="lg"
-          variant="secondary"
-          href="https://accesibilitate.zebrabyte.ro"
-        >Instrumente de accesibilitate</Button>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <p class="text-muted-foreground animate-perspective-in mb-5 text-sm font-medium uppercase tracking-[0.14em]">Digital Accessibility</p>
+        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-230 font-medium text-balance">Accesibilitatea trebuie construită în produs, nu adăugată la final.</h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
+          Evaluăm experiența digitală din perspectiva WCAG și ajutăm echipele să remedieze problemele reale de utilizare. Instrumentele automate și widgetul ZebraByte pot ajuta, dar nu înlocuiesc codul, designul și conținutul accesibil.
+        </p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button size="lg" href="/contact">Solicită o evaluare</Button>
+          <Button size="lg" variant="secondary" href="https://accesibilitate.zebrabyte.ro">Deschide instrumentele</Button>
+        </div>
       </div>
-    </section>
+    </animated-hero>
 
-    <section class="container pb-16 sm:pb-28">
-      <div class="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-3">
-        {
-          areas.map((area) => (
-            <article class="bg-level-0 p-6 sm:p-9">
-              <h2 class="text-h4 mb-3 font-medium">{area.title}</h2>
-              <p class="text-muted-foreground leading-relaxed">{area.description}</p>
-            </article>
-          ))
-        }
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto mb-12 max-w-180 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Assessment & remediation</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Accessibility este mai mult decât contrast și font size.</h2>
+        <p class="text-muted-foreground text-lg">Verificăm componente, conținut și fluxuri din perspectiva oamenilor care navighează diferit, apoi legăm constatările de acțiuni pentru design și development.</p>
+      </div>
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {areas.map((area) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h3 class="text-h5 mb-3 font-medium">{area.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{area.description}</p>
+          </article>
+        ))}
       </div>
     </section>
 
     <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">ZebraByte widget</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Păstrăm și widgetul, dar îl poziționăm corect.</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">Widgetul oferă preferințe utile utilizatorilor și poate fi instalat ca un script separat. Nu îl prezentăm ca pe o soluție care „face site-ul compliant” fără remediation.</p>
+          <a href="https://accesibilitate.zebrabyte.ro" target="_blank" rel="noopener noreferrer" class="text-sm font-medium underline underline-offset-4">Vezi platforma de accesibilitate ↗</a>
+        </div>
+
+        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
+          <div class="mb-6 rounded-xl border bg-active p-4 font-mono text-xs leading-relaxed text-muted-foreground">
+            &lt;script src=&quot;https://accesibilitate.zebrabyte.ro/dist/zbt.js&quot; defer&gt;&lt;/script&gt;
+          </div>
+          <ul class="grid gap-4 sm:grid-cols-2">
+            {widgetFeatures.map((feature) => (
+              <li class="flex gap-3 text-muted-foreground text-sm leading-relaxed">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mb-12 max-w-180">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Lifecycle</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Auditul este începutul, nu finalul.</h2>
+        <p class="text-muted-foreground text-lg">Accessibility se degradează dacă fiecare release adaugă componente noi fără criterii clare. De aceea procesul include retest și maintenance.</p>
+      </div>
+      <div class="space-y-3">
+        {process.map((item) => (
+          <div class="grid grid-cols-[52px_1fr] gap-4 rounded-xl border p-5 sm:p-6">
+            <span class="text-muted-foreground text-sm font-medium">{item.step}</span>
+            <div>
+              <h3 class="mb-2 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-24">
       <div class="container grid gap-8 sm:grid-cols-2 sm:items-center">
-        <h2 class="text-h3 sm:text-h2 font-medium text-balance">
-          Accesibilitatea intră în aceeași disciplină de risk & compliance.
-        </h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Pentru organizațiile care tratează serios guvernanța digitală,
-          accesibilitatea poate fi urmărită împreună cu privacy, securitate și alte
-          obligații de conformitate, cu responsabilități și dovezi clare.
-        </p>
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Governance</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Accesibilitatea intră în aceeași disciplină de risk & compliance.</h2>
+        </div>
+        <p class="text-muted-foreground text-lg leading-relaxed">Pentru organizațiile care tratează serios guvernanța digitală, accesibilitatea poate fi urmărită împreună cu privacy, securitate și alte obligații, cu responsabilități, remediation și evidence clare.</p>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-4 sm:grid-cols-3">
+        <a href="/industries" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Industries</h3><p class="text-muted-foreground text-sm">Vezi sectoarele unde accessibility se conectează cu alte obligații.</p></a>
+        <a href="/gdpr" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">GDPR & Privacy</h3><p class="text-muted-foreground text-sm">Privacy și accessibility în aceeași guvernanță digitală.</p></a>
+        <a href="/compliance-portal" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Compliance Portal</h3><p class="text-muted-foreground text-sm">Urmărește documente, evidence și responsabilități.</p></a>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Vrei să verificăm produsul, nu doar să instalăm un widget?</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Trimite-ne aplicația sau fluxurile importante și stabilim un scope de accessibility assessment.</p>
+        <Button href="/contact" size="lg">Solicită accessibility assessment</Button>
       </div>
     </section>
   </main>
 </Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
