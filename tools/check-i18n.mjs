@@ -107,6 +107,26 @@ if (distHtml.length === 0) {
   console.log(`[i18n] inspected ${htmlDocuments} generated HTML documents.`);
 }
 
+const sitemapFiles = (await walk("dist")).filter((file) => /sitemap[^/]*\.xml$/i.test(file));
+let romanianSitemapUrls = 0;
+let englishSitemapUrls = 0;
+for (const file of sitemapFiles) {
+  const source = await read(file);
+  if (!/<urlset\b/i.test(source)) continue;
+  const locs = [...source.matchAll(/<loc>(https:\/\/www\.zebrabyte\.ro[^<]*)<\/loc>/g)].map((match) => match[1]);
+  for (const loc of locs) {
+    const pathname = new URL(loc).pathname;
+    if (pathname === "/en" || pathname.startsWith("/en/")) englishSitemapUrls += 1;
+    else romanianSitemapUrls += 1;
+  }
+}
+if (romanianSitemapUrls === 0) failures.push("Sitemap contains no Romanian/root URLs.");
+if (englishSitemapUrls === 0) failures.push("Sitemap contains no English /en URLs.");
+if (romanianSitemapUrls > 0 && englishSitemapUrls !== romanianSitemapUrls) {
+  failures.push(`Sitemap locale mismatch: ${romanianSitemapUrls} RO URLs vs ${englishSitemapUrls} EN URLs.`);
+}
+console.log(`[i18n] sitemap audit: ${romanianSitemapUrls} RO URLs / ${englishSitemapUrls} EN URLs.`);
+
 for (const warning of warnings) console.warn(`[i18n] warning: ${warning}`);
 
 if (failures.length) {
