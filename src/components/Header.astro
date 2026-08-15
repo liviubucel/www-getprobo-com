@@ -1,6 +1,7 @@
 ---
 import ZebraByteLogo from "./ZebraByteLogo.astro";
 import HeaderMenu from "./HeaderMenu.astro";
+import AccountMenu from "./AccountMenu.astro";
 import Button from "./ui/Button.svelte";
 import MobileMenu from "./MobileMenu.astro";
 import Icon from "./Icon.astro";
@@ -40,10 +41,12 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       <HeaderMenu groups={menuGroups} />
     </nav>
 
+    <AccountMenu />
+
     <div transition:name="header-compliant">
       <Button
         href="/contact"
-        class="ml-auto h-9 px-4 whitespace-nowrap lg:ml-4 lg:h-8 lg:px-3"
+        class="ml-auto h-9 px-4 whitespace-nowrap lg:ml-3 lg:h-8 lg:px-3"
       >
         Discută cu un expert
       </Button>
