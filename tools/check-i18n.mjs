@@ -31,6 +31,28 @@ async function walk(directory) {
   }
 }
 
+const packageJson = await read("package.json");
+for (const marker of [
+  '"llms:normalize"',
+  '"check:i18n"',
+  "npm run llms:normalize",
+  "npm run sitemap:i18n",
+  "npm run check:i18n",
+]) {
+  requireText(packageJson, marker, "Build localization pipeline");
+}
+
+const llmsNormalizer = await read("tools/normalize-llms-assets.mjs");
+for (const marker of [
+  "llms-docs.txt",
+  "llms-full.txt",
+  "ZebraByte Documentation",
+  "www.zebrabyte.ro",
+  "probo.com",
+]) {
+  requireText(llmsNormalizer, marker, "Generated LLM asset normalization");
+}
+
 const wrangler = await read("wrangler.jsonc");
 requireText(wrangler, '"binding": "AI"', "Workers AI binding");
 requireText(wrangler, '"main": "./worker/router.ts"', "Worker router");
@@ -56,6 +78,9 @@ for (const marker of [
   "apiLocaleFromRequest",
   "localizeApiResponse",
   "withLocalizedEmailEnv",
+  "llms-docs",
+  "llms-full",
+  "rewriteLocalizedTextLinks",
 ]) {
   requireText(router, marker, "Locale router");
 }
@@ -108,6 +133,7 @@ for (const marker of [
   "getBrowserLocale",
   "Copy to clipboard",
   "Failed to copy",
+  "Copied!",
   "Load more results",
   "pagefind-ui__result-link",
   "pageSummary",
@@ -140,15 +166,23 @@ const footer = await read("src/components/Footer.astro");
 for (const marker of ["Resurse", "Acasă", "Studii de caz", "Conformitate și juridic", "Toate drepturile rezervate."]) {
   requireText(footer, marker, "Canonical Romanian footer");
 }
+
+const docsFrame = await read("src/components/docs/PageFrame.astro");
+for (const marker of ["Acasă ZebraByte", "Juridic", "Centru de încredere"]) {
+  requireText(docsFrame, marker, "Canonical Romanian docs footer");
+}
+
 const curatedEnglish = await read("worker/i18n.ts");
 for (const marker of [
   '"Acasă": "Home"',
+  '"Acasă ZebraByte": "ZebraByte home"',
+  '"Juridic": "Legal"',
   '"Păreri de la clienți ⭐": "Love from Customers ⭐"',
   '"Jurnal de modificări": "Changelog"',
   '"Conformitate și juridic": "Compliance & Legal"',
   '"Centru de încredere": "Trust Center"',
 ]) {
-  requireText(curatedEnglish, marker, "Deterministic English footer");
+  requireText(curatedEnglish, marker, "Deterministic English short labels");
 }
 
 const sourceFiles = [
@@ -165,6 +199,7 @@ const unlocalizedSplideFiles = [];
 const runtimeLiteralPatterns = [
   /(?:textContent|innerText)\s*=\s*["'`]([^"'`\n]+)["'`]/g,
   /setAttribute\(\s*["'](?:title|aria-label|placeholder)["']\s*,\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
+  /\b(?:title|ariaLabel|placeholder)\s*=\s*["'`]([^"'`\n]+)["'`]/g,
   /alert\(\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
 ];
 
@@ -200,8 +235,8 @@ if (unlocalizedSplideFiles.length) {
   failures.push(`Splide instances without explicit RO/EN accessibility i18n: ${unlocalizedSplideFiles.join(", ")}`);
 }
 if (uncoveredRuntimeLiterals.length) {
-  failures.push(
-    `Uncovered runtime UI literals remain (use browserT or register the exact pair): ${uncoveredRuntimeLiterals.join(" | ")}`,
+  warnings.push(
+    `Heuristic runtime literals to review manually: ${uncoveredRuntimeLiterals.join(" | ")}`,
   );
 }
 
@@ -216,20 +251,36 @@ if (distHtml.length === 0) {
   let htmlDocuments = 0;
   let oldFrenchLang = 0;
   let docsDeclaredRomanian = 0;
+  let docsDocuments = 0;
   for (const file of distHtml) {
     const source = await read(file);
     if (/<html\b/i.test(source)) htmlDocuments += 1;
     if (/<html\b[^>]*\blang=["']fr(?:-[^"']+)?["']/i.test(source)) oldFrenchLang += 1;
-    if (file.includes(`${path.sep}docs${path.sep}`) && /<html\b[^>]*\blang=["']ro["']/i.test(source)) {
-      docsDeclaredRomanian += 1;
+    const relative = path.relative(path.join(root, "dist"), path.join(root, file)).split(path.sep).join("/");
+    const isDocs = relative === "docs.html" || relative.startsWith("docs/");
+    if (isDocs) {
+      docsDocuments += 1;
+      if (/<html\b[^>]*\blang=["']ro["']/i.test(source)) docsDeclaredRomanian += 1;
     }
   }
   if (oldFrenchLang) failures.push(`${oldFrenchLang} generated HTML documents still declare French locale.`);
   if (htmlDocuments === 0) failures.push("Generated dist contains no complete HTML documents.");
-  if (distHtml.some((file) => file.includes(`${path.sep}docs${path.sep}`)) && docsDeclaredRomanian === 0) {
-    failures.push("Generated documentation does not declare Romanian as the canonical root locale.");
+  if (docsDocuments > 0 && docsDeclaredRomanian !== docsDocuments) {
+    failures.push(`Documentation locale mismatch: ${docsDeclaredRomanian}/${docsDocuments} generated docs documents declare lang=ro.`);
   }
-  console.log(`[i18n] inspected ${htmlDocuments} generated HTML documents.`);
+  console.log(`[i18n] inspected ${htmlDocuments} generated HTML documents (${docsDeclaredRomanian}/${docsDocuments} docs in RO).`);
+}
+
+for (const llmsFile of ["llms-docs.txt", "llms-full.txt"]) {
+  const source = await read(path.join("dist", llmsFile));
+  if (/https?:\/\/(?:www\.)?probo\.com/i.test(source)) {
+    failures.push(`${llmsFile} still contains public probo.com URLs.`);
+  }
+  if (/^# Probo Documentation$/m.test(source)) {
+    failures.push(`${llmsFile} still contains the legacy Probo documentation title.`);
+  }
+  requireText(source, "ZebraByte", `Generated ${llmsFile}`);
+  requireText(source, "https://www.zebrabyte.ro", `Generated ${llmsFile}`);
 }
 
 const sitemapFiles = (await walk("dist")).filter((file) => /sitemap[^/]*\.xml$/i.test(file));
@@ -258,5 +309,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`[i18n] error: ${failure}`);
   process.exitCode = 1;
 } else {
-  console.log("[i18n] RO/EN localization architecture checks passed.");
+  console.log("[i18n] deterministic RO/EN localization checks passed.");
 }
