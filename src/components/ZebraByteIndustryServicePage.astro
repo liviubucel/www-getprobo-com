@@ -1,0 +1,117 @@
+---
+import Button from "./ui/Button.svelte";
+import type { IndustryServiceKey, ZebraByteIndustry } from "../content/zebrabyte-industries";
+import { industryServiceMeta } from "../content/zebrabyte-industries";
+
+interface Props {
+  industry: ZebraByteIndustry;
+  service: IndustryServiceKey;
+}
+
+const { industry, service } = Astro.props;
+const meta = industryServiceMeta[service];
+const siblingServices = Object.entries(industry.serviceSlugs)
+  .filter(([key]) => key !== service)
+  .map(([key, slug]) => ({
+    slug,
+    meta: industryServiceMeta[key as IndustryServiceKey],
+  }));
+
+const serviceLead: Record<IndustryServiceKey, string> = {
+  cyber: `Pentru ${industry.shortTitle}, securitatea cibernetică trebuie să acopere identitatea, aplicațiile, furnizorii și capacitatea de răspuns — nu doar un scan periodic.`,
+  email: `Pentru ${industry.shortTitle}, domeniul și emailul sunt parte din identitatea organizației. SPF, DKIM, DMARC, MFA și anti-phishing reduc riscul de impersonare și compromitere.`,
+  website: `Website-ul este o suprafață publică de atac. Pentru ${industry.shortTitle}, combinăm protecția la edge, hardening, malware detection și recovery cu schimbări controlate.`,
+  hosting: `Hostingul pentru ${industry.shortTitle} este operat ca infrastructură, nu ca simplu spațiu web: hardening, backup, monitorizare, recovery și schimbări gestionate.`,
+  maintenance: `WordPress rămâne software de producție. Pentru ${industry.shortTitle}, actualizările, backup-ul, verificările și rollback-ul trebuie tratate disciplinat, nu ocazional.`,
+};
+---
+
+<animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+  <div class="container text-center">
+    <a href={`/industrii/${industry.slug}`} class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-2 py-0.5 text-sm font-medium hover:underline">
+      {industry.shortTitle} · {meta.eyebrow}
+    </a>
+    <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{meta.label} pentru {industry.shortTitle}</h1>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">{serviceLead[service]}</p>
+    <div class="flex flex-col justify-center gap-3 sm:flex-row">
+      <Button href="/contact" size="lg">Solicită o evaluare</Button>
+      <Button href={meta.href} variant="secondary" size="lg">Vezi serviciul principal</Button>
+    </div>
+  </div>
+</animated-hero>
+
+<section class="container py-16 sm:py-24">
+  <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">De ce contează</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Contextul industriei schimbă prioritățile.</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">{industry.context}</p>
+      <div class="mt-8 flex flex-wrap gap-2">
+        {industry.priorities.map((priority) => <span class="bg-active rounded-full px-3 py-1.5 text-sm">{priority}</span>)}
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border">
+      {meta.core.map((item, index) => (
+        <div class="grid grid-cols-[44px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
+          <span class="text-muted-foreground text-sm">0{index + 1}</span>
+          <div>
+            <h3 class="mb-2 font-medium">{item}</h3>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Măsura este configurată în funcție de activele, fluxurile și riscurile reale ale organizației; nu aplicăm aceeași configurație tuturor clienților.
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="bg-active py-16 sm:py-24">
+  <div class="container">
+    <div class="mb-10 max-w-190">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Risk-driven</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Riscurile pe care le legăm de serviciu.</h2>
+      <p class="text-muted-foreground text-lg">Această pagină păstrează intenția landing page-ului sectorial ZebraByte anterior, dar o conectează la programul complet de security și compliance.</p>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2">
+      {industry.risks.map((risk, index) => (
+        <div class="bg-level-0 rounded-xl border p-6">
+          <div class="text-muted-foreground mb-6 text-sm">Risc 0{index + 1}</div>
+          <p class="font-medium leading-relaxed">{risk}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="container py-16 sm:py-24">
+  <div class="mx-auto mb-10 max-w-180 text-center">
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Program complet</p>
+    <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Nu izolăm acest serviciu de restul infrastructurii.</h2>
+    <p class="text-muted-foreground text-lg">Poți continua către celelalte servicii ZebraByte dedicate aceleiași industrii.</p>
+  </div>
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    {siblingServices.map(({ slug, meta: sibling }) => (
+      <a href={`/${slug}`} class="group rounded-xl border p-6 transition-colors hover:bg-subtle">
+        <p class="text-muted-foreground mb-8 text-sm">{sibling.eyebrow}</p>
+        <h3 class="mb-2 font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
+        <p class="text-muted-foreground text-sm leading-relaxed">{sibling.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="border-t py-16 text-center sm:py-24">
+  <div class="container">
+    <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Vrei să vedem situația reală, nu doar checklist-ul?</h2>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Începem cu infrastructura și riscul existent, apoi stabilim ce merită implementat și în ce ordine.</p>
+    <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
+  </div>
+</section>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
