@@ -21,7 +21,7 @@ const isEmile = author === "Émile Ré";
 ---
 
 <div class="bg-active mb-6 rounded-lg border p-4 text-xs leading-relaxed text-muted-foreground">
-  <strong class="text-foreground">Upstream Probo:</strong> identitatea, fotografiile și biografiile autorilor originali sunt păstrate integral mai jos. Conținutul upstream nu este reclasificat ca fiind scris de ZebraByte.
+  <strong class="text-foreground">Upstream Probo:</strong> fotografiile, numele și biografiile autorilor de mai jos sunt păstrate exact din proiectul original Probo și nu sunt prezentate drept autori ZebraByte.
 </div>
 
 {
@@ -34,42 +34,91 @@ const isEmile = author === "Émile Ré";
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
         <div class="flex flex-col gap-2">
           <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/antoinebouchardy/" class="text-success">
+            <a
+              href="https://www.linkedin.com/in/antoinebouchardy/"
+              class="text-success"
+            >
               Antoine Bouchardy
-            </a>{" "}
-            is the CEO and co-founder of Probo, on a mission to make compliance simple and startup-friendly. He writes about the challenges founders face balancing growth with regulation. When he's not building Probo, you'll find him cycling or tinkering with open-source projects.
+            </a>
+            is the CEO and co-founder of Probo, on a mission to make compliance
+            simple and startup-friendly. He writes about the challenges founders
+            face balancing growth with regulation. When he's not building Probo,
+            you'll find him cycling or tinkering with open-source projects.
           </div>
         </div>
-        <Image densities={[1, 2]} src={AntoinePortrait} alt="Portrait Antoine Bouchardy" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
+
+        <Image
+          densities={[1, 2]}
+          src={AntoinePortrait}
+          alt="Portrait Antoine Bouchardy"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
       </div>
 
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
         <div class="flex flex-col gap-2">
           <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/gearnode/" class="text-success">Bryan Frimin</a>{" "}
-            is the CTO and co-founder. Experienced with cyber-security, he's now building the open compliance tool which adapts to your actual stack.
+            <a
+              href="https://www.linkedin.com/in/gearnode/"
+              class="text-success"
+            >
+              Bryan Frimin
+            </a>
+            is the CTO and co-founder. Experienced with cyber-security, he's now
+            building the open compliance tool which adapts to your actual stack.
           </div>
         </div>
-        <Image src={BryanPortrait} alt="Portrait Bryan Frimin" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
+
+        <Image
+          src={BryanPortrait}
+          alt="Portrait Bryan Frimin"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
       </div>
 
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
         <div class="flex flex-col gap-2">
           <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/arthurmayoux/" class="text-success">Arthur Mayoux</a>{" "}
-            is the Chief of Staff at Probo. Working across multiple departments, his primary objective is to help the company scale.
+            <a
+              href="https://www.linkedin.com/in/arthurmayoux/"
+              class="text-success"
+            >
+              Arthur Mayoux
+            </a>
+            is the Chief of Staff at Probo. Working across multiple departments,
+            his primary objective is to help the company scale.
           </div>
         </div>
-        <Image src={ArthurPortrait} alt="Portrait Arthur Mayoux" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
+
+        <Image
+          src={ArthurPortrait}
+          alt="Portrait Arthur Mayoux"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
       </div>
 
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
         <div class="flex flex-col gap-2">
           <div class="text-muted-foreground text-xs">
-            Émile Ré is a founding engineer at Probo, building the open-source compliance platform from the ground up. He writes about the technical side of making compliance simple for startups.
+            Émile Ré is a founding engineer at Probo, building the open-source
+            compliance platform from the ground up. He writes about the
+            technical side of making compliance simple for startups.
           </div>
         </div>
-        <Image src={EmilePortrait} alt="Portrait Émile Ré" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
+
+        <Image
+          src={EmilePortrait}
+          alt="Portrait Émile Ré"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
       </div>
     </div>
   )
@@ -77,14 +126,28 @@ const isEmile = author === "Émile Ré";
 
 {
   (isAntoine || isArthur || isBryan || isEmile) && (
-    <div class={clsx("flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10", className)}>
+    <div
+      class={clsx(
+        "flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10",
+        className,
+      )}
+    >
       <div class="flex flex-col gap-2">
         {isAntoine && (
           <>
             <div class="text-xs font-medium">Written by Antoine Bouchardy</div>
             <div class="text-muted-foreground text-xs">
-              <a href="https://www.linkedin.com/in/antoinebouchardy/" class="text-success">Antoine Bouchardy</a>{" "}
-              is the CEO and co-founder of Probo, on a mission to make compliance simple and startup-friendly. He writes about the challenges founders face balancing growth with regulation. When he's not building Probo, you'll find him cycling or tinkering with open-source projects.
+              <a
+                href="https://www.linkedin.com/in/antoinebouchardy/"
+                class="text-success"
+              >
+                Antoine Bouchardy
+              </a>
+              is the CEO and co-founder of Probo, on a mission to make
+              compliance simple and startup-friendly. He writes about the
+              challenges founders face balancing growth with regulation. When
+              he's not building Probo, you'll find him cycling or tinkering with
+              open-source projects.
             </div>
           </>
         )}
@@ -92,8 +155,14 @@ const isEmile = author === "Émile Ré";
           <>
             <div class="text-xs font-medium">Written by Arthur Mayoux</div>
             <div class="text-muted-foreground text-xs">
-              <a href="https://www.linkedin.com/in/arthurmayoux/" class="text-success">Arthur Mayoux</a>{" "}
-              is the Chief of Staff at Probo. Working across multiple departments, his primary objective is to help the company scale.
+              <a
+                href="https://www.linkedin.com/in/arthurmayoux/"
+                class="text-success"
+              >
+                Arthur Mayoux
+              </a>
+              is the Chief of Staff at Probo. Working across multiple
+              departments, his primary objective is to help the company scale.
             </div>
           </>
         )}
@@ -101,8 +170,15 @@ const isEmile = author === "Émile Ré";
           <>
             <div class="text-xs font-medium">Written by Bryan Frimin</div>
             <div class="text-muted-foreground text-xs">
-              <a href="https://www.linkedin.com/in/gearnode/" class="text-success">Bryan Frimin</a>{" "}
-              is the CTO and co-founder. Experienced with cyber-security, he's now building the open compliance tool which adapts to your actual stack.
+              <a
+                href="https://www.linkedin.com/in/gearnode/"
+                class="text-success"
+              >
+                Bryan Frimin
+              </a>
+              is the CTO and co-founder. Experienced with cyber-security, he's
+              now building the open compliance tool which adapts to your actual
+              stack.
             </div>
           </>
         )}
@@ -110,16 +186,54 @@ const isEmile = author === "Émile Ré";
           <>
             <div class="text-xs font-medium">Written by Émile Ré</div>
             <div class="text-muted-foreground text-xs">
-              Émile Ré is a founding engineer at Probo, building the open-source compliance platform from the ground up. He writes about the technical side of making compliance simple for startups.
+              Émile Ré is a founding engineer at Probo, building the open-source
+              compliance platform from the ground up. He writes about the
+              technical side of making compliance simple for startups.
             </div>
           </>
         )}
       </div>
 
-      {isAntoine && <Image densities={[1, 2]} src={AntoinePortrait} alt="Portrait Antoine Bouchardy" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isArthur && <Image src={ArthurPortrait} alt="Portrait Arthur Mayoux" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isBryan && <Image src={BryanPortrait} alt="Portrait Bryan Frimin" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isEmile && <Image src={EmilePortrait} alt="Portrait Émile Ré" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+      {isAntoine && (
+        <Image
+          densities={[1, 2]}
+          src={AntoinePortrait}
+          alt="Portrait Antoine Bouchardy"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
+      )}
+
+      {isArthur && (
+        <Image
+          src={ArthurPortrait}
+          alt="Portrait Arthur Mayoux"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
+      )}
+
+      {isBryan && (
+        <Image
+          src={BryanPortrait}
+          alt="Portrait Bryan Frimin"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
+      )}
+
+      {isEmile && (
+        <Image
+          src={EmilePortrait}
+          alt="Portrait Émile Ré"
+          class="mx-auto block shrink-0 sm:mx-0 sm:size-25"
+          width={164}
+          height={164}
+        />
+      )}
     </div>
   )
 }
