@@ -1,17 +1,10 @@
 ---
-import { Image } from "astro:assets";
 import ZebraByteLogo from "./ZebraByteLogo.astro";
-import ProboLogo from "../assets/probo-logo.svg";
 import Frameworks from "./block/Frameworks.astro";
 import ZebraByteStatus from "../components/ZebraByteStatus.svelte";
 import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
 import { Toaster } from "svelte-sonner";
-
-const upstreamCookieBannerEnabled =
-  import.meta.env.PUBLIC_ENABLE_UPSTREAM_COOKIE_BANNER === "true" &&
-  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_ID) &&
-  Boolean(import.meta.env.PUBLIC_COOKIE_BANNER_API_BASE_URL);
 
 const menus = [
   {
@@ -22,7 +15,7 @@ const menus = [
       { label: "ISO/IEC 27001", href: "/iso-27001" },
       { label: "GDPR & Privacy", href: "/gdpr" },
       { label: "NIS2 Readiness", href: "/nis2" },
-      { label: "Open-source Platform", href: "/docs/deployment/self-hosting/docker-compose" },
+      { label: "Accessibility", href: "/accessibility" },
     ],
   },
   {
@@ -44,7 +37,7 @@ const menus = [
       { label: "Hub", href: "/hub" },
       { label: "Blog", href: "/blog" },
       { label: "Stories", href: "/stories" },
-      { label: "Accessibility", href: "/accessibility" },
+      { label: "Recenzii", href: "/love-from-customer" },
     ],
   },
   {
@@ -113,13 +106,6 @@ type Props = {
                     </a>
                   </li>
                 ))}
-                {menu.label === "Legal & Trust" && upstreamCookieBannerEnabled && (
-                  <li>
-                    <probo-settings-link class="text-tertiary-foreground flex-nowrap text-sm whitespace-nowrap hover:text-white hover:underline">
-                      <a href="#">Setări cookie</a>
-                    </probo-settings-link>
-                  </li>
-                )}
               </ul>
             </div>
           ))
@@ -128,23 +114,11 @@ type Props = {
     </div>
 
     <div class="border-border-low flex flex-col gap-5 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex flex-wrap items-center gap-3">
-        <span class="text-tertiary-foreground text-xs">Open-source platform foundation based on</span>
-        <a
-          href="https://github.com/getprobo/probo"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Probo open-source project"
-          class="opacity-70 transition-opacity hover:opacity-100"
-        >
-          <Image src={ProboLogo} alt="Probo" width={73} height={20} />
-        </a>
-      </div>
+      <p class="text-tertiary-foreground text-xxs">
+        Copyright © 2023-2026 ZEBRABYTE LIMITED. All rights reserved.
+      </p>
 
       <div class="flex flex-col items-start gap-3 sm:items-end">
-        <p class="text-tertiary-foreground text-xxs">
-          Copyright © 2023-2026 ZEBRABYTE LIMITED. All rights reserved.
-        </p>
         <ZebraByteStatus />
         <AskAi />
       </div>
