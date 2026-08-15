@@ -42,12 +42,6 @@ export const menuGroups: MenuGroup[] = [
     label: "Compliance",
     items: [
       {
-        label: "Managed Compliance",
-        description: "Compliance gestionat end-to-end de un expert dedicat",
-        href: "/managed-compliance",
-        icon: "handshake",
-      },
-      {
         label: "Compliance Portal",
         description: "Documente, evidence și trust sharing într-un singur loc",
         href: "/compliance-portal",
@@ -77,31 +71,19 @@ export const menuGroups: MenuGroup[] = [
         href: "/nis2",
         icon: "shield-check",
       },
-      {
-        label: "Accessibility",
-        description: "Instrumente gratuite WCAG integrate în compliance",
-        href: "/accessibility",
-        icon: "users-three",
-      },
     ],
     feature: {
       eyebrow: "Managed Compliance",
-      title: "Compliance, gestionat pentru tine",
+      title: "Compliance gestionat end-to-end · Accessibility inclus în program",
       href: "/managed-compliance",
       asset: "/navigation/browser.svg",
-      alt: "Platforma ZebraByte pentru compliance gestionat",
+      alt: "Platforma ZebraByte pentru managed compliance",
       variant: "product",
     },
   },
   {
     label: "Cyber Security",
     items: [
-      {
-        label: "Cyber Security",
-        description: "Program complet de securitate pentru organizație",
-        href: "/cyber-security",
-        icon: "shield-check",
-      },
       {
         label: "Security Assessment",
         description: "Expunere, configurări, vulnerabilități și plan de remediere",
@@ -134,8 +116,8 @@ export const menuGroups: MenuGroup[] = [
       },
     ],
     feature: {
-      eyebrow: "Security-first infrastructure",
-      title: "Protecție tehnică legată direct de compliance",
+      eyebrow: "Cyber Security",
+      title: "Program complet de securitate legat direct de risc și compliance",
       href: "/cyber-security",
       asset: "/navigation/frameworks.svg",
       alt: "Cyber Security ZebraByte",
@@ -146,28 +128,16 @@ export const menuGroups: MenuGroup[] = [
     label: "Resurse",
     items: [
       {
-        label: "Stories",
-        description: "Studii de caz și povești din platformă",
-        href: "/stories",
-        icon: "quotes",
-      },
-      {
         label: "Blog",
         description: "Compliance, security, privacy și product insights",
         href: "/blog",
         icon: "article",
       },
       {
-        label: "Hub",
-        description: "Ghiduri, comparații și resurse practice",
-        href: "/hub",
-        icon: "compass",
-      },
-      {
-        label: "Free Tools",
-        description: "Instrumente gratuite pentru security și compliance",
-        href: "/tools",
-        icon: "shield-check",
+        label: "Stories",
+        description: "Studii de caz și povești din platformă",
+        href: "/stories",
+        icon: "quotes",
       },
       {
         label: "Changelog",
@@ -182,15 +152,15 @@ export const menuGroups: MenuGroup[] = [
         icon: "code",
       },
       {
-        label: "Love from customers",
-        description: "Feedback și experiențe ale clienților",
-        href: "/love-from-customer",
-        icon: "heart",
+        label: "Free Tools",
+        description: "Instrumente gratuite pentru security și compliance",
+        href: "/tools",
+        icon: "shield-check",
       },
     ],
     feature: {
-      eyebrow: "Resource Center",
-      title: "Ghiduri și resurse pentru compliance și security",
+      eyebrow: "Hub",
+      title: "Ghiduri, comparații și resurse pentru compliance și security",
       href: "/hub",
       asset: "/navigation/browser.svg",
       alt: "ZebraByte Hub",
@@ -201,14 +171,8 @@ export const menuGroups: MenuGroup[] = [
     label: "Companie",
     items: [
       {
-        label: "Despre ZebraByte",
-        description: "Misiune, poziționare și modul în care lucrăm",
-        href: "/about",
-        icon: "users-three",
-      },
-      {
         label: "Careers",
-        description: "Roluri și oportunități în echipă",
+        description: "Roluri, role profiles și talent network",
         href: "/careers",
         icon: "briefcase",
       },
@@ -231,12 +195,6 @@ export const menuGroups: MenuGroup[] = [
         icon: "handshake",
       },
       {
-        label: "Security",
-        description: "Postura noastră de securitate și conformitate",
-        href: "https://trust.zebrabyte.ro",
-        icon: "shield-check",
-      },
-      {
         label: "Contact",
         description: "Discută cu echipa ZebraByte",
         href: "/contact",
@@ -244,7 +202,7 @@ export const menuGroups: MenuGroup[] = [
       },
     ],
     feature: {
-      eyebrow: "ZebraByte",
+      eyebrow: "About ZebraByte",
       title: "Cyber security + compliance, într-un singur program",
       href: "/about",
       asset: "/navigation/frameworks.svg",
