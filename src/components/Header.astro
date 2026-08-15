@@ -3,9 +3,8 @@ import ZebraByteLogo from "./ZebraByteLogo.astro";
 import HeaderMenu from "./HeaderMenu.astro";
 import Button from "./ui/Button.svelte";
 import MobileMenu from "./MobileMenu.astro";
-import GithubStars from "./GithubStars.astro";
 import Icon from "./Icon.astro";
-import { directMenuItems, menuGroups } from "../content/menu";
+import { menuGroups } from "../content/menu";
 
 type Props = {
   hideBurger?: boolean;
@@ -39,18 +38,6 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       aria-label="Navigație principală"
     >
       <HeaderMenu groups={menuGroups} />
-      <Button
-        variant="secondary"
-        href={directMenuItems[0].href}
-        class="text-sm leading-tight"
-      >
-        <div class="flex items-center gap-1.5">
-          <Icon name="github-logo" size={17} />
-          <div class="mt-0.5">Star</div>
-        </div>
-        <hr class="bg-border-solid h-full w-[1px]" />
-        <GithubStars class="mt-0.5 block" />
-      </Button>
     </nav>
 
     <div transition:name="header-compliant">
@@ -160,15 +147,13 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
 
     onScroll = () => {
       const isScrolled = document.documentElement.scrollTop > 10;
-      if (isScrolled === this.scrolled) {
-        return;
-      }
+      if (isScrolled === this.scrolled) return;
       this.closest("header")?.setAttribute(
         "data-scrolled",
         isScrolled.toString(),
       );
       this.scrolled = isScrolled;
-    }
+    };
   }
 
   customElementDefine("burger-menu", () => BurgerMenu);
