@@ -41,8 +41,6 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       <HeaderMenu groups={menuGroups} />
     </nav>
 
-    <AccountMenu />
-
     <div transition:name="header-compliant">
       <Button
         href="/contact"
@@ -51,6 +49,8 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
         Discută cu un expert
       </Button>
     </div>
+
+    <AccountMenu />
 
     <slot />
 
