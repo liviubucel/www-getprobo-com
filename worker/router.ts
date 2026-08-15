@@ -63,7 +63,7 @@ function withContentLanguage(response: Response, locale: TargetLocale): Response
 
 function rewriteLocalizedTextLinks(value: string, locale: TargetLocale): string {
   return value.replace(
-    /https:\/\/(?:www\.)?zebrabyte\.ro(?:\/[^^\s)\]}>"']*)?/gi,
+    /https:\/\/(?:www\.)?zebrabyte\.ro(?:\/[^\s)\]}>"']*)?/gi,
     (raw) => {
       try {
         const url = new URL(raw);
