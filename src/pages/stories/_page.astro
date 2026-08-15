@@ -30,36 +30,19 @@ const stories = random(
   3,
 );
 
-const schemaOrg = isZebraByteStory
-  ? {
-      name: "ZebraByte",
-      url: "https://www.zebrabyte.ro",
-      logo: "https://www.zebrabyte.ro/favicon.svg",
-    }
-  : {
-      name: "Probo",
-      url: "https://www.probo.com",
-      logo: "https://www.probo.com/probo-logo.svg",
-    };
-
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: data.title,
   ...(data.description && { description: data.description }),
   datePublished: data.date.toISOString(),
-  author: {
-    "@type": "Organization",
-    name: schemaOrg.name,
-    url: schemaOrg.url,
-  },
   publisher: {
     "@type": "Organization",
-    name: schemaOrg.name,
-    url: schemaOrg.url,
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
     logo: {
       "@type": "ImageObject",
-      url: schemaOrg.logo,
+      url: "https://www.zebrabyte.ro/favicon.svg",
     },
   },
   mainEntityOfPage: {
@@ -67,10 +50,8 @@ const articleSchema = {
     "@id": Astro.url.toString(),
   },
   image: data.ogImage
-    ? `${isZebraByteStory ? "https://www.zebrabyte.ro" : "https://www.probo.com"}${data.ogImage}`
-    : isZebraByteStory
-      ? "https://www.zebrabyte.ro/og.png"
-      : "https://www.probo.com/og.png",
+    ? `https://www.zebrabyte.ro${data.ogImage}`
+    : "https://www.zebrabyte.ro/og.png",
 };
 ---
 
@@ -93,18 +74,13 @@ const articleSchema = {
           fetchpriority="high"
         />
       ) : (
-        <div
-          class="absolute inset-0 z-1 bg-[#dfe7d7]"
-          aria-hidden="true"
-        >
+        <div class="absolute inset-0 z-1 bg-[#dfe7d7]" aria-hidden="true">
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_22%_28%,rgba(20,30,18,0.22),transparent_31%),radial-gradient(circle_at_76%_68%,rgba(20,30,18,0.13),transparent_35%)]" />
         </div>
       )
     }
 
-    <div
-      class="relative z-3 flex flex-col gap-6 p-5 sm:container sm:mb-37 sm:py-0"
-    >
+    <div class="relative z-3 flex flex-col gap-6 p-5 sm:container sm:mb-37 sm:py-0">
       {
         logo ? (
           <Image
@@ -124,70 +100,44 @@ const articleSchema = {
           </div>
         )
       }
-      <h1
-        class="text-h3 text-invert sm:text-h2 animate-perspective-in animation-delay-100 font-medium whitespace-pre-line"
-      >
+      <h1 class="text-h3 text-invert sm:text-h2 animate-perspective-in animation-delay-100 font-medium whitespace-pre-line">
         {data.title}
       </h1>
     </div>
   </header>
 
-  <div
-    class="relative z-5 mx-5 mt-10 mb-6 flex grid-cols-3 flex-col gap-4 sm:container sm:my-0 sm:-mt-[50px] sm:grid sm:-translate-y-12"
-  >
-    {
-      data.impacts.map((impact, k) => (
-        <div>
-          <div
-            class="text-h4 sm:text-invert animate-perspective-in font-medium"
-            style={`animation-delay: ${k * 100 + 200}ms`}
-          >
-            {impact.title}
-          </div>
-          <div
-            class="text-muted-foreground sm:text-tertiary-foreground animate-perspective-in text-lg"
-            style={`animation-delay: ${k * 100 + 200}ms`}
-          >
-            {impact.label}
-          </div>
+  <div class="relative z-5 mx-5 mt-10 mb-6 flex grid-cols-3 flex-col gap-4 sm:container sm:my-0 sm:-mt-[50px] sm:grid sm:-translate-y-12">
+    {data.impacts.map((impact, k) => (
+      <div>
+        <div class="text-h4 sm:text-invert animate-perspective-in font-medium" style={`animation-delay: ${k * 100 + 200}ms`}>
+          {impact.title}
         </div>
-      ))
-    }
+        <div class="text-muted-foreground sm:text-tertiary-foreground animate-perspective-in text-lg" style={`animation-delay: ${k * 100 + 200}ms`}>
+          {impact.label}
+        </div>
+      </div>
+    ))}
   </div>
 
-  <main
-    class="animate-slide-in animation-delay-400 container flex grid-cols-[1fr_320px] flex-col gap-10 sm:my-20 sm:grid sm:gap-20"
-  >
+  <main class="animate-slide-in animation-delay-400 container flex grid-cols-[1fr_320px] flex-col gap-10 sm:my-20 sm:grid sm:gap-20">
     <Prose>
       <Content />
     </Prose>
     <hr class="-mr-5 sm:hidden" />
     <aside class="@container space-y-6 text-xs">
       <div class="space-y-2">
-        <Sharer
-          client:only
-          url={Astro.url.toString()}
-          title={data.title}
-          class="items-start text-start"
-        />
+        <Sharer client:only url={Astro.url.toString()} title={data.title} class="items-start text-start" />
       </div>
       <div class="space-y-2">
         <div class="font-medium">Organizație</div>
         <div class="text-muted-foreground">
-          {
-            data.company.url ? (
-              <a
-                href={data.company.url}
-                class="text-inherit underline-offset-4 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {data.company.name}
-              </a>
-            ) : (
-              data.company.name
-            )
-          }
+          {data.company.url ? (
+            <a href={data.company.url} class="text-inherit underline-offset-4 hover:underline" target="_blank" rel="noopener noreferrer">
+              {data.company.name}
+            </a>
+          ) : (
+            data.company.name
+          )}
         </div>
       </div>
       <div class="space-y-2">
@@ -202,34 +152,26 @@ const articleSchema = {
         <div class="font-medium">Context</div>
         <div class="text-muted-foreground">{data.company.about}</div>
       </div>
-      {
-        !isZebraByteStory && (
-          <div class="bg-active rounded-lg border p-4 text-muted-foreground leading-relaxed">
-            Studiu de caz original Probo, păstrat complet cu imaginile, logo-ul,
-            rezultatele și atribuirea upstream. Organizația prezentată nu este
-            reclasificată drept client ZebraByte.
-          </div>
-        )
-      }
+      {!isZebraByteStory && (
+        <div class="bg-active rounded-lg border p-4 text-muted-foreground leading-relaxed">
+          Acest material face parte din biblioteca de referință a platformei. Organizația prezentată nu este automat reprezentată ca fiind client ZebraByte.
+        </div>
+      )}
       <Newsletter />
     </aside>
   </main>
 
-  {
-    stories.length > 0 && (
-      <div class="container mb-10 sm:mb-20">
-        <hr class="my-10 sm:my-20" />
-        <aside>
-          <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">
-            Explorează mai multe stories
-          </h2>
-          <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
-            {stories.map((story) => <StoryCard story={story} size="relative" />)}
-          </div>
-        </aside>
-      </div>
-    )
-  }
+  {stories.length > 0 && (
+    <div class="container mb-10 sm:mb-20">
+      <hr class="my-10 sm:my-20" />
+      <aside>
+        <h2 class="text-h3 mb-6 text-center font-medium sm:mb-10 sm:text-start">Explorează mai multe stories</h2>
+        <div class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
+          {stories.map((story) => <StoryCard story={story} size="relative" />)}
+        </div>
+      </aside>
+    </div>
+  )}
 </Layout>
 
 <style>
