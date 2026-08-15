@@ -1,64 +1,58 @@
 ---
 import MobileMenuFooter from "virtual:starlight/components/MobileMenuFooter";
-import SidebarSublist from "@astrojs/starlight/components/SidebarSublist.astro";
-import {
-  getDocsSectionForPath,
-  getSidebarGroupsForSection,
-} from "../../lib/docs-navigation";
 
-const sectionId = getDocsSectionForPath(Astro.url.pathname);
-const sidebarGroups = getSidebarGroupsForSection(
-  Astro.locals.starlightRoute.sidebar,
-  sectionId,
-);
+const groups = [
+  {
+    label: "Documentation",
+    items: [
+      { label: "Overview", href: "/docs" },
+      { label: "Managed Compliance", href: "/managed-compliance" },
+      { label: "Compliance Portal", href: "/compliance-portal" },
+    ],
+  },
+  {
+    label: "Frameworks",
+    items: [
+      { label: "SOC 2", href: "/soc2" },
+      { label: "ISO/IEC 27001", href: "/iso-27001" },
+      { label: "GDPR & Privacy", href: "/gdpr" },
+      { label: "NIS2", href: "/nis2" },
+      { label: "Accessibility", href: "/accessibility" },
+    ],
+  },
+  {
+    label: "Security",
+    items: [
+      { label: "Cyber Security", href: "/cyber-security" },
+      { label: "Security Assessment", href: "/security-assessment" },
+      { label: "Website Security", href: "/website-security" },
+      { label: "Email Security", href: "/email-security" },
+      { label: "Incident Response", href: "/incident-response" },
+      { label: "Secure Managed Hosting", href: "/secure-hosting" },
+    ],
+  },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 ---
 
-{
-  sidebarGroups.map(({ group, showHeading }) => (
-    <section class="sidebar-section" aria-label={group.label}>
-      {showHeading && <h2>{group.label}</h2>}
-      <div class="sidebar-section-links">
-        <SidebarSublist sublist={group.entries} nested />
-      </div>
-    </section>
-  ))
-}
-
-<script>
-  let hasScrolledToActiveLink = false;
-
-  document.addEventListener("astro:page-load", () => {
-    if (hasScrolledToActiveLink) return;
-
-    const sidebar = document.getElementById("starlight__sidebar");
-    if (!sidebar) return;
-
-    const activeLink = sidebar.querySelector<HTMLElement>(
-      '[aria-current="page"]',
-    );
-    if (!activeLink) return;
-    hasScrolledToActiveLink = true;
-
-    window.requestAnimationFrame(() => {
-      if (!sidebar.isConnected) return;
-
-      const sidebarRect = sidebar.getBoundingClientRect();
-      const activeLinkRect = activeLink.getBoundingClientRect();
-      const top =
-        sidebar.scrollTop +
-        activeLinkRect.top -
-        sidebarRect.top -
-        (sidebarRect.height - activeLinkRect.height) / 2;
-
-      sidebar.scrollTo({
-        top,
-        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      });
-    });
-  });
-</script>
+{groups.map((group) => (
+  <section class="sidebar-section" aria-label={group.label}>
+    <h2>{group.label}</h2>
+    <ul class="sidebar-section-links">
+      {group.items.map((item) => {
+        const isActive = currentPath === item.href;
+        return (
+          <li>
+            <a href={item.href} aria-current={isActive ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+))}
 
 <div class="md:sl-hidden">
   <MobileMenuFooter />
@@ -72,7 +66,7 @@ const sidebarGroups = getSidebarGroupsForSection(
   }
 
   h2 {
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.45rem;
     color: var(--color-primary);
     font-size: 0.875rem;
     font-weight: 600;
@@ -80,28 +74,32 @@ const sidebarGroups = getSidebarGroupsForSection(
     text-transform: uppercase;
   }
 
-  :global(.sidebar) {
-    interpolate-size: allow-keywords;
+  ul {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  :global(.sidebar details::details-content) {
-    block-size: 0;
-    overflow-y: clip;
-    opacity: 0;
-    transition:
-      block-size 180ms cubic-bezier(0.4, 0, 0.2, 1),
-      content-visibility 180ms allow-discrete,
-      opacity 180ms ease;
+  a {
+    display: block;
+    border-radius: 0.5rem;
+    padding: 0.48rem 0.65rem;
+    color: var(--color-muted-foreground);
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: background-color 140ms ease, color 140ms ease;
   }
 
-  :global(.sidebar details[open]::details-content) {
-    block-size: auto;
-    opacity: 1;
+  a:hover {
+    background: var(--color-subtle);
+    color: var(--color-primary);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    :global(.sidebar details::details-content) {
-      transition: none;
-    }
+  a[aria-current="page"] {
+    background: var(--color-highlight);
+    color: var(--color-primary);
+    font-weight: 600;
   }
 </style>
