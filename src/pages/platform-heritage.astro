@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AboutImg from "../assets/about.png";
+import Team from "../components/block/Team.astro";
+import Gallery from "../components/block/Gallery.astro";
+import Testimonials from "../components/block/Testimonials.astro";
+import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
+---
+
+<Layout
+  title="Open-source platform heritage"
+  description="Preserved upstream Probo visual and editorial material used as the open-source foundation of the ZebraByte compliance platform."
+  noIndex
+>
+  <main>
+    <section class="container my-10 sm:mt-20 sm:mb-24">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Open-source heritage · noindex</p>
+      <h1 class="text-h2 mb-4 font-medium">Probo platform heritage</h1>
+      <p class="text-muted-foreground mb-10 max-w-3xl text-lg leading-relaxed">
+        Această pagină păstrează materialele vizuale upstream Probo separat de oferta comercială ZebraByte. Fotografiile, testimonialele și identitatea de mai jos aparțin proiectului upstream și nu reprezintă clienți sau membri ai echipei ZebraByte.
+      </p>
+      <ResponsiveImage
+        src={AboutImg}
+        class="mb-10 aspect-square rounded-lg object-cover sm:aspect-1080/606"
+        mobile={[640, 640]}
+        sm={[1080, 607]}
+        alt="The Probo team"
+      />
+      <h2 class="text-muted-foreground mb-1">Original mission</h2>
+      <p class="text-quote">
+        We're transforming compliance from a complex burden into an intuitive journey. Our platform makes compliance straightforward and cost-effective, empowering businesses of all sizes to meet regulatory requirements with confidence.
+      </p>
+    </section>
+    <Team />
+    <Gallery />
+    <Testimonials />
+  </main>
+</Layout>
