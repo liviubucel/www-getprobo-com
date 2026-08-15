@@ -1,53 +1,35 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import DownloadAgent from "../components/DownloadAgent.svelte";
-import ProboLogo from "../assets/probo-logo-only.svg";
 ---
 
 <Layout
-  title="Download Probo Agent"
-  description="Download the latest Probo Agent for macOS, Linux, Windows, or FreeBSD to enroll devices and continuously verify device posture."
+  title="Download ZebraByte Device Agent"
+  description="Download the latest ZebraByte Device Agent for macOS, Linux, Windows, or FreeBSD to enroll devices and continuously verify device posture."
   noFrameworks
 >
   <main>
     <animated-hero class="relative block overflow-hidden py-16 sm:py-28">
       <section class="container">
         <div class="mx-auto flex max-w-xl flex-col items-center text-center">
-          <Image
-            src={ProboLogo}
-            alt="Probo"
-            width={80}
-            height={80}
+          <img
+            src="/favicon.svg"
+            alt="ZebraByte"
+            width="80"
+            height="80"
             class="animate-slide-in mb-8 size-20"
           />
-          <h1
-            class="text-h2 animate-slide-in animation-delay-100 mb-4 font-medium"
-          >
-            Download Probo Agent
+          <h1 class="text-h2 animate-slide-in animation-delay-100 mb-4 font-medium">
+            Download ZebraByte Device Agent
           </h1>
-          <p
-            class="text-muted-foreground animate-slide-in animation-delay-200 mb-10 max-w-xl"
-          >
+          <p class="text-muted-foreground animate-slide-in animation-delay-200 mb-10 max-w-xl">
             Available for macOS, Linux, Windows, and FreeBSD.
             <br />
-            See the
-            <a
-              href="/docs/product/probo-agent/overview"
-              class="underline underline-offset-4">Probo Agent docs</a
-            > for install and enrollment.
+            Use it for device enrollment and continuous posture verification inside the compliance workflow.
+            See the <a href="/docs/product" class="underline underline-offset-4">product documentation</a> for the wider platform model.
           </p>
           <div class="animate-slide-in animation-delay-300 w-full">
             <DownloadAgent client:load />
-          </div>
-
-          <div class="bg-active text-muted-foreground mt-10 rounded-xl border p-5 text-sm leading-relaxed">
-            <p class="mb-2 font-medium text-foreground">ZebraByte extension</p>
-            <p>
-              Downloader-ul și identitatea tehnică Probo Agent de mai sus sunt păstrate
-              integral. ZebraByte îl integrează ca componentă upstream open-source și nu
-              îl redenumește artificial până când există un build ZebraByte separat.
-            </p>
           </div>
         </div>
       </section>
