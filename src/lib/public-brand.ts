@@ -5,6 +5,10 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/https?:\/\/(?:www\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/(?:www\.)?probo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
+    .replace(/\bThe latest news from Probo\b/gi, "The latest news from ZebraByte")
+    .replace(/\bfrom the Probo team\b/gi, "from the ZebraByte team")
+    .replace(/\bNew updates and improvements to Probo\b/gi, "New updates and improvements to ZebraByte")
+    .replace(/\bLatest product updates and new features from Probo\b/gi, "Latest product updates and new features from ZebraByte")
     .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
     .replace(/\bprobo-agent\b/g, "zebrabyte-device-agent")
     .replace(/\bProbo vs Vanta\b/gi, "ZebraByte vs Vanta")
@@ -41,6 +45,8 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/\bY Combinator-backed ZebraByte\b/gi, "ZebraByte")
     .replace(/\bZebraByte,? backed by Y Combinator\b/gi, "ZebraByte")
     .replace(/\bZebraByte went through YC(?: in Spring 25)?\b/gi, "ZebraByte serves fast-moving technology teams")
+    .replace(/\bthe platform went through YC(?: in Spring 25)?\b/gi, "the platform serves fast-moving technology teams")
+    .replace(/\bthe platform is YC-backed\b/gi, "the platform")
     .replace(/\bYC company\b/gi, "technology company")
     .replace(/\bYC startup\b/gi, "early-stage technology company");
 }
