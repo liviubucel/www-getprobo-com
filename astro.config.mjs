@@ -97,6 +97,7 @@ export default defineConfig({
       filter(page) {
         const pathname = new URL(page).pathname.replace(/\/+$/, "") || "/";
 
+        if (pathname === "/yc") return false;
         if (pathname.includes("/404")) return false;
         if (pathname.startsWith("/whats-next")) return false;
         if (pathname.startsWith("/feedback")) return false;
@@ -104,63 +105,52 @@ export default defineConfig({
         if (pathname.startsWith("/static")) return false;
         if (pathname.startsWith("/orderform")) return false;
         if (pathname.startsWith("/newsletter/rezultat")) return false;
-
-        const hiddenExact = new Set([
-          "/yc",
-          "/brand",
-          "/download",
-          "/careers",
-          "/changelog",
-          "/products/compliance-portal",
-          "/platform-heritage",
-          "/platform-customer-archive",
-          "/probo-newsletter",
-          "/privacy",
-          "/cookie-policy",
-          "/terms",
-        ]);
-        if (hiddenExact.has(pathname)) return false;
-
-        // Detailed internal documentation is retained in source, but only the
-        // curated ZebraByte documentation landing page is indexed publicly.
-        if (pathname.startsWith("/docs/") && pathname !== "/docs") return false;
-
-        if (pathname.startsWith("/blog/")) return false;
-        if (pathname.startsWith("/changelog/")) return false;
-        if (pathname.startsWith("/hub/")) return false;
-        if (pathname.startsWith("/careers/")) return false;
-
-        if (
-          pathname.startsWith("/stories/") &&
-          !pathname.startsWith("/stories/zebrabyte-")
-        )
-          return false;
-
         if (pathname === "/blog/page/1") return false;
+
         return true;
       },
       serialize(item) {
         if (item.url === "https://www.zebrabyte.ro") {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 1.0;
-        } else if (item.url === "https://www.zebrabyte.ro/managed-compliance") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
-          item.priority = 0.9;
-        } else if (item.url === "https://www.zebrabyte.ro/cyber-security") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
-          item.priority = 0.9;
         } else if (item.url === "https://www.zebrabyte.ro/docs") {
-          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
-          item.priority = 0.7;
-        } else if (item.url === "https://www.zebrabyte.ro/hub") {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
+          item.priority = 0.9;
+        } else if (item.url.includes("/blog/")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
           item.priority = 0.8;
+        } else if (item.url.includes("/hub")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
+          item.priority = 0.8;
+        } else if (
+          item.url.includes("/docs/deployment/configuration") ||
+          item.url.includes("/docs/deployment/self-hosting")
+        ) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.8;
+        } else if (item.url.includes("/docs")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.7;
+        } else if (item.url.includes("/changelog")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("weekly");
+          item.priority = 0.7;
         } else if (item.url.includes("/stories")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.7;
-        } else {
+        } else if (item.url.includes("/about")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.6;
+        } else if (
+          item.url.includes("/privacy") ||
+          item.url.includes("/terms") ||
+          item.url.includes("/cookie-policy") ||
+          item.url.includes("/subprocessors")
+        ) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("yearly");
+          item.priority = 0.3;
+        } else {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.5;
         }
 
         return item;
