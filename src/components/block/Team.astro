@@ -7,145 +7,142 @@ import SachaPortrait from "../../assets/about/sacha-al-himdani.png";
 import ArthurPortrait from "../../assets/about/arthur-mayoux.jpeg";
 import EmilePortrait from "../../assets/about/emile-re.jpeg";
 
-const founders = [
+const leadProfiles = [
   {
     img: AntoinePortrait,
     alt: "Antoine Bourchardy",
     name: "Antoine Bourchardy",
-    role: "Co-founder & CEO",
-    bio: "ISO 27001 auditor with experience in compliance assessment and implementation. Passionate about making compliance accessible and straightforward.",
+    role: "Compliance & product profile",
+    bio: "Compliance assessment and implementation experience focused on making regulatory work more understandable and operational.",
   },
   {
     img: BryanPortrait,
     alt: "Bryan Frimin",
     name: "Bryan Frimin",
-    role: "Co-founder & CTO",
-    bio: "YC alumnus and engineer who managed SOC2/ISO27001 compliance at his previous startup. Experienced in building scalable solutions for complex problems.",
+    role: "Engineering & security profile",
+    bio: "Engineering experience across compliance operations, security workflows and scalable product systems.",
   },
 ];
 
-const employees = [
+const contributorProfiles = [
   {
     img: SachaPortrait,
     alt: "Sacha Al Himdani",
     name: "Sacha Al Himdani",
-    role: "Founding Engineer",
+    role: "Engineering profile",
   },
   {
     img: ArthurPortrait,
     alt: "Arthur Mayoux",
     name: "Arthur Mayoux",
-    role: "Biz Ops",
+    role: "Business operations profile",
   },
   {
     img: EmilePortrait,
     alt: "Émile Ré",
     name: "Émile Ré",
-    role: "Founding Engineer",
+    role: "Engineering profile",
   },
   {
     img: LudovicPortrait,
     alt: "Ludovic Vielle",
     name: "Ludovic Vielle",
-    role: "Founding Engineer",
+    role: "Engineering profile",
   },
 ];
 
-const team = [...founders, ...employees];
+const allProfiles = [...leadProfiles, ...contributorProfiles];
 
 const disciplines = [
   {
-    name: "Cyber Security",
-    role: "Security engineering & incident response",
-    bio: "Evaluare tehnică, hardening, vulnerability management, protecția aplicațiilor și suport pentru incidente, conectate direct la riscul de business.",
+    name: "Managed Compliance",
+    role: "Controls, evidence & audit readiness",
+    bio: "Program management pentru framework-uri, politici, risk reviews, evidence, remediation și pregătirea continuă pentru audit.",
   },
   {
-    name: "Privacy & Compliance",
-    role: "GDPR, NIS2 & audit readiness",
-    bio: "Politici, controale, risk management și dovezi menținute într-un program continuu, nu într-un set static de documente.",
+    name: "Cyber Security",
+    role: "Security engineering & incident response",
+    bio: "Evaluare tehnică, hardening, vulnerability management, protecția aplicațiilor și suport pentru incidente, conectate direct la risc.",
   },
   {
     name: "Secure Infrastructure",
     role: "Managed hosting & platform security",
-    bio: "Infrastructură administrată cu hardening, izolare, monitorizare și procese operaționale orientate spre securitate.",
+    bio: "Infrastructură administrată cu hardening, izolare, backup, monitorizare și change management orientat spre securitate.",
   },
   {
     name: "Automation",
     role: "Integrations, evidence & workflows",
-    bio: "Automatizare pentru evidence collection, workflow-uri, integrări și operațiuni repetitive de compliance.",
+    bio: "Automatizare pentru evidence collection, integrări, API-uri și operațiuni repetitive de compliance.",
   },
 ];
 ---
 
 <section class="container py-10 sm:py-20">
   <div class="mb-10 max-w-3xl sm:mb-16">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Upstream Probo · preserved</p>
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">
+      Platform archive
+    </p>
     <p class="text-muted-foreground text-lg">
-      Blocul original de echipă Probo este păstrat integral, inclusiv fotografiile, rolurile și biografiile. Acesta documentează echipa upstream și nu reprezintă echipa ZebraByte.
+      Păstrăm profilele și fotografia editorială care fac parte din experiența produsului. Persoanele prezentate în această secțiune sunt profile de contribuție și context istoric al platformei; nu sunt prezentate ca angajați ZebraByte.
     </p>
   </div>
 
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Founders</h2>
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Lead profiles</h2>
   <div class="flex flex-col gap-10 sm:flex-row sm:gap-20">
-    {
-      founders.map((f) => (
-        <article class="space-y-2">
-          <Image
-            densities={[1, 2]}
-            src={f.img}
-            alt={f.alt}
-            width={102}
-            height={102}
-            class="mb-4 rounded-lg sm:mb-8"
-          />
-          <h3 class="font-medium">{f.name}</h3>
-          <div>{f.role}</div>
-          <p class="text-lg">{f.bio}</p>
-        </article>
-      ))
-    }
+    {leadProfiles.map((profile) => (
+      <article class="space-y-2">
+        <Image
+          densities={[1, 2]}
+          src={profile.img}
+          alt={profile.alt}
+          width={102}
+          height={102}
+          class="mb-4 rounded-lg sm:mb-8"
+        />
+        <h3 class="font-medium">{profile.name}</h3>
+        <div>{profile.role}</div>
+        <p class="text-lg">{profile.bio}</p>
+      </article>
+    ))}
   </div>
+
   <hr class="my-10 sm:my-30" />
 
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Our team</h2>
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Contributor profiles</h2>
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-    {
-      team.map((item) => (
-        <article class="space-y-2">
-          <Image
-            densities={[1, 2]}
-            src={item.img}
-            alt={item.alt}
-            width={102}
-            height={102}
-            class="mb-4 rounded-lg sm:mb-8"
-          />
-          <h3 class="font-medium">{item.name}</h3>
-          <div>{item.role}</div>
-        </article>
-      ))
-    }
+    {allProfiles.map((item) => (
+      <article class="space-y-2">
+        <Image
+          densities={[1, 2]}
+          src={item.img}
+          alt={item.alt}
+          width={102}
+          height={102}
+          class="mb-4 rounded-lg sm:mb-8"
+        />
+        <h3 class="font-medium">{item.name}</h3>
+        <div>{item.role}</div>
+      </article>
+    ))}
   </div>
 
   <hr class="my-12 sm:my-24" />
 
   <div class="mb-10 max-w-3xl sm:mb-16">
     <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
-    <h2 class="text-h3 mb-4 font-medium">Disciplinele ZebraByte</h2>
+    <h2 class="text-h3 mb-4 font-medium">How ZebraByte operates</h2>
     <p class="text-muted-foreground text-lg">
-      Peste experiența și structura Probo adăugăm capabilitățile ZebraByte fără să rescriem istoria proiectului upstream.
+      ZebraByte adaugă ownership operațional peste platformă prin managed compliance, security engineering, secure infrastructure și automatizare.
     </p>
   </div>
 
   <div class="grid gap-8 sm:grid-cols-2">
-    {
-      disciplines.map((item) => (
-        <article class="space-y-2 rounded-xl border p-6 sm:p-8">
-          <h3 class="text-xl font-medium">{item.name}</h3>
-          <div class="text-muted-foreground">{item.role}</div>
-          <p class="text-lg">{item.bio}</p>
-        </article>
-      ))
-    }
+    {disciplines.map((item) => (
+      <article class="space-y-2 rounded-xl border p-6 sm:p-8">
+        <h3 class="text-xl font-medium">{item.name}</h3>
+        <div class="text-muted-foreground">{item.role}</div>
+        <p class="text-lg">{item.bio}</p>
+      </article>
+    ))}
   </div>
 </section>
