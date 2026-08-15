@@ -75,6 +75,15 @@
 /docs/developers/api/mcp/tools/users /docs/developers/api/mcp/tools/catalog/identity-and-provisioning 301
 /fr/* /:splat 301
 
+# Accessibility: only the standard public widget install remains public.
+/accesibilitate/personalizeaza https://app.zebrabyte.ro 302
+/accesibilitate/audit https://app.zebrabyte.ro 302
+/accesibilitate/obtine-widget /accessibility 301
+/accesibilitate/faq /accessibility 301
+/accesibilitate/disclaimer /accessibility 301
+/accesibilitate/vs-sienna /accessibility 301
+/accesibilitate/* /accessibility 301
+
 # Legacy ZebraByte URLs - preserve SEO continuity while mapping old services to current areas
 /accesibilitate /accessibility 301
 /am-fost-atacat-cibernetic /incident-response 301
