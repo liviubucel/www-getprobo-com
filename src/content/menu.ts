@@ -49,13 +49,13 @@ export const menuGroups: MenuGroup[] = [
         label: "Platforma de conformitate",
         description: "Controale, dovezi și partajare securizată",
         href: "/compliance-portal",
-        icon: "notepad",
+        icon: "shield-check",
       },
       {
         label: "SOC 2",
         description: "Controale și pregătire continuă pentru audit",
         href: "/soc2",
-        icon: "shield-check",
+        icon: "article",
       },
       {
         label: "ISO/IEC 27001",
@@ -153,7 +153,7 @@ export const menuGroups: MenuGroup[] = [
         label: "Instrumente gratuite",
         description: "Instrumente pentru securitate și conformitate",
         href: "/tools",
-        icon: "sparkle",
+        icon: "compass",
       },
       {
         label: "Noutăți produs",
@@ -259,7 +259,7 @@ export const menuGroups: MenuGroup[] = [
         label: "Implementare",
         description: "Cloud, self-hosting, configurare și operațiuni",
         href: "/docs/deployment",
-        icon: "terminal-window",
+        icon: "compass",
       },
       {
         label: "Device Agent",
