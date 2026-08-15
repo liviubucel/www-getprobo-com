@@ -71,6 +71,7 @@ const complianceFeatures = [
             <button
               id="copy-accessibility-code"
               type="button"
+              data-install-code={installCode}
               class="bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium"
             >
               Copiază codul
@@ -124,7 +125,7 @@ const complianceFeatures = [
   </main>
 </Layout>
 
-<script define:vars={{ installCode }}>
+<script>
   import { AnimatedHero } from "../lib/elements/hero";
   import { customElementDefine } from "../lib/dom";
   customElementDefine("animated-hero", () => AnimatedHero);
@@ -133,6 +134,7 @@ const complianceFeatures = [
   const copyStatus = document.querySelector<HTMLElement>("#copy-accessibility-status");
 
   copyButton?.addEventListener("click", async () => {
+    const installCode = copyButton.dataset.installCode ?? "";
     try {
       await navigator.clipboard.writeText(installCode);
       if (copyStatus) copyStatus.textContent = "Cod copiat.";
