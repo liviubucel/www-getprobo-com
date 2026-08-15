@@ -8,11 +8,14 @@ interface Props {
 }
 
 const { industry } = Astro.props;
-const services = Object.entries(industry.serviceSlugs).map(([key, slug]) => ({
-  key,
-  slug,
-  meta: industryServiceMeta[key as keyof typeof industryServiceMeta],
-}));
+const services = Object.entries(industry.serviceSlugs)
+  .filter(([key]) => key !== "maintenance")
+  .map(([key, slug]) => ({
+    key,
+    slug,
+    meta: industryServiceMeta[key as keyof typeof industryServiceMeta],
+    href: key === "hosting" ? "/secure-hosting" : `/${slug}`,
+  }));
 ---
 
 <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
@@ -43,9 +46,7 @@ const services = Object.entries(industry.serviceSlugs).map(([key, slug]) => ({
     </div>
 
     <div class="overflow-hidden rounded-2xl border bg-level-0">
-      <div class="border-b p-6 sm:p-8">
-        <p class="text-muted-foreground text-sm">Suprafața de risc</p>
-      </div>
+      <div class="border-b p-6 sm:p-8"><p class="text-muted-foreground text-sm">Suprafața de risc</p></div>
       <div class="divide-y">
         {industry.risks.map((risk, index) => (
           <div class="flex gap-4 p-5 sm:px-8">
@@ -61,14 +62,19 @@ const services = Object.entries(industry.serviceSlugs).map(([key, slug]) => ({
 <section class="bg-active py-16 sm:py-24">
   <div class="container">
     <div class="mx-auto mb-12 max-w-190 text-center">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">ZebraByte services</p>
-      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Tot stack-ul ZebraByte, adaptat acestei industrii.</h2>
-      <p class="text-muted-foreground text-lg">Paginile sectoriale din website-ul ZebraByte anterior sunt păstrate ca rute reale, dar sunt integrate în experiența Probo în loc să existe ca un site separat.</p>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security & compliance</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Doar servicii care reduc riscul sau susțin compliance-ul.</h2>
+      <p class="text-muted-foreground text-lg">Nu promovăm mentenanță WordPress, migrare sau alte servicii IT generale ca produse separate. Pentru această industrie, oferta rămâne security-first.</p>
     </div>
 
     <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-      {services.map(({ slug, meta }) => (
-        <a href={`/${slug}`} class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
+      <a href="/managed-compliance" class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
+        <p class="text-muted-foreground mb-8 text-sm">Compliance</p>
+        <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">Managed Compliance</h3>
+        <p class="text-muted-foreground leading-relaxed">Risk, controls, evidence și audit readiness gestionate într-un program continuu.</p>
+      </a>
+      {services.map(({ href, meta }) => (
+        <a href={href} class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
           <p class="text-muted-foreground mb-8 text-sm">{meta.eyebrow}</p>
           <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{meta.label}</h3>
           <p class="text-muted-foreground leading-relaxed">{meta.description}</p>
