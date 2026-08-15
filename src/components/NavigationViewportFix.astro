@@ -1,23 +1,36 @@
 <style is:global>
   @media (min-width: 1024px) {
     [data-menu-shell] {
-      height: min(35rem, calc(100vh - 5.75rem));
+      height: min(27.75rem, calc(100vh - 5.75rem));
     }
 
     [data-menu-panel] > :first-child {
       max-height: 100%;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
+      overflow: hidden;
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
     }
 
-    [data-menu-panel] > :first-child::-webkit-scrollbar {
-      width: 6px;
+    [data-menu-panel] > :first-child > :last-child {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.25rem 0.5rem;
+      align-items: start;
     }
 
-    [data-menu-panel] > :first-child::-webkit-scrollbar-thumb {
-      border-radius: 999px;
-      background: var(--color-border-mid);
+    [data-menu-panel] > :first-child > :last-child .navigation-menu-link {
+      gap: 0.75rem;
+      padding: 0.625rem;
+    }
+
+    [data-menu-panel] > :first-child > :last-child .navigation-menu-link > :first-child {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    [data-menu-panel] > :first-child > :last-child .navigation-menu-link > :last-child {
+      font-size: 0.925rem;
+      line-height: 1.3rem;
     }
   }
 </style>
