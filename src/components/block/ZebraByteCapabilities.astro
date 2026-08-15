@@ -1,0 +1,52 @@
+---
+import { clsx } from "clsx";
+import LogosScroll from "../LogosScroll.svelte";
+
+type Props = {
+  constrained?: boolean;
+  class?: string;
+};
+
+const capabilities = [
+  "Managed Compliance",
+  "ISO 27001",
+  "GDPR & Privacy",
+  "NIS2",
+  "Accessibility",
+  "Cyber Security",
+  "Security Assessment",
+  "Website Security",
+  "Email Security",
+  "Incident Response",
+  "Secure Managed Hosting",
+];
+---
+
+<section
+  class={clsx(
+    "relative overflow-hidden p-0",
+    Astro.props.class,
+    Astro.props.constrained && "mx-auto sm:max-w-270",
+  )}
+>
+  <LogosScroll class="flex h-16 w-max items-center sm:h-30" client:load>
+    {
+      capabilities.map((capability) => (
+        <div class="mx-4 flex w-44 flex-none items-center justify-center sm:mx-10 sm:w-56">
+          <span class="text-primary whitespace-nowrap text-base font-medium tracking-[-0.02em] sm:text-lg">
+            {capability}
+          </span>
+        </div>
+      ))
+    }
+  </LogosScroll>
+
+  {
+    Astro.props.constrained && (
+      <>
+        <div class="absolute top-0 right-0 h-full w-5 bg-linear-to-l from-[#FFFFFB] to-[#FFFFFB]/0 sm:w-10" />
+        <div class="absolute top-0 left-0 h-full w-5 bg-linear-to-r from-[#FFFFFB] to-[#FFFFFB]/0 sm:w-10" />
+      </>
+    )
+  }
+</section>
