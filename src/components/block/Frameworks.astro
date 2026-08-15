@@ -1,25 +1,23 @@
 ---
-import { Image } from "astro:assets";
-import Logo from "../../assets/probo-logo-only.svg";
 import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
 
 <div class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
   <div class="container">
-    <Image
-      src={Logo}
-      alt="Logo probo"
-      width={48}
-      height={48}
-      class="mx-auto mb-6"
+    <img
+      src="/images/zbt-negru.svg"
+      alt="ZebraByte"
+      width="122"
+      height="44"
+      class="mx-auto mb-6 h-11 w-auto object-contain"
     />
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
       Managed frameworks
     </h2>
-    <p class="text-muted-foreground mb-12 text-center text-lg">
-      Not seeing the one you are looking for?<br />
-      Reach out, we likely do it as well.
+    <p class="text-muted-foreground mx-auto mb-12 max-w-2xl text-center text-lg">
+      Managed compliance pentru framework-uri de securitate, privacy și governance,
+      conectat direct la controalele tehnice și evidence-ul organizației.
     </p>
 
     <Badges
@@ -31,18 +29,11 @@ import Button from "../../components/ui/Button.svelte";
 
     <Button
       rel="nofollow noreferrer"
-      href="/contact"
+      href="/managed-compliance"
       size="lg"
       class="mx-auto flex w-max"
     >
-      Get compliant
+      Explorează Managed Compliance
     </Button>
-
-    <div class="mx-auto mt-10 max-w-2xl rounded-xl border bg-level-0 p-5 text-center sm:p-6">
-      <p class="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-[0.14em]">ZebraByte extension</p>
-      <p class="text-sm leading-relaxed">
-        ZebraByte păstrează integral această bibliotecă de framework-uri și adaugă servicii de cybersecurity, privacy și infrastructură securizată. Badge-urile de mai sus reprezintă framework-uri gestionate/suportate în experiența Probo și nu trebuie interpretate automat drept certificări deținute de ZebraByte.
-      </p>
-    </div>
   </div>
 </div>
