@@ -5,7 +5,27 @@
 /compliance-guides/iso27001 /iso-27001 301
 /wall-of-trust /love-from-customer 301
 
-# Retire old editorial/platform routes from the public customer journey
+# Public ZebraByte surface: keep retained internal/legacy material out of the customer journey
+/yc / 301
+/brand /about 302
+/download /docs 302
+/careers /about 302
+/careers/* /about 302
+/products/compliance-portal /compliance-portal 301
+/platform-heritage / 301
+/platform-customer-archive /love-from-customer 301
+/probo-newsletter / 301
+/blog.xml /blog 302
+/changelog.xml /changelog 302
+/llms-docs.txt /llms.txt 302
+/llms-full.txt /llms.txt 302
+/md/docs/* /llms.txt 302
+/md/hub/* /hub 302
+/md/blog/* /blog 302
+/md/changelog/* /changelog 302
+/md/stories/* /stories 302
+
+# Editorial routes retained in source are not public ZebraByte articles
 /hub/soc2 /soc2 301
 /hub/iso27001 /iso-27001 301
 /hub/nis2-compliance /nis2 301
@@ -13,26 +33,24 @@
 /blog/page/* /blog 302
 /blog/* /blog 302
 /changelog/* /changelog 302
-/products/compliance-portal /compliance-portal 301
-/platform-heritage / 301
-/platform-customer-archive /love-from-customer 301
-/probo-newsletter / 301
 
-# Internal deployment/agent documentation is not a ZebraByte public product today
+# Detailed internal product/deployment documentation is not a public ZebraByte product today
 /docs/self-hosting /docs 301
 /docs/self-hosting/* /docs 301
 /docs/deployment /docs 301
 /docs/deployment/* /docs 301
-/docs/product/probo-agent /docs/product 301
-/docs/product/probo-agent/* /docs/product 301
-/docs/developers/api/agent/* /docs/developers 301
+/docs/product/probo-agent /docs 301
+/docs/product/probo-agent/* /docs 301
+/docs/developers/api/agent/* /docs 301
+/docs/* /docs 302
 
+# Historical locale compatibility
 /fr / 301
 /fr/about /about 301
 /fr/blog /blog 301
 /fr/blog/:id /blog 301
 /fr/blog/page/:page /blog 301
-/fr/brand /brand 301
+/fr/brand /about 301
 /fr/compliance-guides /hub 301
 /fr/contact /contact 301
 /fr/cookie-policy /cookie-policy 301
@@ -43,7 +61,7 @@
 /fr/yc / 301
 /fr/* /:splat 301
 
-# Documentation URL compatibility for currently public product/developer docs
+# Historical documentation URL compatibility retained in source; public wildcard above resolves these to /docs
 /docs/getting-started /docs/product/getting-started 301
 /docs/getting-started/* /docs/product/getting-started/:splat 301
 /docs/cli /docs/developers/cli 301
