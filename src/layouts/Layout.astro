@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
 import PostHog from "../components/posthog.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
+import { publicBrandText, publicBrandUrl } from "../lib/public-brand.ts";
 
 const { title, description, ogImage, noIndex } = Astro.props;
 interface Props {
@@ -16,11 +17,18 @@ interface Props {
   ogImage?: string;
 }
 
-const seoTitle = title
-  ? `${title} | ZebraByte`
+const publicTitle = publicBrandText(title);
+const publicDescription = publicBrandText(description);
+const seoTitle = publicTitle
+  ? `${publicTitle} | ZebraByte`
   : "Cyber Security & Compliance | ZebraByte";
 const canonical = getCanonicalUrl(Astro.url);
 const effectiveNoIndex = Boolean(noIndex);
+const publicOgImage = ogImage
+  ? ogImage.startsWith("http")
+    ? publicBrandUrl(ogImage)
+    : `https://www.zebrabyte.ro${publicBrandUrl(ogImage)}`
+  : "https://www.zebrabyte.ro/og.png";
 ---
 
 <!doctype html>
@@ -43,7 +51,7 @@ const effectiveNoIndex = Boolean(noIndex);
     <link rel="alternate" type="application/rss+xml" title="ZebraByte Changelog" href="/changelog.xml" />
     <link rel="alternate" type="application/rss+xml" title="ZebraByte Blog" href="/blog.xml" />
 
-    <meta name="description" content={description} />
+    <meta name="description" content={publicDescription} />
     <meta name="author" content="ZebraByte" />
     <meta
       name="keywords"
@@ -62,22 +70,16 @@ const effectiveNoIndex = Boolean(noIndex);
     <meta property="og:site_name" content="ZebraByte" />
     <meta property="og:locale" content="ro_RO" />
     <meta property="og:title" content={seoTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={publicDescription} />
     <meta property="og:url" content={canonical} />
-    <meta
-      property="og:image"
-      content={ogImage ? `https://www.zebrabyte.ro${ogImage}` : "https://www.zebrabyte.ro/og.png"}
-    />
+    <meta property="og:image" content={publicOgImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={title || "ZebraByte - Cyber Security & Compliance"} />
+    <meta property="og:image:alt" content={publicTitle || "ZebraByte - Cyber Security & Compliance"} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={seoTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta
-      name="twitter:image"
-      content={ogImage ? `https://www.zebrabyte.ro${ogImage}` : "https://www.zebrabyte.ro/og.png"}
-    />
+    <meta name="twitter:description" content={publicDescription} />
+    <meta name="twitter:image" content={publicOgImage} />
 
     <script
       type="application/ld+json"
@@ -121,3 +123,65 @@ const effectiveNoIndex = Boolean(noIndex);
     <Footer noFrameworks={Astro.props.noFrameworks} />
   </body>
 </html>
+
+<script>
+  import { publicBrandText, publicBrandUrl } from "../lib/public-brand";
+
+  const ignoredBrandingTags = new Set([
+    "CODE",
+    "PRE",
+    "SCRIPT",
+    "STYLE",
+    "TEXTAREA",
+  ]);
+
+  function shouldSkipBranding(node: Node): boolean {
+    const parent = node.parentElement;
+    if (!parent) return false;
+    return Boolean(
+      Array.from(ignoredBrandingTags).some(
+        (tag) => parent.closest(tag.toLowerCase()) !== null,
+      ),
+    );
+  }
+
+  function applyPublicBranding() {
+    const root = document.body;
+    if (!root) return;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let current: Node | null = walker.nextNode();
+    while (current) {
+      if (!shouldSkipBranding(current) && current.nodeValue) {
+        const next = publicBrandText(current.nodeValue);
+        if (next !== current.nodeValue) current.nodeValue = next;
+      }
+      current = walker.nextNode();
+    }
+
+    for (const element of document.querySelectorAll<HTMLElement>(
+      "[href], [src], [alt], [title], [aria-label]",
+    )) {
+      for (const attribute of ["href", "src"]) {
+        const value = element.getAttribute(attribute);
+        if (!value) continue;
+        const next = publicBrandUrl(value);
+        if (next !== value) element.setAttribute(attribute, next);
+      }
+
+      for (const attribute of ["alt", "title", "aria-label"]) {
+        const value = element.getAttribute(attribute);
+        if (!value) continue;
+        const next = publicBrandText(value);
+        if (next !== value) element.setAttribute(attribute, next);
+      }
+    }
+  }
+
+  document.addEventListener("astro:page-load", applyPublicBranding);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyPublicBranding, { once: true });
+  } else {
+    queueMicrotask(applyPublicBranding);
+  }
+</script>
