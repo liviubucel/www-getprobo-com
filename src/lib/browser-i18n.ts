@@ -2,6 +2,7 @@ export type BrowserLocale = "ro" | "en";
 
 const runtimePairs = [
   ["Copiat", "Copied"],
+  ["Copiat!", "Copied!"],
   ["Copiază", "Copy"],
   ["Copiază în clipboard", "Copy to clipboard"],
   ["Copierea a eșuat", "Failed to copy"],
