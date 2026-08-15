@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ZebraByteIndustryPage from "../../components/ZebraByteIndustryPage.astro";
+import { zebraByteIndustries, type ZebraByteIndustry } from "../../content/zebrabyte-industries";
+
+export function getStaticPaths() {
+  return zebraByteIndustries.map((industry) => ({
+    params: { slug: industry.slug },
+    props: { industry },
+  }));
+}
+
+interface Props {
+  industry: ZebraByteIndustry;
+}
+
+const { industry } = Astro.props;
+---
+
+<Layout
+  title={industry.shortTitle}
+  description={industry.description}
+>
+  <main>
+    <ZebraByteIndustryPage industry={industry} />
+  </main>
+</Layout>
