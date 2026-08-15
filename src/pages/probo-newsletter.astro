@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProboNewsletter from "../components/block/ProboNewsletter.astro";
+---
+
+<Layout
+  title="Probo Newsletter — upstream archive"
+  description="Original Probo newsletter signup preserved from the upstream website."
+  noIndex={true}
+>
+  <main class="container max-w-3xl py-16 sm:py-24">
+    <div class="mb-8 rounded-xl border bg-active p-5 sm:p-6">
+      <p class="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-[0.14em]">Upstream Probo · preserved</p>
+      <h1 class="text-h3 mb-3 font-medium">Original Probo newsletter</h1>
+      <p class="text-muted-foreground leading-relaxed">
+        Formularul de mai jos este implementarea originală Probo și trimite abonarea către infrastructura Probo (<code>lists.probo.com</code>). Este păstrat separat ca funcție upstream; newsletter-ul ZebraByte folosește propriul endpoint și propria listă.
+      </p>
+    </div>
+    <ProboNewsletter />
+  </main>
+</Layout>
