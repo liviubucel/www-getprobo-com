@@ -36,11 +36,10 @@ export function apiLocaleFromRequest(
   request: Request,
   englishPath = false,
 ): TargetLocale {
-  if (englishPath) return "en";
-
   const url = new URL(request.url);
   const explicit = url.searchParams.get("lang")?.toLowerCase();
   if (explicit === "en" || explicit === "ro") return explicit;
+  if (englishPath) return "en";
 
   const acceptLanguage = request.headers.get("Accept-Language")?.toLowerCase() ?? "";
   const languages = acceptLanguage
@@ -82,15 +81,17 @@ function withLocaleHeaders(response: Response, locale: TargetLocale): Headers {
 }
 
 function rewriteNewsletterLocaleLinks(value: string, locale: TargetLocale): string {
-  return value
-    .replace(
-      /\/api\/newsletter\/confirm\?(?!lang=)/g,
-      `/api/newsletter/confirm?lang=${locale}&`,
-    )
-    .replace(
-      /\/api\/newsletter\/unsubscribe\?(?!lang=)/g,
-      `/api/newsletter/unsubscribe?lang=${locale}&`,
-    );
+  return value.replace(
+    /(\/api\/newsletter\/(?:confirm|unsubscribe)\?)([^\s"'<>]*)/g,
+    (_match, prefix: string, rawQuery: string) => {
+      const htmlEscaped = rawQuery.includes("&amp;");
+      const query = rawQuery.replace(/&amp;/g, "&");
+      const params = new URLSearchParams(query);
+      params.set("lang", locale);
+      const serialized = params.toString();
+      return `${prefix}${htmlEscaped ? serialized.replace(/&/g, "&amp;") : serialized}`;
+    },
+  );
 }
 
 async function localizeEmailText(
