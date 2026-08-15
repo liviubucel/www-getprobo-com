@@ -1,70 +1,44 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import Logos from "../components/block/Logos.astro";
 import StoryCard from "../components/StoryCard.astro";
 import { sortStoriesForListing } from "../lib/stories.ts";
 
-const allStories = sortStoriesForListing(await getCollection("stories"));
-const zebraByteStories = allStories.filter((story) =>
-  story.id.startsWith("zebrabyte-"),
-);
-const upstreamStories = allStories.filter(
-  (story) => !story.id.startsWith("zebrabyte-"),
+const stories = sortStoriesForListing(
+  (await getCollection("stories")).filter((story) =>
+    story.id.startsWith("zebrabyte-"),
+  ),
 );
 ---
 
 <Layout
   title="Studii de caz"
-  description="Studii de caz ZebraByte despre securitate și infrastructură, plus biblioteca upstream Probo păstrată separat ca referință open-source."
+  description="Studii de caz ZebraByte despre securitate, compliance și infrastructură security-first."
 >
   <main class="my-10 sm:my-20">
     <div class="container">
-      <h1
-        class="text-h2 sm:text-h1 mb-3 overflow-hidden text-center font-medium"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-3 overflow-hidden text-center font-medium">
         <span class="animate-perspective-in inline-block">Studii de</span>{" "}
-        <span class="animate-perspective-in animation-delay-100 inline-block">
-          caz
-        </span>
+        <span class="animate-perspective-in animation-delay-100 inline-block">caz</span>
       </h1>
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto max-w-180 text-center text-base"
-      >
-        Rezultate și situații documentate din activitatea ZebraByte, fără a transforma
-        experiențele individuale în promisiuni generale.
+      <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-10 max-w-180 text-center text-base sm:mb-14">
+        Situații documentate din activitatea ZebraByte, cu accent pe probleme, intervenții și rezultate verificabile.
       </p>
     </div>
 
-    <Logos class="animate-slide-in animation-delay-300 my-6" constrained />
-
     <section class="container">
-      <div
-        class="animate-slide-in animation-delay-250 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6"
-      >
-        {zebraByteStories.map((item) => <StoryCard story={item} />)}
-      </div>
+      {
+        stories.length > 0 ? (
+          <div class="animate-slide-in animation-delay-250 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+            {stories.map((item) => <StoryCard story={item} />)}
+          </div>
+        ) : (
+          <div class="mx-auto max-w-2xl rounded-2xl border bg-active p-8 text-center sm:p-12">
+            <h2 class="text-h4 mb-3 font-medium">Mai multe studii de caz sunt în pregătire.</h2>
+            <p class="text-muted-foreground">Publicăm doar proiecte pe care le putem documenta corect și fără a expune informații confidențiale.</p>
+          </div>
+        )
+      }
     </section>
-
-    {
-      upstreamStories.length > 0 && (
-        <section class="container mt-16 sm:mt-28">
-          <div class="mb-8 max-w-180">
-            <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">
-              Upstream reference library
-            </p>
-            <h2 class="text-h3 mb-3 font-medium">Studii de caz din proiectul original Probo</h2>
-            <p class="text-muted-foreground leading-relaxed">
-              Păstrăm biblioteca originală pentru valoarea ei educațională și pentru
-              continuitatea proiectului open-source. Organizațiile din această secțiune
-              sunt clienți/cazuri documentate de Probo upstream, nu clienți ZebraByte.
-            </p>
-          </div>
-          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
-            {upstreamStories.map((item) => <StoryCard story={item} />)}
-          </div>
-        </section>
-      )
-    }
   </main>
 </Layout>
