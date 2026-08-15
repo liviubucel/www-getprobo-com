@@ -1,0 +1,108 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const capabilities = [
+  {
+    title: "Migrare cloud și on-premise",
+    description:
+      "Planificăm și executăm mutarea serverelor, aplicațiilor și bazelor de date către o infrastructură nouă, cu dependențe inventariate, testare și plan de rollback.",
+  },
+  {
+    title: "Configurare infrastructură",
+    description:
+      "Proiectăm și configurăm servicii cloud, servere și componente de rețea în funcție de workload, risc, disponibilitate și cerințele operaționale.",
+  },
+  {
+    title: "Security hardening",
+    description:
+      "Aplicăm principii de least privilege, segmentare, configurări defensive, patching și reducerea serviciilor expuse inutil.",
+  },
+  {
+    title: "Identity & access",
+    description:
+      "Conturi, roluri și permisiuni pentru Microsoft 365, Google Workspace, directoare și alte servicii sunt gestionate după principiul accesului minim necesar.",
+  },
+  {
+    title: "Criptare și protecția datelor",
+    description:
+      "Criptarea în tranzit și în repaus este combinată cu controlul accesului, backup și procese de recovery, nu tratată ca o bifă separată.",
+  },
+  {
+    title: "Documentație & proceduri",
+    description:
+      "Păstrăm configurațiile, ownership-ul, procedurile de schimbare și pașii de recovery documentați pentru operare și audit readiness.",
+  },
+];
+
+const process = [
+  ["01", "Discovery", "Inventariem activele, dependențele, conturile, integrarea cu furnizorii și serviciile critice."],
+  ["02", "Design", "Stabilim arhitectura țintă, controls, planul de migrare, fereastra de schimbare și rollback-ul."],
+  ["03", "Migration", "Construim mediul în paralel și transferăm datele/aplicațiile fără a opri prematur serviciul existent."],
+  ["04", "Validation", "Testăm funcționalitatea, accesul, securitatea, observabilitatea, DNS/TLS și procedurile de recovery."],
+  ["05", "Operate", "După cutover, serviciul poate intra în Secure Managed Hosting / managed security în loc să rămână fără ownership."],
+];
+---
+
+<Layout
+  title="Migrare & Servicii IT Administrate — arhivă ZebraByte"
+  description="Capabilitățile ZebraByte pentru migrare cloud/on-prem, infrastructură, access control, hardening și documentație, păstrate ca serviciu legacy."
+  noIndex={true}
+>
+  <main>
+    <section class="container py-16 text-center sm:py-28">
+      <p class="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-[0.14em]">Legacy ZebraByte service · preserved</p>
+      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+        Migrare și infrastructură administrată, păstrate din oferta ZebraByte.
+      </h1>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-180 text-lg leading-relaxed text-balance">
+        Nu ștergem vechea ofertă de servicii IT. O păstrăm ca rută și conținut istoric, dar o conectăm la poziționarea actuală: security engineering, secure infrastructure și migration control, nu administrare IT generică de volum.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/migrare-site" size="lg">Vezi procesul de migrare</Button>
+        <Button href="/secure-hosting" size="lg" variant="secondary">Secure Managed Hosting</Button>
+      </div>
+    </section>
+
+    <section class="container pb-16 sm:pb-24">
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {capabilities.map((item) => (
+          <article class="bg-level-0 min-h-60 p-6 sm:p-8">
+            <h2 class="mb-3 text-xl font-medium">{item.title}</h2>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="mb-10 max-w-180">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Process</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Migrare controlată, nu copy-paste între servere.</h2>
+          <p class="text-muted-foreground text-lg">
+            Păstrăm substanța procesului ZebraByte anterior, dar nu publicăm aici statisticile, testimonialele sau SLA-urile vechi care nu au fost validate pentru noua ofertă.
+          </p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border bg-level-0">
+          {process.map(([number, title, text]) => (
+            <div class="grid gap-4 border-b p-5 last:border-b-0 sm:grid-cols-[56px_170px_1fr] sm:p-6">
+              <span class="text-muted-foreground text-sm">{number}</span>
+              <strong class="font-medium">{title}</strong>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <a href="/security-assessment" class="rounded-xl border p-5 hover:bg-subtle"><strong>Security Assessment</strong><p class="text-muted-foreground mt-2 text-sm">Baseline înainte de schimbări majore.</p></a>
+        <a href="/migrare-site" class="rounded-xl border p-5 hover:bg-subtle"><strong>Migration</strong><p class="text-muted-foreground mt-2 text-sm">Transfer, testare, DNS/TLS și rollback.</p></a>
+        <a href="/secure-hosting" class="rounded-xl border p-5 hover:bg-subtle"><strong>Secure Hosting</strong><p class="text-muted-foreground mt-2 text-sm">Operarea mediului după cutover.</p></a>
+        <a href="/cyber-security" class="rounded-xl border p-5 hover:bg-subtle"><strong>Cyber Security</strong><p class="text-muted-foreground mt-2 text-sm">Hardening, vulnerability management și incident readiness.</p></a>
+      </div>
+    </section>
+  </main>
+</Layout>
