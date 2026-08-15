@@ -13,7 +13,7 @@ Programul leagă governance-ul de realitatea tehnică: riscuri, politici, contro
 - **ISO/IEC 27001** — ISMS, risk treatment, controls și audit preparation.
 - **GDPR & Privacy** — privacy governance, evidence și măsuri tehnice.
 - **NIS2 Readiness** — risk management, governance, resilience și incident readiness.
-- **Accessibility** — instrumente gratuite, WCAG assessment și remediation urmărite în aceeași disciplină de compliance.
+- **Accessibility** — parte din programul ZebraByte Compliance. Widgetul standard poate fi instalat public gratuit; personalizarea, auditul, administrarea, remedierea și evidence tracking necesită acces la platforma Compliance.
 
 ## Cyber Security
 
@@ -25,7 +25,7 @@ Programul leagă governance-ul de realitatea tehnică: riscuri, politici, contro
 
 ## Resources
 
-- **Free Tools** — instrumente de security, privacy și accessibility.
+- **Free Tools** — instrumente publice de security și privacy.
 - **Hub** — resurse pentru compliance și security.
 - **Stories** — studii de caz ZebraByte.
 - **Docs** — documentația produsului și integrărilor disponibile public.
