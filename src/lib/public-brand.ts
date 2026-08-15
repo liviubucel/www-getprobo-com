@@ -9,6 +9,11 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/\bfrom the Probo team\b/gi, "from the ZebraByte team")
     .replace(/\bNew updates and improvements to Probo\b/gi, "New updates and improvements to ZebraByte")
     .replace(/\bLatest product updates and new features from Probo\b/gi, "Latest product updates and new features from ZebraByte")
+    .replace(/\bInspiring stories, real Probo customers\b/gi, "Inspiring stories from the platform reference library")
+    .replace(
+      /\bReal Probo customers share how they got SOC 2 and ISO 27001 certified faster, without hiring a dedicated compliance team\.?/gi,
+      "Case studies from the platform reference library explore SOC 2, ISO 27001 and practical compliance programs.",
+    )
     .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
     .replace(/\bprobo-agent\b/g, "zebrabyte-device-agent")
     .replace(/\bProbo vs Vanta\b/gi, "ZebraByte vs Vanta")
