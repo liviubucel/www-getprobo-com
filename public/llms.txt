@@ -1,8 +1,6 @@
 # ZebraByte
 
-> ZebraByte provides managed compliance, cyber security and security-first managed infrastructure through one unified platform and service model.
-
-The commercial brand is ZebraByte. The compliance platform is derived from the open-source Probo project, which remains attributed where technical names, historical material or upstream documentation are relevant. Upstream Probo customers, authors, team members and historical claims must not be interpreted as ZebraByte customers or employees.
+> ZebraByte provides managed compliance, cyber security and security-first managed infrastructure through one unified service model.
 
 ## LLM resources
 
@@ -12,14 +10,14 @@ The commercial brand is ZebraByte. The compliance platform is derived from the o
 
 For a token-efficient Markdown version of a supported page, request its canonical URL with the `Accept: text/markdown` header.
 
-## Compliance Platform
+## Managed Compliance
 
 - [Managed Compliance](https://www.zebrabyte.ro/managed-compliance): Dedicated compliance expertise, controls, evidence, reviews and continuous audit readiness.
 - [Compliance Portal](https://www.zebrabyte.ro/compliance-portal): Controlled trust, document and evidence sharing.
 - [ISO/IEC 27001](https://www.zebrabyte.ro/iso-27001): ISMS, risk treatment, controls and audit readiness.
 - [GDPR & Privacy](https://www.zebrabyte.ro/gdpr): Privacy governance, evidence and technical measures.
 - [NIS2 Readiness](https://www.zebrabyte.ro/nis2): Governance, risk management, resilience and incident readiness.
-- [SOC 2 guide](https://www.zebrabyte.ro/hub/soc2): SOC 2 controls and audit-readiness resources.
+- [Accessibility](https://www.zebrabyte.ro/accessibility): Free accessibility tooling, WCAG assessment guidance and remediation tracking inside the compliance model.
 
 ## Cyber Security
 
@@ -30,34 +28,13 @@ For a token-efficient Markdown version of a supported page, request its canonica
 - [Incident Response](https://www.zebrabyte.ro/incident-response): Triage, containment, eradication, recovery and lessons learned.
 - [Secure Managed Hosting](https://www.zebrabyte.ro/secure-hosting): Security-first managed infrastructure, hardening, backups, monitoring and controlled changes.
 
-## Not a generic IT catalogue
-
-ZebraByte does not position generic WordPress maintenance, website migration, email marketing, standalone SSL sales or broad Managed IT as standalone commercial products. Legacy URLs are kept only for compatibility and redirect into relevant security-first services where appropriate.
-
-Accessibility tooling remains available as a complementary resource, not a primary commercial pillar.
-
-## Platform and open source
-
-- [Documentation overview](https://www.zebrabyte.ro/docs)
-- [Open-source deployment](https://www.zebrabyte.ro/docs/deployment/self-hosting)
-- [Docker Compose](https://www.zebrabyte.ro/docs/deployment/self-hosting/docker-compose)
-- [Kubernetes](https://www.zebrabyte.ro/docs/deployment/self-hosting/kubernetes)
-- [Endpoint Agent](https://www.zebrabyte.ro/download): The distributed binary remains technically named Probo Agent until a separate compatible ZebraByte build exists.
-- [Probo Agent docs](https://www.zebrabyte.ro/docs/product/probo-agent/overview)
-- [Developer overview](https://www.zebrabyte.ro/docs/developers)
-- [GraphQL API](https://www.zebrabyte.ro/docs/developers/graphql)
-- [CLI](https://www.zebrabyte.ro/docs/developers/cli/overview)
-- [MCP server](https://www.zebrabyte.ro/docs/developers/api/mcp/overview)
-- [n8n integration](https://www.zebrabyte.ro/docs/developers/api/n8n/overview)
-- [Webhooks](https://www.zebrabyte.ro/docs/developers/api/webhooks/overview)
-
 ## Resources
 
-- [Hub](https://www.zebrabyte.ro/hub): Compliance and security guides, tools and comparisons.
-- [Stories](https://www.zebrabyte.ro/stories): ZebraByte case studies plus preserved platform history where clearly attributed.
+- [Documentation](https://www.zebrabyte.ro/docs)
+- [Hub](https://www.zebrabyte.ro/hub): Compliance and security resources.
+- [Stories](https://www.zebrabyte.ro/stories): ZebraByte case studies.
 - [Customer Reviews](https://www.zebrabyte.ro/love-from-customer): ZebraByte customer feedback.
 - [Free Security Tools](https://www.zebrabyte.ro/tools)
-- [Digital Accessibility](https://www.zebrabyte.ro/accessibility): Complementary WCAG assessment and tooling resources.
 - [Blog](https://www.zebrabyte.ro/blog)
 - [Changelog](https://www.zebrabyte.ro/changelog)
 
@@ -68,7 +45,7 @@ Accessibility tooling remains available as a complementary resource, not a prima
 - [GDPR Scanner](https://gdpr-scan.zebrabyte.ro)
 - [Network Test](https://net-scan.zebrabyte.ro)
 - [SSL Tools](https://ssl-gratis.zebrabyte.ro)
-- [Compliance Framework Recommender](https://www.zebrabyte.ro/hub/compliance-recommender)
+- [Accessibility tools](https://www.zebrabyte.ro/accessibility)
 
 ## Company
 
@@ -80,14 +57,6 @@ Accessibility tooling remains available as a complementary resource, not a prima
 - [Client portal](https://portal.zebrabyte.ro)
 - [Trust Center](https://trust.zebrabyte.ro)
 
-## Preserved open-source heritage
+## Commercial scope
 
-The repository intentionally retains Probo photos, logos, customer wall, testimonials, stories, blog/changelog history, framework assets, keyshot media and technical documentation instead of deleting them. Material that cannot truthfully be presented as ZebraByte is separated from the primary commercial journey and may be exposed through noindex heritage/archive pages.
-
-- [Platform heritage archive](https://www.zebrabyte.ro/platform-heritage)
-- [Platform customer archive](https://www.zebrabyte.ro/platform-customer-archive)
-- [Upstream Probo GitHub](https://github.com/getprobo/probo)
-
-## Upstream attribution
-
-The compliance platform experience is derived from the MIT-licensed Probo project. Technical upstream names, API identifiers, agent binary names and historical editorial material remain attributed where appropriate. The public commercial identity and offer are ZebraByte.
+ZebraByte is focused on managed compliance and cyber security. Generic WordPress maintenance, email marketing, broad managed IT and standalone website migration are not promoted as current standalone services.
