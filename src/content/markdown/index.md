@@ -1,20 +1,19 @@
 # ZebraByte — Managed Compliance & Cyber Security
 
-ZebraByte combină managed compliance, platformă open-source, cyber security și infrastructură security-first într-un singur program. Oferta comercială este ZebraByte; Probo rămâne fundația open-source atribuită acolo unde numele sau materialele upstream sunt tehnic relevante.
+ZebraByte combină managed compliance, cyber security și infrastructură security-first într-un singur program. Un expert coordonează controalele, evidence-ul și audit readiness-ul, iar echipa tehnică poate implementa măsurile de securitate care susțin acele controale.
 
 ## Compliance și securitate, gestionate pentru tine
 
-Un compliance officer poate coordona programul end-to-end, în timp ce platforma menține riscurile, controalele, evidence-ul și audit readiness-ul. Echipa de cyber security poate implementa și verifica măsurile tehnice care susțin acele controale.
+Programul leagă governance-ul de realitatea tehnică: riscuri, politici, controale, remediation, security assessment, website și email security, incident readiness și infrastructură securizată.
 
-## Compliance Platform
+## Managed Compliance
 
 - **Managed Compliance** — expert dedicat, controls, evidence, reviews și audit readiness continuă.
 - **Compliance Portal** — distribuire controlată de documente, evidence și informații de trust.
-- **Open-source platform** — self-hosting, API, CLI, MCP, n8n, webhooks și integrări, fără vendor lock-in artificial.
 - **ISO/IEC 27001** — ISMS, risk treatment, controls și audit preparation.
 - **GDPR & Privacy** — privacy governance, evidence și măsuri tehnice.
 - **NIS2 Readiness** — risk management, governance, resilience și incident readiness.
-- **SOC 2** — controls, evidence și audit-readiness resources.
+- **Accessibility** — instrumente gratuite, WCAG assessment și remediation urmărite în aceeași disciplină de compliance.
 
 ## Cyber Security
 
@@ -24,34 +23,31 @@ Un compliance officer poate coordona programul end-to-end, în timp ce platforma
 - **Incident Response** — triage, containment, eradication, recovery și lessons learned.
 - **Secure Managed Hosting** — infrastructură administrată doar în model security-first, cu hardening, backup, monitoring și change management.
 
-## Ce nu mai este ofertă principală
-
-ZebraByte nu mai promovează separat servicii IT generice precum WordPress maintenance, website migration, email marketing, standalone SSL sales sau broad Managed IT. URL-urile legacy sunt păstrate doar pentru compatibilitate și redirectate către serviciile security relevante unde este cazul.
-
 ## Resources
 
-- **Free Tools** — instrumente de security și privacy.
-- **Hub** — ghiduri, comparații și resurse pentru compliance și security.
-- **Stories** — studii de caz și materiale de platformă.
-- **Accessibility** — zonă complementară de resurse și tooling WCAG, nu pilon comercial principal.
+- **Free Tools** — instrumente de security, privacy și accessibility.
+- **Hub** — resurse pentru compliance și security.
+- **Stories** — studii de caz ZebraByte.
+- **Docs** — documentația produsului și integrărilor disponibile public.
 
-## Open-source foundation
+## Commercial focus
 
-Componentele, documentația, fotografiile, logo-urile, testimonialele și materialele istorice Probo care trebuie păstrate rămân în repository și în arhive atribuite/noindex. Nu sunt prezentate drept clienți, echipă sau istorie ZebraByte.
+ZebraByte nu promovează separat servicii IT generice precum WordPress maintenance, email marketing, standalone SSL sales sau broad Managed IT. Serviciile publice sunt organizate în jurul managed compliance și cyber security.
 
 ## Links
 
 - [Managed Compliance](/managed-compliance)
 - [Compliance Portal](/compliance-portal)
+- [ISO/IEC 27001](/iso-27001)
+- [GDPR & Privacy](/gdpr)
+- [NIS2 Readiness](/nis2)
+- [Accessibility](/accessibility)
 - [Cyber Security](/cyber-security)
 - [Security Assessment](/security-assessment)
 - [Website Security](/website-security)
 - [Email Security](/email-security)
 - [Incident Response](/incident-response)
 - [Secure Managed Hosting](/secure-hosting)
-- [ISO/IEC 27001](/iso-27001)
-- [GDPR & Privacy](/gdpr)
-- [NIS2 Readiness](/nis2)
 - [Industries](/industries)
 - [Free Tools](/tools)
 - [Docs](/docs)
