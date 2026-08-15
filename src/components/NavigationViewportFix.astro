@@ -1,0 +1,23 @@
+<style is:global>
+  @media (min-width: 1024px) {
+    [data-menu-shell] {
+      height: min(35rem, calc(100vh - 5.75rem));
+    }
+
+    [data-menu-panel] > :first-child {
+      max-height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+
+    [data-menu-panel] > :first-child::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    [data-menu-panel] > :first-child::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: var(--color-border-mid);
+    }
+  }
+</style>
