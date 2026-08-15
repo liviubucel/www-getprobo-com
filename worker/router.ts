@@ -1,5 +1,10 @@
 import app from "./index";
 import { isEnglishPath, stripEnglishPrefix } from "./i18n";
+import {
+  apiLocaleFromRequest,
+  localizeApiResponse,
+  withLocalizedEmailEnv,
+} from "./i18n-api";
 import { localizeDateMarkup } from "./i18n-dates";
 import { finalizeHtmlLocale } from "./i18n-document";
 import {
@@ -90,6 +95,11 @@ function legacyFrenchRedirect(request: Request): Response | null {
   return Response.redirect(url.toString(), 308);
 }
 
+function isApiRequestPath(pathname: string): boolean {
+  const normalized = isEnglishPath(pathname) ? stripEnglishPrefix(pathname) : pathname;
+  return normalized === "/api" || normalized.startsWith("/api/");
+}
+
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
     const frenchRedirect = legacyFrenchRedirect(request);
@@ -97,9 +107,13 @@ export default {
 
     const url = new URL(request.url);
     const english = isEnglishPath(url.pathname);
+    const apiRequest = isApiRequestPath(url.pathname);
+    const apiLocale = apiRequest ? apiLocaleFromRequest(request, english) : null;
+    const requestEnv = apiLocale ? withLocalizedEmailEnv(env, apiLocale) : env;
 
     if (!english) {
-      const response = await app.fetch(request, env);
+      const response = await app.fetch(request, requestEnv);
+      if (apiLocale) return localizeApiResponse(response, apiLocale, env);
       if (request.method === "HEAD") {
         return localizableKind(response) ? withContentLanguage(response, "ro") : response;
       }
@@ -109,8 +123,9 @@ export default {
     const upstreamUrl = new URL(request.url);
     upstreamUrl.pathname = stripEnglishPrefix(url.pathname);
     const upstreamRequest = new Request(upstreamUrl, request);
-    const response = await app.fetch(upstreamRequest, env);
+    const response = await app.fetch(upstreamRequest, requestEnv);
 
+    if (apiLocale) return localizeApiResponse(response, apiLocale, env);
     if (request.method === "HEAD") {
       return localizableKind(response) ? withContentLanguage(response, "en") : response;
     }
