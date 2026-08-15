@@ -4,11 +4,7 @@ import StoryCard from "../StoryCard.astro";
 import Slider from "../ui/Slider.svelte";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
-const stories = sortStoriesForListing(
-  (await getCollection("stories")).filter((story) =>
-    story.id.startsWith("zebrabyte-"),
-  ),
-);
+const stories = sortStoriesForListing(await getCollection("stories"));
 ---
 
 <section class="stories dark bg-level-0 text-foreground overflow-hidden">
@@ -17,33 +13,17 @@ const stories = sortStoriesForListing(
       Case studies
     </h2>
     <p class="text-muted-foreground mx-auto mb-6 max-w-140 text-center text-lg">
-      Situații reale în care securitatea, infrastructura și compliance-ul trebuie să funcționeze împreună.
+      Compliance journeys, security programs and real-world examples from the full platform library.
     </p>
 
     <a
       href="/stories"
       class="group mb-10 flex items-center justify-center gap-1.5 text-lg font-medium sm:mb-12"
     >
-      Vezi toate studiile de caz
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        xmlns="http://www.w3.org/2000/svg"
-        class="transition-transform group-hover:translate-x-1"
-      >
-        <path
-          d="M9.33325 4L13.3333 7.99999L9.33325 12"
-          stroke="currentColor"
-          stroke-width="1.33333"
-          stroke-linecap="round"
-          stroke-linejoin="round"></path>
-        <path
-          d="M12.6667 8H2.66675"
-          stroke="currentColor"
-          stroke-width="1.33333"
-          stroke-linecap="round"
-          stroke-linejoin="round"></path>
+      All case studies
+      <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="transition-transform group-hover:translate-x-1">
+        <path d="M9.33325 4L13.3333 7.99999L9.33325 12" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M12.6667 8H2.66675" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
     </a>
 
