@@ -1,6 +1,7 @@
 <script lang="ts">
   import clsx from "clsx";
   import { onDestroy } from "svelte";
+  import { toast } from "svelte-sonner";
   import { browserT } from "../../lib/browser-i18n";
 
   const {
@@ -54,6 +55,7 @@
       }, 1600);
     } catch (e) {
       console.error("Failed to copy link:", e);
+      toast.error(browserT("Copierea a eșuat", "Copy failed"));
     }
   };
 </script>
