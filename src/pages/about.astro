@@ -69,6 +69,37 @@ import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
       </div>
     </section>
 
+    <section class="container pb-16 sm:pb-24">
+      <div class="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Povestea ZebraByte</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">De la hosting la security-first operations.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Website-ul ZebraByte anterior documentează evoluția brandului din VREAUHOST către ZebraByte și mutarea accentului de la simpla găzduire web către securitate cibernetică, infrastructură administrată și protecția organizațiilor care depind de servicii digitale.
+          </p>
+          <p class="text-muted-foreground mt-5 text-lg leading-relaxed">
+            ZebraByte operează din Regatul Unit și deservește și piața din România. În noul website păstrăm această istorie, dar organizăm oferta în jurul riscului, securității, privacy și compliance, nu în jurul unui catalog generic de servicii IT.
+          </p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          {[
+            ["Security before convenience", "Deciziile de infrastructură și produs sunt evaluate în primul rând prin impactul asupra securității și datelor."],
+            ["Long-term ownership", "Preferăm relații în care cunoaștem infrastructura și putem menține controalele, nu intervenții izolate fără context."],
+            ["Documented compliance", "Privacy și compliance trebuie susținute de documente, evidence și controale verificabile, nu doar de promisiuni comerciale."],
+            ["Transparent communication", "Schimbările, incidentele și riscurile trebuie comunicate clar, cu ownership și pași de remediere expliciți."],
+            ["Direct responsibility", "Un scope tehnic trebuie să aibă un owner clar, nu să se piardă între furnizori, reselleri și ticket queues."],
+            ["Open-source transparency", "Probo rămâne atribuit vizibil ca upstream; nu ascundem originea componentelor open-source pe care le păstrăm."],
+          ].map(([title, description]) => (
+            <article class="rounded-xl border p-5 sm:p-6">
+              <h3 class="mb-2 font-medium">{title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <KeyFigures />
 
     <Team />
