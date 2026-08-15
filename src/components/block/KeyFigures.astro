@@ -1,19 +1,47 @@
 ---
-const items = [
+const zebraByteItems = [
   { label: "10+", description: "framework-uri și standarde urmărite în platformă" },
-  { label: "RO + EN", description: "servicii și suport pentru organizații din România și internațional" },
-  { label: "Open source", description: "platformă fără dependență obligatorie de un singur vendor" },
+  { label: "RO + EN", description: "servicii și suport ZebraByte în română și engleză" },
+  { label: "Open source", description: "platform core fără dependență obligatorie de un singur vendor" },
+];
+
+const upstreamItems = [
+  { label: "10+", description: "frameworks supported" },
+  { label: "20+", description: "countries served" },
+  { label: "100+", description: "customers" },
 ];
 ---
 
 <section class="bg-active">
   <div class="sm:container">
+    <div class="border-border-low border-b px-5 py-6 sm:px-10">
+      <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.12em]">ZebraByte</p>
+      <h2 class="font-medium">Programul extins</h2>
+    </div>
     <div class="grid grid-cols-2 overflow-hidden sm:grid-cols-3">
       {
-        items.map((item, k) => (
+        zebraByteItems.map((item, k) => (
           <div
             class="items-between -mr-[1px] -mb-[1px] flex aspect-square flex-col justify-between gap-2 border-r border-b p-5 sm:aspect-360/340 sm:p-10"
             style={`animation-delay: ${k * 0.1}s;`}
+          >
+            <span class="text-quote">{item.label}</span>
+            <span class="text-muted-foreground">{item.description}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="border-border-low border-y px-5 py-6 sm:px-10">
+      <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.12em]">Original Probo figures</p>
+      <h2 class="font-medium">Cifrele păstrate din proiectul upstream</h2>
+    </div>
+    <div class="grid grid-cols-2 overflow-hidden sm:grid-cols-3">
+      {
+        upstreamItems.map((item, k) => (
+          <div
+            class="items-between -mr-[1px] -mb-[1px] flex aspect-square flex-col justify-between gap-2 border-r border-b p-5 sm:aspect-360/340 sm:p-10"
+            style={`animation-delay: ${(k + 3) * 0.1}s;`}
           >
             <span class="text-quote">{item.label}</span>
             <span class="text-muted-foreground">{item.description}</span>
