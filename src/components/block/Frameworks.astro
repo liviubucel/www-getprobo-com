@@ -1,38 +1,25 @@
 ---
 import { Image } from "astro:assets";
-import ZebraByteMark from "../../assets/zebrabyte-mark.svg";
-import ProboMark from "../../assets/probo-logo-only.svg";
+import Logo from "../../assets/probo-logo-only.svg";
 import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
 
 <div class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
   <div class="container">
-    <div class="mx-auto mb-6 flex w-max items-center gap-3">
-      <Image
-        src={ZebraByteMark}
-        alt="ZebraByte"
-        width={48}
-        height={48}
-        class="size-12"
-      />
-      <span class="text-muted-foreground text-sm">+</span>
-      <Image
-        src={ProboMark}
-        alt="Probo upstream"
-        width={48}
-        height={48}
-        class="size-12"
-      />
-    </div>
+    <Image
+      src={Logo}
+      alt="Logo probo"
+      width={48}
+      height={48}
+      class="mx-auto mb-6"
+    />
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
-      Framework-uri gestionate în aceeași experiență
+      Managed frameworks
     </h2>
-    <p class="text-muted-foreground mx-auto mb-12 max-w-180 text-center text-lg">
-      ZebraByte extinde experiența originală Probo cu servicii de cybersecurity,
-      privacy și infrastructură securizată, păstrând biblioteca de framework-uri,
-      controale și dovezi. Badge-urile indică framework-uri suportate în platformă,
-      nu certificări deținute automat de ZebraByte.
+    <p class="text-muted-foreground mb-12 text-center text-lg">
+      Not seeing the one you are looking for?<br />
+      Reach out, we likely do it as well.
     </p>
 
     <Badges
@@ -48,7 +35,14 @@ import Button from "../../components/ui/Button.svelte";
       size="lg"
       class="mx-auto flex w-max"
     >
-      Discută despre conformitate
+      Get compliant
     </Button>
+
+    <div class="mx-auto mt-10 max-w-2xl rounded-xl border bg-level-0 p-5 text-center sm:p-6">
+      <p class="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-[0.14em]">ZebraByte extension</p>
+      <p class="text-sm leading-relaxed">
+        ZebraByte păstrează integral această bibliotecă de framework-uri și adaugă servicii de cybersecurity, privacy și infrastructură securizată. Badge-urile de mai sus reprezintă framework-uri gestionate/suportate în experiența Probo și nu trebuie interpretate automat drept certificări deținute de ZebraByte.
+      </p>
+    </div>
   </div>
 </div>
