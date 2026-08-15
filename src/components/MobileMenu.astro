@@ -8,76 +8,194 @@ interface Props {
 }
 
 const { id } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const isGroupActive = (group: (typeof menuGroups)[number]) =>
+  group.items.some(
+    (item) => item.href.startsWith("/") && currentPath.startsWith(item.href),
+  ) ||
+  (group.feature.href.startsWith("/") &&
+    currentPath.startsWith(group.feature.href));
 ---
 
 <dialog
   {id}
-  class="bg-secondary group fixed inset-x-0 top-14 bottom-0 z-50 m-0 h-auto max-h-none w-full max-w-none overflow-y-auto border-0 px-5 pt-6 pb-28 transition-all transition-discrete duration-300 not-open:opacity-0 starting:opacity-0"
+  data-mobile-navigation
+  class="bg-secondary fixed inset-x-0 top-14 bottom-0 z-50 m-0 h-auto max-h-none w-full max-w-none overflow-y-auto border-0 px-4 pt-5 pb-28 transition-all transition-discrete duration-300 not-open:opacity-0 starting:opacity-0 sm:px-5"
 >
-  {
-    menuGroups.map((group) => (
-      <section class="mb-7">
-        {group.showLabel !== false && (
-          <h2 class="text-muted-foreground border-b pb-2 text-xs font-medium tracking-wider uppercase">
-            {group.label}
-          </h2>
-        )}
-
-        <a
-          href={group.feature.href}
-          class="bg-subtle -mx-3 flex items-center gap-4 rounded-t-lg border-b px-3 py-4"
-        >
-          <span class="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span class="text-muted-foreground text-xs font-medium uppercase tracking-[0.1em]">
-              {group.feature.eyebrow}
-            </span>
-            <span class="text-lg font-medium">{group.feature.title}</span>
-          </span>
-          <Icon name="caret-right" size={20} class="text-muted-foreground shrink-0" />
-        </a>
-
-        {group.items.map((item) => (
-          <a href={item.href} class="flex items-center gap-4 border-b py-4">
-            <span class="grid size-11 shrink-0 place-items-center rounded-lg border">
-              <MenuIcon name={item.icon} />
-            </span>
-            <span class="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span class="text-lg font-medium">{item.label}</span>
-              <span class="text-muted-foreground truncate text-sm">
-                {item.description}
+  <div class="mx-auto w-full max-w-2xl">
+    <div class="divide-border-low divide-y border-y">
+      {
+        menuGroups.map((group) => (
+          <details
+            data-mobile-section
+            class="group/mobile"
+            open={isGroupActive(group)}
+          >
+            <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-semibold outline-none [&::-webkit-details-marker]:hidden">
+              <span>{group.label}</span>
+              <span class="text-muted-foreground grid size-8 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
+                <Icon name="caret-down" size={18} />
               </span>
-            </span>
-            <Icon name="caret-right" size={20} class="text-muted-foreground" />
-          </a>
-        ))}
-      </section>
-    ))
-  }
+            </summary>
 
-  <section>
-    <h2 class="text-muted-foreground border-b pb-2 text-xs font-medium tracking-wider uppercase">
-      Acces clienți
-    </h2>
-    {
-      directMenuItems.map((item) => (
-        <a
-          href={item.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center gap-4 border-b py-4"
-        >
-          <span class="grid size-11 shrink-0 place-items-center rounded-lg border">
-            <MenuIcon name={item.icon} />
+            <div class="pb-6">
+              <div class="flex flex-col">
+                {group.items.map((item) => (
+                  <a
+                    href={item.href}
+                    class="group/item flex items-start gap-3 rounded-xl px-1 py-3 outline-none transition-colors hover:bg-subtle focus-visible:bg-subtle"
+                  >
+                    <span class="grid size-10 shrink-0 place-items-center rounded-lg border">
+                      <MenuIcon name={item.icon} />
+                    </span>
+                    <span class="min-w-0 flex-1 pt-0.5">
+                      <span class="block text-[15px] leading-5 font-semibold">
+                        {item.label}
+                      </span>
+                      <span class="text-muted-foreground mt-0.5 block text-[13px] leading-5">
+                        {item.description}
+                      </span>
+                    </span>
+                    <Icon
+                      name="caret-right"
+                      size={17}
+                      class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
+                    />
+                  </a>
+                ))}
+              </div>
+
+              <a
+                href={group.feature.href}
+                class="bg-subtle group/feature mt-3 block overflow-hidden rounded-xl border outline-none focus-visible:ring-2 focus-visible:ring-current"
+                aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
+              >
+                <div class="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    src={group.feature.asset}
+                    alt={group.feature.alt}
+                    loading="lazy"
+                    decoding="async"
+                    class:list={[
+                      "absolute inset-0 size-full",
+                      group.feature.variant === "story" && "object-cover",
+                      group.feature.variant === "product" &&
+                        "object-cover object-top",
+                      group.feature.variant === "guide" &&
+                        "object-contain object-bottom px-3 pt-16 pb-3",
+                    ]}
+                  />
+
+                  {group.feature.variant === "story" && (
+                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.08)] to-[rgba(0,0,0,0.38)]" />
+                  )}
+
+                  {group.feature.variant !== "story" && (
+                    <span
+                      class="absolute inset-0 bg-linear-to-b from-[rgba(248,250,244,0.98)] via-[rgba(248,250,244,0.56)] to-transparent"
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  <span
+                    class:list={[
+                      "absolute top-4 right-4 left-4 z-10 flex flex-col gap-1",
+                      group.feature.variant === "story" && "text-white",
+                    ]}
+                  >
+                    <span
+                      class:list={[
+                        "text-xs leading-4 font-semibold",
+                        group.feature.variant === "story"
+                          ? "text-[#e6ff03]"
+                          : "text-muted-foreground",
+                      ]}
+                    >
+                      {group.feature.eyebrow}
+                    </span>
+                    <span class="max-w-[28rem] text-[18px] leading-6 font-semibold tracking-[-0.2px]">
+                      {group.feature.title}
+                    </span>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </details>
+        ))
+      }
+
+      <details data-mobile-section class="group/mobile">
+        <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-semibold outline-none [&::-webkit-details-marker]:hidden">
+          <span>Acces clienți</span>
+          <span class="text-muted-foreground grid size-8 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
+            <Icon name="caret-down" size={18} />
           </span>
-          <span class="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span class="text-lg font-medium">{item.label}</span>
-            <span class="text-muted-foreground truncate text-sm">
-              {item.description}
-            </span>
-          </span>
-          <Icon name="caret-right" size={20} class="text-muted-foreground" />
-        </a>
-      ))
-    }
-  </section>
+        </summary>
+
+        <div class="pb-6">
+          {directMenuItems.map((item) => (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group/item flex items-start gap-3 rounded-xl px-1 py-3 outline-none transition-colors hover:bg-subtle focus-visible:bg-subtle"
+            >
+              <span class="grid size-10 shrink-0 place-items-center rounded-lg border">
+                <MenuIcon name={item.icon} />
+              </span>
+              <span class="min-w-0 flex-1 pt-0.5">
+                <span class="block text-[15px] leading-5 font-semibold">
+                  {item.label}
+                </span>
+                <span class="text-muted-foreground mt-0.5 block text-[13px] leading-5">
+                  {item.description}
+                </span>
+              </span>
+              <Icon
+                name="caret-right"
+                size={17}
+                class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
+              />
+            </a>
+          ))}
+        </div>
+      </details>
+    </div>
+  </div>
 </dialog>
+
+<script>
+  const bindMobileNavigation = () => {
+    document
+      .querySelectorAll<HTMLDialogElement>("[data-mobile-navigation]")
+      .forEach((dialog) => {
+        if (dialog.dataset.navigationBound === "true") return;
+        dialog.dataset.navigationBound = "true";
+
+        const sections = Array.from(
+          dialog.querySelectorAll<HTMLDetailsElement>(
+            "details[data-mobile-section]",
+          ),
+        );
+
+        sections.forEach((section) => {
+          section.addEventListener("toggle", () => {
+            if (!section.open) return;
+            sections.forEach((other) => {
+              if (other !== section) other.open = false;
+            });
+          });
+        });
+
+        dialog.addEventListener("close", () => {
+          sections.forEach((section) => {
+            section.open = false;
+          });
+        });
+      });
+  };
+
+  document.addEventListener("astro:page-load", bindMobileNavigation);
+  bindMobileNavigation();
+</script>
