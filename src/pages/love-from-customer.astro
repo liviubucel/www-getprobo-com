@@ -5,7 +5,8 @@ import Logos from "../components/block/Logos.astro";
 import Testimonials from "../components/block/Testimonials.astro";
 import WallCard from "../components/WallCard.astro";
 
-const upstreamPosts = (await getCollection("wall"))
+const posts = (await getCollection("wall"))
+  // Drafts render in `astro dev` so you can preview, but never ship to prod.
   .filter((p) => import.meta.env.DEV || !p.data.draft)
   .sort((a, b) => {
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
@@ -17,15 +18,16 @@ const upstreamPosts = (await getCollection("wall"))
 ---
 
 <Layout
-  title="Ce spun clienții"
-  description="Recenzii ZebraByte și wall-ul original Probo, păstrate împreună în aceeași experiență vizuală."
+  title="Love from Customers"
+  description="Real posts from the founders, engineers and security teams who trust Probo to fast-track their SOC 2, ISO 27001 and GDPR compliance."
 >
   <main class="-mt-16 overflow-hidden pt-16">
     <div class="relative isolate">
       <div
         aria-hidden="true"
         class="trust-hero-orb pointer-events-none absolute top-[-1314px] left-1/2 z-0 size-[2265px] rounded-full border-[350px] border-[#E6FF03] blur-[96px]"
-      ></div>
+      >
+      </div>
 
       <section class="relative z-10 container py-16 text-center sm:py-24">
         <div
@@ -35,61 +37,70 @@ const upstreamPosts = (await getCollection("wall"))
           Love from Customers
         </div>
         <h1
-          class="mx-auto mb-6 max-w-[720px] text-[2.75rem] leading-none font-semibold tracking-[-1.4px] text-balance sm:text-5xl sm:tracking-[-1.6px]"
+          class="mx-auto mb-6 max-w-[640px] text-[2.75rem] leading-none font-semibold tracking-[-1.4px] text-balance sm:text-5xl sm:tracking-[-1.6px]"
+          aria-label="Hear it from the teams who trust Probo."
         >
-          <span class="animate-perspective-in block" style="animation-delay: 150ms">
-            Experiențe reale,
+          <span aria-hidden="true" class="block overflow-hidden">
+            <span
+              class="animate-perspective-in block"
+              style="animation-delay: 150ms">Hear it from the teams</span
+            >
           </span>
-          <span class="animate-perspective-in block" style="animation-delay: 200ms">
-            păstrate în aceeași poveste.
+          <span aria-hidden="true" class="block overflow-hidden">
+            <span
+              class="animate-perspective-in block"
+              style="animation-delay: 200ms">who trust Probo.</span
+            >
           </span>
         </h1>
         <p
-          class="text-muted-foreground animate-perspective-in mx-auto max-w-[600px] text-base"
+          class="text-muted-foreground animate-perspective-in mx-auto max-w-[480px] text-base"
           style="animation-delay: 350ms"
         >
-          ZebraByte adaugă propriile recenzii și rezultate peste experiența vizuală
-          originală Probo. Păstrăm inclusiv logo-urile, fotografiile și wall-ul upstream,
-          cu atribuirea lor originală.
+          Real posts from the founders, engineers and security teams trusting
+          Probo to handle their SOC 2, ISO 27001 or other compliance framework.
         </p>
       </section>
 
       <section class="relative z-10 pb-4">
-        <p class="text-tertiary-foreground mb-4 text-center text-xs uppercase tracking-[0.12em]">
-          Companii din experiența originală Probo
-        </p>
         <Logos class="animate-slide-in animation-delay-300" />
       </section>
     </div>
 
-    <Testimonials />
-
-    {
-      upstreamPosts.length > 0 && (
-        <section class="container py-16 sm:py-24">
-          <div class="mb-10 max-w-190">
-            <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">
-              Upstream Probo wall
-            </p>
-            <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Wall-ul original Probo</h2>
-            <p class="text-muted-foreground text-lg leading-relaxed">
-              Postările, fotografiile, numele și organizațiile originale rămân vizibile.
-              Ele documentează experiența Probo upstream și sunt păstrate integral ca
-              parte din produsul și designul pe care ZebraByte îl extinde.
-            </p>
+    <div class="container mt-10 pb-16 sm:mt-14 sm:pb-24">
+      {
+        posts.length > 0 ? (
+          <div
+            class="animate-slide-in animation-delay-250 gap-5 sm:columns-2 lg:columns-3"
+          >
+            {posts.map((post) => (
+              <WallCard post={post} />
+            ))}
           </div>
+        ) : (
+          <p class="text-muted-foreground py-16 text-center text-base">
+            No posts yet. Add MDX files to <code>src/content/wall/</code>.
+          </p>
+        )
+      }
+    </div>
 
-          <div class="animate-slide-in gap-5 sm:columns-2 lg:columns-3">
-            {upstreamPosts.map((post) => <WallCard post={post} />)}
-          </div>
-        </section>
-      )
-    }
+    <section class="border-t pt-16 sm:pt-24">
+      <div class="container mb-8 max-w-3xl text-center sm:mb-12">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte extension</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Recenziile ZebraByte sunt adăugate, nu puse în locul Probo.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Pagina originală Probo de mai sus rămâne integrală. Mai jos adăugăm feedback-ul real ZebraByte și păstrăm în continuare sliderul complet de testimoniale Probo cu fotografiile și citatele originale.
+        </p>
+      </div>
+      <Testimonials />
+    </section>
   </main>
 </Layout>
 
 <script>
   function initWall() {
+    // Language toggle (original <-> translated). Posts render in full — no clamp.
     document
       .querySelectorAll<HTMLButtonElement>("[data-wall-lang]")
       .forEach((btn) => {
@@ -102,6 +113,7 @@ const upstreamPosts = (await getCollection("wall"))
         const translated = btn.dataset.translated ?? "";
         const lang = btn.dataset.langLabel ?? "FR";
         let showingOriginal = false;
+        // Server renders the translation by default; the pill swaps to original.
         btn.addEventListener("click", () => {
           showingOriginal = !showingOriginal;
           post.textContent = showingOriginal ? original : translated;
