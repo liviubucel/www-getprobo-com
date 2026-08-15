@@ -4,22 +4,94 @@ import Button from "../components/ui/Button.svelte";
 
 const installCode = '<script src="https://accesibilitate.zebrabyte.ro/dist/zbt.js" defer></script>';
 
+const standardIncludes = [
+  "Instalare cu o singură linie de cod, fără cont pentru varianta standard.",
+  "Controale de accesibilitate pentru utilizatorii finali: contrast, mărire text, font pentru dislexie, ghid de citire, stop animații și altele.",
+  "Preferințele utilizatorului sunt păstrate local în browser, fără tracking și fără cookies dedicate widgetului.",
+  "Compatibil cu site-uri custom, WordPress, Shopify și alte platforme care permit inserarea unui script.",
+];
+
+const complianceOnly = [
+  "Personalizare și administrare din platforma ZebraByte Compliance.",
+  "Configurare per domeniu și guvernanță centralizată.",
+  "Audit, prioritizare și urmărire a problemelor de accesibilitate.",
+  "Dovezi, remediation și responsabilități în același program de conformitate.",
+];
+
+const audiences = [
+  {
+    title: "Deficiențe de vedere",
+    text: "Text mai mare, contrast ridicat, inversare culori și cursor mărit pentru o navigare mai confortabilă.",
+  },
+  {
+    title: "Cognitiv & dislexie",
+    text: "Font pentru dislexie, spațiere litere și rânduri, plus simplificarea experienței de citire.",
+  },
+  {
+    title: "Epilepsie & fotosensibilitate",
+    text: "Oprirea animațiilor și reducerea mișcării ajută utilizatorii sensibili la efecte vizuale intense.",
+  },
+  {
+    title: "Navigare fără mouse",
+    text: "Evidențierea linkurilor și a titlurilor sprijină orientarea pe pagină și navigarea prin tastatură.",
+  },
+  {
+    title: "Citire asistată",
+    text: "Text-to-speech și ghidul de citire oferă suport suplimentar pentru utilizatorii care preferă asistență direct pe pagină.",
+  },
+  {
+    title: "Daltonism și percepția culorilor",
+    text: "Saturația și contrastele alternative pot face conținutul mai ușor de diferențiat.",
+  },
+];
+
+const featureColumns = [
+  {
+    title: "Ajustări de conținut",
+    items: [
+      "Mărire text",
+      "Text îngroșat",
+      "Spațiere rânduri",
+      "Spațiere litere",
+      "Font pentru dislexie",
+      "Ascundere imagini",
+    ],
+  },
+  {
+    title: "Ajustări de culoare",
+    items: [
+      "Contrast ridicat",
+      "Contrast deschis",
+      "Inversare culori",
+      "Saturație ridicată",
+      "Saturație scăzută",
+      "Monocrom",
+    ],
+  },
+  {
+    title: "Navigare și focus",
+    items: [
+      "Evidențiere linkuri",
+      "Evidențiere titluri",
+      "Cursor mărit",
+      "Ghid de citire",
+      "Oprire animații",
+      "Text-to-speech",
+    ],
+  },
+];
+
+const howItWorks = [
+  ["01", "Lipești scriptul", "Adaugi linia de cod înainte de </body> și widgetul standard devine disponibil pe site."],
+  ["02", "Widgetul apare", "Vizitatorii văd butonul de accesibilitate și pot deschide imediat panoul de preferințe."],
+  ["03", "Utilizatorii aleg preferințele", "Fiecare persoană își poate ajusta experiența în funcție de propriile nevoi."],
+  ["04", "Preferințele se salvează local", "Setările sunt păstrate în browserul utilizatorului, fără a fi trimise către serverele ZebraByte."],
+];
+
 const complianceFeatures = [
-  [
-    "01",
-    "Configurare și administrare",
-    "Personalizarea, configurarea pe domenii și administrarea widgetului se fac din platforma ZebraByte Compliance.",
-  ],
-  [
-    "02",
-    "Audit și remediere",
-    "Problemele de accesibilitate pot fi evaluate, prioritizate și urmărite împreună cu celelalte obligații de conformitate.",
-  ],
-  [
-    "03",
-    "Dovezi și urmărire",
-    "Constatările, responsabilitățile și dovezile de remediere rămân în același program de conformitate al organizației.",
-  ],
+  ["01", "Configurare și administrare", "Personalizarea, setările per domeniu și administrarea widgetului se fac din platforma ZebraByte Compliance."],
+  ["02", "Audit și remediere", "Problemele de accesibilitate pot fi evaluate, prioritizate și urmărite împreună cu celelalte obligații de conformitate."],
+  ["03", "Dovezi și urmărire", "Constatările, responsabilitățile și dovezile de remediere rămân în același program de conformitate al organizației."],
 ];
 ---
 
@@ -28,45 +100,84 @@ const complianceFeatures = [
   description="Accesibilitatea este inclusă în programul ZebraByte Compliance. Widgetul standard poate fi instalat gratuit; administrarea, personalizarea, auditul și remedierea sunt disponibile în platforma Compliance."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
-        Conformitate · Accesibilitate
-      </div>
-
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">Accesibilitatea,</span>
-        <span class="animate-perspective-in block delay-50">în programul tău de conformitate.</span>
-      </h1>
-
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Widgetul ZebraByte în varianta standard poate fi instalat gratuit pe orice site. Personalizarea,
-        administrarea, auditul, remedierea și urmărirea dovezilor sunt funcții ale programului ZebraByte Compliance
-        și necesită acces la platformă.
-      </p>
-
-      <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="#widget-gratuit">
-          Instalează widgetul standard
-        </Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="https://app.zebrabyte.ro">
-          Deschide platforma Compliance
-        </Button>
-      </div>
-    </animated-hero>
-
-    <section id="widget-gratuit" class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-3xl">
-        <div class="mb-10 text-center sm:mb-12">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Instalare publică</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Widgetul standard este gratuit.</h2>
-          <p class="text-muted-foreground mx-auto max-w-2xl text-lg">
-            Pentru instalarea de bază nu este necesar un cont ZebraByte. Adaugă codul de mai jos înainte de
-            <code>&lt;/body&gt;</code>. Această variantă folosește configurația standard și nu include panoul de administrare.
+    <section class="container py-14 sm:py-20">
+      <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+        <div>
+          <div class="mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium text-muted-foreground">Conformitate · Accesibilitate</div>
+          <h1 class="text-h2 sm:text-h1 mb-6 max-w-4xl font-medium text-balance">Accesibilitatea este parte din programul tău de conformitate.</h1>
+          <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+            ZebraByte include accesibilitatea în programul de conformitate, nu ca produs separat. Widgetul standard poate fi instalat gratuit pe orice site,
+            iar personalizarea, administrarea, auditul, remedierea și dovezile sunt gestionate din platforma ZebraByte Compliance.
           </p>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button href="#widget-gratuit" size="lg">Instalează widgetul standard</Button>
+            <Button href="https://app.zebrabyte.ro" variant="secondary" size="lg">Deschide platforma Compliance</Button>
+          </div>
         </div>
 
-        <div class="rounded-2xl border p-5 sm:p-7">
-          <pre class="overflow-x-auto rounded-xl bg-[#141e12] p-5 text-sm text-white"><code>{installCode}</code></pre>
+        <div class="overflow-hidden rounded-3xl border bg-active p-3 sm:p-4">
+          <div class="overflow-hidden rounded-2xl border bg-background p-4 sm:p-6">
+            <div class="mb-5 flex items-center justify-between border-b pb-4">
+              <div>
+                <p class="text-sm font-medium">Previzualizare widget</p>
+                <p class="text-muted-foreground mt-1 text-xs">Varianta standard instalată pe site</p>
+              </div>
+              <span class="rounded-full border px-3 py-1 text-xs text-muted-foreground">fără tracking</span>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-3">
+              {[
+                "Text to speech",
+                "Contrast ridicat",
+                "Mărire text",
+                "Font dislexie",
+                "Ghid citire",
+                "Oprire animații",
+                "Inversare culori",
+                "Spațiere litere",
+                "Cursor mărit",
+              ].map((item) => (
+                <div class="min-h-24 rounded-xl border bg-active p-4 text-center text-sm font-medium flex items-center justify-center">{item}</div>
+              ))}
+            </div>
+            <div class="mt-4 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground">Resetează preferințele</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto mt-10 grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl border p-5">
+          <div class="text-2xl font-medium">1</div>
+          <p class="text-muted-foreground mt-2 text-sm">linie de cod pentru instalarea standard</p>
+        </div>
+        <div class="rounded-2xl border p-5">
+          <div class="text-2xl font-medium">0</div>
+          <p class="text-muted-foreground mt-2 text-sm">tracking și 0 cookies dedicate widgetului</p>
+        </div>
+        <div class="rounded-2xl border p-5">
+          <div class="text-2xl font-medium">10+</div>
+          <p class="text-muted-foreground mt-2 text-sm">tipuri de controale utile pentru utilizatori</p>
+        </div>
+        <div class="rounded-2xl border p-5">
+          <div class="text-2xl font-medium">WCAG</div>
+          <p class="text-muted-foreground mt-2 text-sm">suport practic, fără a înlocui remedierea reală</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="widget-gratuit" class="container pb-12 sm:pb-18">
+      <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div class="rounded-3xl border p-6 sm:p-8">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Instalare publică</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Widgetul standard este gratuit.</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            Pentru instalarea de bază nu este necesar un cont ZebraByte. Adaugi codul înainte de <code>&lt;/body&gt;</code>,
+            iar widgetul standard devine disponibil imediat pe site.
+          </p>
+
+          <div class="rounded-2xl border bg-[#111c13] p-5 sm:p-6">
+            <pre class="m-0 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[13px] leading-6 text-white"><code>{installCode}</code></pre>
+          </div>
+
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <button
               id="copy-accessibility-code"
@@ -78,30 +189,109 @@ const complianceFeatures = [
             </button>
             <span id="copy-accessibility-status" class="text-muted-foreground text-sm" aria-live="polite"></span>
           </div>
+
+          <ul class="mt-6 space-y-3">
+            {standardIncludes.map((item) => (
+              <li class="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <p class="text-muted-foreground mt-5 text-sm leading-relaxed">
-          Widgetul este un instrument de suport pentru utilizatori. Instalarea lui, singură, nu demonstrează conformitatea
-          unui site cu WCAG și nu înlocuiește remedierea problemelor din cod, conținut, design sau fluxurile aplicației.
-        </p>
+        <div class="rounded-3xl border bg-active p-6 sm:p-8">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">În ZebraByte Compliance</p>
+          <h2 class="text-h3 mb-4 font-medium">Ce rămâne în programul de conformitate</h2>
+          <p class="text-muted-foreground mb-6 leading-relaxed">
+            Varianta publică rezolvă doar instalarea standard. Tot ce ține de management, configurare și guvernanță rămâne în platformă.
+          </p>
+
+          <ul class="space-y-3">
+            {complianceOnly.map((item) => (
+              <li class="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-8 rounded-2xl border bg-background p-5">
+            <p class="mb-2 text-sm font-medium">Important</p>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Widgetul oferă controale de preferință pentru utilizator și nu transformă singur un site într-un site conform WCAG. Conformitatea reală cere cod,
+              conținut, design, testare și remediere.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-3xl text-center sm:mb-12">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">În ZebraByte Compliance</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Restul se administrează din programul de conformitate.</h2>
-          <p class="text-muted-foreground text-lg">
-            Accesibilitatea nu este un serviciu separat. Pentru organizațiile care folosesc ZebraByte Compliance,
-            aceasta este administrată împreună cu controalele, riscurile, responsabilitățile și dovezile aplicabile.
+    <section class="container py-12 sm:py-18">
+      <div class="mx-auto max-w-6xl">
+        <div class="mb-10 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Beneficii reale pentru utilizatori</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Cine beneficiază de acest widget?</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Scopul widgetului este să ofere controale de accesibilitate direct pe pagină, fără să schimbe radical designul site-ului și fără să adauge tracking inutil.
           </p>
         </div>
 
-        <div class="flex flex-col gap-6 sm:flex-row sm:gap-12">
-          {complianceFeatures.map(([step, title, text]) => (
-            <div class="flex-1">
-              <div class="text-muted-foreground mb-5 text-sm font-medium">{step}</div>
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {audiences.map((audience) => (
+            <div class="rounded-2xl border p-6">
+              <h3 class="mb-3 text-xl font-medium">{audience.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{audience.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-12 sm:py-18">
+      <div class="container">
+        <div class="mx-auto max-w-6xl">
+          <div class="mb-10 max-w-3xl">
+            <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Funcții disponibile</p>
+            <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Controale utile, fără a complica experiența.</h2>
+            <p class="text-muted-foreground text-lg leading-relaxed">
+              Widgetul standard acoperă cele mai folosite preferințe de accesibilitate pentru navigare, lizibilitate și confort vizual.
+            </p>
+          </div>
+
+          <div class="grid gap-4 lg:grid-cols-3">
+            {featureColumns.map((column) => (
+              <div class="rounded-2xl border bg-background p-6">
+                <h3 class="mb-4 text-xl font-medium">{column.title}</h3>
+                <ul class="space-y-3">
+                  {column.items.map((item) => (
+                    <li class="flex gap-3 text-sm text-muted-foreground">
+                      <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-18">
+      <div class="mx-auto max-w-6xl">
+        <div class="mb-10 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Cum funcționează</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Implementare simplă pentru varianta standard.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Dacă ai nevoie doar de instalarea publică, procesul este rapid. Dacă ai nevoie de guvernanță și administrare, continui în ZebraByte Compliance.
+          </p>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-4">
+          {howItWorks.map(([step, title, text]) => (
+            <div class="rounded-2xl border p-6">
+              <div class="mb-4 text-sm font-medium text-muted-foreground">{step}</div>
               <h3 class="mb-3 text-xl font-medium">{title}</h3>
               <p class="text-muted-foreground leading-relaxed">{text}</p>
             </div>
@@ -110,10 +300,52 @@ const complianceFeatures = [
       </div>
     </section>
 
-    <section class="container py-10 text-center sm:py-20">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">
-        Ai nevoie de personalizare, audit sau administrare?
-      </h2>
+    <section class="bg-active py-12 sm:py-18">
+      <div class="container">
+        <div class="mx-auto max-w-6xl">
+          <div class="mx-auto mb-10 max-w-3xl text-center">
+            <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">În ZebraByte Compliance</p>
+            <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Restul se administrează din programul de conformitate.</h2>
+            <p class="text-muted-foreground text-lg leading-relaxed">
+              Accesibilitatea nu este un serviciu separat. Pentru organizațiile care folosesc ZebraByte Compliance, ea este administrată împreună cu controalele,
+              riscurile, responsabilitățile și dovezile aplicabile.
+            </p>
+          </div>
+
+          <div class="grid gap-4 lg:grid-cols-3">
+            {complianceFeatures.map(([step, title, text]) => (
+              <div class="rounded-2xl border bg-background p-6">
+                <div class="mb-4 text-sm font-medium text-muted-foreground">{step}</div>
+                <h3 class="mb-3 text-xl font-medium">{title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-18">
+      <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <div class="rounded-3xl border p-6 sm:p-8">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Confidențialitate</p>
+          <h2 class="text-h3 mb-4 font-medium">Zero tracking. Zero cookies dedicate. Zero compromis.</h2>
+          <p class="text-muted-foreground leading-relaxed">
+            Widgetul ZebraByte stochează preferințele doar în browserul utilizatorului. Nu trimite date către serverele ZebraByte și nu introduce tracking ca model de business.
+          </p>
+        </div>
+        <div class="rounded-3xl border p-6 sm:p-8">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Limitări importante</p>
+          <p class="text-muted-foreground leading-relaxed">
+            Un widget nu înlocuiește remedierea semanticii HTML, contrastului, focusului, formularelor, documentelor sau fluxurilor critice. Dacă organizația are nevoie de audit,
+            remediere și evidențe, acestea trebuie tratate în programul ZebraByte Compliance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-18">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Ai nevoie de personalizare, audit sau administrare?</h2>
       <p class="text-muted-foreground mx-auto mb-8 max-w-170 text-lg">
         Aceste funcții sunt disponibile prin programul ZebraByte Compliance, nu ca instrumente publice separate.
       </p>
@@ -126,10 +358,6 @@ const complianceFeatures = [
 </Layout>
 
 <script>
-  import { AnimatedHero } from "../lib/elements/hero";
-  import { customElementDefine } from "../lib/dom";
-  customElementDefine("animated-hero", () => AnimatedHero);
-
   const copyButton = document.querySelector<HTMLButtonElement>("#copy-accessibility-code");
   const copyStatus = document.querySelector<HTMLElement>("#copy-accessibility-status");
 
