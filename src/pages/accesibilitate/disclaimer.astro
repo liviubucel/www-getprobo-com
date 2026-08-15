@@ -1,0 +1,59 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Disclaimer Widget de Accesibilitate"
+  description="Limitările și utilizarea corectă a widgetului de accesibilitate ZebraByte."
+  noIndex={true}
+>
+  <main class="container max-w-3xl py-12 sm:py-20">
+    <article class="space-y-8 leading-relaxed">
+      <header>
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Accessibility Widget</p>
+        <h1 class="text-h2 mb-4 font-medium">Disclaimer – Widget de Accesibilitate</h1>
+        <p class="text-muted-foreground text-lg">Transparență despre rolul, capabilitățile și limitările widgetului ZebraByte.</p>
+      </header>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">1. Ce face widgetul</h2>
+        <p class="text-muted-foreground">Widgetul ZebraByte este un instrument client-side care oferă preferințe precum mărirea textului, moduri de contrast, font pentru dislexie, text-to-speech, oprirea animațiilor și evidențierea elementelor de navigare. Nu modifică permanent codul sursă al site-ului.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">2. Nu garantează conformitatea WCAG/EAA</h2>
+        <p class="text-muted-foreground">Instalarea unui widget sau overlay nu face automat site-ul conform cu WCAG, EN 301 549, European Accessibility Act sau alte cerințe aplicabile. Conformitatea reală necesită remedierea structurii HTML, navigării din tastatură, contrastului, textelor alternative, formularelor, focusului și compatibilității cu tehnologiile asistive.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">3. Nu este un scut juridic</h2>
+        <p class="text-muted-foreground">Utilizarea widgetului nu oferă imunitate față de plângeri, reclamații sau alte obligații. Operatorul website-ului rămâne responsabil pentru evaluarea cerințelor aplicabile și pentru accesibilitatea serviciului său.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">4. Overlay-ul este complementar</h2>
+        <p class="text-muted-foreground">ZebraByte nu prezintă overlay-ul ca substitut pentru dezvoltarea accesibilă. Recomandăm audit tehnic, testare manuală și remedierea problemelor în produsul de bază.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">5. Utilizare și răspundere</h2>
+        <p class="text-muted-foreground">Instrumentul este furnizat pentru a ajuta utilizatorii să-și adapteze experiența. Înainte de utilizare în contexte reglementate sau cu risc ridicat, organizația trebuie să valideze funcționarea, compatibilitatea și documentația juridică aplicabilă.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">6. Privacy și self-hosting</h2>
+        <p class="text-muted-foreground">Versiunea publicată a widgetului este proiectată pentru procesare locală a preferințelor. Pentru control suplimentar, scriptul poate fi self-hosted. Organizația care îl implementează trebuie să verifice versiunea efectiv utilizată și politicile sale CSP/privacy.</p>
+      </section>
+
+      <div class="rounded-xl border bg-active p-5 text-sm">
+        Această pagină este păstrată din setul legal/tehnic ZebraByte și este marcată noindex până la revizuirea juridică finală a documentelor noului website.
+      </div>
+
+      <div class="flex flex-wrap gap-4 border-t pt-8 text-sm">
+        <a href="/accessibility" class="underline underline-offset-4">Accessibility</a>
+        <a href="/accesibilitate/audit" class="underline underline-offset-4">Audit</a>
+        <a href="/privacy" class="underline underline-offset-4">Privacy</a>
+      </div>
+    </article>
+  </main>
+</Layout>
