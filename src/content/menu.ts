@@ -88,11 +88,48 @@ export const menuGroups: MenuGroup[] = [
     },
   },
   {
+    label: "Conformitate",
+    items: [
+      {
+        label: "GDPR & Privacy",
+        description: "Privacy governance, măsuri tehnice, evidențe și procese GDPR",
+        href: "/gdpr",
+        icon: "shield-check",
+      },
+      {
+        label: "NIS2 Readiness",
+        description: "Risk management, governance, incidente și evidence pentru NIS2",
+        href: "/nis2",
+        icon: "shield-check",
+      },
+      {
+        label: "ISO/IEC 27001",
+        description: "ISMS readiness, controale, riscuri și audit preparation",
+        href: "/iso-27001",
+        icon: "shield-check",
+      },
+      {
+        label: "Compliance Portal",
+        description: "Trust, documente, approvals și evidence într-un singur loc",
+        href: "/compliance-portal",
+        icon: "code",
+      },
+    ],
+    feature: {
+      eyebrow: "Framework-uri",
+      title: "Security & compliance, gestionate continuu",
+      href: "/iso-27001",
+      asset: "/navigation/frameworks.svg",
+      alt: "Framework-uri de securitate și conformitate",
+      variant: "guide",
+    },
+  },
+  {
     label: "Resurse",
     items: [
       {
         label: "Povești de la clienți",
-        description: "Cum lucrează echipele cu ZebraByte pentru securitate și conformitate",
+        description: "ZebraByte case studies și biblioteca originală Probo",
         href: "/stories",
         icon: "quotes",
       },
@@ -110,7 +147,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Ce spun clienții",
-        description: "Experiențe reale ale organizațiilor care lucrează cu ZebraByte",
+        description: "Recenzii ZebraByte și wall-ul original Probo",
         href: "/love-from-customer",
         icon: "heart",
       },
@@ -141,7 +178,7 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Despre",
-        description: "Viziunea și disciplinele din spatele ZebraByte",
+        description: "ZebraByte și istoria vizuală upstream Probo",
         href: "/about",
         icon: "users-three",
       },
@@ -153,7 +190,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Brand assets",
-        description: "Identitatea și resursele vizuale ZebraByte",
+        description: "Identitatea ZebraByte și biblioteca originală Probo",
         href: "/brand",
         icon: "paint-brush",
       },
