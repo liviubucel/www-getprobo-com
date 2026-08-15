@@ -1,0 +1,69 @@
+---
+interface Props {
+  class?: string;
+  compact?: boolean;
+}
+
+const { class: className, compact = false } = Astro.props;
+const currentPath = Astro.url.pathname || "/";
+const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
+---
+
+<a
+  href={englishPath}
+  data-locale-switch
+  data-language-switch
+  class:list={[
+    "text-muted-foreground hover:text-primary inline-flex h-10 items-center justify-center gap-1.5 rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
+    compact && "px-1.5",
+    className,
+  ]}
+  aria-label="Switch language to English"
+  title="English"
+>
+  <svg
+    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18" />
+    <path d="M12 3a14.5 14.5 0 0 1 0 18" />
+    <path d="M12 3a14.5 14.5 0 0 0 0 18" />
+  </svg>
+  <span data-language-code class="text-xs font-semibold tracking-wide">EN</span>
+</a>
+
+<script>
+  const bindLanguageSwitchers = () => {
+    const pathname = window.location.pathname || "/";
+    const english = pathname === "/en" || pathname.startsWith("/en/");
+    const target = english
+      ? pathname === "/en"
+        ? "/"
+        : pathname.slice(3) || "/"
+      : pathname === "/"
+        ? "/en"
+        : `/en${pathname}`;
+
+    document.querySelectorAll<HTMLAnchorElement>("[data-language-switch]").forEach((link) => {
+      link.href = `${target}${window.location.search}${window.location.hash}`;
+      const code = link.querySelector<HTMLElement>("[data-language-code]");
+      if (code) code.textContent = english ? "RO" : "EN";
+      link.setAttribute(
+        "aria-label",
+        english ? "Schimbă limba în română" : "Switch language to English",
+      );
+      link.title = english ? "Română" : "English";
+    });
+  };
+
+  document.addEventListener("astro:page-load", bindLanguageSwitchers);
+  bindLanguageSwitchers();
+</script>
