@@ -76,15 +76,15 @@ export const menuGroups: MenuGroup[] = [
         icon: "compass",
       },
       {
-        label: "Accesibilitate · Gratuit",
-        description: "Widget gratuit; administrare completă din platformă",
+        label: "Accesibilitate",
+        description: "Inclusă în programul de conformitate",
         href: "/accessibility",
         icon: "sparkle",
       },
     ],
     feature: {
       eyebrow: "Conformitate gestionată",
-      title: "Controale, dovezi și accesibilitate gestionate împreună",
+      title: "Controale, dovezi și accesibilitate într-un singur program",
       href: "/managed-compliance",
       asset: "/navigation/browser.svg",
       alt: "Platforma ZebraByte pentru conformitate gestionată",
