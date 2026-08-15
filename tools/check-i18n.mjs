@@ -43,8 +43,23 @@ for (const marker of [
   "localizeDateMarkup",
   "finalizeHtmlLocale",
   "Content-Language",
+  "apiLocaleFromRequest",
+  "localizeApiResponse",
+  "withLocalizedEmailEnv",
 ]) {
   requireText(router, marker, "Locale router");
+}
+
+const apiI18n = await read("worker/i18n-api.ts");
+for (const marker of [
+  "Accept-Language",
+  "Content-Language",
+  "withLocalizedEmailEnv",
+  "localizeApiResponse",
+  "lang=${locale}",
+  "/en/newsletter/rezultat",
+]) {
+  requireText(apiI18n, marker, "API/email localization");
 }
 
 const translator = await read("worker/i18n-ai.ts");
@@ -63,31 +78,74 @@ for (const marker of ["/en", "RO", "EN", "installBrowserI18nObserver"]) {
 }
 
 const browserI18n = await read("src/lib/browser-i18n.ts");
-for (const marker of ["MutationObserver", "browserT", "getBrowserLocale"]) {
+for (const marker of [
+  "MutationObserver",
+  "browserT",
+  "getBrowserLocale",
+  "Copy to clipboard",
+  "Failed to copy",
+]) {
   requireText(browserI18n, marker, "Browser runtime i18n");
+}
+
+const hydratedContracts = [
+  ["src/components/DealForm.svelte", ["browserT", "getBrowserLocale", "Accept-Language"]],
+  ["src/components/DownloadAgent.svelte", ["browserT"]],
+  ["src/lib/device-agent-release.ts", ["browserT", "getBrowserLocale", "Accept-Language"]],
+  ["src/components/block/Sharer.svelte", ["browserT", "copied = true"]],
+  ["src/components/docs/mermaid-init.ts", ["browserT"]],
+  ["src/components/ui/Slider.svelte", ["browserT", "i18n:", "Previous slide", "Slide-ul anterior"]],
+];
+for (const [file, markers] of hydratedContracts) {
+  const source = await read(file);
+  for (const marker of markers) requireText(source, marker, `Hydrated localization (${file})`);
 }
 
 const sourceFiles = [
   ...(await walk("src/pages")),
   ...(await walk("src/components")),
   ...(await walk("src/layouts")),
+  ...(await walk("src/lib")),
 ].filter((file) => /\.(?:astro|ts|svelte|js|mjs)$/.test(file));
 
 const staleFrenchFiles = [];
-const dynamicLiteralFiles = [];
+const hardCodedUsLocaleFiles = [];
+const uncoveredRuntimeLiterals = [];
+const runtimeLiteralPatterns = [
+  /(?:textContent|innerText)\s*=\s*["'`]([^"'`\n]+)["'`]/g,
+  /setAttribute\(\s*["'](?:title|aria-label|placeholder)["']\s*,\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
+  /alert\(\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
+];
+
 for (const file of sourceFiles) {
   const source = await read(file);
   if (/href\s*=\s*["']\/fr(?:\/|["'])/i.test(source)) staleFrenchFiles.push(file);
-  if (/textContent\s*=\s*["'`][A-Za-zĂÂÎȘȚăâîșț]/u.test(source)) dynamicLiteralFiles.push(file);
+  if (/(?:Intl\.DateTimeFormat|toLocaleString)\(\s*["']en-US["']/i.test(source)) {
+    hardCodedUsLocaleFiles.push(file);
+  }
+
+  if (source.includes("browserT(")) continue;
+  for (const pattern of runtimeLiteralPatterns) {
+    pattern.lastIndex = 0;
+    for (const match of source.matchAll(pattern)) {
+      const literal = match[1]?.trim();
+      if (!literal || !/[A-Za-zĂÂÎȘȚăâîșț]/u.test(literal)) continue;
+      if (!browserI18n.toLocaleLowerCase().includes(literal.toLocaleLowerCase())) {
+        uncoveredRuntimeLiterals.push(`${file}: ${JSON.stringify(literal)}`);
+      }
+    }
+  }
 }
 
 if (staleFrenchFiles.length) {
   failures.push(`Legacy /fr links remain in public source: ${staleFrenchFiles.join(", ")}`);
 }
-
-if (dynamicLiteralFiles.length) {
-  warnings.push(
-    `Runtime text literals detected in ${dynamicLiteralFiles.length} files; global browser i18n observer must remain enabled: ${dynamicLiteralFiles.join(", ")}`,
+if (hardCodedUsLocaleFiles.length) {
+  failures.push(`Hard-coded en-US formatting remains in public source: ${hardCodedUsLocaleFiles.join(", ")}`);
+}
+if (uncoveredRuntimeLiterals.length) {
+  failures.push(
+    `Uncovered runtime UI literals remain (use browserT or register the exact pair): ${uncoveredRuntimeLiterals.join(" | ")}`,
   );
 }
 
