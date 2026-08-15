@@ -8,6 +8,7 @@ import sitemap from "@astrojs/sitemap";
 import { removeHtmlExtension } from "./vite-plugin-remove-html.mjs";
 import { docsSidebar } from "./src/lib/docs-sidebar.ts";
 import { generateMarkdown } from "./tools/generateMarkdown";
+import { sanitizePublicText } from "./tools/sanitizePublicText";
 import { generateSecurityTxt } from "./tools/generateSecurityTxt";
 
 function svelteVirtualCssFallback() {
@@ -90,6 +91,7 @@ export default defineConfig({
       sidebar: docsSidebar,
     }),
     generateMarkdown(),
+    sanitizePublicText(),
     generateSecurityTxt(),
     mdx(),
     svelte(),
