@@ -55,6 +55,8 @@ import Layout from "../../layouts/Layout.astro";
 </Layout>
 
 <script>
+  import { browserT } from "../../lib/browser-i18n";
+
   function initCopy() {
     document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
       if (button.dataset.bound === "true") return;
@@ -63,8 +65,8 @@ import Layout from "../../layouts/Layout.astro";
         const code = button.parentElement?.querySelector("code")?.textContent?.trim();
         if (!code) return;
         await navigator.clipboard.writeText(code);
-        button.textContent = "Copiat";
-        setTimeout(() => (button.textContent = "Copiază"), 1400);
+        button.textContent = browserT("Copiat", "Copied");
+        setTimeout(() => (button.textContent = browserT("Copiază", "Copy")), 1400);
       });
     });
   }
