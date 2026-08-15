@@ -3,6 +3,8 @@ export type BrowserLocale = "ro" | "en";
 const runtimePairs = [
   ["Copiat", "Copied"],
   ["Copiază", "Copy"],
+  ["Copiază în clipboard", "Copy to clipboard"],
+  ["Copierea a eșuat", "Failed to copy"],
   ["Activează modul dev", "Enable dev mode"],
   ["Dezactivează modul dev", "Disable dev mode"],
   ["Vocea implicită a browserului", "Browser default voice"],
