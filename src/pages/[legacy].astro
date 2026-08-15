@@ -1,32 +1,56 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ZebraByteIndustryServicePage from "../components/ZebraByteIndustryServicePage.astro";
+import ZebraByteLegacyPage from "../components/ZebraByteLegacyPage.astro";
 import {
   legacyIndustryServiceSlugs,
   findIndustryServiceByLegacySlug,
   type IndustryServiceKey,
   type ZebraByteIndustry,
 } from "../content/zebrabyte-industries";
+import {
+  legacyZebraBytePages,
+  legacyZebraBytePageBySlug,
+  type LegacyZebraBytePage,
+} from "../content/zebrabyte-legacy-pages";
 
 export function getStaticPaths() {
-  return legacyIndustryServiceSlugs.map((legacy) => {
+  const industryPaths = legacyIndustryServiceSlugs.map((legacy) => {
     const match = findIndustryServiceByLegacySlug(legacy)!;
     return {
       params: { legacy },
       props: {
+        kind: "industry" as const,
         industry: match.industry,
         service: match.service,
       },
     };
   });
+
+  const legacyPaths = legacyZebraBytePages.map((page) => ({
+    params: { legacy: page.slug },
+    props: {
+      kind: "legacy" as const,
+      page,
+    },
+  }));
+
+  return [...industryPaths, ...legacyPaths];
 }
 
-interface Props {
-  industry: ZebraByteIndustry;
-  service: IndustryServiceKey;
-}
+type Props =
+  | {
+      kind: "industry";
+      industry: ZebraByteIndustry;
+      service: IndustryServiceKey;
+    }
+  | {
+      kind: "legacy";
+      page: LegacyZebraBytePage;
+    };
 
-const { industry, service } = Astro.props;
+const props = Astro.props as Props;
+
 const labelMap: Record<IndustryServiceKey, string> = {
   cyber: "Securitate cibernetică",
   email: "Securitate email",
@@ -34,13 +58,31 @@ const labelMap: Record<IndustryServiceKey, string> = {
   hosting: "Hosting securizat",
   maintenance: "Mentenanță WordPress",
 };
+
+const title =
+  props.kind === "industry"
+    ? `${labelMap[props.service]} pentru ${props.industry.shortTitle}`
+    : props.page.title;
+
+const description =
+  props.kind === "industry"
+    ? `${labelMap[props.service]} ZebraByte pentru ${props.industry.shortTitle}: controale tehnice, hardening, monitoring și recovery adaptate riscurilor sectorului.`
+    : props.page.description;
+
+const noIndex = props.kind === "legacy" ? props.page.noIndex : false;
 ---
 
-<Layout
-  title={`${labelMap[service]} pentru ${industry.shortTitle}`}
-  description={`${labelMap[service]} ZebraByte pentru ${industry.shortTitle}: controale tehnice, hardening, monitoring și recovery adaptate riscurilor sectorului.`}
->
+<Layout title={title} description={description} noIndex={noIndex}>
   <main>
-    <ZebraByteIndustryServicePage industry={industry} service={service} />
+    {
+      props.kind === "industry" ? (
+        <ZebraByteIndustryServicePage
+          industry={props.industry}
+          service={props.service}
+        />
+      ) : (
+        <ZebraByteLegacyPage page={props.page} />
+      )
+    }
   </main>
 </Layout>
