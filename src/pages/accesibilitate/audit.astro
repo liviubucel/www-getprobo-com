@@ -1,0 +1,102 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Audit de Accesibilitate Web & Verificare WCAG"
+  description="Activează modul dev al widgetului ZebraByte și rulează un audit de accesibilitate pe pagina ta."
+>
+  <main class="container max-w-4xl py-12 sm:py-20">
+    <header class="mb-12 text-center">
+      <div class="border-border-low text-tertiary-foreground mx-auto mb-5 w-max rounded-lg border px-2 py-1 text-xs font-medium">Audit & Conformitate WCAG</div>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Audit în 4 pași simpli</h1>
+      <p class="text-muted-foreground mx-auto max-w-2xl text-lg leading-relaxed">
+        Folosește modul de dezvoltare al widgetului ZebraByte pentru a verifica pagina activă și pentru a identifica probleme care trebuie remediate în cod, design și conținut.
+      </p>
+      <button id="try-dev-mode" type="button" class="bg-primary text-primary-foreground mt-8 rounded-lg px-6 py-3 text-sm font-medium">
+        Activează modul dev
+      </button>
+      <p class="text-muted-foreground mx-auto mt-3 max-w-xl text-xs">
+        După activare, deschide widgetul și caută secțiunile Adnotări și Raport de accesibilitate.
+      </p>
+    </header>
+
+    <div class="space-y-5">
+      <article class="rounded-2xl border p-6 sm:p-8">
+        <div class="text-muted-foreground mb-2 text-sm">01</div>
+        <h2 class="mb-3 text-xl font-medium">Adaugă scriptul widgetului</h2>
+        <p class="text-muted-foreground mb-5 leading-relaxed">Lipește fragmentul înainte de <code>&lt;/body&gt;</code>.</p>
+        <div class="flex items-center gap-3 rounded-xl bg-active p-4">
+          <code class="min-w-0 flex-1 overflow-x-auto text-xs">&lt;script src="https://accesibilitate.zebrabyte.ro/dist/zbt.js" defer&gt;&lt;/script&gt;</code>
+          <button type="button" data-copy-snippet class="rounded-lg border px-3 py-2 text-xs">Copiază</button>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border p-6 sm:p-8">
+        <div class="text-muted-foreground mb-2 text-sm">02</div>
+        <h2 class="mb-3 text-xl font-medium">Deschide pagina în modul dev</h2>
+        <p class="text-muted-foreground mb-5 leading-relaxed">Adaugă <code>?acc-dev=true</code> la URL. Dacă există deja query parameters, folosește <code>&amp;acc-dev=true</code>.</p>
+        <div class="flex items-center gap-3 rounded-xl bg-active p-4">
+          <code class="min-w-0 flex-1 overflow-x-auto text-xs">https://siteultau.ro/pagina?acc-dev=true</code>
+          <button type="button" data-copy-snippet class="rounded-lg border px-3 py-2 text-xs">Copiază</button>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border p-6 sm:p-8">
+        <div class="text-muted-foreground mb-2 text-sm">03</div>
+        <h2 class="mb-3 text-xl font-medium">Rulează raportul</h2>
+        <p class="text-muted-foreground leading-relaxed">Deschide widgetul, derulează până la secțiunea de dezvoltare și pornește raportul de accesibilitate. Problemele detectate pot fi apoi investigate direct în pagină.</p>
+      </article>
+
+      <article class="rounded-2xl border p-6 sm:p-8">
+        <div class="text-muted-foreground mb-2 text-sm">04</div>
+        <h2 class="mb-3 text-xl font-medium">Remediază și dezactivează modul dev</h2>
+        <p class="text-muted-foreground leading-relaxed">Corectează problemele reale — contrast, semantică, labels, ARIA, focus și navigare — apoi scoate parametrul <code>acc-dev=true</code>.</p>
+        <p class="mt-4 rounded-xl border bg-active p-4 text-xs"><strong>Important:</strong> modul dev este pentru testare și nu trebuie lăsat activ permanent pentru utilizatorii finali.</p>
+      </article>
+    </div>
+
+    <section class="mt-12 rounded-2xl border p-6 text-center sm:p-8">
+      <h2 class="mb-3 text-xl font-medium">Self-host</h2>
+      <p class="text-muted-foreground mx-auto mb-6 max-w-xl">Poți descărca scriptul și îl poți servi din propria infrastructură.</p>
+      <a class="bg-primary text-primary-foreground inline-flex rounded-lg px-5 py-3 text-sm font-medium" href="https://accesibilitate.zebrabyte.ro/dist/zbt.js" download="zbt.js">Descarcă zbt.js</a>
+    </section>
+
+    <div class="mt-10 border-t pt-8 text-sm">
+      <a href="/accessibility" class="underline underline-offset-4">← Înapoi la accesibilitate</a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  function initAccessibilityAudit() {
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-snippet]").forEach((button) => {
+      if (button.dataset.bound === "true") return;
+      button.dataset.bound = "true";
+      button.addEventListener("click", async () => {
+        const code = button.parentElement?.querySelector("code")?.textContent?.trim();
+        if (!code) return;
+        await navigator.clipboard.writeText(code);
+        const original = button.textContent;
+        button.textContent = "Copiat";
+        setTimeout(() => (button.textContent = original), 1400);
+      });
+    });
+
+    const toggle = document.querySelector<HTMLButtonElement>("#try-dev-mode");
+    if (!toggle || toggle.dataset.bound === "true") return;
+    toggle.dataset.bound = "true";
+    const current = new URL(window.location.href);
+    const enabled = current.searchParams.get("acc-dev") === "true";
+    toggle.textContent = enabled ? "Dezactivează modul dev" : "Activează modul dev";
+    toggle.setAttribute("aria-pressed", String(enabled));
+    toggle.addEventListener("click", () => {
+      const next = new URL(window.location.href);
+      if (next.searchParams.get("acc-dev") === "true") next.searchParams.delete("acc-dev");
+      else next.searchParams.set("acc-dev", "true");
+      window.location.href = next.toString();
+    });
+  }
+  initAccessibilityAudit();
+  document.addEventListener("astro:after-swap", initAccessibilityAudit);
+</script>
