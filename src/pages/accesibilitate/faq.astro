@@ -1,0 +1,116 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const faqs = [
+  {
+    question: "Ce face de fapt acest widget?",
+    answer: "Oferă vizitatorilor un panou cu controale pentru dimensiunea textului, contrast, font pentru dislexie, text-to-speech, oprirea animațiilor și alte preferințe de accesibilitate.",
+  },
+  {
+    question: "Acest widget îmi face site-ul conform cu standardele WCAG?",
+    answer: "Nu. Niciun widget nu poate garanta conformitatea WCAG. Conformitatea reală necesită HTML semantic, ARIA corect, navigare din tastatură, text alternativ, contrast și testare. Widgetul este complementar, nu un substitut pentru remediere.",
+  },
+  {
+    question: "Prin ce este diferit de overlay-urile comerciale?",
+    answer: "Nu promitem conformitate automată și nu folosim afirmații de tip «AI fixes everything». Widgetul oferă controale de preferință pentru vizitator; remedierea rămâne în cod, design și conținut.",
+  },
+  {
+    question: "Este gratuit?",
+    answer: "Da. Scriptul widgetului ZebraByte poate fi folosit fără abonament pentru funcțiile publicate în această versiune.",
+  },
+  {
+    question: "Colectează date sau folosește cookie-uri?",
+    answer: "Widgetul este proiectat să ruleze în browser și să păstreze preferințele local. Verifică întotdeauna versiunea de script pe care o implementezi și politica aplicabilă înainte de publicare.",
+  },
+  {
+    question: "Cum îl instalez?",
+    answer: "Adaugă scriptul <code>&lt;script src='https://accesibilitate.zebrabyte.ro/dist/zbt.js' defer&gt;&lt;/script&gt;</code> înainte de <code>&lt;/body&gt;</code>. Poți genera o configurație personalizată din pagina Personalizează.",
+  },
+  {
+    question: "Pe ce platforme funcționează?",
+    answer: "Pe site-uri care permit încărcarea unui script JavaScript: WordPress, Shopify, site-uri statice și aplicații personalizate, în funcție de politicile CSP și integrarea site-ului.",
+  },
+  {
+    question: "Pot personaliza poziția, dimensiunea și culoarea?",
+    answer: "Da. Configuratorul ZebraByte generează atribute pentru poziție, offset, dimensiune, culoare, icon și setări Text-to-Speech.",
+  },
+  {
+    question: "Widgetul modifică permanent codul site-ului?",
+    answer: "Nu. Preferințele sunt aplicate client-side pentru utilizator. Remedierea permanentă a accesibilității trebuie făcută separat în codul aplicației.",
+  },
+  {
+    question: "Pot găsi probleme reale de accesibilitate în cod?",
+    answer: "Da. Modul dev se activează cu <code>?acc-dev=true</code> și permite folosirea auditului integrat pentru a identifica probleme care necesită investigație și remediere.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+---
+
+<Layout
+  title="FAQ - Widget Accesibilitate ZebraByte"
+  description="Întrebări frecvente despre instalarea, limitările, auditul și personalizarea widgetului de accesibilitate ZebraByte."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <main class="container max-w-3xl py-12 sm:py-20">
+    <header class="mb-10">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Accessibility FAQ</p>
+      <h1 class="text-h2 mb-4 font-medium">Întrebări frecvente</h1>
+      <p class="text-muted-foreground text-lg">Răspunsuri despre WCAG, overlay-uri, instalare, privacy, dev mode și configurarea widgetului.</p>
+    </header>
+
+    <div class="relative mb-8">
+      <input id="faq-search" type="search" placeholder="Caută: WCAG, contrast, overlay, voce, instalare..." class="w-full rounded-xl border bg-level-0 px-4 py-3 text-sm" />
+    </div>
+
+    <section id="faq-list" class="space-y-3">
+      {faqs.map((faq) => (
+        <details class="faq-item overflow-hidden rounded-xl border bg-level-0">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-medium">
+            <span>{faq.question}</span><span aria-hidden="true">⌄</span>
+          </summary>
+          <div class="text-muted-foreground border-t bg-active p-5 text-sm leading-relaxed" set:html={faq.answer} />
+        </details>
+      ))}
+    </section>
+
+    <p id="faq-empty" class="text-muted-foreground hidden py-10 text-center">Nu s-au găsit întrebări.</p>
+
+    <div class="mt-10 flex flex-wrap gap-3 border-t pt-8 text-sm">
+      <a href="/accesibilitate/audit" class="underline underline-offset-4">Audit</a>
+      <a href="/accesibilitate/personalizeaza" class="underline underline-offset-4">Personalizează</a>
+      <a href="/accessibility" class="underline underline-offset-4">Pagina principală</a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  function initFaqSearch() {
+    const input = document.querySelector<HTMLInputElement>("#faq-search");
+    const items = [...document.querySelectorAll<HTMLElement>("#faq-list .faq-item")];
+    const empty = document.querySelector<HTMLElement>("#faq-empty");
+    if (!input || input.dataset.bound === "true") return;
+    input.dataset.bound = "true";
+    input.addEventListener("input", () => {
+      const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      let visible = 0;
+      items.forEach((item) => {
+        const match = terms.every((term) => (item.textContent ?? "").toLowerCase().includes(term));
+        item.classList.toggle("hidden", !match);
+        if (match) visible += 1;
+        if (!match) item.removeAttribute("open");
+      });
+      empty?.classList.toggle("hidden", visible !== 0);
+    });
+  }
+  initFaqSearch();
+  document.addEventListener("astro:after-swap", initFaqSearch);
+</script>
