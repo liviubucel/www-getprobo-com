@@ -26,14 +26,27 @@ const menus = [
     ],
   },
   {
+    label: "ZebraByte services",
+    items: [
+      { label: "Server Security", href: "/securitate-servere" },
+      { label: "SSL / TLS", href: "/certificat-ssl" },
+      { label: "Website Migration", href: "/migrare-site" },
+      { label: "WordPress Maintenance", href: "/wordpress-maintenance" },
+      { label: "Managed IT / Migration", href: "/servicii-premium-it-migratie-securitate" },
+      { label: "Industries", href: "/industries" },
+      { label: "Partnerships", href: "/partnerships" },
+    ],
+  },
+  {
     label: "Conformitate",
     items: [
       { label: "GDPR & Privacy", href: "/gdpr" },
+      { label: "GDPR România", href: "/serviciigdprromania" },
+      { label: "Cookie Consent", href: "/cookie-banner-conformitate-gdpr" },
       { label: "NIS2 Readiness", href: "/nis2" },
       { label: "ISO/IEC 27001", href: "/iso-27001" },
       { label: "Compliance Portal", href: "/compliance-portal" },
       { label: "SOC 2 Hub", href: "/hub/soc2" },
-      { label: "Compliance Recommender", href: "/hub/compliance-recommender" },
     ],
   },
   {
@@ -42,23 +55,26 @@ const menus = [
       { label: "Platformă open-source", href: "/docs/deployment/self-hosting/docker-compose" },
       { label: "Download Probo Agent", href: "/download" },
       { label: "Free Tools", href: "/tools" },
+      { label: "Accessibility", href: "/accessibility" },
+      { label: "Accessibility Audit", href: "/accesibilitate/audit" },
+      { label: "Widget Configurator", href: "/accesibilitate/personalizeaza" },
       { label: "Docs", href: "/docs" },
       { label: "Hub", href: "/hub" },
       { label: "Blog", href: "/blog" },
       { label: "Stories", href: "/stories" },
       { label: "Changelog", href: "/changelog" },
-      { label: "Love from Customers ⭐", href: "/love-from-customer" },
     ],
   },
   {
     label: "Companie",
     items: [
       { label: "About", href: "/about" },
-      { label: "Industries", href: "/industries" },
-      { label: "Partnerships", href: "/partnerships" },
       { label: "Careers", href: "/careers" },
       { label: "Brand", href: "/brand" },
+      { label: "Love from Customers ⭐", href: "/love-from-customer" },
+      { label: "Video Reviews", href: "/recenzii-video" },
       { label: "Contact", href: "/contact" },
+      { label: "Book a call", href: "/programare" },
       { label: "Portal clienți", href: "https://portal.zebrabyte.ro" },
       { label: "LinkedIn", href: "https://www.linkedin.com/company/zebrabyteuk" },
     ],
@@ -107,7 +123,7 @@ type Props = {
         <Newsletter variant="footer" />
       </div>
 
-      <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 xl:grid-cols-6">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
         {
           menus.map((menu) => (
             <div class="space-y-3">
