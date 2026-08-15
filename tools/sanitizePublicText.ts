@@ -29,7 +29,37 @@ function sanitizePublicOutput(content: string): string {
     .replace(/\bZebraByte open-source\b/gi, "ZebraByte");
 }
 
-function findTextFiles(dir: string): string[] {
+function sanitizeHtmlOutput(content: string): string {
+  // Structured data is public metadata, so sanitize it before protecting the
+  // remaining script blocks from any text replacement.
+  let html = content.replace(
+    /<script([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi,
+    (_match, attrs: string, json: string) =>
+      `<script${attrs}>${sanitizePublicOutput(json)}</script>`,
+  );
+
+  // Preserve commands, code samples, scripts and styling byte-for-byte. The
+  // public brand rewrite applies only outside these technical blocks.
+  const protectedBlocks: string[] = [];
+  html = html.replace(
+    /<(code|pre|script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    (block) => {
+      const marker = `___ZBT_PROTECTED_BLOCK_${protectedBlocks.length}___`;
+      protectedBlocks.push(block);
+      return marker;
+    },
+  );
+
+  html = sanitizePublicOutput(html);
+
+  protectedBlocks.forEach((block, index) => {
+    html = html.replace(`___ZBT_PROTECTED_BLOCK_${index}___`, block);
+  });
+
+  return html;
+}
+
+function findPublicFiles(dir: string): string[] {
   const results: string[] = [];
   if (!existsSync(dir)) return results;
 
@@ -37,11 +67,11 @@ function findTextFiles(dir: string): string[] {
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {
-      results.push(...findTextFiles(fullPath));
+      results.push(...findPublicFiles(fullPath));
       continue;
     }
 
-    if (/\.(?:md|txt|xml)$/i.test(entry)) results.push(fullPath);
+    if (/\.(?:html|md|txt|xml)$/i.test(entry)) results.push(fullPath);
   }
 
   return results;
@@ -63,17 +93,19 @@ export function sanitizePublicText(): AstroIntegration {
     hooks: {
       "astro:build:done": ({ dir }) => {
         const distDir = fileURLToPath(dir);
-        const files = findTextFiles(distDir);
+        const files = findPublicFiles(distDir);
 
         for (const file of files) {
           const content = readFileSync(file, "utf-8");
-          const sanitized = sanitizePublicOutput(content);
+          const sanitized = file.endsWith(".html")
+            ? sanitizeHtmlOutput(content)
+            : sanitizePublicOutput(content);
           if (sanitized !== content) writeFileSync(file, sanitized);
           writeDeviceAgentAlias(distDir, file);
         }
 
         console.log(
-          `[sanitize-public-zebrabyte-text] Sanitized ${files.length} generated text files`,
+          `[sanitize-public-zebrabyte-text] Sanitized ${files.length} generated public files`,
         );
       },
     },
