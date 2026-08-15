@@ -1,0 +1,131 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
+---
+
+<Layout
+  title="Recenzii Clienți ZebraByte"
+  description="Recenzii ZebraByte și formular securizat pentru feedback, păstrate din website-ul anterior și integrate în experiența Probo."
+>
+  <main class="container py-12 sm:py-20">
+    <header class="mx-auto mb-12 max-w-190 text-center">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Customer reviews</p>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Ce spun clienții ZebraByte</h1>
+      <p class="text-muted-foreground text-lg">Păstrăm recenziile reale ZebraByte și formularul prin care clienții pot trimite feedback. Wall-ul și testimonialele originale Probo rămân separat, integral.</p>
+    </header>
+
+    <section class="mx-auto mb-14 max-w-3xl rounded-2xl border bg-active p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="font-medium">Diana Ruse</p>
+          <p class="text-muted-foreground mt-1 text-sm">Testimonial video · 5/5 · 16 Jul 2025</p>
+        </div>
+        <span class="text-sm" aria-label="5 din 5 stele">★★★★★</span>
+      </div>
+      <p class="text-muted-foreground mt-6 text-sm leading-relaxed">
+        Testimonialul video original este păstrat în repo-ul ZebraByte sursă ca <code>/images/reviews/diana-ruse-testimonial.mp4</code>. Nu îl înlocuim cu media generată sau cu alt client; fișierul binar trebuie transferat 1:1 înainte de publicarea clipului în acest repo.
+      </p>
+    </section>
+
+    <div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <section class="space-y-4">
+        <h2 class="text-h3 font-medium">Recenziile sunt deja pe site</h2>
+        <p class="text-muted-foreground leading-relaxed">Homepage-ul și pagina Love from Customers includ feedback ZebraByte din sursele păstrate în website-ul anterior, iar dedesubt păstrăm și sliderul complet de testimoniale Probo cu fotografiile și citatele originale.</p>
+        <div class="grid gap-3 pt-3">
+          <a href="/love-from-customer" class="rounded-xl border p-5 hover:bg-subtle"><strong>Love from Customers</strong><p class="text-muted-foreground mt-2 text-sm">ZebraByte reviews + customer wall și testimoniale Probo.</p></a>
+          <a href="/stories" class="rounded-xl border p-5 hover:bg-subtle"><strong>Stories</strong><p class="text-muted-foreground mt-2 text-sm">Studii de caz ZebraByte + biblioteca Probo păstrată.</p></a>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border p-6 sm:p-8">
+        <h2 class="mb-2 text-2xl font-medium">Lasă o recenzie</h2>
+        <p class="text-muted-foreground mb-7 text-sm">Formularul folosește același endpoint securizat ZebraByte cu Turnstile și Email Service.</p>
+
+        <form id="review-form" class="space-y-5">
+          <input type="hidden" name="service" value="Altceva" />
+          <input type="hidden" name="company" value="Customer review" />
+          <input type="hidden" name="phone" value="" />
+
+          <label class="block space-y-2 text-sm font-medium">
+            <span>Nume *</span>
+            <input name="name" required maxlength="100" autocomplete="name" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
+          </label>
+
+          <label class="block space-y-2 text-sm font-medium">
+            <span>Email *</span>
+            <input name="email" type="email" required maxlength="254" autocomplete="email" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
+          </label>
+
+          <fieldset>
+            <legend class="mb-2 text-sm font-medium">Rating *</legend>
+            <div class="flex gap-2">
+              {[1,2,3,4,5].map((rating) => (
+                <label class="cursor-pointer">
+                  <input class="peer sr-only" type="radio" name="rating" value={rating} required />
+                  <span class="peer-checked:bg-active grid size-10 place-items-center rounded-lg border">{rating}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label class="block space-y-2 text-sm font-medium">
+            <span>Recenzia ta *</span>
+            <textarea id="review-text" required maxlength="2000" rows="5" class="bg-level-0 w-full rounded-lg border px-3 py-2.5"></textarea>
+          </label>
+
+          <input type="hidden" name="message" id="review-message" />
+
+          <label class="flex items-start gap-3 text-sm">
+            <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+            <span class="text-muted-foreground">Sunt de acord ca feedback-ul și datele furnizate să fie procesate pentru verificarea și publicarea recenziei, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.</span>
+          </label>
+
+          <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto"></div>
+          <div id="review-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+          <button id="review-submit" type="submit" class="bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium disabled:opacity-50">Trimite recenzia</button>
+        </form>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  function setupReviewForm() {
+    const form = document.querySelector<HTMLFormElement>("#review-form");
+    const status = document.querySelector<HTMLElement>("#review-status");
+    const submit = document.querySelector<HTMLButtonElement>("#review-submit");
+    const text = document.querySelector<HTMLTextAreaElement>("#review-text");
+    const message = document.querySelector<HTMLInputElement>("#review-message");
+    if (!form || !status || !submit || !text || !message || form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
+      if (!rating) return;
+      message.value = `[CUSTOMER REVIEW ${rating}/5]\n\n${text.value}`;
+      submit.disabled = true;
+      status.classList.add("hidden");
+      try {
+        const response = await fetch("/api/contact", { method: "POST", body: new FormData(form) });
+        const payload = (await response.json()) as { success?: boolean; error?: string };
+        status.classList.remove("hidden");
+        if (!response.ok || !payload.success) {
+          status.textContent = payload.error || "Recenzia nu a putut fi trimisă.";
+          return;
+        }
+        status.textContent = "Mulțumim! Recenzia a fost trimisă pentru verificare.";
+        form.reset();
+        (window as Window & { turnstile?: { reset: () => void } }).turnstile?.reset();
+      } catch {
+        status.classList.remove("hidden");
+        status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+  setupReviewForm();
+  document.addEventListener("astro:page-load", setupReviewForm);
+</script>
