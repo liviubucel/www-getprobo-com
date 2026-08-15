@@ -149,6 +149,8 @@ import Layout from "../../layouts/Layout.astro";
 </Layout>
 
 <script>
+  import { browserT, getBrowserLocale } from "../../lib/browser-i18n";
+
   const defaults = {
     position: "bottom-right",
     accentColor: "#1976d2",
@@ -225,7 +227,7 @@ import Layout from "../../layouts/Layout.astro";
 
     const fillVoices = () => {
       const previous = voiceSelect.value;
-      voiceSelect.innerHTML = '<option value="">Vocea implicită a browserului</option>';
+      voiceSelect.innerHTML = `<option value="">${browserT("Vocea implicită a browserului", "Browser default voice")}</option>`;
       window.speechSynthesis?.getVoices().forEach((voice) => {
         const option = document.createElement("option");
         option.value = voice.name;
@@ -243,14 +245,21 @@ import Layout from "../../layouts/Layout.astro";
     document.querySelector<HTMLButtonElement>("#test-voice")?.addEventListener("click", () => {
       if (!("speechSynthesis" in window)) return;
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance("Acesta este un exemplu pentru widgetul de accesibilitate ZebraByte.");
+      const locale = getBrowserLocale();
+      const utterance = new SpeechSynthesisUtterance(
+        browserT(
+          "Acesta este un exemplu pentru widgetul de accesibilitate ZebraByte.",
+          "This is an example for the ZebraByte accessibility widget.",
+        ),
+      );
+      utterance.lang = locale === "en" ? "en-GB" : "ro-RO";
       utterance.rate = Number(rate.value);
       utterance.pitch = Number(pitch.value);
       if (voiceSelect.value) {
         const voice = window.speechSynthesis.getVoices().find((item) => item.name === voiceSelect.value);
         if (voice) utterance.voice = voice;
       }
-      document.querySelector("#voice-status")!.textContent = "Redare exemplu...";
+      document.querySelector("#voice-status")!.textContent = browserT("Redare exemplu...", "Playing example...");
       utterance.onend = () => (document.querySelector("#voice-status")!.textContent = "");
       window.speechSynthesis.speak(utterance);
     });
@@ -258,7 +267,7 @@ import Layout from "../../layouts/Layout.astro";
     document.querySelector<HTMLButtonElement>("#copy-code")?.addEventListener("click", async () => {
       await navigator.clipboard.writeText(generated.textContent ?? "");
       const status = document.querySelector("#copy-status")!;
-      status.textContent = "Cod copiat în clipboard.";
+      status.textContent = browserT("Cod copiat în clipboard.", "Code copied to clipboard.");
       setTimeout(() => (status.textContent = ""), 1800);
     });
 

@@ -9,7 +9,7 @@ const allPosts = (await getCollection("blog")).sort(
 );
 const lastPage = Math.ceil(allPosts.length / pageSize);
 const posts = allPosts.slice(0, pageSize);
-const dateFormatter = Intl.DateTimeFormat("en-US", {
+const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   year: "numeric",
   month: "long",
   day: "numeric",
@@ -17,15 +17,15 @@ const dateFormatter = Intl.DateTimeFormat("en-US", {
 ---
 
 <Layout
-  title="Blog: Compliance, Security & SOC 2 Insights"
-  description="The latest news, insights, and practical guides about compliance, security certifications, SOC 2, ISO 27001, and GDPR from the Probo team."
+  title="Blog ZebraByte: securitate, conformitate și infrastructură"
+  description="Analize, ghiduri și noutăți ZebraByte despre securitate cibernetică, conformitate, GDPR, NIS2, infrastructură și hosting administrat."
 >
   <main class="container my-10 sm:my-20">
     <h1 class="text-h2 animate-slide-in mb-3 font-medium">Blog</h1>
     <p
       class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-base sm:mb-16"
     >
-      The latest news from Probo
+      Analize, ghiduri și noutăți de la ZebraByte
     </p>
     <div
       class="animate-slide-in animation-delay-300 flex flex-col items-start gap-10 sm:grid sm:grid-cols-[1fr_320px] sm:gap-30"
@@ -35,7 +35,7 @@ const dateFormatter = Intl.DateTimeFormat("en-US", {
           posts.map((post: any) => (
             <article class="space-y-3 border-b py-10 first:pt-0 last:border-b-0">
               <div class="text-muted-foreground">
-                {dateFormatter.format(new Date(post.data.date))}, by{" "}
+                {dateFormatter.format(new Date(post.data.date))}, de{" "}
                 {post.data.author.name}
               </div>
               <h2>

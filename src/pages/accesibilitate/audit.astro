@@ -69,6 +69,8 @@ import Layout from "../../layouts/Layout.astro";
 </Layout>
 
 <script>
+  import { browserT } from "../../lib/browser-i18n";
+
   function initAccessibilityAudit() {
     document.querySelectorAll<HTMLButtonElement>("[data-copy-snippet]").forEach((button) => {
       if (button.dataset.bound === "true") return;
@@ -78,7 +80,7 @@ import Layout from "../../layouts/Layout.astro";
         if (!code) return;
         await navigator.clipboard.writeText(code);
         const original = button.textContent;
-        button.textContent = "Copiat";
+        button.textContent = browserT("Copiat", "Copied");
         setTimeout(() => (button.textContent = original), 1400);
       });
     });
@@ -88,7 +90,9 @@ import Layout from "../../layouts/Layout.astro";
     toggle.dataset.bound = "true";
     const current = new URL(window.location.href);
     const enabled = current.searchParams.get("acc-dev") === "true";
-    toggle.textContent = enabled ? "Dezactivează modul dev" : "Activează modul dev";
+    toggle.textContent = enabled
+      ? browserT("Dezactivează modul dev", "Disable dev mode")
+      : browserT("Activează modul dev", "Enable dev mode");
     toggle.setAttribute("aria-pressed", String(enabled));
     toggle.addEventListener("click", () => {
       const next = new URL(window.location.href);

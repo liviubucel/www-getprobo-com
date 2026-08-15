@@ -41,6 +41,8 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
 </a>
 
 <script>
+  import { installBrowserI18nObserver } from "../lib/browser-i18n";
+
   const bindLanguageSwitchers = () => {
     const pathname = window.location.pathname || "/";
     const english = pathname === "/en" || pathname.startsWith("/en/");
@@ -62,6 +64,8 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
       );
       link.title = english ? "Română" : "English";
     });
+
+    installBrowserI18nObserver();
   };
 
   document.addEventListener("astro:page-load", bindLanguageSwitchers);

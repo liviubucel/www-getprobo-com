@@ -90,6 +90,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
 <script>
   import { customElementDefine } from "../../lib/dom";
+  import { browserT, getBrowserLocale } from "../../lib/browser-i18n";
 
   class NewsletterForm extends HTMLElement {
     connectedCallback() {
@@ -102,13 +103,14 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         button.disabled = true;
-        button.textContent = "Se trimite...";
+        button.textContent = browserT("Se trimite...", "Sending...");
         status.classList.add("hidden");
         status.textContent = "";
 
         try {
           const response = await fetch("/api/newsletter/subscribe", {
             method: "POST",
+            headers: { "Accept-Language": getBrowserLocale() },
             body: new FormData(form),
           });
           const payload = (await response.json()) as {
@@ -118,7 +120,10 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           };
 
           if (!response.ok || !payload.success) {
-            status.textContent = payload.error || "Abonarea nu a putut fi procesată.";
+            status.textContent = browserT(
+              "Abonarea nu a putut fi procesată.",
+              "Your subscription could not be processed.",
+            );
             status.classList.remove("hidden");
             return;
           }
@@ -126,14 +131,25 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           form.hidden = true;
           success.classList.remove("hidden");
           if (payload.alreadySubscribed) {
-            success.textContent = "Adresa este deja abonată la newsletter-ul ZebraByte.";
+            success.textContent = browserT(
+              "Adresa este deja abonată la newsletter-ul ZebraByte.",
+              "This email address is already subscribed to the ZebraByte newsletter.",
+            );
+          } else {
+            success.textContent = browserT(
+              "Verifică inbox-ul pentru linkul de confirmare. Abonarea devine activă numai după confirmare.",
+              "Check your inbox for the confirmation link. Your subscription becomes active only after confirmation.",
+            );
           }
         } catch {
-          status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+          status.textContent = browserT(
+            "A apărut o eroare de rețea. Încearcă din nou.",
+            "A network error occurred. Please try again.",
+          );
           status.classList.remove("hidden");
         } finally {
           button.disabled = false;
-          button.textContent = "Abonează-mă";
+          button.textContent = browserT("Abonează-mă", "Subscribe");
         }
       });
     }

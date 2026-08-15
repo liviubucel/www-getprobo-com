@@ -91,6 +91,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 </Layout>
 
 <script>
+  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
+
   function setupReviewForm() {
     const form = document.querySelector<HTMLFormElement>("#review-form");
     const status = document.querySelector<HTMLElement>("#review-status");
@@ -108,19 +110,32 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       submit.disabled = true;
       status.classList.add("hidden");
       try {
-        const response = await fetch("/api/contact", { method: "POST", body: new FormData(form) });
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Accept-Language": getBrowserLocale() },
+          body: new FormData(form),
+        });
         const payload = (await response.json()) as { success?: boolean; error?: string };
         status.classList.remove("hidden");
         if (!response.ok || !payload.success) {
-          status.textContent = payload.error || "Recenzia nu a putut fi trimisă.";
+          status.textContent = browserT(
+            "Recenzia nu a putut fi trimisă.",
+            "The review could not be sent.",
+          );
           return;
         }
-        status.textContent = "Mulțumim! Recenzia a fost trimisă pentru verificare.";
+        status.textContent = browserT(
+          "Mulțumim! Recenzia a fost trimisă pentru verificare.",
+          "Thank you! Your review has been submitted for verification.",
+        );
         form.reset();
         (window as Window & { turnstile?: { reset: () => void } }).turnstile?.reset();
       } catch {
         status.classList.remove("hidden");
-        status.textContent = "A apărut o eroare de rețea. Încearcă din nou.";
+        status.textContent = browserT(
+          "A apărut o eroare de rețea. Încearcă din nou.",
+          "A network error occurred. Please try again.",
+        );
       } finally {
         submit.disabled = false;
       }

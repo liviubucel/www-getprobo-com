@@ -19,34 +19,35 @@ const mediaUrls =
   entry.data.images ?? (entry.data.image ? [entry.data.image] : []);
 const isLogoLayout = entry.data.imagesLayout === "logos";
 const isVideoMedia = (url: string) => /\.(mp4|webm)$/i.test(url);
-const dateFormatter = Intl.DateTimeFormat("en-US", {
+const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   year: "numeric",
   month: "long",
   day: "numeric",
 });
 
 const changelogImage = mediaUrls.find((url) => !isVideoMedia(url));
+const articleImage = changelogImage
+  ? new URL(changelogImage, "https://www.zebrabyte.ro").toString()
+  : "https://www.zebrabyte.ro/og.png";
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: entry.data.title,
   description: entry.data.description,
-  image: changelogImage
-    ? `https://www.probo.com${changelogImage}`
-    : "https://www.probo.com/og.png",
+  image: articleImage,
   datePublished: entry.data.date.toISOString(),
   dateModified: entry.data.date.toISOString(),
   author: {
     "@type": "Organization",
-    name: "Probo",
+    name: "ZebraByte",
   },
   publisher: {
     "@type": "Organization",
-    name: "Probo",
+    name: "ZebraByte",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.probo.com/probo-logo.svg",
+      url: "https://www.zebrabyte.ro/og.png",
     },
   },
   mainEntityOfPage: {
@@ -80,7 +81,7 @@ const articleSchema = {
           d="M18.566 10.234a.8.8 0 0 1 0 1.132L13.93 16l4.635 4.634a.8.8 0 0 1-1.132 1.132l-5.2-5.2a.8.8 0 0 1 0-1.132l5.2-5.2a.8.8 0 0 1 1.132 0Z"
           clip-rule="evenodd"></path></svg
       >
-      Back to Changelog
+      Înapoi la Changelog
     </a>
 
     <div class="text-muted-foreground animate-fade-in animation-delay-100 mb-3">
