@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
   import Button from "./ui/Button.svelte";
+  import { browserT } from "../lib/browser-i18n";
   import {
     describeAsset,
     detectPlatform,
@@ -18,7 +19,12 @@
   let release = $state<DeviceAgentRelease | null>(null);
   let platform = $state<DetectedPlatform>({ os: "unknown", arch: "unknown" });
   let primaryAsset = $state<ReleaseAsset | null>(null);
-  let errorMessage = $state("Unable to load the latest release.");
+  let errorMessage = $state(
+    browserT(
+      "Nu am putut încărca cea mai recentă versiune.",
+      "Unable to load the latest release.",
+    ),
+  );
   let platformsOpen = $state(false);
 
   const binaryAssets = $derived(
@@ -37,7 +43,10 @@
         errorMessage =
           error instanceof Error
             ? error.message
-            : "Unable to load the latest release.";
+            : browserT(
+                "Nu am putut încărca cea mai recentă versiune.",
+                "Unable to load the latest release.",
+              );
         status = "error";
       });
   });
@@ -70,19 +79,23 @@
 <div class="mx-auto flex max-w-xl flex-col items-center text-center">
   {#if status === "loading"}
     <Button size="lg" disabled aria-busy="true">
-      Detecting your platform…
+      {browserT("Detectăm platforma…", "Detecting your platform…")}
     </Button>
     <p class="text-muted-foreground mt-4 text-sm">
-      Looking up the latest ZebraByte Device Agent release…
+      {browserT(
+        "Căutăm cea mai recentă versiune ZebraByte Device Agent…",
+        "Looking up the latest ZebraByte Device Agent release…",
+      )}
     </p>
   {:else if status === "error"}
     <p class="text-muted-foreground mb-4 text-sm">{errorMessage}</p>
     <Button size="lg" href="/contact" rel="nofollow">
-      Contact support
+      {browserT("Contactează suportul", "Contact support")}
     </Button>
   {:else if release}
     <p class="text-muted-foreground mb-4 text-sm">
-      Latest release: <span class="text-foreground font-medium">v{release.version}</span>
+      {browserT("Cea mai recentă versiune:", "Latest release:")}
+      <span class="text-foreground font-medium">v{release.version}</span>
     </p>
 
     {#if primaryAsset}
@@ -93,11 +106,14 @@
         data-ph-event="download_device_agent_click"
       >
         {@render downloadIcon("size-5 shrink-0")}
-        Download for {platformLabel(platform)}
+        {browserT("Descarcă pentru", "Download for")} {platformLabel(platform)}
       </Button>
     {:else}
       <p class="text-muted-foreground mb-4 text-sm">
-        We couldn’t match a download automatically for your platform. Choose one below.
+        {browserT(
+          "Nu am putut identifica automat descărcarea potrivită pentru platforma ta. Alege una mai jos.",
+          "We couldn’t match a download automatically for your platform. Choose one below.",
+        )}
       </p>
     {/if}
 
@@ -109,7 +125,7 @@
         aria-controls="other-platforms-list"
         onclick={() => (platformsOpen = !platformsOpen)}
       >
-        Other platforms
+        {browserT("Alte platforme", "Other platforms")}
         {@render caretIcon(
           `size-3.5 shrink-0 transition-transform duration-200 ${platformsOpen ? "rotate-180" : ""}`,
         )}

@@ -1,5 +1,8 @@
 <script lang="ts">
   import clsx from "clsx";
+  import { onDestroy } from "svelte";
+  import { toast } from "svelte-sonner";
+  import { browserT } from "../../lib/browser-i18n";
 
   const {
     url,
@@ -8,6 +11,14 @@
   }: { url: string; title: string; class?: string } = $props();
 
   let copied = $state(false);
+  let copiedTimer: ReturnType<typeof setTimeout> | undefined;
+
+  onDestroy(() => {
+    if (copiedTimer) {
+      clearTimeout(copiedTimer);
+      copiedTimer = undefined;
+    }
+  });
 
   const openWindow = (shareUrl: string) => {
     if (typeof window === "undefined") return;
@@ -36,24 +47,33 @@
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(url);
+      copied = true;
+      if (copiedTimer) clearTimeout(copiedTimer);
+      copiedTimer = setTimeout(() => {
+        copied = false;
+        copiedTimer = undefined;
+      }, 1600);
     } catch (e) {
       console.error("Failed to copy link:", e);
+      toast.error(browserT("Copierea a eșuat", "Copy failed"));
     }
   };
 </script>
 
 <aside class={clsx("text-center flex flex-col gap-4 items-start", className)}>
-  <div class="text-xs font-medium">Share article</div>
+  <div class="text-xs font-medium">
+    {browserT("Distribuie articolul", "Share article")}
+  </div>
   <div
     class="flex items-center text-muted-foreground justify-center gap-2"
-    aria-label="Share this page"
+    aria-label={browserT("Distribuie această pagină", "Share this page")}
     role="group"
   >
     <button
       class="hover:text-foreground transition-colors"
       type="button"
-      title="Share on X"
-      aria-label="Share on X"
+      title={browserT("Distribuie pe X", "Share on X")}
+      aria-label={browserT("Distribuie pe X", "Share on X")}
       onclick={shareX}
     >
       <svg
@@ -71,8 +91,8 @@
     <button
       class="hover:text-foreground transition-colors"
       type="button"
-      title="Share by email"
-      aria-label="Share by email"
+      title={browserT("Distribuie prin email", "Share by email")}
+      aria-label={browserT("Distribuie prin email", "Share by email")}
       onclick={shareEmail}
     >
       <svg
@@ -89,8 +109,12 @@
     <button
       class="hover:text-foreground transition-colors"
       type="button"
-      title={copied ? "Copied!" : "Copy link"}
-      aria-label={copied ? "Copied!" : "Copy link"}
+      title={copied
+        ? browserT("Copiat!", "Copied!")
+        : browserT("Copiază linkul", "Copy link")}
+      aria-label={copied
+        ? browserT("Copiat!", "Copied!")
+        : browserT("Copiază linkul", "Copy link")}
       onclick={copyLink}
     >
       <svg

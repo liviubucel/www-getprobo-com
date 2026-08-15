@@ -8,45 +8,45 @@ import { Toaster } from "svelte-sonner";
 
 const menus = [
   {
-    label: "Resources",
+    label: "Resurse",
     items: [
-      { label: "Home", href: "/" },
+      { label: "Acasă", href: "/" },
       { label: "Blog", href: "/blog" },
       { label: "Hub", href: "/hub" },
-      { label: "Stories", href: "/stories" },
-      { label: "Love from Customers ⭐", href: "/love-from-customer" },
-      { label: "Changelog", href: "/changelog" },
-      { label: "Download", href: "/download" },
-      { label: "Docs", href: "/docs" },
-      { label: "Free Tools", href: "/tools" },
+      { label: "Studii de caz", href: "/stories" },
+      { label: "Păreri de la clienți ⭐", href: "/love-from-customer" },
+      { label: "Jurnal de modificări", href: "/changelog" },
+      { label: "Descărcări", href: "/download" },
+      { label: "Documentație", href: "/docs" },
+      { label: "Instrumente gratuite", href: "/tools" },
     ],
   },
   {
-    label: "Company",
+    label: "Companie",
     items: [
-      { label: "About", href: "/about" },
-      { label: "Careers", href: "/careers" },
+      { label: "Despre", href: "/about" },
+      { label: "Cariere", href: "/careers" },
       { label: "Brand", href: "/brand" },
-      { label: "Industries", href: "/industries" },
-      { label: "Partnerships", href: "/partnerships" },
+      { label: "Industrii", href: "/industries" },
+      { label: "Parteneriate", href: "/partnerships" },
       { label: "Contact", href: "/contact" },
-      { label: "Client Portal", href: "https://portal.zebrabyte.ro" },
+      { label: "Portal clienți", href: "https://portal.zebrabyte.ro" },
     ],
   },
   {
-    label: "Compliance & Legal",
+    label: "Conformitate și juridic",
     items: [
-      { label: "Managed Compliance", href: "/managed-compliance" },
-      { label: "Compliance Portal", href: "/compliance-portal" },
+      { label: "Conformitate gestionată", href: "/managed-compliance" },
+      { label: "Platforma de conformitate", href: "/compliance-portal" },
       { label: "SOC 2", href: "/soc2" },
       { label: "ISO/IEC 27001", href: "/iso-27001" },
-      { label: "GDPR & Privacy", href: "/gdpr" },
+      { label: "GDPR și confidențialitate", href: "/gdpr" },
       { label: "NIS2", href: "/nis2" },
-      { label: "Accessibility", href: "/accessibility" },
-      { label: "Trust Center", href: "https://trust.zebrabyte.ro" },
-      { label: "Cookie Policy", href: "/cookie-policy" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of service", href: "/terms" },
+      { label: "Accesibilitate", href: "/accessibility" },
+      { label: "Centru de încredere", href: "https://trust.zebrabyte.ro" },
+      { label: "Politica privind cookie-urile", href: "/cookie-policy" },
+      { label: "Politica de confidențialitate", href: "/privacy" },
+      { label: "Termeni și condiții", href: "/terms" },
     ],
   },
 ];
@@ -87,8 +87,8 @@ type Props = {
 
   <div class="container flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
     <p class="text-tertiary-foreground text-xxs flex flex-wrap items-center gap-3">
-      Copyright © 2023-2026 ZEBRABYTE LIMITED. All rights reserved.
-      <span>Company No. 15194067 · ICO ZB748706</span>
+      Copyright © 2023-2026 ZEBRABYTE LIMITED. Toate drepturile rezervate.
+      <span>Nr. companie 15194067 · ICO ZB748706</span>
       <ZebraByteStatus />
     </p>
     <AskAi />

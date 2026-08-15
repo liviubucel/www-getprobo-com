@@ -4,6 +4,7 @@
   import Splide from "@splidejs/splide";
   import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
   import { Intersection } from "@splidejs/splide-extension-intersection";
+  import { browserT } from "../lib/browser-i18n";
 
   const props: { children: Snippet; class?: string } = $props();
   let slider: HTMLDivElement | null = null;
@@ -19,6 +20,20 @@
       autoWidth: true,
       pagination: false,
       mediaQuery: "min",
+      i18n: {
+        prev: browserT("Slide-ul anterior", "Previous slide"),
+        next: browserT("Slide-ul următor", "Next slide"),
+        first: browserT("Mergi la primul slide", "Go to first slide"),
+        last: browserT("Mergi la ultimul slide", "Go to last slide"),
+        slideX: browserT("Mergi la slide-ul %s", "Go to slide %s"),
+        pageX: browserT("Mergi la pagina %s", "Go to page %s"),
+        play: browserT("Pornește redarea automată", "Start autoplay"),
+        pause: browserT("Oprește redarea automată", "Pause autoplay"),
+        carousel: browserT("carusel", "carousel"),
+        select: browserT("Selectează un slide pentru afișare", "Select a slide to show"),
+        slide: "slide",
+        slideLabel: browserT("%s din %s", "%s of %s"),
+      },
       autoScroll: {
         autoStart: !prefersReducedMotion,
         pauseOnFocus: true,

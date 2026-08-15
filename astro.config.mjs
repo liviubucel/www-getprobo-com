@@ -85,6 +85,12 @@ export default defineConfig({
         alt: "ZebraByte",
       },
       defaultLocale: "root",
+      locales: {
+        root: {
+          label: "Română",
+          lang: "ro",
+        },
+      },
       customCss: ["./src/styles/starlight.css"],
       lastUpdated: true,
       pagination: false,
