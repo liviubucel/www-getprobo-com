@@ -51,6 +51,15 @@ const process = [
   { step: "04", title: "Retest", text: "Reverificăm fluxurile importante după implementare și documentăm ce a fost remediat sau ce risc rămâne." },
   { step: "05", title: "Maintain", text: "Accessibility intră în procesul de schimbare astfel încât noile pagini și componente să nu reintroducă aceleași bariere." },
 ];
+
+const tools = [
+  { title: "Instalare widget", href: "/accesibilitate/obtine-widget", text: "Snippet public, self-host și pași de verificare." },
+  { title: "Personalizează", href: "/accesibilitate/personalizeaza", text: "Poziție, offset, dimensiune, culoare, icon și TTS." },
+  { title: "Audit / dev mode", href: "/accesibilitate/audit", text: "Activează ?acc-dev=true și investighează problemele." },
+  { title: "FAQ", href: "/accesibilitate/faq", text: "WCAG, overlay, privacy, instalare și limitări." },
+  { title: "Disclaimer", href: "/accesibilitate/disclaimer", text: "Rolul și limitele juridice/tehnice ale widgetului." },
+  { title: "Comparație legacy", href: "/accesibilitate/vs-sienna", text: "Material istoric păstrat, marcat noindex." },
+];
 ---
 
 <Layout
@@ -67,7 +76,7 @@ const process = [
         </p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
           <Button size="lg" href="/contact">Solicită o evaluare</Button>
-          <Button size="lg" variant="secondary" href="https://accesibilitate.zebrabyte.ro">Deschide instrumentele</Button>
+          <Button size="lg" variant="secondary" href="/accesibilitate/obtine-widget">Instalează widgetul</Button>
         </div>
       </div>
     </animated-hero>
@@ -94,7 +103,10 @@ const process = [
           <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">ZebraByte widget</p>
           <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Păstrăm și widgetul, dar îl poziționăm corect.</h2>
           <p class="text-muted-foreground mb-6 text-lg leading-relaxed">Widgetul oferă preferințe utile utilizatorilor și poate fi instalat ca un script separat. Nu îl prezentăm ca pe o soluție care „face site-ul compliant” fără remediation.</p>
-          <a href="https://accesibilitate.zebrabyte.ro" target="_blank" rel="noopener noreferrer" class="text-sm font-medium underline underline-offset-4">Vezi platforma de accesibilitate ↗</a>
+          <div class="flex flex-wrap gap-4 text-sm font-medium">
+            <a href="/accesibilitate/personalizeaza" class="underline underline-offset-4">Deschide configuratorul</a>
+            <a href="/accesibilitate/audit" class="underline underline-offset-4">Rulează auditul</a>
+          </div>
         </div>
 
         <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
@@ -114,21 +126,36 @@ const process = [
     </section>
 
     <section class="container py-16 sm:py-24">
-      <div class="mb-12 max-w-180">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Lifecycle</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Auditul este începutul, nu finalul.</h2>
-        <p class="text-muted-foreground text-lg">Accessibility se degradează dacă fiecare release adaugă componente noi fără criterii clare. De aceea procesul include retest și maintenance.</p>
+      <div class="mb-10 max-w-180">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Instrumente ZebraByte restaurate</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Zona de accessibility din site-ul vechi este din nou disponibilă.</h2>
+        <p class="text-muted-foreground text-lg">Nu am redus-o la un singur landing page: funcțiile și paginile utile au rute proprii în noul website.</p>
       </div>
-      <div class="space-y-3">
-        {process.map((item) => (
-          <div class="grid grid-cols-[52px_1fr] gap-4 rounded-xl border p-5 sm:p-6">
-            <span class="text-muted-foreground text-sm font-medium">{item.step}</span>
-            <div>
-              <h3 class="mb-2 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-            </div>
-          </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {tools.map((tool) => (
+          <a href={tool.href} class="group rounded-xl border p-6 transition-colors hover:bg-subtle">
+            <h3 class="mb-2 font-medium group-hover:underline group-hover:underline-offset-4">{tool.title}</h3>
+            <p class="text-muted-foreground text-sm leading-relaxed">{tool.text}</p>
+          </a>
         ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="mb-12 max-w-180">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Lifecycle</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Auditul este începutul, nu finalul.</h2>
+          <p class="text-muted-foreground text-lg">Accessibility se degradează dacă fiecare release adaugă componente noi fără criterii clare. De aceea procesul include retest și maintenance.</p>
+        </div>
+        <div class="space-y-3">
+          {process.map((item) => (
+            <div class="bg-level-0 grid grid-cols-[52px_1fr] gap-4 rounded-xl border p-5 sm:p-6">
+              <span class="text-muted-foreground text-sm font-medium">{item.step}</span>
+              <div><h3 class="mb-2 font-medium">{item.title}</h3><p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p></div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
 
