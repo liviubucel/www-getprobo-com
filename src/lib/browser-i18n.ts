@@ -21,6 +21,21 @@ const runtimePairs = [
   ["Recenzia nu a putut fi trimisă.", "The review could not be sent."],
   ["Mulțumim! Recenzia a fost trimisă pentru verificare.", "Thank you! Your review has been submitted for verification."],
   ["A apărut o eroare de rețea. Încearcă din nou.", "A network error occurred. Please try again."],
+  ["Căutare", "Search"],
+  ["Șterge", "Clear"],
+  ["Încarcă mai multe rezultate", "Load more results"],
+  ["Caută pe acest site", "Search this site"],
+  ["Filtre", "Filters"],
+  ["Niciun rezultat", "No results"],
+  ["Rezultatele căutării", "Search results"],
+  ["navigare", "navigate"],
+  ["selectare", "select"],
+  ["ștergere", "clear"],
+  ["închidere", "close"],
+  ["căutare", "search"],
+  ["Căutarea a eșuat", "Search failed"],
+  ["Rezultatele vor apărea pe măsură ce tastezi", "Results will appear as you type"],
+  ["Se încarcă", "Loading"],
   ["Copy for LLM", "Copy for LLM"],
   ["Copied", "Copied"],
   ["Copy failed", "Copy failed"],
@@ -55,6 +70,8 @@ for (const [english, romanian] of explicitRomanian) {
 }
 
 const ignoredSelector = "script,style,code,pre,textarea,svg";
+const pagefindSummaryCache = new Map<string, Promise<{ title?: string; excerpt?: string } | null>>();
+const pagefindInFlight = new WeakSet<Element>();
 let observerInstalled = false;
 let observer: MutationObserver | null = null;
 
@@ -68,6 +85,41 @@ export function browserT(romanian: string, english: string): string {
   return getBrowserLocale() === "en" ? english : romanian;
 }
 
+function translatePagefindDynamic(core: string, locale: BrowserLocale): string | null {
+  if (locale === "ro") {
+    let match = core.match(/^No results for (.+)\. Showing results for (.+) instead$/i);
+    if (match) return `Niciun rezultat pentru ${match[1]}. Se afișează în schimb rezultatele pentru ${match[2]}`;
+    match = core.match(/^No results for (.+)\. Try one of the following searches:$/i);
+    if (match) return `Niciun rezultat pentru ${match[1]}. Încearcă una dintre următoarele căutări:`;
+    match = core.match(/^No results for (.+)$/i);
+    if (match) return `Niciun rezultat pentru ${match[1]}`;
+    match = core.match(/^(\d+) results? for (.+)$/i);
+    if (match) return `${match[1]} ${Number(match[1]) === 1 ? "rezultat" : "rezultate"} pentru ${match[2]}`;
+    match = core.match(/^(\d+) results?$/i);
+    if (match) return `${match[1]} ${Number(match[1]) === 1 ? "rezultat" : "rezultate"}`;
+    match = core.match(/^Searching for (.+)\.\.\.$/i);
+    if (match) return `Se caută ${match[1]}...`;
+    match = core.match(/^(\d+) selected$/i);
+    if (match) return `${match[1]} ${Number(match[1]) === 1 ? "selectat" : "selectate"}`;
+  } else {
+    let match = core.match(/^Niciun rezultat pentru (.+)\. Se afișează în schimb rezultatele pentru (.+)$/i);
+    if (match) return `No results for ${match[1]}. Showing results for ${match[2]} instead`;
+    match = core.match(/^Niciun rezultat pentru (.+)\. Încearcă una dintre următoarele căutări:$/i);
+    if (match) return `No results for ${match[1]}. Try one of the following searches:`;
+    match = core.match(/^Niciun rezultat pentru (.+)$/i);
+    if (match) return `No results for ${match[1]}`;
+    match = core.match(/^(\d+) (?:rezultat|rezultate) pentru (.+)$/i);
+    if (match) return `${match[1]} ${Number(match[1]) === 1 ? "result" : "results"} for ${match[2]}`;
+    match = core.match(/^(\d+) (?:rezultat|rezultate)$/i);
+    if (match) return `${match[1]} ${Number(match[1]) === 1 ? "result" : "results"}`;
+    match = core.match(/^Se caută(?: după:)? (.+)\.\.\.$/i);
+    if (match) return `Searching for ${match[1]}...`;
+    match = core.match(/^(\d+) (?:selectat|selectate)$/i);
+    if (match) return `${match[1]} selected`;
+  }
+  return null;
+}
+
 function translateRuntimeValue(value: string, locale = getBrowserLocale()): string {
   const leading = value.match(/^\s*/)?.[0] ?? "";
   const trailing = value.match(/\s*$/)?.[0] ?? "";
@@ -77,6 +129,9 @@ function translateRuntimeValue(value: string, locale = getBrowserLocale()): stri
   const dictionary = locale === "en" ? roToEn : enToRo;
   const translated = dictionary.get(core.toLocaleLowerCase(locale === "en" ? "ro-RO" : "en-GB"));
   if (translated && translated !== core) return `${leading}${translated}${trailing}`;
+
+  const pagefind = translatePagefindDynamic(core, locale);
+  if (pagefind) return `${leading}${pagefind}${trailing}`;
 
   const glossaryEnglish = core.match(/^(\d+) glossary (term|terms) found\.$/i);
   if (locale === "ro" && glossaryEnglish) {
@@ -116,6 +171,99 @@ function localizeTextNode(node: Node) {
   if (translated !== node.nodeValue) node.nodeValue = translated;
 }
 
+function localizedResultUrl(raw: string, locale: BrowserLocale): string {
+  const url = new URL(raw, window.location.origin);
+  if (url.origin !== window.location.origin) return url.toString();
+
+  if (locale === "en") {
+    if (url.pathname !== "/en" && !url.pathname.startsWith("/en/")) {
+      url.pathname = url.pathname === "/" ? "/en" : `/en${url.pathname}`;
+    }
+  } else if (url.pathname === "/en" || url.pathname.startsWith("/en/")) {
+    url.pathname = url.pathname === "/en" ? "/" : url.pathname.slice(3) || "/";
+  }
+  return url.toString();
+}
+
+function pageSummary(url: string): Promise<{ title?: string; excerpt?: string } | null> {
+  const cached = pagefindSummaryCache.get(url);
+  if (cached) return cached;
+
+  const pending = (async () => {
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: "text/html" },
+        credentials: "same-origin",
+      });
+      if (!response.ok) return null;
+      const html = await response.text();
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+      const target = new URL(url);
+      let title = "";
+      let excerpt = "";
+
+      if (target.hash) {
+        const id = decodeURIComponent(target.hash.slice(1));
+        const section = parsed.getElementById(id);
+        title = section?.textContent?.trim() ?? "";
+        const sibling = section?.nextElementSibling;
+        excerpt = sibling?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+      }
+
+      title ||= parsed.querySelector("main h1")?.textContent?.trim() ?? parsed.querySelector("h1")?.textContent?.trim() ?? "";
+      excerpt ||= parsed.querySelector('meta[name="description"]')?.getAttribute("content")?.trim() ?? "";
+
+      return {
+        title: title || undefined,
+        excerpt: excerpt ? excerpt.slice(0, 320) : undefined,
+      };
+    } catch {
+      return null;
+    }
+  })();
+
+  pagefindSummaryCache.set(url, pending);
+  return pending;
+}
+
+async function localizePagefindLink(link: HTMLAnchorElement) {
+  if (pagefindInFlight.has(link)) return;
+  pagefindInFlight.add(link);
+
+  const locale = getBrowserLocale();
+  const localizedUrl = localizedResultUrl(link.href, locale);
+  if (localizedUrl !== link.href) link.href = localizedUrl;
+
+  const summary = await pageSummary(localizedUrl);
+  if (!summary) return;
+
+  if (summary.title) {
+    link.textContent = summary.title;
+    const result = link.closest(".pagefind-ui__result, .pagefind-ui__result-nested");
+    const image = result?.querySelector<HTMLImageElement>(".pagefind-ui__result-image");
+    if (image) image.alt = summary.title;
+  }
+
+  if (summary.excerpt) {
+    const titleContainer = link.closest(".pagefind-ui__result-title");
+    const scope = titleContainer?.parentElement;
+    const excerpt = scope?.querySelector<HTMLElement>(":scope > .pagefind-ui__result-excerpt");
+    if (excerpt) excerpt.textContent = summary.excerpt;
+  }
+
+  link.dataset.zbtLocalized = locale;
+}
+
+function localizePagefindResults(root: ParentNode) {
+  const links = root instanceof HTMLAnchorElement && root.matches(".pagefind-ui__result-link")
+    ? [root]
+    : [...root.querySelectorAll<HTMLAnchorElement>(".pagefind-ui__result-link")];
+  for (const link of links) {
+    if (link.dataset.zbtLocalized === getBrowserLocale()) continue;
+    void localizePagefindLink(link);
+  }
+}
+
 function localizeElement(element: Element) {
   if (element.matches(ignoredSelector) || element.closest(ignoredSelector)) return;
 
@@ -135,11 +283,14 @@ function localizeElement(element: Element) {
       if (translated !== value) node.setAttribute(attribute, translated);
     }
   }
+
+  localizePagefindResults(element);
 }
 
 function localizeDocument() {
   if (!document.body) return;
   localizeElement(document.body);
+  localizePagefindResults(document);
 }
 
 export function installBrowserI18nObserver() {
