@@ -1,26 +1,38 @@
 ---
 import { Image } from "astro:assets";
-import Logo from "../../assets/zebrabyte-mark.svg";
+import ZebraByteMark from "../../assets/zebrabyte-mark.svg";
+import ProboMark from "../../assets/probo-logo-only.svg";
 import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
 
 <div class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
   <div class="container">
-    <Image
-      src={Logo}
-      alt="ZebraByte"
-      width={48}
-      height={48}
-      class="mx-auto mb-6"
-    />
+    <div class="mx-auto mb-6 flex w-max items-center gap-3">
+      <Image
+        src={ZebraByteMark}
+        alt="ZebraByte"
+        width={48}
+        height={48}
+        class="size-12"
+      />
+      <span class="text-muted-foreground text-sm">+</span>
+      <Image
+        src={ProboMark}
+        alt="Probo upstream"
+        width={48}
+        height={48}
+        class="size-12"
+      />
+    </div>
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
-      Framework-uri și standarde gestionate în platformă
+      Framework-uri gestionate în aceeași experiență
     </h2>
     <p class="text-muted-foreground mx-auto mb-12 max-w-180 text-center text-lg">
-      Platforma poate organiza controale, dovezi și activități pentru mai multe
-      framework-uri de securitate și conformitate. Afișarea unui badge indică
-      suportul în platformă, nu o certificare deținută automat de ZebraByte.
+      ZebraByte extinde experiența originală Probo cu servicii de cybersecurity,
+      privacy și infrastructură securizată, păstrând biblioteca de framework-uri,
+      controale și dovezi. Badge-urile indică framework-uri suportate în platformă,
+      nu certificări deținute automat de ZebraByte.
     </p>
 
     <Badges
