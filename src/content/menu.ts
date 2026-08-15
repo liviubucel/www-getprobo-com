@@ -5,12 +5,16 @@ export type MenuIconName =
   | "clock-counter-clockwise"
   | "code"
   | "compass"
-  | "github-logo"
   | "handshake"
   | "heart"
+  | "magnifying-glass"
+  | "monitor"
+  | "notepad"
   | "paint-brush"
   | "quotes"
   | "shield-check"
+  | "sparkle"
+  | "terminal-window"
   | "users-three";
 
 export type MenuItem = {
@@ -39,88 +43,94 @@ export type MenuGroup = {
 
 export const menuGroups: MenuGroup[] = [
   {
-    label: "Compliance",
+    label: "Conformitate",
     items: [
       {
-        label: "Compliance Portal",
-        description: "Documente, evidence și trust sharing într-un singur loc",
+        label: "Platforma de conformitate",
+        description: "Controale, dovezi și partajare securizată",
         href: "/compliance-portal",
-        icon: "shield-check",
+        icon: "notepad",
       },
       {
         label: "SOC 2",
-        description: "Controls, evidence și audit readiness continuă",
+        description: "Controale și pregătire continuă pentru audit",
         href: "/soc2",
         icon: "shield-check",
       },
       {
         label: "ISO/IEC 27001",
-        description: "ISMS, risk treatment, controale și audit readiness",
+        description: "ISMS, riscuri și pregătire pentru certificare",
         href: "/iso-27001",
-        icon: "shield-check",
+        icon: "book-open-text",
       },
       {
-        label: "GDPR & Privacy",
-        description: "Privacy governance, evidence și măsuri tehnice",
+        label: "GDPR și confidențialitate",
+        description: "Guvernanță, evidențe și măsuri tehnice",
         href: "/gdpr",
-        icon: "shield-check",
+        icon: "users-three",
       },
       {
-        label: "NIS2 Readiness",
-        description: "Risk management, governance și incident readiness",
+        label: "Pregătire NIS2",
+        description: "Guvernanță, risc și răspuns la incidente",
         href: "/nis2",
-        icon: "shield-check",
+        icon: "compass",
+      },
+      {
+        label: "Accesibilitate · Gratuit",
+        description: "Widget gratuit; administrare completă din Compliance",
+        href: "/accessibility",
+        icon: "sparkle",
       },
     ],
     feature: {
-      eyebrow: "Managed Compliance",
-      title: "Compliance gestionat end-to-end · Accessibility inclus în program",
+      eyebrow: "Conformitate gestionată",
+      title: "Controale, dovezi și accesibilitate gestionate împreună",
       href: "/managed-compliance",
       asset: "/navigation/browser.svg",
-      alt: "Platforma ZebraByte pentru managed compliance",
+      alt: "Platforma ZebraByte pentru conformitate gestionată",
       variant: "product",
     },
   },
   {
-    label: "Cyber Security",
+    label: "Securitate",
     items: [
       {
-        label: "Security Assessment",
-        description: "Expunere, configurări, vulnerabilități și plan de remediere",
+        label: "Evaluare de securitate",
+        description: "Expunere, configurări și plan de remediere",
         href: "/security-assessment",
-        icon: "shield-check",
+        icon: "magnifying-glass",
       },
       {
-        label: "Website Security",
-        description: "WAF, DDoS, malware, hardening și recovery",
+        label: "Securitate website",
+        description: "WAF, DDoS, malware și hardening",
         href: "/website-security",
-        icon: "shield-check",
+        icon: "monitor",
       },
       {
-        label: "Email Security",
-        description: "SPF, DKIM, DMARC, anti-spoofing și account hardening",
+        label: "Securitate email",
+        description: "SPF, DKIM, DMARC și anti-spoofing",
         href: "/email-security",
         icon: "shield-check",
       },
       {
-        label: "Incident Response",
-        description: "Triage, containment, eradication și recovery",
+        label: "Răspuns la incidente",
+        description: "Triage, izolare, remediere și recuperare",
         href: "/incident-response",
-        icon: "shield-check",
+        icon: "clock-counter-clockwise",
       },
       {
-        label: "Secure Managed Hosting",
-        description: "Hosting administrat doar în model security-first",
+        label: "Hosting securizat administrat",
+        description: "Infrastructură administrată security-first",
         href: "/secure-hosting",
-        icon: "code",
+        icon: "terminal-window",
       },
     ],
     feature: {
-      eyebrow: "Cyber Security",
-      title: "Program complet de securitate legat direct de risc și compliance",
+      eyebrow: "Securitate cibernetică",
+      title: "Protecție tehnică legată direct de risc și conformitate",
       href: "/cyber-security",
       asset: "/navigation/frameworks.svg",
-      alt: "Cyber Security ZebraByte",
+      alt: "Programul ZebraByte de securitate cibernetică",
       variant: "guide",
     },
   },
@@ -129,123 +139,147 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Blog",
-        description: "Compliance, security, privacy și product insights",
+        description: "Analize despre conformitate, privacy și securitate",
         href: "/blog",
         icon: "article",
       },
       {
-        label: "Stories",
-        description: "Studii de caz și povești din platformă",
+        label: "Studii de caz",
+        description: "Povești și exemple practice din platformă",
         href: "/stories",
         icon: "quotes",
       },
       {
-        label: "Changelog",
-        description: "Actualizări și funcții noi ale platformei",
+        label: "Instrumente gratuite",
+        description: "Tool-uri pentru securitate și conformitate",
+        href: "/tools",
+        icon: "sparkle",
+      },
+      {
+        label: "Noutăți produs",
+        description: "Funcții noi și îmbunătățiri ale platformei",
         href: "/changelog",
         icon: "clock-counter-clockwise",
       },
       {
-        label: "Download",
-        description: "Descarcă aplicațiile și componentele disponibile",
+        label: "Descărcări",
+        description: "Aplicații și componente ZebraByte",
         href: "/download",
         icon: "code",
       },
       {
-        label: "Free Tools",
-        description: "Instrumente gratuite pentru security și compliance",
-        href: "/tools",
-        icon: "shield-check",
+        label: "Newsletter",
+        description: "Ghiduri și actualizări direct în inbox",
+        href: "/newsletter",
+        icon: "heart",
       },
     ],
     feature: {
-      eyebrow: "Hub",
-      title: "Ghiduri, comparații și resurse pentru compliance și security",
+      eyebrow: "Hub ZebraByte",
+      title: "Ghiduri, comparații și resurse practice",
       href: "/hub",
-      asset: "/navigation/browser.svg",
-      alt: "ZebraByte Hub",
-      variant: "guide",
+      asset: "/navigation/ahrefs.webp",
+      alt: "Biblioteca ZebraByte de resurse și studii de caz",
+      variant: "story",
     },
   },
   {
     label: "Companie",
     items: [
       {
-        label: "Careers",
-        description: "Roluri, role profiles și talent network",
+        label: "Cariere",
+        description: "Roluri, profile și oportunități ZebraByte",
         href: "/careers",
         icon: "briefcase",
       },
       {
         label: "Brand",
-        description: "Logo, identitate și resurse de brand ZebraByte",
+        description: "Logo, identitate și resurse de brand",
         href: "/brand",
         icon: "paint-brush",
       },
       {
-        label: "Industries",
-        description: "Security și compliance adaptate riscului sectorial",
+        label: "Industrii",
+        description: "Securitate și conformitate adaptate sectorului",
         href: "/industries",
         icon: "compass",
       },
       {
-        label: "Partnerships",
-        description: "Parteneriate pentru security și compliance",
+        label: "Parteneriate",
+        description: "Colaborări pentru securitate și conformitate",
         href: "/partnerships",
         icon: "handshake",
       },
       {
-        label: "Contact",
-        description: "Discută cu echipa ZebraByte",
-        href: "/contact",
-        icon: "handshake",
+        label: "Trust Center",
+        description: "Postura ZebraByte de securitate și conformitate",
+        href: "https://trust.zebrabyte.ro",
+        icon: "shield-check",
+      },
+      {
+        label: "Programează o discuție",
+        description: "Alege direct o fereastră disponibilă",
+        href: "/programare",
+        icon: "clock-counter-clockwise",
       },
     ],
     feature: {
-      eyebrow: "About ZebraByte",
-      title: "Cyber security + compliance, într-un singur program",
+      eyebrow: "Despre ZebraByte",
+      title: "Cyber security și conformitate, într-un singur program",
       href: "/about",
-      asset: "/navigation/frameworks.svg",
-      alt: "ZebraByte security and compliance",
-      variant: "guide",
+      asset: "/og-zebrabyte.svg",
+      alt: "ZebraByte",
+      variant: "story",
     },
   },
   {
-    label: "Docs",
+    label: "Documentație",
     href: "/docs",
     showLabel: false,
     items: [
       {
-        label: "Get started",
+        label: "Începe aici",
         description: "Concepte și capabilități ale platformei",
         href: "/docs",
         icon: "book-open-text",
       },
       {
-        label: "Product",
-        description: "Compliance, risk, privacy, audit și trust workflows",
+        label: "Produs",
+        description: "Compliance, risk, privacy și audit workflows",
         href: "/docs/product",
         icon: "shield-check",
       },
       {
-        label: "Developers",
-        description: "GraphQL, CLI, MCP, n8n, webhooks și integrări",
+        label: "Dezvoltatori",
+        description: "GraphQL, CLI, MCP, n8n și webhooks",
         href: "/docs/developers",
         icon: "code",
       },
       {
         label: "Deployment",
-        description: "Cloud, self-hosting, configuration și operations",
+        description: "Cloud, self-hosting, configurare și operațiuni",
         href: "/docs/deployment",
-        icon: "code",
+        icon: "terminal-window",
+      },
+      {
+        label: "Device Agent",
+        description: "Instalare și administrare pe dispozitive",
+        href: "/docs/product/device-agent/overview",
+        icon: "monitor",
+      },
+      {
+        label: "API și integrări",
+        description: "Automatizare și conectare cu sistemele tale",
+        href: "/docs/developers/api",
+        icon: "notepad",
       },
     ],
     feature: {
-      eyebrow: "Documentation",
-      title: "Înțelege și operează platforma ZebraByte",
+      eyebrow: "Documentație",
+      title: "Înțelege, integrează și operează platforma ZebraByte",
       href: "/docs",
-      asset: "/navigation/browser.svg",
-      alt: "Previzualizare documentație ZebraByte",
+      asset: "/navigation/docs.svg",
+      alt: "Documentația ZebraByte",
       variant: "product",
     },
   },
@@ -253,9 +287,21 @@ export const menuGroups: MenuGroup[] = [
 
 export const directMenuItems: MenuItem[] = [
   {
-    label: "Portal clienți",
-    description: "Accesează contul și serviciile ZebraByte",
-    href: "https://portal.zebrabyte.ro",
+    label: "Platforma ZebraByte",
+    description: "Compliance, riscuri, controale și dovezi",
+    href: "https://app.zebrabyte.ro",
     icon: "shield-check",
+  },
+  {
+    label: "Portal clienți",
+    description: "Cont, facturi, servicii și suport",
+    href: "https://portal.zebrabyte.ro",
+    icon: "users-three",
+  },
+  {
+    label: "Webmail",
+    description: "Accesează emailul ZebraByte",
+    href: "https://mail.zebrabyte.ro",
+    icon: "monitor",
   },
 ];
