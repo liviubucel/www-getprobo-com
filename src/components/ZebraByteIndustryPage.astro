@@ -1,0 +1,111 @@
+---
+import Button from "./ui/Button.svelte";
+import type { ZebraByteIndustry } from "../content/zebrabyte-industries";
+import { industryServiceMeta } from "../content/zebrabyte-industries";
+
+interface Props {
+  industry: ZebraByteIndustry;
+}
+
+const { industry } = Astro.props;
+const services = Object.entries(industry.serviceSlugs).map(([key, slug]) => ({
+  key,
+  slug,
+  meta: industryServiceMeta[key as keyof typeof industryServiceMeta],
+}));
+---
+
+<animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+  <div class="container text-center">
+    <a href="/industries" class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-2 py-0.5 text-sm font-medium hover:underline">
+      Industries · {industry.shortTitle}
+    </a>
+    <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{industry.title}</h1>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">{industry.description}</p>
+    <div class="flex flex-col justify-center gap-3 sm:flex-row">
+      <Button href="/contact" size="lg">Discută cu un expert</Button>
+      <Button href="/security-assessment" variant="secondary" size="lg">Începe cu un assessment</Button>
+    </div>
+  </div>
+</animated-hero>
+
+<section class="container py-12 sm:py-20">
+  <div class="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Context</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Security trebuie să reflecte modul în care funcționează organizația.</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">{industry.context}</p>
+      <div class="mt-8 flex flex-wrap gap-2">
+        {industry.priorities.map((priority) => (
+          <span class="bg-active rounded-full px-3 py-1.5 text-sm">{priority}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border bg-level-0">
+      <div class="border-b p-6 sm:p-8">
+        <p class="text-muted-foreground text-sm">Suprafața de risc</p>
+      </div>
+      <div class="divide-y">
+        {industry.risks.map((risk, index) => (
+          <div class="flex gap-4 p-5 sm:px-8">
+            <span class="text-muted-foreground mt-0.5 text-xs">0{index + 1}</span>
+            <p class="leading-relaxed">{risk}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-active py-16 sm:py-24">
+  <div class="container">
+    <div class="mx-auto mb-12 max-w-190 text-center">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">ZebraByte services</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Tot stack-ul ZebraByte, adaptat acestei industrii.</h2>
+      <p class="text-muted-foreground text-lg">Paginile sectoriale din website-ul ZebraByte anterior sunt păstrate ca rute reale, dar sunt integrate în experiența Probo în loc să existe ca un site separat.</p>
+    </div>
+
+    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+      {services.map(({ slug, meta }) => (
+        <a href={`/${slug}`} class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
+          <p class="text-muted-foreground mb-8 text-sm">{meta.eyebrow}</p>
+          <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{meta.label}</h3>
+          <p class="text-muted-foreground leading-relaxed">{meta.description}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="container py-16 sm:py-24">
+  <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Outcomes</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Ce trebuie să rămână după proiect.</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">Nu urmărim doar livrarea unor documente. Scopul este o postură tehnică și operațională mai clară, care poate fi menținută și demonstrată.</p>
+    </div>
+    <div class="grid gap-3">
+      {industry.outcomes.map((outcome, index) => (
+        <div class="rounded-xl border p-5 sm:p-6">
+          <div class="mb-2 text-sm text-muted-foreground">0{index + 1}</div>
+          <p class="font-medium leading-relaxed">{outcome}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="border-t py-16 text-center sm:py-24">
+  <div class="container">
+    <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium">Security, compliance și infrastructură într-un singur program.</h2>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-170 text-lg">Putem începe cu un assessment punctual sau putem prelua implementarea și operarea măsurilor rezultate.</p>
+    <Button href="/contact" size="lg">Discută despre {industry.shortTitle}</Button>
+  </div>
+</section>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
