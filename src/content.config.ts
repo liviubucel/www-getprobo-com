@@ -44,13 +44,18 @@ const stories = defineCollection({
         }),
       )
       .min(1),
-    image: z.string(),
+    /**
+     * Upstream Probo stories normally provide photographic media and a framework badge.
+     * ZebraByte-authored stories may intentionally use the native visual fallback instead,
+     * so these fields must remain optional in the collection schema as well as StorySchema.
+     */
+    image: z.string().optional(),
     previewImage: z.string().optional(),
     /** Public URL for a muted looping card trailer (e.g. /stories/trailers/foo.mp4) */
     trailer: z.string().optional(),
     ogImage: z.string().optional(),
-    framework: z.enum(frameworks.map((f) => f.label) as any),
-    logo: z.string(),
+    framework: z.enum(frameworks.map((f) => f.label) as any).optional(),
+    logo: z.string().optional(),
     /** Hero logo height in px (story page + cards); default 23 */
     logoHeight: z.number().optional(),
     /** Logo asset for light UI (e.g. story cards); falls back to `logo` */
