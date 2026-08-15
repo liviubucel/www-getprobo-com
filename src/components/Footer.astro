@@ -8,40 +8,43 @@ import { Toaster } from "svelte-sonner";
 
 const menus = [
   {
-    label: "Compliance",
+    label: "Resources",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "Blog", href: "/blog" },
+      { label: "Hub", href: "/hub" },
+      { label: "Stories", href: "/stories" },
+      { label: "Love from Customers ⭐", href: "/love-from-customer" },
+      { label: "Changelog", href: "/changelog" },
+      { label: "Download", href: "/download" },
+      { label: "Docs", href: "/docs" },
+      { label: "Free Tools", href: "/tools" },
+    ],
+  },
+  {
+    label: "Company",
+    items: [
+      { label: "About", href: "/about" },
+      { label: "Careers", href: "/careers" },
+      { label: "Brand", href: "/brand" },
+      { label: "Industries", href: "/industries" },
+      { label: "Partnerships", href: "/partnerships" },
+      { label: "Contact", href: "/contact" },
+      { label: "Client Portal", href: "https://portal.zebrabyte.ro" },
+    ],
+  },
+  {
+    label: "Compliance & Legal",
     items: [
       { label: "Managed Compliance", href: "/managed-compliance" },
       { label: "Compliance Portal", href: "/compliance-portal" },
       { label: "SOC 2", href: "/soc2" },
       { label: "ISO/IEC 27001", href: "/iso-27001" },
       { label: "GDPR & Privacy", href: "/gdpr" },
-      { label: "NIS2 Readiness", href: "/nis2" },
+      { label: "NIS2", href: "/nis2" },
       { label: "Accessibility", href: "/accessibility" },
-    ],
-  },
-  {
-    label: "Security & Resources",
-    items: [
-      { label: "Cyber Security", href: "/cyber-security" },
-      { label: "Security Assessment", href: "/security-assessment" },
-      { label: "Website Security", href: "/website-security" },
-      { label: "Email Security", href: "/email-security" },
-      { label: "Incident Response", href: "/incident-response" },
-      { label: "Secure Managed Hosting", href: "/secure-hosting" },
-      { label: "Hub", href: "/hub" },
-      { label: "Insights", href: "/blog" },
-      { label: "Free Tools", href: "/tools" },
-    ],
-  },
-  {
-    label: "Company & Legal",
-    items: [
-      { label: "About", href: "/about" },
-      { label: "Industries", href: "/industries" },
-      { label: "Partnerships", href: "/partnerships" },
-      { label: "Reviews", href: "/love-from-customer" },
-      { label: "Contact", href: "/contact" },
       { label: "Trust Center", href: "https://trust.zebrabyte.ro" },
+      { label: "Cookie Policy", href: "/cookie-policy" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of service", href: "/terms" },
     ],
@@ -71,10 +74,7 @@ type Props = {
           <ul class="space-y-3">
             {menu.items.map((item) => (
               <li>
-                <a
-                  href={item.href}
-                  class="text-tertiary-foreground text-sm hover:text-white hover:underline"
-                >
+                <a href={item.href} class="text-tertiary-foreground text-sm hover:text-white hover:underline">
                   {item.label}
                 </a>
               </li>
