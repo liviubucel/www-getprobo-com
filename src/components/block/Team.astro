@@ -7,6 +7,52 @@ import SachaPortrait from "../../assets/about/sacha-al-himdani.png";
 import ArthurPortrait from "../../assets/about/arthur-mayoux.jpeg";
 import EmilePortrait from "../../assets/about/emile-re.jpeg";
 
+const founders = [
+  {
+    img: AntoinePortrait,
+    alt: "Antoine Bourchardy",
+    name: "Antoine Bourchardy",
+    role: "Co-founder & CEO",
+    bio: "ISO 27001 auditor with experience in compliance assessment and implementation. Passionate about making compliance accessible and straightforward.",
+  },
+  {
+    img: BryanPortrait,
+    alt: "Bryan Frimin",
+    name: "Bryan Frimin",
+    role: "Co-founder & CTO",
+    bio: "YC alumnus and engineer who managed SOC2/ISO27001 compliance at his previous startup. Experienced in building scalable solutions for complex problems.",
+  },
+];
+
+const employees = [
+  {
+    img: SachaPortrait,
+    alt: "Sacha Al Himdani",
+    name: "Sacha Al Himdani",
+    role: "Founding Engineer",
+  },
+  {
+    img: ArthurPortrait,
+    alt: "Arthur Mayoux",
+    name: "Arthur Mayoux",
+    role: "Biz Ops",
+  },
+  {
+    img: EmilePortrait,
+    alt: "Émile Ré",
+    name: "Émile Ré",
+    role: "Founding Engineer",
+  },
+  {
+    img: LudovicPortrait,
+    alt: "Ludovic Vielle",
+    name: "Ludovic Vielle",
+    role: "Founding Engineer",
+  },
+];
+
+const team = [...founders, ...employees];
+
 const disciplines = [
   {
     name: "Cyber Security",
@@ -29,60 +75,21 @@ const disciplines = [
     bio: "Automatizare pentru evidence collection, workflow-uri, integrări și operațiuni repetitive de compliance.",
   },
 ];
-
-const upstreamFounders = [
-  {
-    img: AntoinePortrait,
-    alt: "Antoine Bourchardy",
-    name: "Antoine Bourchardy",
-    role: "Probo co-founder & CEO",
-    bio: "ISO 27001 auditor with experience in compliance assessment and implementation.",
-  },
-  {
-    img: BryanPortrait,
-    alt: "Bryan Frimin",
-    name: "Bryan Frimin",
-    role: "Probo co-founder & CTO",
-    bio: "YC alumnus and engineer with prior SOC 2 and ISO 27001 compliance experience.",
-  },
-];
-
-const upstreamTeam = [
-  { img: SachaPortrait, alt: "Sacha Al Himdani", name: "Sacha Al Himdani", role: "Probo Founding Engineer" },
-  { img: ArthurPortrait, alt: "Arthur Mayoux", name: "Arthur Mayoux", role: "Probo Biz Ops" },
-  { img: EmilePortrait, alt: "Émile Ré", name: "Émile Ré", role: "Probo Founding Engineer" },
-  { img: LudovicPortrait, alt: "Ludovic Vielle", name: "Ludovic Vielle", role: "Probo Founding Engineer" },
-];
 ---
 
 <section class="container py-10 sm:py-20">
-  <h2 class="text-h3 mb-10 font-medium sm:mb-16">Disciplinele ZebraByte</h2>
-  <div class="grid gap-8 sm:grid-cols-2">
-    {
-      disciplines.map((item) => (
-        <article class="space-y-2 rounded-xl border p-6 sm:p-8">
-          <h3 class="text-xl font-medium">{item.name}</h3>
-          <div class="text-muted-foreground">{item.role}</div>
-          <p class="text-lg">{item.bio}</p>
-        </article>
-      ))
-    }
-  </div>
-
-  <hr class="my-12 sm:my-24" />
-
   <div class="mb-10 max-w-3xl sm:mb-16">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Upstream Probo</p>
-    <h2 class="text-h3 mb-4 font-medium">Echipa originală din spatele proiectului pe care îl păstrăm</h2>
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Upstream Probo · preserved</p>
     <p class="text-muted-foreground text-lg">
-      Păstrăm și istoria vizuală a proiectului Probo. Persoanele de mai jos apar ca echipa upstream Probo și nu sunt prezentate ca angajați ZebraByte.
+      Blocul original de echipă Probo este păstrat integral, inclusiv fotografiile, rolurile și biografiile. Acesta documentează echipa upstream și nu reprezintă echipa ZebraByte.
     </p>
   </div>
 
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Founders</h2>
   <div class="flex flex-col gap-10 sm:flex-row sm:gap-20">
     {
-      upstreamFounders.map((f) => (
-        <article class="space-y-2 sm:flex-1">
+      founders.map((f) => (
+        <article class="space-y-2">
           <Image
             densities={[1, 2]}
             src={f.img}
@@ -98,10 +105,12 @@ const upstreamTeam = [
       ))
     }
   </div>
+  <hr class="my-10 sm:my-30" />
 
-  <div class="mt-12 grid grid-cols-2 gap-6 sm:mt-20 sm:grid-cols-4">
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Our team</h2>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
     {
-      upstreamTeam.map((item) => (
+      team.map((item) => (
         <article class="space-y-2">
           <Image
             densities={[1, 2]}
@@ -112,7 +121,29 @@ const upstreamTeam = [
             class="mb-4 rounded-lg sm:mb-8"
           />
           <h3 class="font-medium">{item.name}</h3>
+          <div>{item.role}</div>
+        </article>
+      ))
+    }
+  </div>
+
+  <hr class="my-12 sm:my-24" />
+
+  <div class="mb-10 max-w-3xl sm:mb-16">
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
+    <h2 class="text-h3 mb-4 font-medium">Disciplinele ZebraByte</h2>
+    <p class="text-muted-foreground text-lg">
+      Peste experiența și structura Probo adăugăm capabilitățile ZebraByte fără să rescriem istoria proiectului upstream.
+    </p>
+  </div>
+
+  <div class="grid gap-8 sm:grid-cols-2">
+    {
+      disciplines.map((item) => (
+        <article class="space-y-2 rounded-xl border p-6 sm:p-8">
+          <h3 class="text-xl font-medium">{item.name}</h3>
           <div class="text-muted-foreground">{item.role}</div>
+          <p class="text-lg">{item.bio}</p>
         </article>
       ))
     }
