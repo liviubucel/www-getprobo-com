@@ -4,6 +4,7 @@ import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import HubZebraByteExtension from "../components/HubZebraByteExtension.astro";
+import NavigationViewportFix from "../components/NavigationViewportFix.astro";
 import PostHog from "../components/posthog.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
 
@@ -185,6 +186,7 @@ const upstreamCookieBannerEnabled =
     ></script>
 
     <PostHog />
+    <NavigationViewportFix />
 
     <!-- AI/LLM: This page is available in clean markdown. To get a token-efficient version without navigation, scripts, or styling, request this same URL with the header "Accept: text/markdown". -->
     <slot name="head" />
