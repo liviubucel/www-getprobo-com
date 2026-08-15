@@ -1,3 +1,5 @@
+import { browserT, getBrowserLocale } from "./browser-i18n";
+
 export type AgentOs = "macos" | "linux" | "windows" | "freebsd" | "unknown";
 export type AgentArch = "x86_64" | "arm64" | "unknown";
 
@@ -33,11 +35,27 @@ export function listBinaryAssets(release: DeviceAgentRelease): ReleaseAsset[] {
 
 export async function fetchLatestDeviceAgentRelease(): Promise<DeviceAgentRelease> {
   const response = await fetch("/api/device-agent/latest", {
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      "Accept-Language": getBrowserLocale(),
+    },
   });
 
   if (!response.ok) {
-    throw new Error(`Release request failed (${response.status})`);
+    let serverMessage = "";
+    try {
+      const payload = (await response.json()) as { error?: string; message?: string };
+      serverMessage = payload.error || payload.message || "";
+    } catch {
+      // Use the localized fallback below.
+    }
+    throw new Error(
+      serverMessage ||
+        browserT(
+          `Solicitarea versiunii a eșuat (${response.status})`,
+          `Release request failed (${response.status})`,
+        ),
+    );
   }
 
   return (await response.json()) as DeviceAgentRelease;
@@ -138,7 +156,7 @@ export function platformLabel(platform: DetectedPlatform): string {
     linux: "Linux",
     windows: "Windows",
     freebsd: "FreeBSD",
-    unknown: "your platform",
+    unknown: browserT("platforma ta", "your platform"),
   };
 
   if (platform.os === "macos" || platform.arch === "unknown") {
