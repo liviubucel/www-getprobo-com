@@ -18,60 +18,69 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
     currentPath.startsWith(group.feature.href));
 ---
 
-<dialog
+<div
   {id}
   data-mobile-navigation
-  class="bg-secondary fixed inset-x-0 top-14 bottom-0 z-50 m-0 h-auto max-h-none w-full max-w-none overflow-y-auto border-0 px-4 pt-5 pb-28 transition-all transition-discrete duration-300 not-open:opacity-0 starting:opacity-0 sm:px-5"
+  hidden
+  aria-hidden="true"
+  class="bg-secondary pointer-events-none fixed inset-x-0 top-16 bottom-0 z-40 -translate-y-2 overflow-y-auto border-t opacity-0 transition-[opacity,transform] duration-200 xl:hidden"
 >
-  <div class="mx-auto w-full max-w-2xl">
-    <div class="divide-border-low divide-y border-y">
+  <div class="mx-auto w-full max-w-2xl px-4 pt-4 pb-28 sm:px-5">
+    <div class="overflow-hidden rounded-2xl border bg-secondary">
       {
         menuGroups.map((group) => (
           <details
             data-mobile-section
-            class="group/mobile"
+            class="group/mobile border-b last:border-b-0"
             open={isGroupActive(group)}
           >
-            <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-semibold outline-none [&::-webkit-details-marker]:hidden">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
               <span>{group.label}</span>
-              <span class="text-muted-foreground grid size-8 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
-                <Icon name="caret-down" size={18} />
+              <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
+                <Icon name="caret-down" size={17} />
               </span>
             </summary>
 
-            <div class="pb-6">
+            <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
               <div class="flex flex-col">
-                {group.items.map((item) => (
-                  <a
-                    href={item.href}
-                    class="group/item flex items-start gap-3 rounded-xl px-1 py-3 outline-none transition-colors hover:bg-subtle focus-visible:bg-subtle"
-                  >
-                    <span class="grid size-10 shrink-0 place-items-center rounded-lg border">
-                      <MenuIcon name={item.icon} />
-                    </span>
-                    <span class="min-w-0 flex-1 pt-0.5">
-                      <span class="block text-[15px] leading-5 font-semibold">
-                        {item.label}
+                {group.items.map((item) => {
+                  const external = item.href.startsWith("http");
+                  return (
+                    <a
+                      href={item.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
+                    >
+                      <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
+                        <MenuIcon name={item.icon} />
                       </span>
-                      <span class="text-muted-foreground mt-0.5 block text-[13px] leading-5">
-                        {item.description}
+                      <span class="min-w-0 flex-1 pt-0.5">
+                        <span class="block text-[14px] leading-5 font-semibold">
+                          {item.label}
+                        </span>
+                        <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
+                          {item.description}
+                        </span>
                       </span>
-                    </span>
-                    <Icon
-                      name="caret-right"
-                      size={17}
-                      class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
-                    />
-                  </a>
-                ))}
+                      <Icon
+                        name="caret-right"
+                        size={16}
+                        class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
+                      />
+                    </a>
+                  );
+                })}
               </div>
 
               <a
                 href={group.feature.href}
-                class="bg-subtle group/feature mt-3 block overflow-hidden rounded-xl border outline-none focus-visible:ring-2 focus-visible:ring-current"
+                target={group.feature.href.startsWith("http") ? "_blank" : undefined}
+                rel={group.feature.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                class="bg-secondary group/feature mx-1 mt-2 block overflow-hidden rounded-xl border outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-current/20"
                 aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
               >
-                <div class="relative aspect-[16/10] overflow-hidden">
+                <div class="relative aspect-[16/9] overflow-hidden">
                   <img
                     src={group.feature.asset}
                     alt={group.feature.alt}
@@ -84,30 +93,30 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                       group.feature.variant === "product" &&
                         "object-cover object-top",
                       group.feature.variant === "guide" &&
-                        "object-contain object-bottom px-3 pt-16 pb-3",
+                        "object-contain object-bottom px-4 pt-14 pb-3",
                     ]}
                   />
 
                   {group.feature.variant === "story" && (
-                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.08)] to-[rgba(0,0,0,0.38)]" />
+                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.12)] to-[rgba(0,0,0,0.46)]" />
                   )}
 
                   {group.feature.variant !== "story" && (
                     <span
-                      class="absolute inset-0 bg-linear-to-b from-[rgba(248,250,244,0.98)] via-[rgba(248,250,244,0.56)] to-transparent"
+                      class="absolute inset-0 bg-linear-to-b from-[rgba(248,250,244,0.98)] via-[rgba(248,250,244,0.62)] to-transparent"
                       aria-hidden="true"
                     />
                   )}
 
                   <span
                     class:list={[
-                      "absolute top-4 right-4 left-4 z-10 flex flex-col gap-1",
+                      "absolute top-3.5 right-4 left-4 z-10 flex flex-col gap-1",
                       group.feature.variant === "story" && "text-white",
                     ]}
                   >
                     <span
                       class:list={[
-                        "text-xs leading-4 font-semibold",
+                        "text-[11px] leading-4 font-semibold",
                         group.feature.variant === "story"
                           ? "text-[#e6ff03]"
                           : "text-muted-foreground",
@@ -115,7 +124,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                     >
                       {group.feature.eyebrow}
                     </span>
-                    <span class="max-w-[28rem] text-[18px] leading-6 font-semibold tracking-[-0.2px]">
+                    <span class="max-w-[28rem] text-[16px] leading-5 font-semibold tracking-[-0.15px]">
                       {group.feature.title}
                     </span>
                   </span>
@@ -127,35 +136,35 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
       }
 
       <details data-mobile-section class="group/mobile">
-        <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-semibold outline-none [&::-webkit-details-marker]:hidden">
+        <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
           <span>Acces clienți</span>
-          <span class="text-muted-foreground grid size-8 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
-            <Icon name="caret-down" size={18} />
+          <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
+            <Icon name="caret-down" size={17} />
           </span>
         </summary>
 
-        <div class="pb-6">
+        <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
           {directMenuItems.map((item) => (
             <a
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="group/item flex items-start gap-3 rounded-xl px-1 py-3 outline-none transition-colors hover:bg-subtle focus-visible:bg-subtle"
+              class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
             >
-              <span class="grid size-10 shrink-0 place-items-center rounded-lg border">
+              <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
                 <MenuIcon name={item.icon} />
               </span>
               <span class="min-w-0 flex-1 pt-0.5">
-                <span class="block text-[15px] leading-5 font-semibold">
+                <span class="block text-[14px] leading-5 font-semibold">
                   {item.label}
                 </span>
-                <span class="text-muted-foreground mt-0.5 block text-[13px] leading-5">
+                <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
                   {item.description}
                 </span>
               </span>
               <Icon
                 name="caret-right"
-                size={17}
+                size={16}
                 class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
               />
             </a>
@@ -163,8 +172,23 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
         </div>
       </details>
     </div>
+
+    <div class="mt-4 grid gap-2.5">
+      <a
+        href="/contact"
+        class="bg-primary text-primary-foreground flex min-h-12 items-center justify-center rounded-xl px-4 text-center text-[15px] font-semibold transition-opacity hover:opacity-90"
+      >
+        Discută cu un expert
+      </a>
+      <a
+        href="/compliance-portal"
+        class="flex min-h-11 items-center justify-center rounded-xl border bg-secondary px-4 text-center text-[14px] font-semibold transition-colors hover:bg-subtle"
+      >
+        Vezi platforma ZebraByte
+      </a>
+    </div>
   </div>
-</dialog>
+</div>
 
 <script>
   const warmedFeatureUrls = new Set<string>();
@@ -180,36 +204,23 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
     preload.src = src;
   };
 
-  const warmMenuArtwork = (dialog: HTMLDialogElement) => {
-    dialog
-      .querySelectorAll<HTMLImageElement>("[data-mobile-feature-image]")
-      .forEach((image) => warmImage(image));
-  };
-
   const bindMobileNavigation = () => {
     document
-      .querySelectorAll<HTMLDialogElement>("[data-mobile-navigation]")
-      .forEach((dialog) => {
-        if (dialog.dataset.navigationBound === "true") return;
-        dialog.dataset.navigationBound = "true";
+      .querySelectorAll<HTMLElement>("[data-mobile-navigation]")
+      .forEach((menu) => {
+        if (menu.dataset.navigationBound === "true") return;
+        menu.dataset.navigationBound = "true";
 
         const sections = Array.from(
-          dialog.querySelectorAll<HTMLDetailsElement>(
+          menu.querySelectorAll<HTMLDetailsElement>(
             "details[data-mobile-section]",
           ),
         );
-
-        const observer = new MutationObserver(() => {
-          if (dialog.open) warmMenuArtwork(dialog);
-        });
-        observer.observe(dialog, { attributes: true, attributeFilter: ["open"] });
 
         sections.forEach((section) => {
           section.addEventListener("toggle", () => {
             if (!section.open) return;
 
-            // Force the featured artwork into the HTTP cache before the user
-            // reaches the card. The image itself remains unchanged.
             warmImage(
               section.querySelector<HTMLImageElement>(
                 "[data-mobile-feature-image]",
@@ -219,12 +230,6 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
             sections.forEach((other) => {
               if (other !== section) other.open = false;
             });
-          });
-        });
-
-        dialog.addEventListener("close", () => {
-          sections.forEach((section) => {
-            section.open = false;
           });
         });
       });
