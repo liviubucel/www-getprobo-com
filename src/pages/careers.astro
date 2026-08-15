@@ -2,77 +2,118 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 
-// Keep the original Probo jobs collection mechanism, but do not publish upstream
-// Probo vacancies as ZebraByte vacancies. ZebraByte roles use the `zebrabyte-`
-// content id prefix when added to this collection.
-const positions = (await getCollection("jobs", ({ data }) => !data.draft)).filter(
-  (position) => position.id.startsWith("zebrabyte-"),
+const allPositions = await getCollection("jobs", ({ data }) => !data.draft);
+const zebraBytePositions = allPositions.filter((position) =>
+  position.id.startsWith("zebrabyte-"),
+);
+const upstreamPositions = allPositions.filter(
+  (position) => !position.id.startsWith("zebrabyte-"),
 );
 ---
 
 <Layout
-  title="Cariere ZebraByte"
-  description="Alătură-te ZebraByte și lucrează la intersecția dintre securitate cibernetică, privacy, compliance, open source și infrastructură securizată."
+  title="Cariere ZebraByte & Probo upstream"
+  description="Cariere ZebraByte și oportunitățile originale din proiectul upstream Probo, păstrate în aceeași experiență."
 >
   <main>
     <section class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
       <h1 class="text-h2 animate-slide-in mb-3 font-medium">Cariere</h1>
       <p
-        class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 max-w-2xl sm:mb-12"
+        class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 max-w-2xl sm:mb-14"
       >
-        Construim un mod mai practic de a gestiona securitatea și conformitatea:
-        expertiză tehnică, automatizare și open source într-un singur program.
+        Construim la intersecția dintre securitate, compliance, open source și
+        infrastructură. Păstrăm în același timp și job collection-ul original Probo,
+        fără să îl ascundem sau să îl prezentăm drept ZebraByte.
       </p>
 
-      {
-        positions.length > 0 ? (
-          <div class="animate-slide-in animation-delay-200 flex flex-col gap-4">
-            <h2 class="text-muted-foreground mb-1">Poziții deschise</h2>
-            {positions.map((position) => (
-              <a
-                href={`/careers/${position.id}`}
-                class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
-              >
-                <div>
-                  <h3 class="font-medium">{position.data.title}</h3>
-                  <p class="text-muted-foreground text-sm">
-                    {position.data.location} · {position.data.type}
-                  </p>
-                </div>
-                <span class="text-muted-foreground">→</span>
-              </a>
-            ))}
+      <div class="space-y-14">
+        <section>
+          <div class="mb-5">
+            <p class="text-muted-foreground mb-1 text-sm font-medium uppercase tracking-[0.12em]">ZebraByte</p>
+            <h2 class="text-h4 font-medium">Poziții ZebraByte</h2>
           </div>
-        ) : (
-          <div class="animate-slide-in animation-delay-200 border-border-low rounded-lg border p-10 text-center">
-            <p class="text-muted-foreground mb-4">
-              Nu avem momentan o poziție publicată. Păstrăm însă deschis canalul
-              pentru oameni foarte buni în security engineering, GRC, privacy și
-              platform engineering.
-            </p>
-            <p>
-              Trimite-ne profilul tău la{" "}
-              <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">
-                contact@zebrabyte.ro
-              </a>
-            </p>
-          </div>
-        )
-      }
+          {
+            zebraBytePositions.length > 0 ? (
+              <div class="animate-slide-in animation-delay-200 flex flex-col gap-4">
+                {zebraBytePositions.map((position) => (
+                  <a
+                    href={`/careers/${position.id}`}
+                    class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
+                  >
+                    <div>
+                      <h3 class="font-medium">{position.data.title}</h3>
+                      <p class="text-muted-foreground text-sm">
+                        {position.data.location} · {position.data.type}
+                      </p>
+                    </div>
+                    <span class="text-muted-foreground">→</span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div class="border-border-low rounded-lg border p-8">
+                <p class="text-muted-foreground mb-3">
+                  Nu avem momentan o poziție ZebraByte publicată în collection.
+                </p>
+                <p>
+                  Pentru security engineering, GRC, privacy sau platform engineering,
+                  scrie-ne la{" "}
+                  <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">
+                    contact@zebrabyte.ro
+                  </a>.
+                </p>
+              </div>
+            )
+          }
+        </section>
 
-      <div
-        class="animate-slide-in animation-delay-300 border-border-low mt-10 rounded-lg border p-10 text-center"
-      >
-        <p class="text-muted-foreground mb-4">
-          Nu vezi rolul potrivit? Ne interesează colaborările cu oameni care pot
-          aduce competență reală în securitate, conformitate și automatizare.
-        </p>
-        <p>
-          Scrie-ne la{" "}
-          <a href="mailto:contact@zebrabyte.ro" class="text-primary underline">
-            contact@zebrabyte.ro
-          </a>
-        </p>
+        <section>
+          <div class="mb-5">
+            <p class="text-muted-foreground mb-1 text-sm font-medium uppercase tracking-[0.12em]">Upstream Probo</p>
+            <h2 class="text-h4 font-medium">Pozițiile originale Probo</h2>
+            <p class="text-muted-foreground mt-2">
+              Joburile de mai jos sunt păstrate din proiectul upstream Probo. Sunt
+              afișate cu titlurile și locațiile originale și nu reprezintă angajări
+              ZebraByte.
+            </p>
+          </div>
+
+          {
+            upstreamPositions.length > 0 ? (
+              <div class="flex flex-col gap-4">
+                {upstreamPositions.map((position) => (
+                  <a
+                    href={`/careers/${position.id}`}
+                    class="border-border-low hover:border-border-mid flex items-center justify-between rounded-lg border p-6 transition-colors"
+                  >
+                    <div>
+                      <h3 class="font-medium">{position.data.title}</h3>
+                      <p class="text-muted-foreground text-sm">
+                        {position.data.location} · {position.data.type}
+                      </p>
+                    </div>
+                    <span class="text-muted-foreground">→</span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div class="border-border-low rounded-lg border p-8">
+                <p class="text-muted-foreground">
+                  Collection-ul upstream nu conține momentan poziții publicate.
+                </p>
+              </div>
+            )
+          }
+
+          <div class="border-border-low mt-5 rounded-lg border p-6">
+            <p class="text-muted-foreground mb-2 text-sm">
+              Contactul original Probo pentru oportunități upstream:
+            </p>
+            <a href="mailto:careers@probo.com" class="text-primary underline">
+              careers@probo.com
+            </a>
+          </div>
+        </section>
       </div>
     </section>
   </main>
