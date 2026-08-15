@@ -147,7 +147,7 @@ const hydratedContracts = [
   ["src/components/DealForm.svelte", ["browserT", "getBrowserLocale", "Accept-Language"]],
   ["src/components/DownloadAgent.svelte", ["browserT"]],
   ["src/lib/device-agent-release.ts", ["browserT", "getBrowserLocale", "Accept-Language"]],
-  ["src/components/block/Sharer.svelte", ["browserT", "copied = true", "onDestroy"]],
+  ["src/components/block/Sharer.svelte", ["browserT", "copied = true", "onDestroy", "toast.error"]],
   ["src/components/docs/mermaid-init.ts", ["browserT"]],
   ["src/components/docs/MobileMenuToggle.astro", ["browserT", "Deschide meniul documentației", "Open documentation menu"]],
   ["src/components/docs/ThemeToggle.astro", ["Temă luminoasă", "Temă întunecată", "Tema sistemului"]],
@@ -194,8 +194,9 @@ const sourceFiles = [
 
 const staleFrenchFiles = [];
 const hardCodedUsLocaleFiles = [];
-const uncoveredRuntimeLiterals = [];
+const uncoveredRuntimeLiterals = new Set();
 const unlocalizedSplideFiles = [];
+const MAX_RUNTIME_LITERALS_PER_FILE = 20;
 const runtimeLiteralPatterns = [
   /(?:textContent|innerText)\s*=\s*["'`]([^"'`\n]+)["'`]/g,
   /setAttribute\(\s*["'](?:title|aria-label|placeholder)["']\s*,\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
@@ -213,13 +214,18 @@ for (const file of sourceFiles) {
     unlocalizedSplideFiles.push(file);
   }
 
+  const fileRuntimeLiterals = new Set();
   for (const pattern of runtimeLiteralPatterns) {
     pattern.lastIndex = 0;
     for (const match of source.matchAll(pattern)) {
       const literal = match[1]?.trim();
       if (!literal || !/[A-Za-zĂÂÎȘȚăâîșț]/u.test(literal)) continue;
-      if (!browserI18nLower.includes(literal.toLocaleLowerCase())) {
-        uncoveredRuntimeLiterals.push(`${file}: ${JSON.stringify(literal)}`);
+      const normalizedLiteral = literal.toLocaleLowerCase();
+      if (fileRuntimeLiterals.has(normalizedLiteral)) continue;
+      fileRuntimeLiterals.add(normalizedLiteral);
+      if (fileRuntimeLiterals.size > MAX_RUNTIME_LITERALS_PER_FILE) continue;
+      if (!browserI18nLower.includes(normalizedLiteral)) {
+        uncoveredRuntimeLiterals.add(`${file}: ${JSON.stringify(literal)}`);
       }
     }
   }
@@ -234,9 +240,9 @@ if (hardCodedUsLocaleFiles.length) {
 if (unlocalizedSplideFiles.length) {
   failures.push(`Splide instances without explicit RO/EN accessibility i18n: ${unlocalizedSplideFiles.join(", ")}`);
 }
-if (uncoveredRuntimeLiterals.length) {
+if (uncoveredRuntimeLiterals.size) {
   warnings.push(
-    `Heuristic runtime literals to review manually: ${uncoveredRuntimeLiterals.join(" | ")}`,
+    `Heuristic runtime literals to review manually: ${[...uncoveredRuntimeLiterals].join(" | ")}`,
   );
 }
 
