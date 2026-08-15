@@ -1,23 +1,25 @@
 ---
+import { Image } from "astro:assets";
+import Mark from "../../assets/zebrabyte-mark.svg";
 import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
 
 <div class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
   <div class="container">
-    <img
-      src="/images/zbt-negru.svg"
+    <Image
+      src={Mark}
       alt="ZebraByte"
-      width="122"
-      height="44"
-      class="mx-auto mb-6 h-11 w-auto object-contain"
+      width={48}
+      height={48}
+      class="mx-auto mb-6"
     />
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
       Managed frameworks
     </h2>
-    <p class="text-muted-foreground mx-auto mb-12 max-w-2xl text-center text-lg">
-      Managed compliance pentru framework-uri de securitate, privacy și governance,
-      conectat direct la controalele tehnice și evidence-ul organizației.
+    <p class="text-muted-foreground mb-12 text-center text-lg">
+      Not seeing the one you are looking for?<br />
+      Reach out, we likely support it as well.
     </p>
 
     <Badges
@@ -29,11 +31,11 @@ import Button from "../../components/ui/Button.svelte";
 
     <Button
       rel="nofollow noreferrer"
-      href="/managed-compliance"
+      href="/contact"
       size="lg"
       class="mx-auto flex w-max"
     >
-      Explorează Managed Compliance
+      Get compliant
     </Button>
   </div>
 </div>
