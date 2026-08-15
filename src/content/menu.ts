@@ -39,7 +39,7 @@ export type MenuGroup = {
 
 export const menuGroups: MenuGroup[] = [
   {
-    label: "Compliance Platform",
+    label: "Compliance",
     items: [
       {
         label: "Managed Compliance",
@@ -52,12 +52,6 @@ export const menuGroups: MenuGroup[] = [
         description: "Documente, evidence și trust sharing într-un singur loc",
         href: "/compliance-portal",
         icon: "shield-check",
-      },
-      {
-        label: "Platformă open-source",
-        description: "Self-hosting, control asupra datelor și fără vendor lock-in",
-        href: "/docs/deployment/self-hosting/docker-compose",
-        icon: "code",
       },
       {
         label: "ISO/IEC 27001",
@@ -76,6 +70,12 @@ export const menuGroups: MenuGroup[] = [
         description: "Risk management, governance și incident readiness",
         href: "/nis2",
         icon: "shield-check",
+      },
+      {
+        label: "Accessibility",
+        description: "Instrument gratuit WCAG integrat în zona de compliance",
+        href: "/accessibility",
+        icon: "users-three",
       },
     ],
     feature: {
@@ -141,7 +141,7 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Stories",
-        description: "Studii de caz și experiențe din platformă",
+        description: "Studii de caz ZebraByte",
         href: "/stories",
         icon: "quotes",
       },
@@ -153,13 +153,13 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Hub",
-        description: "Ghiduri, comparații și instrumente practice",
+        description: "Ghiduri și resurse practice",
         href: "/hub",
         icon: "compass",
       },
       {
         label: "Free Tools",
-        description: "Instrumente gratuite pentru security și privacy",
+        description: "Instrumente gratuite pentru security și compliance",
         href: "/tools",
         icon: "shield-check",
       },
@@ -170,10 +170,10 @@ export const menuGroups: MenuGroup[] = [
         icon: "heart",
       },
       {
-        label: "Accessibility",
-        description: "Resurse și instrumente WCAG păstrate ca zonă complementară",
-        href: "/accessibility",
-        icon: "users-three",
+        label: "Changelog",
+        description: "Actualizări ale platformei și serviciilor ZebraByte",
+        href: "/changelog",
+        icon: "clock-counter-clockwise",
       },
     ],
     feature: {
@@ -196,7 +196,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "De ce ZebraByte",
-        description: "Security-first, privacy și control asupra infrastructurii",
+        description: "Security-first, privacy și ownership clar",
         href: "/decezebrabyte",
         icon: "shield-check",
       },
@@ -208,7 +208,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Partnerships",
-        description: "Parteneriate pentru security, compliance și platformă",
+        description: "Parteneriate pentru security și compliance",
         href: "/partnerships",
         icon: "handshake",
       },
@@ -253,20 +253,14 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Developers",
-        description: "GraphQL, CLI, MCP, n8n, webhooks și integrări",
+        description: "API, automatizări și integrări",
         href: "/docs/developers",
         icon: "code",
-      },
-      {
-        label: "Deployment",
-        description: "Cloud, self-hosting și configurarea platformei",
-        href: "/docs/deployment",
-        icon: "compass",
       },
     ],
     feature: {
       eyebrow: "Documentație",
-      title: "Configurează și operează platforma ZebraByte",
+      title: "Înțelege și operează platforma ZebraByte",
       href: "/docs",
       asset: "/navigation/browser.svg",
       alt: "Previzualizare documentație ZebraByte",
@@ -276,12 +270,6 @@ export const menuGroups: MenuGroup[] = [
 ];
 
 export const directMenuItems: MenuItem[] = [
-  {
-    label: "GitHub",
-    description: "Codul platformei și fundația open-source",
-    href: "https://github.com/liviubucel/www-getprobo-com",
-    icon: "github-logo",
-  },
   {
     label: "Portal clienți",
     description: "Accesează contul și serviciile ZebraByte",
