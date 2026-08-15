@@ -232,34 +232,48 @@ async function localizePagefindLink(link: HTMLAnchorElement) {
 
   const locale = getBrowserLocale();
   const localizedUrl = localizedResultUrl(link.href, locale);
-  if (localizedUrl !== link.href) link.href = localizedUrl;
 
-  const summary = await pageSummary(localizedUrl);
-  if (!summary) return;
+  try {
+    if (localizedUrl !== link.href) link.href = localizedUrl;
 
-  if (summary.title) {
-    link.textContent = summary.title;
-    const result = link.closest(".pagefind-ui__result, .pagefind-ui__result-nested");
-    const image = result?.querySelector<HTMLImageElement>(".pagefind-ui__result-image");
-    if (image) image.alt = summary.title;
+    const summary = await pageSummary(localizedUrl);
+    if (!summary) return;
+
+    if (summary.title && link.textContent !== summary.title) {
+      link.textContent = summary.title;
+      const result = link.closest(".pagefind-ui__result, .pagefind-ui__result-nested");
+      const image = result?.querySelector<HTMLImageElement>(".pagefind-ui__result-image");
+      if (image && image.alt !== summary.title) image.alt = summary.title;
+    }
+
+    if (summary.excerpt) {
+      const titleContainer = link.closest(".pagefind-ui__result-title");
+      const scope = titleContainer?.parentElement;
+      const excerpt = scope?.querySelector<HTMLElement>(":scope > .pagefind-ui__result-excerpt");
+      if (excerpt && excerpt.textContent !== summary.excerpt) excerpt.textContent = summary.excerpt;
+    }
+
+    link.dataset.zbtLocalized = locale;
+    link.dataset.zbtLocalizedHref = localizedUrl;
+  } finally {
+    pagefindInFlight.delete(link);
   }
-
-  if (summary.excerpt) {
-    const titleContainer = link.closest(".pagefind-ui__result-title");
-    const scope = titleContainer?.parentElement;
-    const excerpt = scope?.querySelector<HTMLElement>(":scope > .pagefind-ui__result-excerpt");
-    if (excerpt) excerpt.textContent = summary.excerpt;
-  }
-
-  link.dataset.zbtLocalized = locale;
 }
 
 function localizePagefindResults(root: ParentNode) {
   const links = root instanceof HTMLAnchorElement && root.matches(".pagefind-ui__result-link")
     ? [root]
     : [...root.querySelectorAll<HTMLAnchorElement>(".pagefind-ui__result-link")];
+  const locale = getBrowserLocale();
   for (const link of links) {
-    if (link.dataset.zbtLocalized === getBrowserLocale()) continue;
+    const expectedHref = localizedResultUrl(link.href, locale);
+    if (
+      link.dataset.zbtLocalized === locale &&
+      link.dataset.zbtLocalizedHref === expectedHref &&
+      link.href === expectedHref
+    ) {
+      continue;
+    }
     void localizePagefindLink(link);
   }
 }
