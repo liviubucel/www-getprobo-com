@@ -34,7 +34,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     <ZebraByteLogo class="mr-auto" />
 
     <nav
-      class="hidden items-center gap-2.25 lg:flex"
+      class="hidden items-center gap-2.25 xl:flex"
       transition:name="header-nav"
       aria-label="Navigație principală"
     >
@@ -46,7 +46,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     <div transition:name="header-compliant">
       <Button
         href="/contact"
-        class="ml-auto h-9 px-4 whitespace-nowrap lg:ml-3 lg:h-8 lg:px-3"
+        class="ml-auto h-9 px-4 whitespace-nowrap xl:ml-3 xl:h-8 xl:px-3"
       >
         Discută cu un expert
       </Button>
@@ -57,7 +57,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     {
       !hideBurger && (
         <burger-menu
-          class="group ml-3 grid size-9 place-items-center lg:hidden"
+          class="group ml-3 grid size-9 place-items-center xl:hidden"
           aria-label="Deschide meniul"
           aria-expanded="false"
           aria-controls="mobile-menu"
