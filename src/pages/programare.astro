@@ -1,0 +1,93 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Programare Discuție Tehnică"
+  description="Programează o discuție tehnică de 30 de minute cu ZebraByte despre cybersecurity, compliance, hosting securizat sau accessibility."
+>
+  <main class="container py-12 sm:py-20">
+    <div class="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+      <section class="lg:py-4">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Rezervare directă</p>
+        <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Programează o discuție tehnică</h1>
+        <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
+          Alege data și ora direct din calendar pentru o discuție video de 30 de minute cu ZebraByte. Putem analiza contextul tehnic, scope-ul și pașii următori fără să transformăm prima discuție într-un proces comercial complicat.
+        </p>
+
+        <div class="mb-8 overflow-hidden rounded-xl border">
+          <div class="grid grid-cols-[120px_1fr] gap-3 border-b p-4"><span class="text-muted-foreground text-sm">Durată</span><strong>30 minute</strong></div>
+          <div class="grid grid-cols-[120px_1fr] gap-3 border-b p-4"><span class="text-muted-foreground text-sm">Format</span><strong>Online video call</strong></div>
+          <div class="grid grid-cols-[120px_1fr] gap-3 p-4"><span class="text-muted-foreground text-sm">Programare</span><strong>Cal.com</strong></div>
+        </div>
+
+        <h2 class="mb-4 text-lg font-medium">Putem discuta despre:</h2>
+        <ul class="text-muted-foreground space-y-4 leading-relaxed">
+          <li><strong class="text-foreground">Cyber Security:</strong> assessment, website/email security, vulnerability management, incident response.</li>
+          <li><strong class="text-foreground">Compliance:</strong> GDPR, NIS2, ISO 27001 readiness și Compliance Portal.</li>
+          <li><strong class="text-foreground">Infrastructure:</strong> secure managed hosting, migration, WordPress operations și recovery.</li>
+          <li><strong class="text-foreground">Accessibility:</strong> WCAG assessment, remediation și widget/tooling ZebraByte.</li>
+        </ul>
+
+        <p class="text-muted-foreground mt-8 border-t pt-5 text-xs leading-relaxed">
+          Calendarul este integrarea Cal.com folosită și în website-ul ZebraByte anterior. Datele introduse în booking sunt procesate prin serviciul Cal.com conform configurației contului de booking.
+        </p>
+      </section>
+
+      <section class="overflow-hidden rounded-2xl border bg-level-0 p-2 sm:p-3" aria-label="Calendar programare ZebraByte">
+        <div id="my-cal-inline-30min" class="min-h-[700px] w-full"></div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline>
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement('script')).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === 'string') {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ['initNamespace', namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, 'https://app.cal.com/embed/embed.js', 'init');
+
+  Cal('init', '30min', { origin: 'https://app.cal.com' });
+  Cal.config = Cal.config || {};
+  Cal.config.forwardQueryParams = true;
+  Cal.ns['30min']('inline', {
+    elementOrSelector: '#my-cal-inline-30min',
+    config: {
+      layout: 'month_view',
+      useSlotsViewOnSmallScreen: 'true',
+      hideBranding: true,
+    },
+    calLink: 'zbt-appointment/30min',
+  });
+  Cal.ns['30min']('ui', {
+    styles: { body: { background: 'transparent' } },
+    cssVarsPerTheme: {
+      dark: { 'cal-brand': '#fdfcfa' },
+      light: { 'cal-brand': '#121212' },
+    },
+    hideEventTypeDetails: false,
+    layout: 'month_view',
+  });
+</script>
