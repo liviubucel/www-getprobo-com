@@ -13,11 +13,14 @@ export async function getStaticPaths() {
 
 const { job } = Astro.props;
 const { Content } = await render(job);
+const isZebraByteJob = job.id.startsWith("zebrabyte-");
+const brand = isZebraByteJob ? "ZebraByte" : "Probo";
+const applyEmail = isZebraByteJob ? "contact@zebrabyte.ro" : "careers@probo.com";
 ---
 
 <Layout
-  title={`${job.data.title} - Probo Careers`}
-  description={`Join Probo as a ${job.data.title}. ${job.data.location} · ${job.data.type}`}
+  title={`${job.data.title} - ${brand} Careers`}
+  description={`${job.data.title} · ${job.data.location} · ${job.data.type}. ${isZebraByteJob ? "ZebraByte opportunity." : "Original upstream Probo opportunity preserved in the project."}`}
 >
   <main>
     <article class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
@@ -25,10 +28,13 @@ const { Content } = await render(job);
         href="/careers"
         class="text-muted-foreground hover:text-foreground animate-slide-in mb-8 inline-flex items-center gap-1 text-sm transition-colors"
       >
-        ← Back to careers
+        ← Înapoi la Careers
       </a>
 
       <header class="animate-slide-in animation-delay-100 mb-10">
+        <p class="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-[0.12em]">
+          {isZebraByteJob ? "ZebraByte opportunity" : "Upstream Probo opportunity"}
+        </p>
         <h1 class="text-h2 mb-3 font-medium">
           {job.data.title}
         </h1>
@@ -37,16 +43,25 @@ const { Content } = await render(job);
         </p>
       </header>
 
+      {
+        !isZebraByteJob && (
+          <div class="bg-active text-muted-foreground mb-8 rounded-lg border p-4 text-sm leading-relaxed">
+            Aceasta este poziția originală Probo păstrată împreună cu conținutul ei.
+            Nu este prezentată drept poziție ZebraByte.
+          </div>
+        )
+      }
+
       <Prose class="animate-slide-in animation-delay-200">
         <Content />
       </Prose>
 
       <div class="animate-slide-in animation-delay-300 mt-12 text-center">
         <a
-          href={`mailto:careers@probo.com?subject=${job.data.title} Application`}
+          href={`mailto:${applyEmail}?subject=${encodeURIComponent(job.data.title + " Application")}`}
           class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-lg px-6 py-3 font-medium transition-colors"
         >
-          Apply for this job
+          Aplică pentru acest rol
         </a>
       </div>
     </article>
