@@ -1,0 +1,81 @@
+---
+const resources = [
+  {
+    title: "Cyber Security",
+    description:
+      "Assessment, hardening, vulnerability management, website/email security și incident response conectate la riscul real al organizației.",
+    href: "/cyber-security",
+    tag: "Security",
+  },
+  {
+    title: "GDPR & Privacy",
+    description:
+      "Data mapping, privacy risk, vendor controls, consent și evidence conectate la sistemele și procesele reale.",
+    href: "/gdpr",
+    tag: "Privacy",
+  },
+  {
+    title: "NIS2 Readiness",
+    description:
+      "Governance, risk management, incident readiness, supply chain și technical controls într-un singur program.",
+    href: "/nis2",
+    tag: "NIS2",
+  },
+  {
+    title: "ISO/IEC 27001 Readiness",
+    description:
+      "ISMS scope, risk treatment, controls, Statement of Applicability, evidence și audit preparation.",
+    href: "/iso-27001",
+    tag: "ISMS",
+  },
+  {
+    title: "Secure Managed Hosting",
+    description:
+      "Hardening, backup, recovery, monitoring, migration și schimbări operate cu securitatea integrată în infrastructură.",
+    href: "/secure-hosting",
+    tag: "Infrastructure",
+  },
+  {
+    title: "Digital Accessibility",
+    description:
+      "WCAG assessment, remediation, retest și widget/tooling ZebraByte păstrat din website-ul anterior.",
+    href: "/accessibility",
+    tag: "Accessibility",
+  },
+];
+---
+
+<section class="container border-t py-16 sm:py-24" aria-labelledby="zebrabyte-hub-extension">
+  <div class="mb-10 max-w-3xl">
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">
+      ZebraByte extension
+    </p>
+    <h2 id="zebrabyte-hub-extension" class="text-h3 sm:text-h2 mb-4 font-medium">
+      Security, privacy & infrastructure
+    </h2>
+    <p class="text-muted-foreground text-lg leading-relaxed">
+      Resource Center-ul Probo de mai sus este fișierul upstream original. ZebraByte
+      adaugă separat resursele care conectează compliance-ul la securitatea tehnică,
+      privacy, accessibility și infrastructura organizației.
+    </p>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      resources.map((resource) => (
+        <a
+          href={resource.href}
+          class="group rounded-2xl border bg-level-0 p-6 transition-colors hover:bg-subtle"
+        >
+          <span class="bg-active mb-8 inline-flex rounded-full px-3 py-1 text-xs font-medium">
+            {resource.tag}
+          </span>
+          <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">
+            {resource.title}
+          </h3>
+          <p class="text-muted-foreground leading-relaxed">{resource.description}</p>
+        </a>
+      ))
+    }
+  </div>
+</section>
