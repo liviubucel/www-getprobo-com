@@ -7,27 +7,27 @@ type Props = {
 
 const { class: className } = Astro.props;
 
-const themes: { value: string; label: string; icon: IconName }[] = [
-  { value: "light", label: "Light", icon: "sun" },
-  { value: "dark", label: "Dark", icon: "moon" },
-  { value: "auto", label: "System", icon: "monitor" },
+const themes: { value: string; label: string; title: string; icon: IconName }[] = [
+  { value: "light", label: "Luminos", title: "Temă luminoasă", icon: "sun" },
+  { value: "dark", label: "Întunecat", title: "Temă întunecată", icon: "moon" },
+  { value: "auto", label: "Sistem", title: "Tema sistemului", icon: "monitor" },
 ];
 ---
 
 <docs-theme-toggle
   class:list={["theme-toggle", className]}
   role="group"
-  aria-label="Theme"
+  aria-label="Temă"
 >
   {
-    themes.map(({ value, label, icon }) => (
+    themes.map(({ value, label, title, icon }) => (
       <button
         type="button"
         data-theme={value}
         aria-pressed="false"
-        title={`${label} theme`}
+        title={title}
       >
-        <Icon name={icon} size={14} label={`${label} theme`} />
+        <Icon name={icon} size={14} label={title} />
       </button>
     ))
   }
