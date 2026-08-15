@@ -1,6 +1,7 @@
 import app from "./index";
 import { isEnglishPath, stripEnglishPrefix } from "./i18n";
 import { localizeDateMarkup } from "./i18n-dates";
+import { finalizeHtmlLocale } from "./i18n-document";
 import {
   localizePlainText,
   normalizeRomanianMarkup,
@@ -11,19 +12,20 @@ import {
 
 type WorkerEnv = Parameters<typeof app.fetch>[1] & TranslationEnv;
 
-type LocalizableKind = "markup" | "markdown" | null;
+type LocalizableKind = "html" | "xml" | "markdown" | null;
 
 function localizableKind(response: Response): LocalizableKind {
   const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (contentType.includes("text/html") || contentType.includes("application/xhtml+xml")) {
+    return "html";
+  }
   if (
-    contentType.includes("text/html") ||
-    contentType.includes("application/xhtml+xml") ||
     contentType.includes("application/xml") ||
     contentType.includes("text/xml") ||
     contentType.includes("application/rss+xml") ||
     contentType.includes("application/atom+xml")
   ) {
-    return "markup";
+    return "xml";
   }
   if (contentType.includes("text/markdown") || contentType.includes("text/x-markdown")) {
     return "markdown";
@@ -45,6 +47,7 @@ async function localizeResponse(
   response: Response,
   locale: TargetLocale,
   env: WorkerEnv,
+  publicUrl: URL,
 ): Promise<Response> {
   const kind = localizableKind(response);
   if (!kind) return response;
@@ -55,7 +58,7 @@ async function localizeResponse(
   const source = await response.text();
   let localized = source;
 
-  if (kind === "markup") {
+  if (kind === "html" || kind === "xml") {
     localized =
       locale === "en"
         ? await translateEnglishMarkup(source, env)
@@ -65,6 +68,7 @@ async function localizeResponse(
   }
 
   localized = localizeDateMarkup(localized, locale);
+  if (kind === "html") localized = finalizeHtmlLocale(localized, locale, publicUrl);
 
   const headers = new Headers(response.headers);
   headers.set("Content-Language", locale);
@@ -99,7 +103,7 @@ export default {
       if (request.method === "HEAD") {
         return localizableKind(response) ? withContentLanguage(response, "ro") : response;
       }
-      return localizeResponse(response, "ro", env);
+      return localizeResponse(response, "ro", env, url);
     }
 
     const upstreamUrl = new URL(request.url);
@@ -110,6 +114,6 @@ export default {
     if (request.method === "HEAD") {
       return localizableKind(response) ? withContentLanguage(response, "en") : response;
     }
-    return localizeResponse(response, "en", env);
+    return localizeResponse(response, "en", env, url);
   },
 };
