@@ -2,6 +2,7 @@ export function publicBrandText(value: string | undefined | null): string {
   if (!value) return "";
 
   return value
+    .replace(/https?:\/\/(?:www\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/(?:www\.)?probo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
     .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
@@ -30,6 +31,12 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/\bZebraByte's open-source platform\b/gi, "the ZebraByte platform")
     .replace(/\bZebraByte is the only open-source,?\s*/gi, "ZebraByte is a ")
     .replace(/\bopen-source ZebraByte\b/gi, "ZebraByte")
+    .replace(/\bopen[ -]source compliance platform\b/gi, "compliance platform")
+    .replace(/\bopen[ -]source platform\b/gi, "platform")
+    .replace(/\bopen[ -]source software\b/gi, "software")
+    .replace(/\bopen[ -]source project\b/gi, "platform project")
+    .replace(/\bMIT-licensed compliance platform\b/gi, "compliance platform")
+    .replace(/\bMIT-licensed platform\b/gi, "platform")
     .replace(/\bYC-backed ZebraByte\b/gi, "ZebraByte")
     .replace(/\bY Combinator-backed ZebraByte\b/gi, "ZebraByte")
     .replace(/\bZebraByte,? backed by Y Combinator\b/gi, "ZebraByte")
@@ -43,9 +50,11 @@ export function publicBrandUrl(value: string | undefined | null): string {
 
   return value
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
+    .replace(/https?:\/\/(?:www\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/(?:www\.)?probo\.com/gi, "https://www.zebrabyte.ro")
     .replace(/https?:\/\/github\.com\/getprobo\/probo(?:\/[^\s]*)?/gi, "/docs")
     .replace(/https?:\/\/discord\.gg\/8qfdJYfvpY/gi, "/contact")
+    .replace(/\/probo-newsletter\b/g, "/newsletter")
     .replace(/\/hub\/probo-vs-vanta\b/g, "/hub/zebrabyte-vs-vanta")
     .replace(/\/hub\/probo-vs-fractional-ciso\b/g, "/hub/zebrabyte-vs-fractional-ciso")
     .replace(/\/docs\/product\/probo-agent\b/g, "/docs/product/device-agent")
