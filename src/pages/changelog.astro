@@ -1,55 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getCollection } from "astro:content";
-
-const entries = (await getCollection("changelog")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
-
-const dateFormatter = Intl.DateTimeFormat("ro-RO", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
 ---
 
 <Layout
   title="Changelog"
-  description="Istoricul îmbunătățirilor platformei de compliance. Arhiva existentă include update-urile originale Probo păstrate cu atribuirea upstream."
+  description="Actualizări publice ZebraByte pentru platformă, security tooling și experiența de managed compliance."
+  noIndex
 >
   <main class="container my-10 max-w-[720px] sm:my-20">
     <h1 class="text-h2 animate-slide-in mb-3 font-medium">Changelog</h1>
-    <p
-      class="text-muted-foreground animate-slide-in animation-delay-100 mb-5 text-base"
-    >
-      Update-uri ale platformei și experienței open-source.
+    <p class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-base sm:mb-16">
+      Aici vor fi publicate numai release-uri și schimbări ZebraByte confirmate pentru producție.
     </p>
-    <div
-      class="bg-active text-muted-foreground animate-slide-in animation-delay-150 mb-10 rounded-lg border p-4 text-sm leading-relaxed sm:mb-16"
-    >
-      Intrările istorice de mai jos provin din changelog-ul original Probo și sunt
-      păstrate pentru continuitatea proiectului. Update-urile ZebraByte vor fi
-      adăugate în aceeași structură, fără rescrierea retroactivă a istoricului upstream.
+
+    <div class="animate-slide-in animation-delay-200 rounded-2xl border bg-active p-6 sm:p-8">
+      <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">În pregătire</p>
+      <h2 class="text-h4 mb-3 font-medium">Public changelog</h2>
+      <p class="text-muted-foreground leading-relaxed">
+        Nu republicăm istoricul tehnic al componentelor interne ca și cum ar fi release-uri ZebraByte.
+        Changelog-ul public va începe odată cu versiunile ZebraByte livrate și validate în producție.
+      </p>
     </div>
-    <ul class="animate-slide-in animation-delay-300 space-y-2">
-      {
-        entries.map((entry) => (
-          <li class="flex items-baseline gap-3">
-            <time class="text-muted-foreground shrink-0 text-sm">
-              {dateFormatter.format(new Date(entry.data.date))}
-            </time>
-            <a href={`/changelog/${entry.id}`} class="hover:underline">
-              {entry.data.title}
-            </a>
-            {entry.data.tags.length > 0 &&
-              entry.data.tags.map((tag) => (
-                <span class="bg-highlight shrink-0 rounded-full px-2 py-0.5 text-xs font-medium">
-                  {tag}
-                </span>
-              ))}
-          </li>
-        ))
-      }
-    </ul>
   </main>
 </Layout>
