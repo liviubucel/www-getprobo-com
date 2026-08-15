@@ -2,9 +2,17 @@ export function publicBrandText(value: string | undefined | null): string {
   if (!value) return "";
 
   return value
-    .replace(/https?:\/\/(?:www\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
-    .replace(/https?:\/\/(?:www\.)?probo\.com/gi, "https://www.zebrabyte.ro")
+    .replace(/https?:\/\/status\.probo\.com/gi, "https://status.zebrabyte.ro")
+    .replace(/https?:\/\/probostatus\.com/gi, "https://status.zebrabyte.ro")
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
+    .replace(/https?:\/\/(?:[a-z0-9-]+\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
+    .replace(/https?:\/\/(?:[a-z0-9-]+\.)?probo\.com/gi, "https://www.zebrabyte.ro")
+    .replace(/brew install getprobo\/tap\/prb/gi, "# Install prb from the ZebraByte deployment package")
+    .replace(/go install github\.com\/getprobo\/probo\/cmd\/prb@latest/gi, "# Install prb from the ZebraByte deployment package")
+    .replace(/\bPROBO_([A-Z0-9_]+)/g, "ZEBRABYTE_$1")
+    .replace(/\bprobo-agent\b/gi, "zebrabyte-device-agent")
+    .replace(/\bProbo Agent\b/gi, "ZebraByte Device Agent")
+    .replace(/\/docs\/product\/probo-agent\b/gi, "/docs/product/device-agent")
     .replace(/\bThe latest news from Probo\b/gi, "The latest news from ZebraByte")
     .replace(/\bfrom the Probo team\b/gi, "from the ZebraByte team")
     .replace(/\bNew updates and improvements to Probo\b/gi, "New updates and improvements to ZebraByte")
@@ -36,8 +44,7 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/\bachieving SOC 2 certification\b/gi, "SOC 2 readiness and reporting")
     .replace(/\bSOC 2 certification\b/gi, "SOC 2 report")
     .replace(/\bSOC 2 certificate\b/gi, "SOC 2 report")
-    .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
-    .replace(/\bprobo-agent\b/g, "zebrabyte-device-agent")
+    .replace(/\bProbo CLI\b/gi, "ZebraByte CLI")
     .replace(/\bProbo vs Vanta\b/gi, "ZebraByte vs Vanta")
     .replace(
       /\bProbo vs Hiring a Fractional CISO\b/gi,
@@ -54,8 +61,8 @@ export function publicBrandText(value: string | undefined | null): string {
     // Unqualified historical brand mentions are neutralized instead of being
     // rewritten as ZebraByte. This avoids changing third-party quotes into
     // statements that falsely claim a ZebraByte customer relationship.
-    .replace(/\bProbo\b/g, "the platform")
-    .replace(/\bPROBO\b/g, "THE PLATFORM")
+    .replace(/\bProbo\b/gi, "the platform")
+    .replace(/\bgetprobo\b/gi, "ZebraByte")
     .replace(/\bZebraByte is an open-source compliance platform\b/gi, "ZebraByte is a compliance platform")
     .replace(/\bZebraByte is built on an open-source compliance platform\b/gi, "ZebraByte provides a compliance platform")
     .replace(/\bZebraByte's open-source compliance platform\b/gi, "the ZebraByte compliance platform")
@@ -82,10 +89,12 @@ export function publicBrandUrl(value: string | undefined | null): string {
   if (!value) return "";
 
   return value
+    .replace(/https?:\/\/status\.probo\.com/gi, "https://status.zebrabyte.ro")
+    .replace(/https?:\/\/probostatus\.com/gi, "https://status.zebrabyte.ro")
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
-    .replace(/https?:\/\/(?:www\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
-    .replace(/https?:\/\/(?:www\.)?probo\.com/gi, "https://www.zebrabyte.ro")
-    .replace(/https?:\/\/github\.com\/getprobo\/probo(?:\/[^\s]*)?/gi, "/docs")
+    .replace(/https?:\/\/(?:[a-z0-9-]+\.)?getprobo\.com/gi, "https://www.zebrabyte.ro")
+    .replace(/https?:\/\/(?:[a-z0-9-]+\.)?probo\.com/gi, "https://www.zebrabyte.ro")
+    .replace(/https?:\/\/github\.com\/getprobo\/probo(?:\/[^\s"']*)?/gi, "/docs")
     .replace(/https?:\/\/discord\.gg\/8qfdJYfvpY/gi, "/contact")
     .replace(/\/probo-newsletter\b/g, "/newsletter")
     .replace(/\/hub\/probo-vs-vanta\b/g, "/hub/zebrabyte-vs-vanta")
