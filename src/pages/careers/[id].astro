@@ -4,7 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import Prose from "../../components/Prose.astro";
 
 export async function getStaticPaths() {
-  const jobs = await getCollection("jobs", ({ data }) => !data.draft);
+  const jobs = await getCollection("jobs");
   return jobs.map((job) => ({
     params: { id: job.id },
     props: { job },
@@ -13,14 +13,14 @@ export async function getStaticPaths() {
 
 const { job } = Astro.props;
 const { Content } = await render(job);
-const isZebraByteJob = job.id.startsWith("zebrabyte-");
-const brand = isZebraByteJob ? "ZebraByte" : "Probo";
-const applyEmail = isZebraByteJob ? "contact@zebrabyte.ro" : "careers@probo.com";
+const isOpenZebraByteJob =
+  job.id.startsWith("zebrabyte-") && !job.data.draft;
 ---
 
 <Layout
-  title={`${job.data.title} - ${brand} Careers`}
-  description={`${job.data.title} · ${job.data.location} · ${job.data.type}. ${isZebraByteJob ? "ZebraByte opportunity." : "Original upstream Probo opportunity preserved in the project."}`}
+  title={`${job.data.title} - ZebraByte Careers`}
+  description={`${job.data.title} · ${job.data.type}. ${isOpenZebraByteJob ? "Open ZebraByte opportunity." : "Role profile in the ZebraByte careers library."}`}
+  noIndex={!isOpenZebraByteJob}
 >
   <main>
     <article class="mx-auto my-10 max-w-[720px] px-5 sm:mt-20 sm:mb-30">
@@ -33,24 +33,19 @@ const applyEmail = isZebraByteJob ? "contact@zebrabyte.ro" : "careers@probo.com"
 
       <header class="animate-slide-in animation-delay-100 mb-10">
         <p class="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-[0.12em]">
-          {isZebraByteJob ? "ZebraByte opportunity" : "Upstream Probo opportunity"}
+          {isOpenZebraByteJob ? "Open ZebraByte position" : "Role profile · Talent network"}
         </p>
-        <h1 class="text-h2 mb-3 font-medium">
-          {job.data.title}
-        </h1>
+        <h1 class="text-h2 mb-3 font-medium">{job.data.title}</h1>
         <p class="text-muted-foreground">
-          {job.data.location} · {job.data.type}
+          {isOpenZebraByteJob ? `${job.data.location} · ${job.data.type}` : job.data.type}
         </p>
       </header>
 
-      {
-        !isZebraByteJob && (
-          <div class="bg-active text-muted-foreground mb-8 rounded-lg border p-4 text-sm leading-relaxed">
-            Aceasta este poziția originală Probo păstrată împreună cu conținutul ei.
-            Nu este prezentată drept poziție ZebraByte.
-          </div>
-        )
-      }
+      {!isOpenZebraByteJob && (
+        <div class="bg-active text-muted-foreground mb-8 rounded-lg border p-4 text-sm leading-relaxed">
+          Acest profil este păstrat în biblioteca Careers pentru a descrie tipul de rol și competențele asociate. Nu reprezintă în acest moment un anunț ZebraByte confirmat ca deschis.
+        </div>
+      )}
 
       <Prose class="animate-slide-in animation-delay-200">
         <Content />
@@ -58,10 +53,10 @@ const applyEmail = isZebraByteJob ? "contact@zebrabyte.ro" : "careers@probo.com"
 
       <div class="animate-slide-in animation-delay-300 mt-12 text-center">
         <a
-          href={`mailto:${applyEmail}?subject=${encodeURIComponent(job.data.title + " Application")}`}
+          href={`mailto:contact@zebrabyte.ro?subject=${encodeURIComponent((isOpenZebraByteJob ? "Application - " : "Talent Network - ") + job.data.title)}`}
           class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-lg px-6 py-3 font-medium transition-colors"
         >
-          Aplică pentru acest rol
+          {isOpenZebraByteJob ? "Aplică pentru acest rol" : "Înregistrează-ți interesul"}
         </a>
       </div>
     </article>
