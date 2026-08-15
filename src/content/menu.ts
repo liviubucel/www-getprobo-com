@@ -54,6 +54,12 @@ export const menuGroups: MenuGroup[] = [
         icon: "shield-check",
       },
       {
+        label: "SOC 2",
+        description: "Controls, evidence și audit readiness continuă",
+        href: "/soc2",
+        icon: "shield-check",
+      },
+      {
         label: "ISO/IEC 27001",
         description: "ISMS, risk treatment, controale și audit readiness",
         href: "/iso-27001",
@@ -73,7 +79,7 @@ export const menuGroups: MenuGroup[] = [
       },
       {
         label: "Accessibility",
-        description: "Instrument gratuit WCAG integrat în zona de compliance",
+        description: "Instrumente gratuite WCAG integrate în compliance",
         href: "/accessibility",
         icon: "users-three",
       },
@@ -146,7 +152,7 @@ export const menuGroups: MenuGroup[] = [
         icon: "quotes",
       },
       {
-        label: "Blog",
+        label: "Insights",
         description: "Security, privacy și compliance",
         href: "/blog",
         icon: "article",
@@ -168,12 +174,6 @@ export const menuGroups: MenuGroup[] = [
         description: "Feedback de la clienții ZebraByte",
         href: "/love-from-customer",
         icon: "heart",
-      },
-      {
-        label: "Changelog",
-        description: "Actualizări ale platformei și serviciilor ZebraByte",
-        href: "/changelog",
-        icon: "clock-counter-clockwise",
       },
     ],
     feature: {
