@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import ZebraByteLogo from "./ZebraByteLogo.astro";
 import ProboLogo from "../assets/probo-logo.svg";
 import Frameworks from "./block/Frameworks.astro";
-import OpenStatus from "../components/OpenStatus.svelte";
 import ZebraByteStatus from "../components/ZebraByteStatus.svelte";
 import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
@@ -16,7 +15,18 @@ const upstreamCookieBannerEnabled =
 
 const menus = [
   {
-    label: "Security",
+    label: "Compliance",
+    items: [
+      { label: "Managed Compliance", href: "/managed-compliance" },
+      { label: "Compliance Portal", href: "/compliance-portal" },
+      { label: "ISO/IEC 27001", href: "/iso-27001" },
+      { label: "GDPR & Privacy", href: "/gdpr" },
+      { label: "NIS2 Readiness", href: "/nis2" },
+      { label: "Open-source Platform", href: "/docs/deployment/self-hosting/docker-compose" },
+    ],
+  },
+  {
+    label: "Cyber Security",
     items: [
       { label: "Cyber Security", href: "/cyber-security" },
       { label: "Security Assessment", href: "/security-assessment" },
@@ -27,81 +37,36 @@ const menus = [
     ],
   },
   {
-    label: "ZebraByte services",
-    items: [
-      { label: "Server Security", href: "/securitate-servere" },
-      { label: "SSL / TLS", href: "/certificat-ssl" },
-      { label: "Website Migration", href: "/migrare-site" },
-      { label: "WordPress Maintenance", href: "/wordpress-maintenance" },
-      { label: "Managed IT / Migration", href: "/servicii-premium-it-migratie-securitate" },
-      { label: "Industries", href: "/industries" },
-      { label: "Partnerships", href: "/partnerships" },
-    ],
-  },
-  {
-    label: "Conformitate",
-    items: [
-      { label: "GDPR & Privacy", href: "/gdpr" },
-      { label: "GDPR România", href: "/serviciigdprromania" },
-      { label: "Cookie Consent", href: "/cookie-banner-conformitate-gdpr" },
-      { label: "NIS2 Readiness", href: "/nis2" },
-      { label: "ISO/IEC 27001", href: "/iso-27001" },
-      { label: "Compliance Portal", href: "/compliance-portal" },
-      { label: "SOC 2 Hub", href: "/hub/soc2" },
-    ],
-  },
-  {
     label: "Platformă & Resurse",
     items: [
-      { label: "Platformă open-source", href: "/docs/deployment/self-hosting/docker-compose" },
-      { label: "Download Probo Agent", href: "/download" },
-      { label: "Free Tools", href: "/tools" },
-      { label: "Accessibility", href: "/accessibility" },
-      { label: "Accessibility Audit", href: "/accesibilitate/audit" },
-      { label: "Widget Configurator", href: "/accesibilitate/personalizeaza" },
       { label: "Docs", href: "/docs" },
+      { label: "Free Tools", href: "/tools" },
       { label: "Hub", href: "/hub" },
       { label: "Blog", href: "/blog" },
       { label: "Stories", href: "/stories" },
-      { label: "Changelog", href: "/changelog" },
+      { label: "Accessibility", href: "/accessibility" },
     ],
   },
   {
     label: "Companie",
     items: [
-      { label: "About", href: "/about" },
+      { label: "Despre ZebraByte", href: "/about" },
       { label: "De ce ZebraByte", href: "/decezebrabyte" },
-      { label: "Careers", href: "/careers" },
-      { label: "Brand", href: "/brand" },
-      { label: "Love from Customers ⭐", href: "/love-from-customer" },
-      { label: "Video Reviews", href: "/recenzii-video" },
+      { label: "Industries", href: "/industries" },
+      { label: "Partnerships", href: "/partnerships" },
       { label: "Contact", href: "/contact" },
       { label: "Book a call", href: "/programare" },
       { label: "Portal clienți", href: "https://portal.zebrabyte.ro" },
-      { label: "LinkedIn", href: "https://www.linkedin.com/company/zebrabyteuk" },
     ],
   },
   {
-    label: "Probo upstream",
-    items: [
-      { label: "Original Compliance Portal", href: "/products/compliance-portal" },
-      { label: "Probo Agent Docs", href: "/docs/product/probo-agent/overview" },
-      { label: "Original Probo Newsletter", href: "/probo-newsletter" },
-      { label: "Probo vs Vanta", href: "/hub/probo-vs-vanta" },
-      { label: "Original Stories", href: "/stories" },
-      { label: "Original Changelog", href: "/changelog" },
-      { label: "Probo GitHub", href: "https://github.com/getprobo/probo" },
-      { label: "Probo website", href: "https://www.probo.com" },
-    ],
-  },
-  {
-    label: "Legal",
+    label: "Legal & Trust",
     items: [
       { label: "Legal Center", href: "/legal" },
-      { label: "Cookie Policy", href: "/cookie-policy" },
       { label: "Privacy Policy", href: "/privacy" },
+      { label: "Cookie Policy", href: "/cookie-policy" },
       { label: "Terms of service", href: "/terms" },
-      { label: "Security", href: "https://trust.zebrabyte.ro" },
+      { label: "Trust Center", href: "https://trust.zebrabyte.ro" },
       { label: "Subprocessors", href: "https://trust.zebrabyte.ro/subprocessors" },
     ],
   },
@@ -120,8 +85,8 @@ type Props = {
       <div class="text-tertiary-foreground space-y-5">
         <ZebraByteLogo />
         <p class="max-w-[280px] text-sm leading-relaxed">
-          Cyber security, privacy, compliance și infrastructură securizată construite
-          peste experiența open-source Probo pe care o păstrăm complet.
+          Managed compliance, cyber security și infrastructură security-first pentru
+          organizații care vor să rămână protejate și continuu audit-ready.
         </p>
         <div class="space-y-1 text-xs leading-relaxed">
           <a href="mailto:contact@zebrabyte.ro" class="block hover:text-white hover:underline">contact@zebrabyte.ro</a>
@@ -132,7 +97,7 @@ type Props = {
         <Newsletter variant="footer" />
       </div>
 
-      <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 xl:grid-cols-5">
         {
           menus.map((menu) => (
             <div class="space-y-3">
@@ -148,7 +113,7 @@ type Props = {
                     </a>
                   </li>
                 ))}
-                {menu.label === "Legal" && upstreamCookieBannerEnabled && (
+                {menu.label === "Legal & Trust" && upstreamCookieBannerEnabled && (
                   <li>
                     <probo-settings-link class="text-tertiary-foreground flex-nowrap text-sm whitespace-nowrap hover:text-white hover:underline">
                       <a href="#">Setări cookie</a>
@@ -163,28 +128,24 @@ type Props = {
     </div>
 
     <div class="border-border-low flex flex-col gap-5 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex flex-wrap items-center gap-4">
-        <span class="text-tertiary-foreground text-xs">Platform core derived from</span>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-tertiary-foreground text-xs">Open-source platform foundation based on</span>
         <a
           href="https://github.com/getprobo/probo"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Probo upstream project"
-          class="opacity-80 transition-opacity hover:opacity-100"
+          aria-label="Probo open-source project"
+          class="opacity-70 transition-opacity hover:opacity-100"
         >
           <Image src={ProboLogo} alt="Probo" width={73} height={20} />
         </a>
       </div>
 
-      <div class="flex flex-col items-start gap-4 sm:items-end">
+      <div class="flex flex-col items-start gap-3 sm:items-end">
         <p class="text-tertiary-foreground text-xxs">
           Copyright © 2023-2026 ZEBRABYTE LIMITED. All rights reserved.
         </p>
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-tertiary-foreground text-xxs">Probo upstream</span>
-          <OpenStatus client:visible />
-          <ZebraByteStatus />
-        </div>
+        <ZebraByteStatus />
         <AskAi />
       </div>
     </div>
