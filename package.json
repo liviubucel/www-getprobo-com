@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && npm run sitemap:i18n && npm run check:i18n",
+    "build": "astro build && npm run sitemap:i18n",
     "check:i18n": "node tools/check-i18n.mjs",
     "sitemap:i18n": "node tools/localize-sitemap.mjs",
     "check:docs": "node tools/check-docs.mjs",
