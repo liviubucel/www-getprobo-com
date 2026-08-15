@@ -1,28 +1,50 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import PostHog from "../posthog.astro";
+import { publicBrandText, publicBrandUrl } from "../../lib/public-brand.ts";
 
 const { head, entry, siteTitle } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname.replace(/\.html$/, "").replace(/\/+$/, "");
-const markdownAlternate = pathname ? `/md${pathname}.md` : "/md/index.md";
-const seoTitle = `${entry.data.title} | ${siteTitle}`;
-const description = entry.data.description;
+const markdownAlternate = publicBrandUrl(
+  pathname ? `/md${pathname}.md` : "/md/index.md",
+);
+const publicEntryTitle = publicBrandText(entry.data.title);
+const publicDescription = publicBrandText(entry.data.description);
+const seoTitle = `${publicEntryTitle} | ${publicBrandText(siteTitle)}`;
+
+const publicHead = head.map(({ tag, attrs, content }) => ({
+  tag,
+  attrs: attrs
+    ? Object.fromEntries(
+        Object.entries(attrs).map(([key, value]) => [
+          key,
+          typeof value === "string"
+            ? publicBrandText(publicBrandUrl(value))
+            : value,
+        ]),
+      )
+    : attrs,
+  content:
+    typeof content === "string"
+      ? publicBrandText(publicBrandUrl(content))
+      : content,
+}));
 ---
 
 {
-  head.map(({ tag: Tag, attrs, content }) => (
+  publicHead.map(({ tag: Tag, attrs, content }) => (
     <Tag {...attrs} set:html={content} />
   ))
 }
 <meta property="og:image" content="https://www.zebrabyte.ro/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content={entry.data.title} />
+<meta property="og:image:alt" content={publicEntryTitle} />
 <meta property="og:site_name" content="ZebraByte" />
 <meta property="og:locale" content="ro_RO" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={seoTitle} />
-{description && <meta name="twitter:description" content={description} />}
+{publicDescription && <meta name="twitter:description" content={publicDescription} />}
 <meta name="twitter:image" content="https://www.zebrabyte.ro/og.png" />
 <link
   href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
@@ -39,3 +61,62 @@ const description = entry.data.description;
 
 <ClientRouter />
 <PostHog />
+
+<script>
+  import { publicBrandText, publicBrandUrl } from "../../lib/public-brand";
+
+  const ignoredDocsBrandingTags = new Set([
+    "CODE",
+    "PRE",
+    "SCRIPT",
+    "STYLE",
+    "TEXTAREA",
+  ]);
+
+  function shouldSkipDocsBranding(node: Node): boolean {
+    const parent = node.parentElement;
+    if (!parent) return false;
+    return Array.from(ignoredDocsBrandingTags).some(
+      (tag) => parent.closest(tag.toLowerCase()) !== null,
+    );
+  }
+
+  function applyDocsBranding() {
+    const root = document.body;
+    if (!root) return;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let current: Node | null = walker.nextNode();
+    while (current) {
+      if (!shouldSkipDocsBranding(current) && current.nodeValue) {
+        const next = publicBrandText(current.nodeValue);
+        if (next !== current.nodeValue) current.nodeValue = next;
+      }
+      current = walker.nextNode();
+    }
+
+    for (const element of document.querySelectorAll<HTMLElement>(
+      "[href], [src], [alt], [title], [aria-label]",
+    )) {
+      for (const attribute of ["href", "src"]) {
+        const value = element.getAttribute(attribute);
+        if (!value) continue;
+        const next = publicBrandUrl(value);
+        if (next !== value) element.setAttribute(attribute, next);
+      }
+      for (const attribute of ["alt", "title", "aria-label"]) {
+        const value = element.getAttribute(attribute);
+        if (!value) continue;
+        const next = publicBrandText(value);
+        if (next !== value) element.setAttribute(attribute, next);
+      }
+    }
+  }
+
+  document.addEventListener("astro:page-load", applyDocsBranding);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyDocsBranding, { once: true });
+  } else {
+    queueMicrotask(applyDocsBranding);
+  }
+</script>
