@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { scale } from "svelte/transition";
   import { onDestroy } from "svelte";
   import { frameworks } from "../content/frameworks.ts";
   import { windowWidth } from "../lib/window.ts";
@@ -104,7 +105,7 @@
       availableFrameworks[Math.floor(Math.random() * availableFrameworks.length)];
     const randomIndex = Math.floor(Math.random() * visibleFrameworks.length);
 
-    // Never remove the current badge until the replacement is fully available.
+    // Keep the existing badge visible until its replacement is fully loaded.
     const loaded = await preloadFramework(randomFramework);
     if (destroyed || generation !== rotationGeneration) return;
 
@@ -117,8 +118,8 @@
     scheduleNext();
   };
 
-  // Server and browser start from the same deterministic list. This prevents
-  // hydration mismatches while keeping the live rotation after load.
+  // Identical SSR/client initial order avoids hydration mismatches. Rotation is
+  // still live after hydration and starts only when the grid is visible.
   $effect(() => {
     visibleFrameworks = orderedFrameworks.slice(0, targetCount);
     rotationGeneration += 1;
@@ -127,8 +128,6 @@
   $effect(() => {
     if (!intersection.observed) return;
 
-    // Warm all tiny SVGs once the grid is close to/inside the viewport so
-    // future rotations are instant instead of briefly displaying an empty cell.
     preloadRemainingFrameworks();
     scheduleNext();
 
@@ -160,7 +159,10 @@
       )}
     >
       {#key framework.badge}
-        <div class="col-1 row-1 size-25 space-y-3 aspect-square mix-blend-multiply">
+        <div
+          class="transition-all duration-1000 col-1 row-1 space-y-3 size-25 aspect-square mix-blend-multiply"
+          transition:scale={{ duration: 750 }}
+        >
           <FrameworkBadge
             name={framework.badge}
             class="block size-16 mx-auto"
