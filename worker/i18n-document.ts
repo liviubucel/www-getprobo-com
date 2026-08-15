@@ -34,6 +34,19 @@ function removeAlternateLanguageLinks(html: string): string {
   );
 }
 
+function localizeTurnstileWidgets(html: string, locale: TargetLocale): string {
+  return html.replace(
+    /<([a-z][\w:-]*)\b([^>]*\bclass=["'][^"']*\bcf-turnstile\b[^"']*["'][^>]*)>/gi,
+    (_match, tag: string, rawAttributes: string) => {
+      const attributes = rawAttributes.replace(
+        /\sdata-language=["'][^"']*["']/gi,
+        "",
+      );
+      return `<${tag}${attributes} data-language="${locale}">`;
+    },
+  );
+}
+
 export function finalizeHtmlLocale(
   html: string,
   locale: TargetLocale,
@@ -78,6 +91,7 @@ export function finalizeHtmlLocale(
     `<link rel="alternate" hreflang="x-default" href="${escapeHtmlAttribute(romanianCanonical)}" />`,
   ].join("\n");
   result = result.replace(/<\/head>/i, `${alternates}\n</head>`);
+  result = localizeTurnstileWidgets(result, locale);
 
   return result;
 }
