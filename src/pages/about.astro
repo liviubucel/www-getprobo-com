@@ -1,77 +1,49 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ZebraByteLogo from "../components/ZebraByteLogo.astro";
+import AboutImg from "../assets/about.png";
+import KeyFigures from "../components/block/KeyFigures.astro";
+import Team from "../components/block/Team.astro";
+import Gallery from "../components/block/Gallery.astro";
+import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
 ---
 
 <Layout
-  title="Despre ZebraByte"
-  description="ZebraByte combină managed compliance, cyber security și infrastructură security-first într-un singur program pentru organizații care vor securitate măsurabilă și audit readiness continuă."
+  title="About ZebraByte"
+  description="Learn how ZebraByte connects managed compliance, cyber security and security-first infrastructure into one operating model."
 >
   <main>
-    <section class="container py-16 sm:py-28">
-      <div class="max-w-4xl">
-        <div class="mb-8"><ZebraByteLogo class="origin-left scale-125" /></div>
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZEBRABYTE LIMITED</p>
-        <h1 class="text-h2 sm:text-h1 mb-6 font-medium text-balance">Security și compliance trebuie să funcționeze împreună.</h1>
-        <p class="text-muted-foreground max-w-3xl text-xl leading-relaxed">
-          ZebraByte este o companie security-first. Construim și operăm programe de managed compliance,
-          cyber security și infrastructură securizată pentru organizații care vor să reducă riscul real,
-          nu doar să completeze checklist-uri.
-        </p>
-      </div>
+    <section class="container my-10 sm:mt-20 sm:mb-30">
+      <h1 class="text-h2 animate-slide-in mb-3 font-medium">About</h1>
+      <p class="text-muted-foreground animate-slide-in animation-delay-100 mb-6 sm:mb-12">
+        The mission, operating model and platform experience behind ZebraByte.
+      </p>
+
+      <figure class="animate-slide-in animation-delay-200 mb-10 sm:mb-30">
+        <ResponsiveImage
+          src={AboutImg}
+          class="aspect-square rounded-lg object-cover sm:aspect-1080/606"
+          mobile={[640, 640]}
+          sm={[1080, 607]}
+          alt="Platform archive team photography"
+          fetchpriority="high"
+        />
+        <figcaption class="text-muted-foreground mt-3 text-xs leading-relaxed">
+          Archive photography retained as part of the platform experience. People shown in archived imagery are not presented as ZebraByte employees unless explicitly stated.
+        </figcaption>
+      </figure>
+
+      <h2 class="text-muted-foreground animate-slide-in animation-delay-300 mb-1">
+        Mission
+      </h2>
+      <p class="text-quote animate-slide-in animation-delay-400">
+        We're turning compliance and security from separate, reactive projects into one operational program. Controls, evidence, privacy obligations and technical remediation should stay connected, measurable and continuously ready for review.
+      </p>
     </section>
 
-    <section class="bg-active py-12 sm:py-20">
-      <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Misiune</p>
-          <h2 class="text-h3 sm:text-h2 font-medium">Un singur program, de la control la implementare.</h2>
-        </div>
-        <div class="space-y-5 text-lg leading-relaxed">
-          <p>
-            Platforma de compliance gestionează riscuri, controale, evidence, politici și audit readiness.
-            Echipa de cyber security poate implementa și verifica măsurile tehnice care susțin acele controale:
-            hardening, website și email security, vulnerability management, incident response și secure managed hosting.
-          </p>
-          <p class="text-muted-foreground">
-            Astfel, compliance-ul nu rămâne o colecție de documente, iar security nu funcționează fără governance și ownership.
-          </p>
-        </div>
-      </div>
-    </section>
+    <KeyFigures />
 
-    <section class="container py-12 sm:py-24">
-      <div class="mb-10 max-w-3xl">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Cum lucrăm</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Platformă, expert dedicat și engineering.</h2>
-        <p class="text-muted-foreground text-lg">
-          Nu vindem un catalog generic de servicii IT. Ne concentrăm pe servicii care reduc riscul, susțin controalele și mențin organizația pregătită pentru audit și incidente.
-        </p>
-      </div>
+    <Team />
 
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          ["Managed Compliance", "Un expert coordonează programul end-to-end, iar platforma automatizează evidence, approvals și follow-up."],
-          ["Cyber Security", "Assessment, hardening, application security, email security, vulnerability management și incident readiness."],
-          ["Secure Infrastructure", "Hosting administrat security-first, cu controale tehnice, backup, monitoring și change management."],
-          ["Accessibility in Compliance", "Instrumentele WCAG sunt gratuite, iar auditul și remediation pot fi urmărite în același program de compliance."],
-          ["Evidence over promises", "Controalele trebuie susținute de dovezi verificabile, ownership și remediere urmărită."],
-          ["Direct responsibility", "Scope-ul are owner clar și este urmărit până la rezultat, fără fragmentare între furnizori."],
-        ].map(([title, description]) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <h3 class="mb-3 text-xl font-medium">{title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="container pb-16 sm:pb-24">
-      <div class="grid gap-4 sm:grid-cols-3">
-        <a href="/managed-compliance" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Compliance</p><h2 class="mb-2 text-xl font-medium">Managed Compliance</h2><p class="text-muted-foreground">Program gestionat end-to-end și continuu audit-ready.</p></a>
-        <a href="/cyber-security" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Security</p><h2 class="mb-2 text-xl font-medium">Cyber Security</h2><p class="text-muted-foreground">Controale tehnice și security operations.</p></a>
-        <a href="/secure-hosting" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors"><p class="text-muted-foreground mb-6 text-sm">Infrastructure</p><h2 class="mb-2 text-xl font-medium">Secure Managed Hosting</h2><p class="text-muted-foreground">Infrastructură administrată doar în model security-first.</p></a>
-      </div>
-    </section>
+    <Gallery />
   </main>
 </Layout>
