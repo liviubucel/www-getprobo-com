@@ -68,8 +68,15 @@ requireText(translator, "i18n:v3:text", "Translation cache");
 requireText(translator, "i18n:v3:page", "Page translation cache");
 
 const documentLocale = await read("worker/i18n-document.ts");
-for (const marker of ['hreflang="ro"', 'hreflang="en"', 'hreflang="x-default"', "og:locale"]) {
-  requireText(documentLocale, marker, "SEO locale finalizer");
+for (const marker of [
+  'hreflang="ro"',
+  'hreflang="en"',
+  'hreflang="x-default"',
+  "og:locale",
+  "localizeTurnstileWidgets",
+  "data-language",
+]) {
+  requireText(documentLocale, marker, "SEO/third-party locale finalizer");
 }
 
 const switcher = await read("src/components/LanguageSwitcher.astro");
@@ -95,10 +102,29 @@ const hydratedContracts = [
   ["src/components/block/Sharer.svelte", ["browserT", "copied = true"]],
   ["src/components/docs/mermaid-init.ts", ["browserT"]],
   ["src/components/ui/Slider.svelte", ["browserT", "i18n:", "Previous slide", "Slide-ul anterior"]],
+  ["src/components/LogosScroll.svelte", ["browserT", "i18n:"]],
+  ["src/components/block/TestimonialsScroll.svelte", ["browserT", "i18n:"]],
+  ["src/components/ZebraByteStatus.svelte", ["browserT", "All systems are operational"]],
+  ["src/components/FrameworkBadge.svelte", ["browserT", "framework badge", "badge de conformitate"]],
 ];
 for (const [file, markers] of hydratedContracts) {
   const source = await read(file);
   for (const marker of markers) requireText(source, marker, `Hydrated localization (${file})`);
+}
+
+const footer = await read("src/components/Footer.astro");
+for (const marker of ["Resurse", "Acasă", "Studii de caz", "Conformitate și juridic", "Toate drepturile rezervate."]) {
+  requireText(footer, marker, "Canonical Romanian footer");
+}
+const curatedEnglish = await read("worker/i18n.ts");
+for (const marker of [
+  '"Acasă": "Home"',
+  '"Păreri de la clienți ⭐": "Love from Customers ⭐"',
+  '"Jurnal de modificări": "Changelog"',
+  '"Conformitate și juridic": "Compliance & Legal"',
+  '"Centru de încredere": "Trust Center"',
+]) {
+  requireText(curatedEnglish, marker, "Deterministic English footer");
 }
 
 const sourceFiles = [
@@ -111,6 +137,7 @@ const sourceFiles = [
 const staleFrenchFiles = [];
 const hardCodedUsLocaleFiles = [];
 const uncoveredRuntimeLiterals = [];
+const unlocalizedSplideFiles = [];
 const runtimeLiteralPatterns = [
   /(?:textContent|innerText)\s*=\s*["'`]([^"'`\n]+)["'`]/g,
   /setAttribute\(\s*["'](?:title|aria-label|placeholder)["']\s*,\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
@@ -120,8 +147,11 @@ const runtimeLiteralPatterns = [
 for (const file of sourceFiles) {
   const source = await read(file);
   if (/href\s*=\s*["']\/fr(?:\/|["'])/i.test(source)) staleFrenchFiles.push(file);
-  if (/(?:Intl\.DateTimeFormat|toLocaleString)\(\s*["']en-US["']/i.test(source)) {
+  if (/(?:Intl\.DateTimeFormat|Intl\.NumberFormat|toLocaleString)\(\s*["']en-US["']/i.test(source)) {
     hardCodedUsLocaleFiles.push(file);
+  }
+  if (source.includes("new Splide(") && (!source.includes("browserT(") || !source.includes("i18n:"))) {
+    unlocalizedSplideFiles.push(file);
   }
 
   if (source.includes("browserT(")) continue;
@@ -142,6 +172,9 @@ if (staleFrenchFiles.length) {
 }
 if (hardCodedUsLocaleFiles.length) {
   failures.push(`Hard-coded en-US formatting remains in public source: ${hardCodedUsLocaleFiles.join(", ")}`);
+}
+if (unlocalizedSplideFiles.length) {
+  failures.push(`Splide instances without explicit RO/EN accessibility i18n: ${unlocalizedSplideFiles.join(", ")}`);
 }
 if (uncoveredRuntimeLiterals.length) {
   failures.push(
