@@ -143,8 +143,18 @@ const {
       if (this.hideTimer) window.clearTimeout(this.hideTimer);
     }
 
+    closeMainNavigation() {
+      const burger = document.querySelector<HTMLElement>(
+        'burger-menu[aria-expanded="true"]',
+      );
+      burger?.click();
+    }
+
     setOpen(next: boolean) {
       if (!this.trigger || !this.panel || this.open === next) return;
+
+      if (next) this.closeMainNavigation();
+
       this.open = next;
       this.trigger.setAttribute("aria-expanded", String(next));
 
@@ -154,7 +164,7 @@ const {
       }
 
       if (next) {
-        document.dispatchEvent(new CustomEvent("zbt:account-menu-open", { detail: { source: this } }));
+        document.dispatchEvent(new CustomEvent("zbt:account-menu-open"));
         this.panel.hidden = false;
         requestAnimationFrame(() => {
           if (!this.panel) return;
