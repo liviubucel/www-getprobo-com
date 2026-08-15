@@ -1,24 +1,49 @@
 /sitemap.xml /sitemap-index.xml 301
-/subprocessors https://compliance.probo.com/subprocessors 301
+/subprocessors https://trust.zebrabyte.ro/subprocessors 301
 /compliance-guides /hub 301
-/compliance-guides/soc2 /hub/soc2 301
-/compliance-guides/iso27001 /hub/iso27001 301
+/compliance-guides/soc2 /soc2 301
+/compliance-guides/iso27001 /iso-27001 301
 /wall-of-trust /love-from-customer 301
-/blog/page/1 /blog 301
+
+# Retire old editorial/platform routes from the public customer journey
+/hub/soc2 /soc2 301
+/hub/iso27001 /iso-27001 301
+/hub/nis2-compliance /nis2 301
+/hub/* /hub 302
+/blog/page/* /blog 302
+/blog/* /blog 302
+/changelog/* /changelog 302
+/products/compliance-portal /compliance-portal 301
+/platform-heritage / 301
+/platform-customer-archive /love-from-customer 301
+/probo-newsletter / 301
+
+# Internal deployment/agent documentation is not a ZebraByte public product today
+/docs/self-hosting /docs 301
+/docs/self-hosting/* /docs 301
+/docs/deployment /docs 301
+/docs/deployment/* /docs 301
+/docs/product/probo-agent /docs/product 301
+/docs/product/probo-agent/* /docs/product 301
+/docs/developers/api/agent/* /docs/developers 301
+
 /fr / 301
 /fr/about /about 301
 /fr/blog /blog 301
-/fr/blog/:id /blog/:id 301
-/fr/blog/page/:page /blog/page/:page 301
+/fr/blog/:id /blog 301
+/fr/blog/page/:page /blog 301
 /fr/brand /brand 301
 /fr/compliance-guides /hub 301
 /fr/contact /contact 301
 /fr/cookie-policy /cookie-policy 301
 /fr/privacy /privacy 301
 /fr/stories /stories 301
-/fr/stories/:id /stories/:id 301
+/fr/stories/:id /stories 301
 /fr/terms /terms 301
-/fr/yc /yc 301
+/fr/yc / 301
+/fr/* /:splat 301
+
+# Documentation URL compatibility for currently public product/developer docs
 /docs/getting-started /docs/product/getting-started 301
 /docs/getting-started/* /docs/product/getting-started/:splat 301
 /docs/cli /docs/developers/cli 301
@@ -32,16 +57,7 @@
 /docs/developers/cli/commands/risks /docs/developers/cli/commands/risk 301
 /docs/developers/cli/commands/users /docs/developers/cli/commands/user 301
 /docs/developers/cli/commands/webhooks /docs/developers/cli/commands/webhook 301
-/docs/self-hosting /docs/deployment/self-hosting 301
-/docs/self-hosting/* /docs/deployment/self-hosting/:splat 301
 /docs/developers/api/n8n/graphql /docs/developers/api/n8n/resources/execute 301
-/docs/configuration /docs/deployment/configuration 301
-/docs/configuration/* /docs/deployment/configuration/:splat 301
-/docs/product/probo-agent/contributing /docs/developers/api/agent/contributing 301
-/docs/product/probo-agent/installation /docs/product/probo-agent/macos 301
-/docs/product/probo-agent/desktop-install /docs/product/probo-agent/macos 301
-/docs/product/probo-agent/server-install /docs/product/probo-agent/linux 301
-/docs/product/access-review/infrastructure-security /docs/deployment/infrastructure-security 301
 /docs/product/access-review/clerk /docs/product/access-review/directory 301
 /docs/developers/api/mcp/tools/assets /docs/developers/api/mcp/tools/catalog/assets-and-data 301
 /docs/developers/api/mcp/tools/audits /docs/developers/api/mcp/tools/catalog/audits-and-findings 301
@@ -61,7 +77,6 @@
 /docs/developers/api/mcp/tools/third-parties /docs/developers/api/mcp/tools/catalog/third-parties 301
 /docs/developers/api/mcp/tools/tias /docs/developers/api/mcp/tools/catalog/privacy 301
 /docs/developers/api/mcp/tools/users /docs/developers/api/mcp/tools/catalog/identity-and-provisioning 301
-/fr/* /:splat 301
 
 # Legacy ZebraByte URLs - keep SEO continuity but retire generic IT offers
 /accesibilitate /accessibility 301
