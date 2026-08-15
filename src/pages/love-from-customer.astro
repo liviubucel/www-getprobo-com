@@ -1,41 +1,140 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
+import { getCollection } from "astro:content";
+import Logos from "../components/block/Logos.astro";
+import WallCard from "../components/WallCard.astro";
+
+const posts = (await getCollection("wall"))
+  .filter(
+    (post) =>
+      post.id.startsWith("zebrabyte-") &&
+      (import.meta.env.DEV || !post.data.draft),
+  )
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    const ao = a.data.order ?? Number.POSITIVE_INFINITY;
+    const bo = b.data.order ?? Number.POSITIVE_INFINITY;
+    if (ao !== bo) return ao - bo;
+    return (b.data.followers ?? 0) - (a.data.followers ?? 0);
+  });
 ---
 
 <Layout
-  title="Recenzii ZebraByte"
-  description="Feedback real de la clienții ZebraByte despre securizare, secure managed hosting, suport și proiecte livrate."
+  title="Love from Customers"
+  description="Real ZebraByte customer feedback about security recovery, managed hosting, support and delivered digital projects."
 >
-  <main>
-    <section class="container py-16 text-center sm:py-24">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Customer reviews</p>
-      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-3xl font-medium text-balance">Ce spun clienții ZebraByte.</h1>
-      <p class="text-muted-foreground mx-auto max-w-2xl text-lg leading-relaxed">
-        Feedback despre securizarea website-urilor, migrarea în infrastructură security-first, suport și proiecte livrate de echipa ZebraByte.
-      </p>
-    </section>
-
-    <ZebraByteTestimonials />
-
-    <section class="container py-12 sm:py-20">
-      <div class="grid gap-4 sm:grid-cols-3">
-        <a href="/recenzii-video" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors">
-          <p class="text-muted-foreground mb-6 text-sm">Video reviews</p>
-          <h2 class="mb-2 text-xl font-medium">Recenzii video</h2>
-          <p class="text-muted-foreground">Experiențe video păstrate din website-ul ZebraByte.</p>
-        </a>
-        <a href="/stories" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors">
-          <p class="text-muted-foreground mb-6 text-sm">Case studies</p>
-          <h2 class="mb-2 text-xl font-medium">Stories</h2>
-          <p class="text-muted-foreground">Vezi contexte tehnice, probleme și rezultate.</p>
-        </a>
-        <a href="/contact" class="bg-subtle hover:bg-active rounded-2xl border p-6 transition-colors">
-          <p class="text-muted-foreground mb-6 text-sm">Start</p>
-          <h2 class="mb-2 text-xl font-medium">Discută cu ZebraByte</h2>
-          <p class="text-muted-foreground">Spune-ne ce trebuie protejat sau adus în compliance.</p>
-        </a>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <div class="relative isolate">
+      <div
+        aria-hidden="true"
+        class="trust-hero-orb pointer-events-none absolute top-[-1314px] left-1/2 z-0 size-[2265px] rounded-full border-[350px] border-[#E6FF03] blur-[96px]"
+      >
       </div>
-    </section>
+
+      <section class="relative z-10 container py-16 text-center sm:py-24">
+        <div
+          class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium"
+          style="animation-delay: 100ms"
+        >
+          Love from Customers
+        </div>
+        <h1
+          class="mx-auto mb-6 max-w-[680px] text-[2.75rem] leading-none font-semibold tracking-[-1.4px] text-balance sm:text-5xl sm:tracking-[-1.6px]"
+          aria-label="Hear it from people who worked with ZebraByte."
+        >
+          <span aria-hidden="true" class="block overflow-hidden">
+            <span class="animate-perspective-in block" style="animation-delay: 150ms">
+              Hear it from people
+            </span>
+          </span>
+          <span aria-hidden="true" class="block overflow-hidden">
+            <span class="animate-perspective-in block" style="animation-delay: 200ms">
+              who worked with ZebraByte.
+            </span>
+          </span>
+        </h1>
+        <p
+          class="text-muted-foreground animate-perspective-in mx-auto max-w-[520px] text-base"
+          style="animation-delay: 350ms"
+        >
+          Real feedback about security recovery, hosting, support and projects delivered by ZebraByte.
+        </p>
+      </section>
+
+      <section class="relative z-10 pb-4">
+        <p class="text-muted-foreground mb-2 text-center text-xs font-medium uppercase tracking-[0.12em]">
+          Organizations featured across the wider platform reference library
+        </p>
+        <Logos class="animate-slide-in animation-delay-300" />
+      </section>
+    </div>
+
+    <div class="container mt-10 pb-16 sm:mt-14 sm:pb-24">
+      {
+        posts.length > 0 ? (
+          <div class="animate-slide-in animation-delay-250 gap-5 sm:columns-2 lg:columns-3">
+            {posts.map((post) => <WallCard post={post} />)}
+          </div>
+        ) : (
+          <p class="text-muted-foreground py-16 text-center text-base">
+            Customer reviews are being prepared for this wall.
+          </p>
+        )
+      }
+    </div>
   </main>
 </Layout>
+
+<script>
+  function initWall() {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-wall-lang]")
+      .forEach((btn) => {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = "1";
+        const card = btn.closest("article");
+        const post = card?.querySelector<HTMLElement>("[data-wall-post]");
+        if (!post) return;
+        const original = btn.dataset.original ?? "";
+        const translated = btn.dataset.translated ?? "";
+        const lang = btn.dataset.langLabel ?? "RO";
+        let showingOriginal = false;
+        btn.addEventListener("click", () => {
+          showingOriginal = !showingOriginal;
+          post.textContent = showingOriginal ? original : translated;
+          btn.textContent = showingOriginal ? "EN" : lang;
+          btn.title = showingOriginal
+            ? "Show translation (EN)"
+            : `Show original (${lang})`;
+        });
+      });
+  }
+
+  initWall();
+  document.addEventListener("astro:page-load", initWall);
+</script>
+
+<style>
+  .trust-hero-orb {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .trust-hero-orb {
+      animation: trust-hero-orb-scale-in cubic-bezier(0.785, 0.135, 0.15, 0.86) 3s both;
+      animation-delay: -1200ms;
+    }
+  }
+
+  @keyframes trust-hero-orb-scale-in {
+    from {
+      transform: translateX(-50%) scale(0);
+    }
+
+    to {
+      transform: translateX(-50%) scale(1);
+    }
+  }
+</style>
