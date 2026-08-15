@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ZebraByteIndustryServicePage from "../components/ZebraByteIndustryServicePage.astro";
+import {
+  legacyIndustryServiceSlugs,
+  findIndustryServiceByLegacySlug,
+  type IndustryServiceKey,
+  type ZebraByteIndustry,
+} from "../content/zebrabyte-industries";
+
+export function getStaticPaths() {
+  return legacyIndustryServiceSlugs.map((legacy) => {
+    const match = findIndustryServiceByLegacySlug(legacy)!;
+    return {
+      params: { legacy },
+      props: {
+        industry: match.industry,
+        service: match.service,
+      },
+    };
+  });
+}
+
+interface Props {
+  industry: ZebraByteIndustry;
+  service: IndustryServiceKey;
+}
+
+const { industry, service } = Astro.props;
+const labelMap: Record<IndustryServiceKey, string> = {
+  cyber: "Securitate cibernetică",
+  email: "Securitate email",
+  website: "Securitate website",
+  hosting: "Hosting securizat",
+  maintenance: "Mentenanță WordPress",
+};
+---
+
+<Layout
+  title={`${labelMap[service]} pentru ${industry.shortTitle}`}
+  description={`${labelMap[service]} ZebraByte pentru ${industry.shortTitle}: controale tehnice, hardening, monitoring și recovery adaptate riscurilor sectorului.`}
+>
+  <main>
+    <ZebraByteIndustryServicePage industry={industry} service={service} />
+  </main>
+</Layout>
