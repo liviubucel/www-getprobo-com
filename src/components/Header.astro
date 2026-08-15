@@ -48,7 +48,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       <Button href="/contact" class="h-8 px-3 whitespace-nowrap">
         Discută cu un expert
       </Button>
-      <AccountMenu />
+      <AccountMenu id="client-access-panel-desktop" />
     </div>
 
     <slot />
@@ -57,30 +57,7 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
       !hideBurger && (
         <div class="ml-auto flex items-center gap-1 xl:hidden">
           <LanguageSwitcher compact />
-
-          <a
-            href="https://portal.zebrabyte.ro"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-muted-foreground hover:text-primary grid size-10 place-items-center rounded-lg transition-colors"
-            aria-label="Portal clienți ZebraByte"
-            title="Portal clienți"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="7" r="4" />
-              <path d="M4 21a8 8 0 0 1 16 0" />
-            </svg>
-          </a>
+          <AccountMenu id="client-access-panel-mobile" mobile />
 
           <burger-menu
             class="group grid size-10 cursor-pointer place-items-center rounded-lg transition-colors hover:bg-subtle"
