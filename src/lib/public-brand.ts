@@ -6,15 +6,24 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/https?:\/\/compliance\.probo\.com/gi, "https://trust.zebrabyte.ro")
     .replace(/\bProbo Agent\b/g, "ZebraByte Device Agent")
     .replace(/\bprobo-agent\b/g, "zebrabyte-device-agent")
+    .replace(/\bProbo vs Vanta\b/gi, "ZebraByte vs Vanta")
+    .replace(
+      /\bProbo vs Hiring a Fractional CISO\b/gi,
+      "ZebraByte vs Hiring a Fractional CISO",
+    )
+    .replace(/\bWhy Probo\b/gi, "Why ZebraByte")
     .replace(/\bProbo is an open-source compliance platform\b/gi, "ZebraByte is a compliance platform")
     .replace(/\bProbo is built on an open-source compliance platform\b/gi, "ZebraByte provides a compliance platform")
     .replace(/\bProbo's open-source compliance platform\b/gi, "the ZebraByte compliance platform")
     .replace(/\bProbo's open-source platform\b/gi, "the ZebraByte platform")
-    .replace(/\bopen-source Probo\b/gi, "ZebraByte")
-    .replace(/\bProbo open-source\b/gi, "ZebraByte")
-    .replace(/\bProbo is the only open-source,?\s*/gi, "ZebraByte is a ")
-    .replace(/\bProbo\b/g, "ZebraByte")
-    .replace(/\bPROBO\b/g, "ZEBRABYTE")
+    .replace(/\bopen-source Probo\b/gi, "the platform")
+    .replace(/\bProbo open-source\b/gi, "the platform")
+    .replace(/\bProbo is the only open-source,?\s*/gi, "The platform is a ")
+    // Unqualified historical brand mentions are neutralized instead of being
+    // rewritten as ZebraByte. This avoids changing third-party quotes into
+    // statements that falsely claim a ZebraByte customer relationship.
+    .replace(/\bProbo\b/g, "the platform")
+    .replace(/\bPROBO\b/g, "THE PLATFORM")
     .replace(/\bZebraByte is an open-source compliance platform\b/gi, "ZebraByte is a compliance platform")
     .replace(/\bZebraByte is built on an open-source compliance platform\b/gi, "ZebraByte provides a compliance platform")
     .replace(/\bZebraByte's open-source compliance platform\b/gi, "the ZebraByte compliance platform")
