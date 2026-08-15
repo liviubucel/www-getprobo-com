@@ -1,105 +1,105 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
 import ZebraByteLogo from "../components/ZebraByteLogo.astro";
+import ProboLogo from "../assets/probo-logo.svg";
+import ProboLogoOnly from "../assets/probo-logo-only.svg";
+import ProboWhiteLogo from "../assets/probo_white_logo.svg";
 import { frameworks } from "../content/frameworks.ts";
 import FrameworkBadge from "../components/FrameworkBadge.svelte";
 ---
 
 <Layout
   title="Brand Assets"
-  description="Resurse vizuale ZebraByte și badge-uri pentru framework-urile de securitate și conformitate suportate de platformă."
+  description="Resurse vizuale ZebraByte, activele originale Probo și biblioteca de badge-uri pentru framework-urile suportate de platformă."
 >
   <main class="container max-w-[920px] py-10 sm:py-20">
     <h1 class="text-h2 animate-slide-in mb-3 font-medium">Brand Assets</h1>
-    <p
-      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 sm:mb-20"
-    >
-      Identitatea ZebraByte și resursele vizuale folosite în prezentări,
-      integrări și materiale de parteneriat. Păstrăm această zonă din experiența
-      Probo, dar numai cu active care aparțin ZebraByte.
+    <p class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 sm:mb-20">
+      Păstrăm biblioteca vizuală completă a proiectului Probo și adăugăm identitatea
+      ZebraByte peste aceeași structură. Activele sunt separate clar pentru a putea
+      fi folosite corect în prezentări, integrări și documentație.
     </p>
 
-    <div class="space-y-16">
+    <div class="space-y-20">
       <section class="animate-slide-in animation-delay-200">
-        <h2 class="mb-6 text-xl font-medium">Logo & mark</h2>
+        <div class="mb-6">
+          <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
+          <h2 class="text-xl font-medium">Logo & mark</h2>
+        </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <div
-              class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg"
-            >
+            <div class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg px-6">
               <ZebraByteLogo />
             </div>
-            <p class="text-muted-foreground text-center text-sm">
-              Wordmark-ul folosit în interfața curentă.
-            </p>
+            <p class="text-muted-foreground text-center text-sm">Wordmark ZebraByte folosit în interfața curentă.</p>
           </div>
-
           <div>
-            <div
-              class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg"
-            >
-              <img
-                src="/favicon.svg"
-                alt="ZebraByte brand mark"
-                width="64"
-                height="64"
-                class="size-16"
-              />
+            <div class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg">
+              <img src="/favicon.svg" alt="ZebraByte brand mark" width="64" height="64" class="size-16" />
             </div>
             <div class="flex justify-center">
-              <a
-                href="/favicon.svg"
-                download="zebrabyte-mark.svg"
-                class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors"
-              >
-                Download SVG
-              </a>
+              <a href="/favicon.svg" download="zebrabyte-mark.svg" class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors">Download SVG</a>
             </div>
           </div>
         </div>
+      </section>
 
-        <p class="text-muted-foreground mt-6 text-sm leading-relaxed">
-          Nu publicăm încă un fișier nou drept „logo oficial complet” dacă nu este
-          exact asset-ul aprobat ZebraByte. Brand mark-ul de mai sus este copiat din
-          site-ul ZebraByte actual; lockup-urile suplimentare pot fi adăugate aici
-          fără schimbarea structurii paginii.
-        </p>
+      <section class="animate-slide-in animation-delay-250">
+        <div class="mb-6">
+          <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.14em]">Upstream Probo</p>
+          <h2 class="text-xl font-medium">Logo library originală</h2>
+          <p class="text-muted-foreground mt-2 text-sm">
+            Aceste active sunt păstrate integral din proiectul Probo și rămân disponibile pentru referințe upstream, documentație și componentele originale ale platformei.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <div class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg">
+              <Image src={ProboLogo} alt="Probo Logo" width={146} height={40} class="h-10 w-auto" />
+            </div>
+            <div class="flex justify-center">
+              <a href="/probo-logo.svg" download class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors">Download SVG</a>
+            </div>
+          </div>
+
+          <div>
+            <div class="bg-level-1 mb-4 flex h-32 items-center justify-center rounded-lg">
+              <Image src={ProboLogoOnly} alt="Probo Logo Icon" width={40} height={40} class="h-10 w-auto" />
+            </div>
+            <div class="flex justify-center">
+              <a href="/probo-logo-only.svg" download class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors">Download SVG</a>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-4 flex h-32 items-center justify-center rounded-lg bg-[#141E12]">
+              <Image src={ProboWhiteLogo} alt="Probo Logo white" width={148} height={41} class="h-10 w-auto" />
+            </div>
+            <div class="flex justify-center">
+              <a href={ProboWhiteLogo.src} download class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2 text-sm transition-colors">Download SVG</a>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="animate-slide-in animation-delay-300">
-        <h2 class="mb-6 text-xl font-medium">Security & compliance badges</h2>
+        <h2 class="mb-6 text-xl font-medium">Compliance Badges</h2>
         <p class="text-muted-foreground mb-6 text-sm">
-          Biblioteca originală de framework badges rămâne parte din platformă.
-          Badge-urile descriu standarde și framework-uri suportate; nu reprezintă,
-          prin simpla afișare, certificări deținute de ZebraByte.
+          Biblioteca originală de badge-uri Probo este păstrată complet. Ea descrie standarde și framework-uri suportate de platformă; afișarea lor nu implică automat certificarea ZebraByte.
         </p>
         <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
           {
             frameworks.map((framework) => (
               <div>
                 <div class="bg-level-1 mb-4 flex h-40 flex-col items-center justify-center rounded-lg p-6">
-                  <FrameworkBadge
-                    name={framework.badge}
-                    class="mb-3 block size-16 mix-blend-multiply"
-                    client:visible
-                  />
+                  <FrameworkBadge name={framework.badge} class="mb-3 block size-16 mix-blend-multiply" client:visible />
                   <div class="text-center text-sm">{framework.label}</div>
                 </div>
                 <div class="flex flex-wrap justify-center gap-2">
-                  <a
-                    href={`/frameworks/${framework.badge}.svg`}
-                    download
-                    class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-3 py-1.5 text-xs transition-colors"
-                  >
-                    SVG
-                  </a>
-                  <a
-                    href={`/frameworks/${framework.badge}.json`}
-                    download
-                    class="bg-level-1 text-foreground border-border hover:bg-level-2 inline-block rounded-md border px-3 py-1.5 text-xs transition-colors"
-                  >
-                    JSON
-                  </a>
+                  <a href={`/frameworks/${framework.badge}.svg`} download class="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-3 py-1.5 text-xs transition-colors">SVG</a>
+                  <a href={`/frameworks/${framework.badge}.json`} download class="bg-level-1 text-foreground border-border hover:bg-level-2 inline-block rounded-md border px-3 py-1.5 text-xs transition-colors">JSON</a>
                 </div>
               </div>
             ))
