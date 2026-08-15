@@ -1,0 +1,54 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="ZebraByte vs Sienna — comparație legacy"
+  description="Arhivă a comparației ZebraByte dintre abordarea sa pentru widgetul de accesibilitate și overlay-uri comerciale."
+  noIndex={true}
+>
+  <main class="container max-w-3xl py-12 sm:py-20">
+    <header class="mb-10">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Legacy comparison · noindex</p>
+      <h1 class="text-h2 mb-4 font-medium">Widget de accesibilitate: abordarea ZebraByte vs overlay-uri comerciale</h1>
+      <p class="text-muted-foreground text-lg leading-relaxed">Păstrăm ruta și subiectele din comparația istorică ZebraByte. Afirmațiile despre produse terțe se pot schimba în timp, de aceea această versiune nu este prezentată ca o comparație comercială actuală și nu este indexată.</p>
+    </header>
+
+    <div class="space-y-10 leading-relaxed">
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">Supply-chain risk</h2>
+        <p class="text-muted-foreground">Orice script terț executat în browser extinde suprafața de atac. Pentru un widget de accesibilitate, opțiunea de self-hosting, o politică CSP atentă și controlul versiunii scriptului pot reduce dependența de modificări externe necontrolate.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">Local-first & privacy</h2>
+        <p class="text-muted-foreground">Abordarea ZebraByte urmărește ca preferințele widgetului să fie procesate local și ca funcțiile de bază să nu depindă de tracking. Organizația care implementează scriptul trebuie totuși să verifice versiunea concretă și configurația sa.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">Self-hosting</h2>
+        <p class="text-muted-foreground">Scriptul poate fi descărcat și servit din infrastructura proprie, ceea ce permite organizației să controleze origin-ul, caching-ul, CSP-ul și momentul în care actualizează versiunea.</p>
+      </section>
+
+      <section>
+        <h2 class="text-h4 mb-3 font-medium">Fără promisiuni de conformitate automată</h2>
+        <p class="text-muted-foreground">ZebraByte nu poziționează widgetul ca soluție care repară automat WCAG. Overlay-ul oferă preferințe utilizatorului; auditul și remedierea aplicației rămân necesare.</p>
+      </section>
+
+      <section class="rounded-2xl border bg-active p-6">
+        <h2 class="mb-3 text-xl font-medium">Ce am păstrat din pagina originală</h2>
+        <ul class="text-muted-foreground list-disc space-y-2 pl-5 text-sm">
+          <li>discuția despre supply-chain risk și CSP;</li>
+          <li>abordarea local-first și lipsa dependenței de tracking pentru funcțiile widgetului;</li>
+          <li>self-hosting și controlul scriptului;</li>
+          <li>separarea între overlay și conformitatea WCAG reală.</li>
+        </ul>
+      </section>
+
+      <div class="flex flex-wrap gap-3 border-t pt-8">
+        <a href="/accesibilitate/obtine-widget" class="bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium">Instalează widgetul</a>
+        <a href="/accesibilitate/audit" class="rounded-lg border px-4 py-2.5 text-sm font-medium">Rulează auditul</a>
+      </div>
+    </div>
+  </main>
+</Layout>
