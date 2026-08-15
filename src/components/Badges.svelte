@@ -43,7 +43,6 @@
 
   let timer: ReturnType<typeof setTimeout> | null = null;
   let destroyed = false;
-  let rotationGeneration = 0;
   let innerWidth = $state(windowWidth());
   let isMobile = $derived(innerWidth < 640);
   let targetCount = $derived(isMobile && countMobile ? countMobile : count);
@@ -53,6 +52,9 @@
   const badgeSrc = (badge: string) =>
     `/frameworks/${badge.replaceAll(" ", "")}.svg?v=3`;
 
+  // For SVGs, onload is enough to guarantee the resource is available for the
+  // next frame. Do not await img.decode(): Safari can delay SVG decode and make
+  // the rotation appear frozen.
   const preloadFramework = (framework: (typeof frameworks)[number]) =>
     new Promise<boolean>((resolve) => {
       if (typeof Image === "undefined") {
@@ -61,24 +63,15 @@
       }
 
       const image = new Image();
-      image.decoding = "async";
-      image.onload = async () => {
-        try {
-          await image.decode?.();
-        } catch {
-          // The resource is already loaded; decode() support varies by browser.
-        }
-        resolve(true);
-      };
+      image.onload = () => resolve(true);
       image.onerror = () => resolve(false);
       image.src = badgeSrc(framework.badge);
     });
 
-  const preloadRemainingFrameworks = () => {
+  const warmFrameworkCache = () => {
     if (typeof Image === "undefined") return;
     orderedFrameworks.forEach((framework) => {
       const image = new Image();
-      image.decoding = "async";
       image.src = badgeSrc(framework.badge);
     });
   };
@@ -90,10 +83,9 @@
   };
 
   const tick = async () => {
-    const generation = ++rotationGeneration;
-    const visibleBadges = new Set(visibleFrameworks.map((framework) => framework.badge));
     const availableFrameworks = orderedFrameworks.filter(
-      (framework) => !visibleBadges.has(framework.badge),
+      (framework) =>
+        !visibleFrameworks.map((visible) => visible.badge).includes(framework.badge),
     );
 
     if (availableFrameworks.length === 0 || visibleFrameworks.length === 0) {
@@ -105,34 +97,34 @@
       availableFrameworks[Math.floor(Math.random() * availableFrameworks.length)];
     const randomIndex = Math.floor(Math.random() * visibleFrameworks.length);
 
-    // Keep the existing badge visible until its replacement is fully loaded.
+    // Preserve the original behaviour: one random tile changes every five
+    // seconds with the keyed scale transition. We only wait for the next SVG's
+    // HTTP load so the outgoing tile is never replaced by an empty frame.
     const loaded = await preloadFramework(randomFramework);
-    if (destroyed || generation !== rotationGeneration) return;
+    if (destroyed) return;
 
     if (loaded) {
-      visibleFrameworks = visibleFrameworks.map((framework, index) =>
-        index === randomIndex ? randomFramework : framework,
-      );
+      visibleFrameworks[randomIndex] = randomFramework;
     }
 
     scheduleNext();
   };
 
-  // Identical SSR/client initial order avoids hydration mismatches. Rotation is
-  // still live after hydration and starts only when the grid is visible.
+  // Deterministic initial content avoids SSR/client hydration mismatches. This
+  // only resets when the responsive badge count changes; live rotations remain
+  // untouched between ticks.
   $effect(() => {
     visibleFrameworks = orderedFrameworks.slice(0, targetCount);
-    rotationGeneration += 1;
   });
 
+  // Keep the original live behaviour: rotate only while this grid is visible.
   $effect(() => {
-    if (!intersection.observed) return;
-
-    preloadRemainingFrameworks();
-    scheduleNext();
+    if (intersection.observed) {
+      warmFrameworkCache();
+      scheduleNext();
+    }
 
     return () => {
-      rotationGeneration += 1;
       if (timer) {
         clearTimeout(timer);
         timer = null;
@@ -142,7 +134,6 @@
 
   onDestroy(() => {
     destroyed = true;
-    rotationGeneration += 1;
     if (timer) clearTimeout(timer);
   });
 
