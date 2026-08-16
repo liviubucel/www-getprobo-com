@@ -32,6 +32,7 @@ const [
   layout,
   header,
   headerMenu,
+  mobileMenu,
   agents,
 ] = await Promise.all([
   read("package.json"),
@@ -53,6 +54,7 @@ const [
   read("src/layouts/Layout.astro"),
   read("src/components/Header.astro"),
   read("src/components/HeaderMenu.astro"),
+  read("src/components/MobileMenu.astro"),
   read("AGENTS.md"),
 ]);
 
@@ -121,12 +123,26 @@ requireText(layout, 'id="main-content"', "main content focus target");
 requireText(layout, "display=swap", "Geist typography fidelity");
 requireText(layout, 'rel="preconnect" href="https://fonts.googleapis.com"', "font preconnect");
 requireText(layout, 'rel="preconnect" href="https://fonts.gstatic.com"', "font preconnect");
+
 requireText(header, "backdrop-blur-md", "header visual treatment");
+requireText(header, '<MobileMenu id="mobile-menu" />', "mobile navigation drawer rendering");
+requireText(header, 'customElementDefine("burger-menu"', "mobile navigation controller");
+requireText(header, "lockPage()", "mobile navigation scroll lock");
+requireText(header, "closeOnEscape", "mobile navigation Escape behavior");
+requireText(header, 'CustomEvent("zbt:main-menu-open")', "mobile/account menu coordination");
+requireText(mobileMenu, "details[data-mobile-section]", "mobile feature accordion");
+requireText(mobileMenu, "astro:page-load", "mobile navigation lifecycle rebinding");
 
 requireText(headerMenu, 'document.addEventListener("pointerdown", this.onDocumentPointerDown)', "desktop menu outside-click close");
 requireText(headerMenu, 'link.addEventListener("click", this.close)', "desktop menu link close");
 requireText(headerMenu, "suppressNextFocus", "desktop menu Escape focus guard");
 requireText(headerMenu, 'event.key !== "Escape"', "desktop menu Escape behavior");
+requireText(headerMenu, "transitionPanels", "desktop menu panel transition behavior");
+requireText(headerMenu, "contentTravelDistance", "desktop menu directional motion");
+requireText(headerMenu, "getAnimations()", "desktop menu transition cancellation");
+requireText(headerMenu, "prefers-reduced-motion: reduce", "desktop menu reduced-motion behavior");
+requireText(headerMenu, 'CustomEvent("zbt:main-menu-open")', "desktop/account menu coordination");
+requireText(headerMenu, "data-menu-feature-image", "desktop menu deferred media");
 
 requireText(agents, "ZebraByte Experience Contract", "agent engineering contract");
 requireText(agents, "worker/main.ts", "agent Worker architecture guidance");
