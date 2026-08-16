@@ -10,14 +10,25 @@ const blog = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }),
   schema: z.object({
     title: z.string(),
+    /** Optional public slug. Imported archives use this so storage paths never leak into URLs. */
+    slug: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
     date: z.date(),
     dateModified: z.date().optional(),
-    /** Meta description / preview excerpt; keep 120-160 chars for SEO. */
-    excerpt: z.string().min(120),
+    /** Meta description / preview excerpt; keep 120-200 chars for SEO. */
+    excerpt: z.string().min(120).max(220),
     author: z.object({
       name: z.string(),
     }),
     ogImage: z.string().optional(),
+    /** Legacy Probo articles can use a compact illustration beside the title. */
+    titleImage: z.string().optional(),
+    /** Source attribution for migrated editorial archives. */
+    source: z.enum(["zebrabyte", "probo"]).optional(),
+    legacyId: z.string().optional(),
+    tags: z.array(z.string()).optional().default([]),
     faqs: z
       .array(
         z.object({
