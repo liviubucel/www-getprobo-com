@@ -1,0 +1,90 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import BlogCategoryNav from "../../../components/BlogCategoryNav.astro";
+import WrittenBy from "../../../components/block/WrittenBy.astro";
+import { getBlogHref } from "../../../lib/blog";
+import {
+  blogCategories,
+  getBlogCategory,
+  getBlogCategoryBySlug,
+  type BlogCategorySlug,
+} from "../../../lib/blog-categories";
+
+export async function getStaticPaths() {
+  return blogCategories.map((category) => ({
+    params: { category: category.slug },
+  }));
+}
+
+const categorySlug = Astro.params.category as BlogCategorySlug;
+const category = getBlogCategoryBySlug(categorySlug);
+if (!category) throw new Error(`Unknown blog category: ${categorySlug}`);
+
+const posts = (await getCollection("blog"))
+  .filter((post) => getBlogCategory(post).slug === category.slug)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const dateFormatter = Intl.DateTimeFormat("ro-RO", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<Layout
+  title={`${category.label} | Blog ZebraByte`}
+  description={category.description}
+>
+  <main class="container my-10 sm:my-20">
+    <Breadcrumbs
+      items={[
+        { label: "Blog", href: "/blog" },
+        { label: category.label },
+      ]}
+      class="mb-5"
+    />
+    <h1 class="text-h2 mb-3 font-medium">{category.label}</h1>
+    <p class="text-muted-foreground mb-7 max-w-3xl text-base sm:mb-9">
+      {category.description}
+    </p>
+    <BlogCategoryNav active={category.slug} class="mb-12 sm:mb-16" />
+
+    <div class="flex flex-col items-start gap-10 sm:grid sm:grid-cols-[1fr_320px] sm:gap-30">
+      <section class="w-full">
+        {
+          posts.length ? (
+            posts.map((post) => {
+              const postCategory = getBlogCategory(post);
+              return (
+                <article class="space-y-3 border-b py-10 first:pt-0 last:border-b-0">
+                  <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+                    <span class="text-muted-foreground">
+                      {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
+                    </span>
+                    <span aria-hidden="true" class="text-border">•</span>
+                    <span class="font-medium">{postCategory.label}</span>
+                  </div>
+                  <h2>
+                    <a href={getBlogHref(post)} class="text-h4 block font-medium hover:opacity-80">
+                      {post.data.title}
+                    </a>
+                  </h2>
+                  <p class="text-muted-foreground text-lg whitespace-pre-line">
+                    {post.data.excerpt}
+                  </p>
+                </article>
+              );
+            })
+          ) : (
+            <p class="text-muted-foreground">Nu există încă articole în această categorie.</p>
+          )
+        }
+      </section>
+      <aside class="sticky top-20">
+        <WrittenBy />
+      </aside>
+    </div>
+  </main>
+</Layout>
