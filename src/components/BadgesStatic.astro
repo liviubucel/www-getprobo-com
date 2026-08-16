@@ -8,6 +8,7 @@ interface Props {
   countMobile?: number;
   class?: string;
   border?: boolean;
+  eager?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   countMobile = count,
   class: className,
   border = false,
+  eager = false,
 } = Astro.props;
 
 const preferredOrder = [
@@ -53,7 +55,7 @@ const orderedFrameworks = [
           <FrameworkBadge
             name={framework.badge}
             class="mx-auto block size-16"
-            priority={index < Math.min(countMobile, 6)}
+            priority={eager && index < Math.min(countMobile, 6)}
           />
           <div class="text-xxs whitespace-nowrap">{framework.label}</div>
         </div>
