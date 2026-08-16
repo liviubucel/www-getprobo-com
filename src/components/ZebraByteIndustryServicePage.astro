@@ -74,12 +74,12 @@ const serviceLead: Record<IndustryServiceKey, string> = {
       <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Riscurile pe care le legăm de serviciu.</h2>
       <p class="text-muted-foreground text-lg">Această pagină păstrează intenția landing page-ului sectorial ZebraByte anterior, dar o conectează la programul complet de security și compliance.</p>
     </div>
-    <div class="grid gap-3 sm:grid-cols-2">
+    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
       {industry.risks.map((risk, index) => (
-        <div class="bg-level-0 rounded-xl border p-6">
+        <article class="bg-level-0 min-h-44 p-6 sm:p-8">
           <div class="text-muted-foreground mb-6 text-sm">Risc 0{index + 1}</div>
           <p class="font-medium leading-relaxed">{risk}</p>
-        </div>
+        </article>
       ))}
     </div>
   </div>
@@ -91,9 +91,9 @@ const serviceLead: Record<IndustryServiceKey, string> = {
     <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Nu izolăm acest serviciu de restul infrastructurii.</h2>
     <p class="text-muted-foreground text-lg">Poți continua către celelalte servicii ZebraByte dedicate aceleiași industrii.</p>
   </div>
-  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
     {siblingServices.map(({ slug, meta: sibling }) => (
-      <a href={`/${slug}`} class="group rounded-xl border p-6 transition-colors hover:bg-subtle">
+      <a href={`/${slug}`} class="bg-level-0 group min-h-56 p-6 transition-colors hover:bg-subtle sm:p-8">
         <p class="text-muted-foreground mb-8 text-sm">{sibling.eyebrow}</p>
         <h3 class="mb-2 font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
         <p class="text-muted-foreground text-sm leading-relaxed">{sibling.description}</p>

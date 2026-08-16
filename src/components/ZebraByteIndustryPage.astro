@@ -132,10 +132,10 @@ const services = Object.entries(industry.serviceSlugs)
       <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Ce trebuie să rămână după proiect.</h2>
       <p class="text-muted-foreground text-lg leading-relaxed">Nu urmărim doar livrarea unor documente. Scopul este o postură tehnică și operațională mai clară, care poate fi menținută, verificată și demonstrată.</p>
     </div>
-    <div class="grid gap-3">
+    <div class="divide-y border-y">
       {industry.outcomes.map((outcome, index) => (
-        <div class="rounded-xl border p-5 sm:p-6">
-          <div class="text-muted-foreground mb-2 text-sm">0{index + 1}</div>
+        <div class="grid grid-cols-[44px_1fr] gap-3 py-5 sm:py-6">
+          <div class="text-muted-foreground text-sm">0{index + 1}</div>
           <p class="font-medium leading-relaxed">{outcome}</p>
         </div>
       ))}

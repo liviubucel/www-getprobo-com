@@ -59,6 +59,20 @@ Inherited role profiles may be retained as a clearly labeled role library, but t
 
 Probo authors may be shown only for imported material that explicitly carries their attribution. Default/new ZebraByte editorial material must not inherit Probo people by default.
 
+### Generated ZebraByte landing pages
+
+New ZebraByte industry, service, legacy and contact surfaces may add content that did not exist in the Probo snapshot, but their chrome must remain consistent with the inherited visual system.
+
+Prefer continuous structures for repeated peer items:
+
+- `divide-y` / `border-y` for editorial lists and outcomes;
+- one framed `gap-px` grid with `bg-border` separators for peer cards/links;
+- free layout and whitespace where content does not require a container.
+
+Avoid turning every paragraph, outcome, contact method or related link into its own floating `rounded-xl border p-6` card. A single form, media frame, interactive surface or intentional framed grid can still use rounded/bordered chrome. The rule is about repeated independent card shells, not a global ban on borders or rounded corners.
+
+This keeps new ZebraByte content compatible with Probo's calmer hierarchy while preserving first-party forms, current service architecture, security controls and SEO.
+
 ## Change procedure
 
 Before changing an inherited surface:

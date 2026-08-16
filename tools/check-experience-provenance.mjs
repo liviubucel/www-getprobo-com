@@ -11,12 +11,27 @@ function forbidText(content, needle, label) {
   if (content.includes(needle)) failures.push(`${label}: forbidden ${JSON.stringify(needle)}`);
 }
 
-const [about, team, logos, home, love, baseline] = await Promise.all([
+const [
+  about,
+  team,
+  logos,
+  home,
+  love,
+  contact,
+  industryPage,
+  industryService,
+  legacyPage,
+  baseline,
+] = await Promise.all([
   read("src/pages/about.astro"),
   read("src/components/block/Team.astro"),
   read("src/components/block/Logos.astro"),
   read("src/pages/index.astro"),
   read("src/pages/love-from-customer.astro"),
+  read("src/pages/contact.astro"),
+  read("src/components/ZebraByteIndustryPage.astro"),
+  read("src/components/ZebraByteIndustryServicePage.astro"),
+  read("src/components/ZebraByteLegacyPage.astro"),
   read("docs/architecture/experience-baseline.md"),
 ]);
 
@@ -35,6 +50,16 @@ requireText(
   baseline,
   "Never present Probo customer logos as ZebraByte social proof",
   "baseline social-proof provenance rule",
+);
+requireText(
+  baseline,
+  "Generated ZebraByte landing pages",
+  "generated landing-page visual contract",
+);
+requireText(
+  baseline,
+  "Avoid turning every paragraph, outcome, contact method or related link into its own floating",
+  "repeated card-chrome rule",
 );
 
 requireText(about, 'import Team from "../components/block/Team.astro"', "About inherited section rhythm");
@@ -72,6 +97,24 @@ requireText(
 requireText(love, 'post.id.startsWith("zebrabyte-")', "customer wall ZebraByte-only source filter");
 forbidText(love, 'import Logos from "../components/block/Logos.astro"', "customer wall inherited company marquee");
 forbidText(love, "wider platform reference library", "customer wall inherited social-proof workaround");
+
+requireText(contact, 'class="divide-y border-y"', "contact editorial rail");
+requireText(contact, 'id="contact-form"', "contact first-party form");
+requireText(contact, "data-turnstile-container", "contact Turnstile verification");
+forbidText(contact, '<div class="rounded-xl border p-6">', "contact repeated floating cards");
+
+requireText(industryPage, 'class="divide-y border-y"', "industry editorial list rhythm");
+requireText(industryPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry framed peer grid");
+forbidText(industryPage, 'class="rounded-xl border p-5 sm:p-6"', "industry outcome card repetition");
+
+requireText(industryService, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry service framed peer grids");
+forbidText(industryService, 'class="bg-level-0 rounded-xl border p-6"', "industry service risk card repetition");
+forbidText(industryService, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "industry service sibling card repetition");
+
+requireText(legacyPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "legacy page framed peer grid");
+requireText(legacyPage, 'class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5"', "legacy note editorial treatment");
+forbidText(legacyPage, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "legacy related card repetition");
+forbidText(legacyPage, "mt-5 rounded-xl border bg-active p-5", "legacy note floating-card treatment");
 
 if (failures.length) {
   console.error(`[provenance] ${failures.length} provenance/baseline violation(s):`);

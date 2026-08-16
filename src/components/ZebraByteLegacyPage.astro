@@ -28,7 +28,7 @@ const { page } = Astro.props;
     <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Din ZebraByte</p>
     <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Conținut păstrat și integrat în experiența Probo.</h2>
     <p class="text-muted-foreground text-lg leading-relaxed">{page.intro}</p>
-    {page.note && <p class="mt-5 rounded-xl border bg-active p-5 text-sm leading-relaxed">{page.note}</p>}
+    {page.note && <p class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5">{page.note}</p>}
   </div>
 </section>
 
@@ -65,9 +65,9 @@ const { page } = Astro.props;
     <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Continuă</p>
     <h2 class="text-h3 font-medium">Servicii conectate</h2>
   </div>
-  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
     {page.related.map((item) => (
-      <a href={item.href} class="group rounded-xl border p-6 transition-colors hover:bg-subtle">
+      <a href={item.href} class="bg-level-0 group min-h-44 p-6 transition-colors hover:bg-subtle sm:p-8">
         <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.label}</h3>
         <p class="text-muted-foreground mt-2 text-sm">Deschide serviciul și vezi cum se leagă de programul ZebraByte.</p>
       </a>
