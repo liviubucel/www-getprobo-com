@@ -1,131 +1,102 @@
 ---
 import { clsx } from "clsx";
-import LogosScroll from "../LogosScroll.svelte";
 
 type Props = {
-  constrained?: boolean
-  class?: string
-}
+  constrained?: boolean;
+  class?: string;
+};
 
 const companies = [
-  {
-    image: "ahrefs.svg",
-    alt: "Ahrefs",
-    href: "https://ahrefs.com",
-    class: "h-5 w-auto sm:h-6",
-  },
-  {
-    image: "lucis.svg",
-    alt: "Lucis",
-    href: "https://www.lucis.life",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "filz.svg",
-    alt: "Filz",
-    href: "https://www.filiz.io",
-    class: "h-8 w-auto sm:h-9",
-  },
-  {
-    image: "wolfia.svg",
-    alt: "Wolfia",
-    href: "https://www.wolfia.com",
-    class: "h-7 w-auto sm:h-8",
-  },
-  {
-    image: "trace_for_good.svg",
-    alt: "Trace for Good",
-    href: "https://www.traceforgood.com",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "tinfoil.svg",
-    alt: "Tinfoil",
-    href: "https://tinfoil.sh",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "typebot.svg",
-    alt: "Typebot",
-    href: "https://typebot.io",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "normal.svg",
-    alt: "Normal",
-    href: "https://normalcomputing.ai",
-    class: "h-4 w-auto sm:h-5",
-  },
-  {
-    image: "morphik.svg",
-    alt: "Morphik",
-    href: "https://morphik.ai",
-    class: "h-8 w-auto sm:h-9",
-  },
-  {
-    image: "vybe.svg",
-    alt: "Vybe",
-    href: "https://www.vybe.build/",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "blaxel-logo.svg",
-    alt: "Blaxel",
-    href: "https://blaxel.ai/",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "sonarly-logo.svg",
-    alt: "Sonarly",
-    href: "https://sonarly.com/",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "verso.svg",
-    alt: "Verso",
-    href: "https://www.askverso.ai/",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "awen_logo.svg",
-    alt: "Awen",
-    href: "https://www.awen.ai/",
-    class: "h-6 w-auto sm:h-7",
-  },
-  {
-    image: "wafer_logo.svg",
-    alt: "Wafer",
-    href: "https://www.wafer.ai/",
-    class: "h-6 w-auto sm:h-7",
-  },
+  { image: "ahrefs.svg", alt: "Ahrefs", href: "https://ahrefs.com", class: "h-5 w-auto sm:h-6" },
+  { image: "lucis.svg", alt: "Lucis", href: "https://www.lucis.life", class: "h-6 w-auto sm:h-7" },
+  { image: "filz.svg", alt: "Filz", href: "https://www.filiz.io", class: "h-8 w-auto sm:h-9" },
+  { image: "wolfia.svg", alt: "Wolfia", href: "https://www.wolfia.com", class: "h-7 w-auto sm:h-8" },
+  { image: "trace_for_good.svg", alt: "Trace for Good", href: "https://www.traceforgood.com", class: "h-6 w-auto sm:h-7" },
+  { image: "tinfoil.svg", alt: "Tinfoil", href: "https://tinfoil.sh", class: "h-6 w-auto sm:h-7" },
+  { image: "typebot.svg", alt: "Typebot", href: "https://typebot.io", class: "h-6 w-auto sm:h-7" },
+  { image: "normal.svg", alt: "Normal", href: "https://normalcomputing.ai", class: "h-4 w-auto sm:h-5" },
+  { image: "morphik.svg", alt: "Morphik", href: "https://morphik.ai", class: "h-8 w-auto sm:h-9" },
+  { image: "vybe.svg", alt: "Vybe", href: "https://www.vybe.build/", class: "h-6 w-auto sm:h-7" },
+  { image: "blaxel-logo.svg", alt: "Blaxel", href: "https://blaxel.ai/", class: "h-6 w-auto sm:h-7" },
+  { image: "sonarly-logo.svg", alt: "Sonarly", href: "https://sonarly.com/", class: "h-6 w-auto sm:h-7" },
+  { image: "verso.svg", alt: "Verso", href: "https://www.askverso.ai/", class: "h-6 w-auto sm:h-7" },
+  { image: "awen_logo.svg", alt: "Awen", href: "https://www.awen.ai/", class: "h-6 w-auto sm:h-7" },
+  { image: "wafer_logo.svg", alt: "Wafer", href: "https://www.wafer.ai/", class: "h-6 w-auto sm:h-7" },
 ];
+
+const logoGroup = (duplicate = false) => companies.map((company) => (
+  <a
+    href={company.href}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="mx-4 flex w-30 flex-none items-center justify-center sm:mx-15 sm:w-50"
+    aria-label={duplicate ? undefined : company.alt}
+    aria-hidden={duplicate ? "true" : undefined}
+    tabindex={duplicate ? "-1" : undefined}
+  >
+    <img
+      src={`/clients/${company.image}`}
+      alt={duplicate ? "" : company.alt}
+      class={company.class}
+      width="160"
+      height="36"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+));
 ---
 
-<section class={clsx("p-0 overflow-hidden relative", Astro.props.class, Astro.props.constrained && "sm:max-w-270 mx-auto")}>
-  <LogosScroll class="flex h-16 w-max items-center sm:h-30" client:load>
-    {
-      companies.map((company) => (
-        <a
-          href={company.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mx-4 flex w-30 flex-none items-center justify-center sm:mx-15 sm:w-50"
-          aria-label={company.alt}
-        >
-          <img
-            src={`/clients/${company.image}`}
-            alt={company.alt}
-            class={company.class}
-          />
-        </a>
-      ))
-    }
-  </LogosScroll>
+<section
+  class={clsx(
+    "relative overflow-hidden p-0",
+    Astro.props.class,
+    Astro.props.constrained && "mx-auto sm:max-w-270",
+  )}
+>
+  <div class="logo-marquee flex h-16 w-max items-center sm:h-30">
+    <div class="flex shrink-0 items-center">{logoGroup()}</div>
+    <div class="flex shrink-0 items-center" aria-hidden="true">{logoGroup(true)}</div>
+  </div>
 
-  {Astro.props.constrained && <div
-    class="absolute top-0 right-0 h-full w-5 sm:w-10 bg-linear-to-l from-[#FFFFFB] to-[#FFFFFB]/0"
-  ></div>
-  <div
-    class="absolute top-0 left-0 h-full w-5 sm:w-10 bg-linear-to-r from-[#FFFFFB] to-[#FFFFFB]/0"
-  ></div>}
+  {
+    Astro.props.constrained && (
+      <>
+        <div class="absolute top-0 right-0 h-full w-5 bg-linear-to-l from-[#FFFFFB] to-[#FFFFFB]/0 sm:w-10" />
+        <div class="absolute top-0 left-0 h-full w-5 bg-linear-to-r from-[#FFFFFB] to-[#FFFFFB]/0 sm:w-10" />
+      </>
+    )
+  }
 </section>
+
+<style>
+  .logo-marquee {
+    animation: zbt-logo-marquee 42s linear infinite;
+    will-change: transform;
+  }
+
+  .logo-marquee:hover,
+  .logo-marquee:focus-within {
+    animation-play-state: paused;
+  }
+
+  @keyframes zbt-logo-marquee {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-marquee {
+      animation: none;
+      max-width: 100%;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-width: none;
+    }
+
+    .logo-marquee::-webkit-scrollbar {
+      display: none;
+    }
+  }
+</style>
