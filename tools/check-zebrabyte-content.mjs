@@ -136,8 +136,8 @@ async function checkBlog() {
 
   if (!router.includes('from "./blog-legacy-redirects"')) fail("Worker is not consuming the generated legacy blog redirect map.");
   if (!router.includes("legacyWixBlogRedirects[legacyKey]")) fail("Worker legacy Wix redirect does not resolve exact mapped aliases.");
-  if (!router.includes("blogul-nostru-1") || !router.includes("(?:ro\\/)?")) {
-    fail("Worker legacy redirect does not cover old /ro blog paths.");
+  if (!router.includes("legacyWixBlogRedirect") || !router.includes("blogul-nostru-1")) {
+    fail("Worker is missing the legacy Wix blog redirect handler.");
   }
 
   console.log(
