@@ -39,6 +39,40 @@ function parseGeneratedRedirects(source) {
   return JSON.parse(match[1]);
 }
 
+async function checkBlogSyncPipeline() {
+  const packageJson = JSON.parse(await read("package.json"));
+  const syncCommand = packageJson?.scripts?.["sync:zebrabyte-blog"];
+  const canonicalDirectCommand = "node tools/sync-zebrabyte-blog-v2.mjs";
+  const optimizedWrapperCommand = "node tools/sync-zebrabyte-blog-optimized.mjs";
+
+  if (syncCommand === canonicalDirectCommand) return;
+
+  if (syncCommand === optimizedWrapperCommand) {
+    try {
+      const wrapper = await read("tools/sync-zebrabyte-blog-optimized.mjs");
+      const delegatesToCanonicalImporter =
+        wrapper.includes('import("./sync-zebrabyte-blog-v2.mjs")') ||
+        wrapper.includes("import('./sync-zebrabyte-blog-v2.mjs')");
+      const scopesOptimizationToSanityImages =
+        wrapper.includes('url.hostname !== "cdn.sanity.io"') &&
+        wrapper.includes('url.pathname.includes("/images/")');
+
+      if (!delegatesToCanonicalImporter) {
+        fail("optimized ZebraByte blog sync wrapper does not delegate to the canonical duplicate-safe importer.");
+      }
+      if (!scopesOptimizationToSanityImages) {
+        fail("optimized ZebraByte blog sync wrapper is not safely scoped to Sanity image requests.");
+      }
+      return;
+    } catch (error) {
+      fail(`unable to validate optimized ZebraByte blog sync wrapper: ${error instanceof Error ? error.message : error}`);
+      return;
+    }
+  }
+
+  fail("build pipeline is not using the canonical duplicate-safe ZebraByte blog importer or its validated image-optimization wrapper.");
+}
+
 async function checkBlog() {
   let manifest;
   try {
@@ -114,10 +148,7 @@ async function checkBlog() {
     fail(`invalid generated legacy redirect map: ${error instanceof Error ? error.message : error}`);
   }
 
-  const packageJson = JSON.parse(await read("package.json"));
-  if (packageJson?.scripts?.["sync:zebrabyte-blog"] !== "node tools/sync-zebrabyte-blog-v2.mjs") {
-    fail("build pipeline is not using the canonical duplicate-safe ZebraByte blog importer.");
-  }
+  await checkBlogSyncPipeline();
 
   const blogRoute = await read("src/pages/blog/[id].astro");
   const blogIndex = await read("src/pages/blog.astro");
