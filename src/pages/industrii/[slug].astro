@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import ZebraByteIndustryPage from "../../components/ZebraByteIndustryPage.astro";
 import { zebraByteIndustries, type ZebraByteIndustry } from "../../content/zebrabyte-industries";
+import { getIndustryEditorial } from "../../content/zebrabyte-industry-editorial";
 
 export function getStaticPaths() {
   return zebraByteIndustries.map((industry) => ({
@@ -15,12 +16,28 @@ interface Props {
 }
 
 const { industry } = Astro.props;
+const editorial = getIndustryEditorial(industry.slug);
+if (!editorial) throw new Error(`Missing adapted industry editorial content for ${industry.slug}`);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: editorial.faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+};
 ---
 
 <Layout
-  title={industry.shortTitle}
+  title={industry.title}
   description={industry.description}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <main>
     <ZebraByteIndustryPage industry={industry} />
   </main>
