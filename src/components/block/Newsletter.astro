@@ -55,10 +55,11 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
         </label>
 
         <div
-          class="cf-turnstile max-w-full overflow-hidden"
+          class="max-w-full overflow-hidden"
+          data-turnstile-container
           data-sitekey={turnstileSiteKey}
-          data-theme="auto"
           data-size="flexible"
+          aria-label="Verificare de securitate"
         ></div>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -91,23 +92,45 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 <script>
   import { customElementDefine } from "../../lib/dom";
   import { browserT, getBrowserLocale } from "../../lib/browser-i18n";
+  import {
+    ensureTurnstileToken,
+    lazyRenderTurnstile,
+    resetTurnstile,
+  } from "../../lib/turnstile";
 
   class NewsletterForm extends HTMLElement {
+    private turnstileCleanup?: () => void;
+
     connectedCallback() {
       const form = this.querySelector("form") as HTMLFormElement | null;
       const success = this.querySelector<HTMLElement>("[data-success]");
       const status = this.querySelector<HTMLElement>("[data-status]");
       const button = form?.querySelector("button") as HTMLButtonElement | null;
+      const turnstile = this.querySelector<HTMLElement>("[data-turnstile-container]");
       if (!form || !success || !status || !button) return;
+
+      this.turnstileCleanup?.();
+      this.turnstileCleanup = lazyRenderTurnstile(turnstile);
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         button.disabled = true;
-        button.textContent = browserT("Se trimite...", "Sending...");
+        button.textContent = browserT("Se verifică...", "Verifying...");
         status.classList.add("hidden");
         status.textContent = "";
 
         try {
+          const verified = await ensureTurnstileToken(turnstile);
+          if (!verified) {
+            status.textContent = browserT(
+              "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+              "Security verification is not ready yet. Please try again.",
+            );
+            status.classList.remove("hidden");
+            return;
+          }
+
+          button.textContent = browserT("Se trimite...", "Sending...");
           const response = await fetch("/api/newsletter/subscribe", {
             method: "POST",
             headers: { "Accept-Language": getBrowserLocale() },
@@ -148,10 +171,16 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           );
           status.classList.remove("hidden");
         } finally {
+          resetTurnstile(turnstile);
           button.disabled = false;
           button.textContent = browserT("Abonează-mă", "Subscribe");
         }
       });
+    }
+
+    disconnectedCallback() {
+      this.turnstileCleanup?.();
+      this.turnstileCleanup = undefined;
     }
   }
 
