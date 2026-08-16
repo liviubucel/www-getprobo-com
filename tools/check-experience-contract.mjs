@@ -33,6 +33,7 @@ const [
   layout,
   header,
   headerMenu,
+  accountMenu,
   mobileMenu,
   agents,
 ] = await Promise.all([
@@ -56,6 +57,7 @@ const [
   read("src/layouts/Layout.astro"),
   read("src/components/Header.astro"),
   read("src/components/HeaderMenu.astro"),
+  read("src/components/AccountMenu.astro"),
   read("src/components/MobileMenu.astro"),
   read("AGENTS.md"),
 ]);
@@ -87,8 +89,8 @@ requireText(testimonialScroll, "speed: -1", "testimonial reverse desktop row");
 
 requireText(stories, 'import Slider from "../ui/Slider.svelte"', "case-study carousel");
 requireText(stories, "client:load", "case-study carousel hydration");
-requireText(stories, "withOverflow", "case-study overflow behavior");
-requireText(stories, "navigateOnClick", "case-study click navigation");
+requireText(stories, "withOverflow", "case-study carousel overflow behavior");
+requireText(stories, "navigateOnClick", "case-study carousel click navigation");
 forbidText(stories, ".slice(0, 6)", "case-study collection completeness");
 
 requireText(storyCard, 'FrameworkBadge from "../components/FrameworkBadge.svelte"', "story animated badge");
@@ -105,10 +107,10 @@ requireText(hub, 'FrameworkBadge from "../components/FrameworkBadge.svelte"', "H
 requireText(hub, "client:visible", "Hub animated badge hydration");
 forbidText(hub, "FrameworkBadgeStatic", "Hub animated badges");
 
-requireText(logos, 'LogosScroll from "../LogosScroll.svelte"', "customer logo carousel");
-requireText(logos, "client:load", "customer logo carousel hydration");
-requireText(logoScroll, "AutoScroll", "customer logo auto-scroll");
-requireText(logoScroll, "prefers-reduced-motion: reduce", "customer logo reduced-motion support");
+requireText(logos, 'LogosScroll from "../LogosScroll.svelte"', "capability marquee");
+requireText(logos, "client:load", "capability marquee hydration");
+requireText(logoScroll, "AutoScroll", "capability marquee auto-scroll");
+requireText(logoScroll, "prefers-reduced-motion: reduce", "capability marquee reduced-motion support");
 
 requireText(complianceTrack, "<compliance-track", "compliance journey progression");
 requireText(complianceTrack, "IntersectionObserver", "compliance journey viewport trigger");
@@ -149,6 +151,12 @@ requireText(headerMenu, "getAnimations()", "desktop menu transition cancellation
 requireText(headerMenu, "prefers-reduced-motion: reduce", "desktop menu reduced-motion behavior");
 requireText(headerMenu, 'CustomEvent("zbt:main-menu-open")', "desktop/account menu coordination");
 requireText(headerMenu, "data-menu-feature-image", "desktop menu deferred media");
+
+requireText(accountMenu, 'document.addEventListener("zbt:main-menu-open", this.closeFromMainMenu)', "account menu closes for main navigation");
+requireText(accountMenu, "closeDesktopNavigation()", "account menu desktop-navigation close path");
+requireText(accountMenu, 'header-menu[data-open="true"]', "account menu detects open desktop navigation");
+requireText(accountMenu, 'new KeyboardEvent("keydown", { key: "Escape", bubbles: true })', "account menu reuses desktop Escape semantics");
+requireText(accountMenu, "if (next) this.closeMainNavigation();", "account menu closes competing navigation before opening");
 
 requireText(agents, "ZebraByte Experience Contract", "agent engineering contract");
 requireText(agents, "worker/main.ts", "agent Worker architecture guidance");
