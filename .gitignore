@@ -35,5 +35,8 @@ pnpm-debug.log*
 src/content/blog/zebrabyte-generated/
 public/blog/zebrabyte-generated/
 
+# Changelog entries synchronized from public GitHub PRs during builds
+src/content/changelog/github-*.mdx
+
 # Claude Code local settings
 .claude/settings.local.json
