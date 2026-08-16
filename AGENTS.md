@@ -31,7 +31,8 @@ That includes:
 - progressive/viewport-triggered states;
 - media posters and loading states;
 - typography;
-- accessibility behavior.
+- accessibility behavior;
+- Astro view-transition/navigation behavior where the layout declares `transition:name`.
 
 A build that compiles while silently making a moving component static is a regression.
 
@@ -44,7 +45,8 @@ Do **not** replace any of the following unless the change has explicit product a
 - animated/progressive custom element -> static markup;
 - full content collection -> arbitrary `.slice(...)` subset;
 - animated hero -> static gradient;
-- responsive interactive component -> mobile-only static component.
+- responsive interactive component -> mobile-only static component;
+- Astro `ClientRouter`/view-transition behavior -> normal full-document navigation when transition semantics are still part of the UI.
 
 Performance work must preserve the experience. Prefer lifecycle improvements such as viewport pausing, lazy media source assignment, poster images, asset sizing, caching and reduced unnecessary work.
 
@@ -62,10 +64,11 @@ Protected behaviors currently include:
 6. **Case studies** — use the interactive Slider, preserve overflow/click navigation and do not arbitrarily cap the collection.
 7. **Compliance journey** — viewport-triggered steps activate progressively.
 8. **Product videos** — can lazy-load, but retain a poster/meaningful visual state before playback.
-9. **Header** — preserve the intended translucent/backdrop treatment and navigation interactions.
-10. **Desktop mega-menu** — closes on outside interaction/link selection, supports Escape without immediately reopening and preserves focus semantics.
-11. **Motion on mobile** — mobile is not a reason to disable motion. Disable or reduce motion for `prefers-reduced-motion: reduce`.
-12. **Typography** — Geist is part of the visual contract. Loading strategy must not intentionally prefer a permanent fallback font.
+9. **Global layout** — preserves body typography/background classes, the skip-to-content target and Astro `ClientRouter` view transitions.
+10. **Header** — preserve the intended translucent/backdrop treatment and navigation interactions.
+11. **Desktop mega-menu** — closes on outside interaction/link selection, supports Escape without immediately reopening and preserves focus semantics.
+12. **Motion on mobile** — mobile is not a reason to disable motion. Disable or reduce motion for `prefers-reduced-motion: reduce`.
+13. **Typography** — Geist is part of the visual contract. Loading strategy must not intentionally prefer a permanent fallback font.
 
 ## Accessibility and motion
 
@@ -74,6 +77,8 @@ Respect `prefers-reduced-motion: reduce`. This is an accessibility requirement a
 Do not conflate reduced motion with viewport width. A user on a phone who has not requested reduced motion should receive the intended motion/interaction unless there is a specific mobile UX reason documented in the component.
 
 All interactive changes must preserve keyboard access, focus visibility, Escape behavior where applicable and correct `aria-*` state.
+
+The global skip link and `#main-content` focus target are protected accessibility infrastructure. Do not remove them while reconstructing or optimizing the layout.
 
 ## Cloudflare runtime architecture
 
@@ -141,7 +146,8 @@ Bad examples:
 - remove animation only on mobile;
 - use `display=optional` if it makes the branded font commonly disappear;
 - cap a content collection without a product requirement;
-- remove client behavior and call the visual resting state equivalent.
+- remove client behavior and call the visual resting state equivalent;
+- remove `ClientRouter` while leaving view-transition declarations throughout the UI.
 
 ## Before editing
 

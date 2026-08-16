@@ -113,6 +113,11 @@ requireText(saleArg, "const poster =", "autopilot video poster");
 requireText(saleArg, "poster={poster}", "autopilot video poster rendering");
 requireText(saleArg, 'preload="none"', "autopilot video lazy loading");
 
+requireText(layout, 'import { ClientRouter } from "astro:transitions"', "marketing view transitions");
+requireText(layout, "<ClientRouter />", "marketing view transitions");
+requireText(layout, 'class="text-primary bg-level-0 font-sans text-base"', "global body visual contract");
+requireText(layout, 'href="#main-content"', "skip-to-content accessibility");
+requireText(layout, 'id="main-content"', "main content focus target");
 requireText(layout, "display=swap", "Geist typography fidelity");
 requireText(layout, 'rel="preconnect" href="https://fonts.googleapis.com"', "font preconnect");
 requireText(layout, 'rel="preconnect" href="https://fonts.gstatic.com"', "font preconnect");
