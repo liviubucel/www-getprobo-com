@@ -21,6 +21,7 @@ type WorkerEnv = Parameters<typeof app.fetch>[1] & TranslationEnv;
 type LocalizableKind = "html" | "xml" | "markdown" | null;
 
 const localizablePublicTextPath = /^\/(?:llms|llms-docs|llms-full)\.txt$/i;
+const localizedResponseTtlSeconds = 60 * 60 * 24 * 7;
 
 // These pages are authored natively in Romanian. Returning the static asset body
 // directly keeps Cloudflare streaming intact and lets the browser discover CSS,
@@ -35,6 +36,8 @@ const nativeRomanianHtmlPaths = new Set([
   "/contact",
   "/newsletter",
   "/recenzii-video",
+  "/feedback",
+  "/orderform",
 ]);
 
 function normalizedPathname(pathname: string): string {
@@ -90,6 +93,40 @@ function withContentLanguage(response: Response, locale: TargetLocale): Response
   });
 }
 
+function localizedHeaders(response: Response, locale: TargetLocale): Headers {
+  const headers = new Headers(response.headers);
+  headers.set("Content-Language", locale);
+  headers.delete("Content-Length");
+  headers.delete("Content-Encoding");
+  headers.delete("ETag");
+  return headers;
+}
+
+function responseCacheKey(
+  response: Response,
+  locale: TargetLocale,
+  kind: Exclude<LocalizableKind, null>,
+): string | null {
+  if (response.status !== 200) return null;
+  const etag = response.headers.get("ETag");
+  if (!etag) return null;
+  const normalized = etag.replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 160);
+  if (!normalized) return null;
+  return `i18n:v4:response:${locale}:${kind}:${normalized}`;
+}
+
+function responseFromLocalizedBody(
+  response: Response,
+  locale: TargetLocale,
+  body: string,
+): Response {
+  return new Response(body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: localizedHeaders(response, locale),
+  });
+}
+
 function rewriteLocalizedTextLinks(value: string, locale: TargetLocale): string {
   return value.replace(
     /https:\/\/(?:www\.)?zebrabyte\.ro(?:\/[^\s)\]}>"']*)?/gi,
@@ -121,6 +158,16 @@ async function localizeResponse(
     return withContentLanguage(response, locale);
   }
 
+  const cacheKey = responseCacheKey(response, locale, kind);
+  if (cacheKey && env.NEWSLETTER) {
+    try {
+      const cached = await env.NEWSLETTER.get(cacheKey);
+      if (cached) return responseFromLocalizedBody(response, locale, cached);
+    } catch {
+      // Translation cache is an optimization; never block the public response.
+    }
+  }
+
   const source = await response.text();
   let localized = source;
 
@@ -139,17 +186,17 @@ async function localizeResponse(
   localized = localizeDateMarkup(localized, locale);
   if (kind === "html") localized = finalizeHtmlLocale(localized, locale, publicUrl);
 
-  const headers = new Headers(response.headers);
-  headers.set("Content-Language", locale);
-  headers.delete("Content-Length");
-  headers.delete("Content-Encoding");
-  headers.delete("ETag");
+  if (cacheKey && env.NEWSLETTER) {
+    try {
+      await env.NEWSLETTER.put(cacheKey, localized, {
+        expirationTtl: localizedResponseTtlSeconds,
+      });
+    } catch {
+      // A failed cache write must not fail the page request.
+    }
+  }
 
-  return new Response(localized, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
+  return responseFromLocalizedBody(response, locale, localized);
 }
 
 function legacyFrenchRedirect(request: Request): Response | null {
