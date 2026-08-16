@@ -27,7 +27,10 @@ const blog = defineCollection({
     titleImage: z.string().optional(),
     /** Source attribution for migrated editorial archives. */
     source: z.enum(["zebrabyte", "probo"]).optional(),
+    /** Canonical source document ID for a migrated article. */
     legacyId: z.string().optional(),
+    /** Every source document represented by this canonical article, including deduplicated copies. */
+    legacyIds: z.array(z.string()).optional().default([]),
     tags: z.array(z.string()).optional().default([]),
     faqs: z
       .array(
