@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "npm run sync:zebrabyte-blog && npm run sync:changelog && npm run check:zebrabyte-content && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n",
-    "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog-v2.mjs",
+    "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog-optimized.mjs",
     "sync:changelog": "node tools/sync-github-changelog.mjs",
     "check:zebrabyte-content": "node tools/check-zebrabyte-content.mjs",
     "check:i18n": "node tools/check-i18n.mjs",
