@@ -193,6 +193,12 @@ export const menuGroups: MenuGroup[] = [
     label: "Companie",
     items: [
       {
+        label: "Despre noi",
+        description: "Misiunea, principiile și modul în care lucrăm",
+        href: "/about",
+        icon: "users-three",
+      },
+      {
         label: "Cariere",
         description: "Roluri, profile și oportunități ZebraByte",
         href: "/careers",
