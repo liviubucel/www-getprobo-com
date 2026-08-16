@@ -1,147 +1,85 @@
 ---
-import { Image } from "astro:assets";
-import BryanPortrait from "../../assets/about/bryan-frimin.png";
-import AntoinePortrait from "../../assets/about/antoine-bourchardy.png";
-import LudovicPortrait from "../../assets/about/ludovic-vielle.jpeg";
-import SachaPortrait from "../../assets/about/sacha-al-himdani.png";
-import ArthurPortrait from "../../assets/about/arthur-mayoux.jpeg";
-import EmilePortrait from "../../assets/about/emile-re.jpeg";
+import MenuIcon from "../MenuIcon.astro";
+import type { MenuIconName } from "../../content/menu";
 
-const leadProfiles = [
-  {
-    img: AntoinePortrait,
-    alt: "Antoine Bourchardy",
-    name: "Antoine Bourchardy",
-    role: "Compliance & product profile",
-    bio: "Compliance assessment and implementation experience focused on making regulatory work more understandable and operational.",
-  },
-  {
-    img: BryanPortrait,
-    alt: "Bryan Frimin",
-    name: "Bryan Frimin",
-    role: "Engineering & security profile",
-    bio: "Engineering experience across compliance operations, security workflows and scalable product systems.",
-  },
-];
+type Discipline = {
+  name: string;
+  role: string;
+  bio: string;
+  icon: MenuIconName;
+};
 
-const contributorProfiles = [
-  {
-    img: SachaPortrait,
-    alt: "Sacha Al Himdani",
-    name: "Sacha Al Himdani",
-    role: "Engineering profile",
-  },
-  {
-    img: ArthurPortrait,
-    alt: "Arthur Mayoux",
-    name: "Arthur Mayoux",
-    role: "Business operations profile",
-  },
-  {
-    img: EmilePortrait,
-    alt: "Émile Ré",
-    name: "Émile Ré",
-    role: "Engineering profile",
-  },
-  {
-    img: LudovicPortrait,
-    alt: "Ludovic Vielle",
-    name: "Ludovic Vielle",
-    role: "Engineering profile",
-  },
-];
-
-const allProfiles = [...leadProfiles, ...contributorProfiles];
-
-const disciplines = [
+const leadDisciplines: Discipline[] = [
   {
     name: "Managed Compliance",
-    role: "Controls, evidence & audit readiness",
-    bio: "Program management pentru framework-uri, politici, risk reviews, evidence, remediation și pregătirea continuă pentru audit.",
+    role: "Controale, dovezi și audit readiness",
+    bio: "Coordonăm programul de conformitate de la analiză și risk reviews până la politici, evidence, remediation și pregătirea continuă pentru audit.",
+    icon: "shield-check",
   },
   {
     name: "Cyber Security",
-    role: "Security engineering & incident response",
-    bio: "Evaluare tehnică, hardening, vulnerability management, protecția aplicațiilor și suport pentru incidente, conectate direct la risc.",
+    role: "Evaluare, hardening și remediere",
+    bio: "Legăm cerințele de conformitate de măsuri tehnice reale: evaluare de securitate, protecția aplicațiilor și emailului, vulnerability management și răspuns la incidente.",
+    icon: "magnifying-glass",
   },
+];
+
+const disciplines: Discipline[] = [
+  ...leadDisciplines,
   {
     name: "Secure Infrastructure",
-    role: "Managed hosting & platform security",
+    role: "Hosting administrat și platform security",
     bio: "Infrastructură administrată cu hardening, izolare, backup, monitorizare și change management orientat spre securitate.",
+    icon: "terminal-window",
+  },
+  {
+    name: "Incident Response",
+    role: "Evaluare, izolare și recuperare",
+    bio: "Sprijin pentru evaluarea incidentului, izolarea cauzei, remediere și pașii de recuperare necesari după un eveniment de securitate.",
+    icon: "clock-counter-clockwise",
+  },
+  {
+    name: "Privacy & GRC",
+    role: "Risc, guvernanță și privacy",
+    bio: "Conectăm obligațiile de privacy, evaluările de risc, furnizorii și controalele într-un program care poate fi urmărit și demonstrat.",
+    icon: "users-three",
   },
   {
     name: "Automation",
-    role: "Integrations, evidence & workflows",
-    bio: "Automatizare pentru evidence collection, integrări, API-uri și operațiuni repetitive de compliance.",
+    role: "Integrări, evidence și workflows",
+    bio: "Automatizăm colectarea dovezilor, integrările și operațiunile repetitive fără să înlocuim ownership-ul uman asupra deciziilor de securitate și conformitate.",
+    icon: "code",
   },
 ];
 ---
 
 <section class="container py-10 sm:py-20">
-  <div class="mb-10 max-w-3xl sm:mb-16">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">
-      Platform archive
-    </p>
-    <p class="text-muted-foreground text-lg">
-      Păstrăm profilele și fotografia editorială care fac parte din experiența produsului. Persoanele prezentate în această secțiune sunt profile de contribuție și context istoric al platformei; nu sunt prezentate ca angajați ZebraByte.
-    </p>
-  </div>
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Cum lucrăm</h2>
 
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Lead profiles</h2>
   <div class="flex flex-col gap-10 sm:flex-row sm:gap-20">
-    {leadProfiles.map((profile) => (
-      <article class="space-y-2">
-        <Image
-          densities={[1, 2]}
-          src={profile.img}
-          alt={profile.alt}
-          width={102}
-          height={102}
-          class="mb-4 rounded-lg sm:mb-8"
-        />
-        <h3 class="font-medium">{profile.name}</h3>
-        <div>{profile.role}</div>
-        <p class="text-lg">{profile.bio}</p>
+    {leadDisciplines.map((item) => (
+      <article class="flex-1 space-y-2">
+        <div class="bg-level-1 mb-4 grid size-[102px] place-items-center rounded-lg border sm:mb-8" aria-hidden="true">
+          <MenuIcon name={item.icon} class="size-8" />
+        </div>
+        <h3 class="font-medium">{item.name}</h3>
+        <div>{item.role}</div>
+        <p class="text-lg">{item.bio}</p>
       </article>
     ))}
   </div>
 
   <hr class="my-10 sm:my-30" />
 
-  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Contributor profiles</h2>
+  <h2 class="text-h3 mb-10 font-medium sm:mb-20">Capabilități</h2>
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-    {allProfiles.map((item) => (
+    {disciplines.map((item) => (
       <article class="space-y-2">
-        <Image
-          densities={[1, 2]}
-          src={item.img}
-          alt={item.alt}
-          width={102}
-          height={102}
-          class="mb-4 rounded-lg sm:mb-8"
-        />
+        <div class="bg-level-1 mb-4 grid size-[102px] place-items-center rounded-lg border sm:mb-8" aria-hidden="true">
+          <MenuIcon name={item.icon} class="size-7" />
+        </div>
         <h3 class="font-medium">{item.name}</h3>
         <div>{item.role}</div>
-      </article>
-    ))}
-  </div>
-
-  <hr class="my-12 sm:my-24" />
-
-  <div class="mb-10 max-w-3xl sm:mb-16">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
-    <h2 class="text-h3 mb-4 font-medium">How ZebraByte operates</h2>
-    <p class="text-muted-foreground text-lg">
-      ZebraByte adaugă ownership operațional peste platformă prin managed compliance, security engineering, secure infrastructure și automatizare.
-    </p>
-  </div>
-
-  <div class="grid gap-8 sm:grid-cols-2">
-    {disciplines.map((item) => (
-      <article class="space-y-2 rounded-xl border p-6 sm:p-8">
-        <h3 class="text-xl font-medium">{item.name}</h3>
-        <div class="text-muted-foreground">{item.role}</div>
-        <p class="text-lg">{item.bio}</p>
       </article>
     ))}
   </div>

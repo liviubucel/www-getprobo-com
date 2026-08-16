@@ -1,26 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import AboutImg from "../assets/about.png";
 import KeyFigures from "../components/block/KeyFigures.astro";
-import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
-
-const principles = [
-  {
-    title: "Securitate înainte de orice",
-    description:
-      "Pentru ZebraByte, securitatea nu este un serviciu adăugat la final. Este fundația pe care construim infrastructura, automatizarea și activitatea de conformitate.",
-  },
-  {
-    title: "Relații pe termen lung",
-    description:
-      "Preferăm să înțelegem contextul tehnic al clientului și să construim continuitate, nu să tratăm fiecare nevoie ca pe un proiect izolat.",
-  },
-  {
-    title: "Transparență și responsabilitate",
-    description:
-      "Deciziile tehnice, riscurile și remedierea trebuie să poată fi explicate clar. Clientul trebuie să știe ce se întâmplă și de ce.",
-  },
-];
+import Team from "../components/block/Team.astro";
 ---
 
 <Layout
@@ -35,14 +16,19 @@ const principles = [
       </p>
 
       <figure class="animate-slide-in animation-delay-200 mb-10 sm:mb-30">
-        <ResponsiveImage
-          src={AboutImg}
-          class="aspect-square rounded-lg object-cover sm:aspect-1080/606"
-          mobile={[640, 640]}
-          sm={[1080, 607]}
-          alt="ZebraByte — securitate, conformitate și infrastructură"
-          fetchpriority="high"
-        />
+        <div class="bg-level-1 relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border sm:aspect-1080/606">
+          <div class="absolute inset-0 opacity-60 [background-image:linear-gradient(to_right,var(--color-border-low)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-low)_1px,transparent_1px)] [background-size:48px_48px]" aria-hidden="true" />
+          <div class="bg-level-0 relative flex w-[min(72%,420px)] items-center justify-center rounded-2xl border px-8 py-10 shadow-sm sm:px-12 sm:py-14">
+            <img
+              src="/images/zbt-negru.svg"
+              alt="ZebraByte"
+              width="420"
+              height="120"
+              class="h-auto w-full"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
       </figure>
 
       <h2 class="text-muted-foreground animate-slide-in animation-delay-300 mb-1">
@@ -54,37 +40,6 @@ const principles = [
     </section>
 
     <KeyFigures />
-
-    <section class="container py-10 sm:py-20">
-      <div class="mb-10 max-w-3xl sm:mb-20">
-        <p class="text-muted-foreground mb-2">Principiile noastre</p>
-        <h2 class="text-h3 font-medium">Cum lucrăm</h2>
-      </div>
-
-      <div class="grid gap-10 sm:grid-cols-3 sm:gap-12">
-        {principles.map((principle) => (
-          <article class="space-y-3">
-            <h3 class="text-xl font-medium">{principle.title}</h3>
-            <p class="text-muted-foreground text-lg leading-relaxed">
-              {principle.description}
-            </p>
-          </article>
-        ))}
-      </div>
-
-      <hr class="my-10 sm:my-30" />
-
-      <div class="grid gap-8 sm:grid-cols-[1fr_2fr] sm:gap-20">
-        <p class="text-muted-foreground">De ce ZebraByte</p>
-        <div class="space-y-8">
-          <p class="text-quote">
-            Securitatea nu ar trebui să fie un lux sau o opțiune ascunsă. Trebuie să fie fundația pe care se construiesc serviciile digitale.
-          </p>
-          <p class="text-muted-foreground max-w-3xl text-lg leading-relaxed">
-            Am pornit din zona infrastructurii și am extins aceeași responsabilitate către securitate cibernetică, conformitate și automatizare. Păstrăm însă aceeași idee de bază: înțelegem contextul real, reducem fragmentarea și construim servicii care pot fi operate și îmbunătățite în timp.
-          </p>
-        </div>
-      </div>
-    </section>
+    <Team />
   </main>
 </Layout>

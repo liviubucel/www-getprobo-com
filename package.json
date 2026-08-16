@@ -12,7 +12,7 @@
     "sync:changelog": "node tools/sync-github-changelog.mjs",
     "check:performance-assets": "node tools/check-performance-assets.mjs",
     "check:zebrabyte-content": "node tools/check-zebrabyte-content.mjs",
-    "check:experience": "node tools/check-experience-contract.mjs",
+    "check:experience": "node tools/check-experience-contract.mjs && node tools/check-experience-provenance.mjs",
     "check:i18n": "node tools/check-i18n.mjs",
     "llms:normalize": "node tools/normalize-llms-assets.mjs",
     "sitemap:i18n": "node tools/localize-sitemap.mjs",

@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import Logos from "../components/block/Logos.astro";
 import WallCard from "../components/WallCard.astro";
 
 const posts = (await getCollection("wall"))
@@ -59,13 +58,6 @@ const posts = (await getCollection("wall"))
         >
           Real feedback about security recovery, hosting, support and projects delivered by ZebraByte.
         </p>
-      </section>
-
-      <section class="relative z-10 pb-4">
-        <p class="text-muted-foreground mb-2 text-center text-xs font-medium uppercase tracking-[0.12em]">
-          Organizations featured across the wider platform reference library
-        </p>
-        <Logos class="animate-slide-in animation-delay-300" />
       </section>
     </div>
 
