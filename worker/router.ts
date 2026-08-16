@@ -1,5 +1,6 @@
 import app from "./index";
 import { legacyWixBlogRedirects } from "./blog-legacy-redirects";
+import { zebrabyteBlogSlugs } from "./blog-zebrabyte-slugs";
 import { isEnglishPath, stripEnglishPrefix, toEnglishPath } from "./i18n";
 import {
   apiLocaleFromRequest,
@@ -50,6 +51,10 @@ function isNativeRomanianHtmlPath(pathname: string): boolean {
   if (nativeRomanianHtmlPaths.has(normalized)) return true;
   if (/^\/blog\/page\/\d+$/i.test(normalized)) return true;
   if (/^\/blog\/categorie\/[^/]+$/i.test(normalized)) return true;
+
+  const article = normalized.match(/^\/blog\/([^/]+)$/i);
+  if (article?.[1] && zebrabyteBlogSlugs.has(decodeURIComponent(article[1]))) return true;
+
   return false;
 }
 
@@ -106,13 +111,18 @@ function responseCacheKey(
   response: Response,
   locale: TargetLocale,
   kind: Exclude<LocalizableKind, null>,
+  publicUrl: URL,
 ): string | null {
   if (response.status !== 200) return null;
   const etag = response.headers.get("ETag");
   if (!etag) return null;
-  const normalized = etag.replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 160);
-  if (!normalized) return null;
-  return `i18n:v4:response:${locale}:${kind}:${normalized}`;
+  const normalizedEtag = etag.replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 120);
+  if (!normalizedEtag) return null;
+  const normalizedPath = publicUrl.pathname
+    .replace(/[^a-zA-Z0-9/_-]/g, "")
+    .replace(/\/+$/, "")
+    .slice(0, 220) || "/";
+  return `i18n:v4:response:${locale}:${kind}:${normalizedEtag}:${normalizedPath}`;
 }
 
 function responseFromLocalizedBody(
@@ -158,7 +168,7 @@ async function localizeResponse(
     return withContentLanguage(response, locale);
   }
 
-  const cacheKey = responseCacheKey(response, locale, kind);
+  const cacheKey = responseCacheKey(response, locale, kind, publicUrl);
   if (cacheKey && env.NEWSLETTER) {
     try {
       const cached = await env.NEWSLETTER.get(cacheKey);
