@@ -23,28 +23,6 @@ const companies = [
   { image: "awen_logo.svg", alt: "Awen", href: "https://www.awen.ai/", class: "h-6 w-auto sm:h-7" },
   { image: "wafer_logo.svg", alt: "Wafer", href: "https://www.wafer.ai/", class: "h-6 w-auto sm:h-7" },
 ];
-
-const logoGroup = (duplicate = false) => companies.map((company) => (
-  <a
-    href={company.href}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="mx-4 flex w-30 flex-none items-center justify-center sm:mx-15 sm:w-50"
-    aria-label={duplicate ? undefined : company.alt}
-    aria-hidden={duplicate ? "true" : undefined}
-    tabindex={duplicate ? "-1" : undefined}
-  >
-    <img
-      src={`/clients/${company.image}`}
-      alt={duplicate ? "" : company.alt}
-      class={company.class}
-      width="160"
-      height="36"
-      loading="lazy"
-      decoding="async"
-    />
-  </a>
-));
 ---
 
 <section
@@ -55,8 +33,53 @@ const logoGroup = (duplicate = false) => companies.map((company) => (
   )}
 >
   <div class="logo-marquee flex h-16 w-max items-center sm:h-30">
-    <div class="flex shrink-0 items-center">{logoGroup()}</div>
-    <div class="flex shrink-0 items-center" aria-hidden="true">{logoGroup(true)}</div>
+    <div class="flex shrink-0 items-center">
+      {
+        companies.map((company) => (
+          <a
+            href={company.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mx-4 flex w-30 flex-none items-center justify-center sm:mx-15 sm:w-50"
+            aria-label={company.alt}
+          >
+            <img
+              src={`/clients/${company.image}`}
+              alt={company.alt}
+              class={company.class}
+              width="160"
+              height="36"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="flex shrink-0 items-center" aria-hidden="true">
+      {
+        companies.map((company) => (
+          <a
+            href={company.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mx-4 flex w-30 flex-none items-center justify-center sm:mx-15 sm:w-50"
+            tabindex="-1"
+          >
+            <img
+              src={`/clients/${company.image}`}
+              alt=""
+              class={company.class}
+              width="160"
+              height="36"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ))
+      }
+    </div>
   </div>
 
   {
