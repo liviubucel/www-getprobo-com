@@ -31,5 +31,9 @@ pnpm-debug.log*
 .dev.vars
 .vercel
 
+# ZebraByte legacy blog generated from Sanity during build
+src/content/blog/zebrabyte-generated/
+public/blog/zebrabyte-generated/
+
 # Claude Code local settings
 .claude/settings.local.json
