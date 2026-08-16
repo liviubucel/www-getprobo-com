@@ -29,6 +29,10 @@ function setDifference(left, right) {
   return [...left].filter((value) => !right.has(value));
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function parseGeneratedRedirects(source) {
   const match = source.match(/Object\.freeze\((\{[\s\S]*\})\);/);
   if (!match) throw new Error("unable to parse generated redirect map");
@@ -155,26 +159,41 @@ async function checkIndustries() {
   const structuralSlugs = new Set(
     [...structural.matchAll(/^\s{4}slug: "([^"]+)",$/gm)].map((match) => match[1]),
   );
-  const editorialSlugs = new Set(
-    [...editorial.matchAll(/^  (?:(?:"([^"]+)")|([a-z0-9-]+)): \{$/gm)].map(
-      (match) => match[1] ?? match[2],
-    ),
-  );
 
-  if (structuralSlugs.size !== legacyIndustryCount) fail(`expected ${legacyIndustryCount} canonical industries, found ${structuralSlugs.size}.`);
-  if (editorialSlugs.size !== legacyIndustryCount) fail(`expected ${legacyIndustryCount} adapted industry editorials, found ${editorialSlugs.size}.`);
+  if (structuralSlugs.size !== legacyIndustryCount) {
+    fail(`expected ${legacyIndustryCount} canonical industries, found ${structuralSlugs.size}.`);
+  }
+
+  // Validate editorial coverage against the canonical industry list. Do not infer
+  // industry slugs from arbitrary object keys such as the nested `partner` field.
+  const editorialSlugs = new Set();
+  for (const slug of structuralSlugs) {
+    const escaped = escapeRegExp(slug);
+    const propertyPattern = new RegExp(
+      `^  (?:(?:"${escaped}")|${escaped}): \\{$`,
+      "m",
+    );
+    if (propertyPattern.test(editorial)) editorialSlugs.add(slug);
+  }
 
   const missingEditorial = setDifference(structuralSlugs, editorialSlugs);
-  const orphanEditorial = setDifference(editorialSlugs, structuralSlugs);
-  if (missingEditorial.length) fail(`missing editorial content for: ${missingEditorial.join(", ")}`);
-  if (orphanEditorial.length) fail(`editorial content without canonical industry: ${orphanEditorial.join(", ")}`);
+  if (missingEditorial.length) {
+    fail(`missing editorial content for: ${missingEditorial.join(", ")}`);
+  }
+  if (editorialSlugs.size !== structuralSlugs.size) {
+    fail(`industry editorial coverage failed: ${editorialSlugs.size}/${structuralSlugs.size}.`);
+  }
 
   if (!index.includes("zebraByteIndustries.map")) fail("industry index is not generated from the canonical industry dataset.");
   if (!index.includes("/industrii/${industry.slug}")) fail("industry cards do not link to their dedicated pages.");
-  if (!page.includes("editorial.focusAreas") || !page.includes("editorial.faqs")) fail("industry page component is missing migrated focus areas or FAQs.");
+  if (!page.includes("editorial.focusAreas") || !page.includes("editorial.faqs") || !page.includes("editorial.partner")) {
+    fail("industry page component is missing migrated focus areas, partner content, or FAQs.");
+  }
   if (!route.includes('"@type": "FAQPage"')) fail("industry route is missing FAQ structured data.");
 
-  console.log(`[zebrabyte-content] industry parity OK: ${structuralSlugs.size}/${legacyIndustryCount} sectors enriched.`);
+  console.log(
+    `[zebrabyte-content] industry parity OK: ${editorialSlugs.size}/${legacyIndustryCount} canonical sectors enriched; nested editorial fields validated separately.`,
+  );
 }
 
 await checkBlog();
