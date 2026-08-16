@@ -7,9 +7,13 @@ type TurnstileApi = {
       size?: "normal" | "compact" | "flexible";
       appearance?: "always" | "execute" | "interaction-only";
       language?: string;
+      callback?: (token: string) => void;
+      "expired-callback"?: () => void;
+      "error-callback"?: () => void;
     },
   ) => string;
   reset: (widgetId?: string) => void;
+  getResponse: (widgetId?: string) => string;
 };
 
 type TurnstileWindow = Window & {
@@ -40,6 +44,10 @@ function loadTurnstile(): Promise<TurnstileApi> {
 
     const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
     if (existing) {
+      if (target.turnstile) {
+        resolve(target.turnstile);
+        return;
+      }
       existing.addEventListener("load", resolveWhenReady, { once: true });
       existing.addEventListener("error", () => reject(new Error("Turnstile failed to load.")), {
         once: true,
@@ -81,9 +89,42 @@ export async function renderTurnstile(container: HTMLElement): Promise<string | 
     size: container.dataset.size === "flexible" ? "flexible" : "normal",
     appearance: "interaction-only",
     language: document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "ro",
+    callback: () => container.dispatchEvent(new CustomEvent("zbt:turnstile-ready")),
+    "expired-callback": () => container.dispatchEvent(new CustomEvent("zbt:turnstile-expired")),
+    "error-callback": () => container.dispatchEvent(new CustomEvent("zbt:turnstile-error")),
   });
   container.dataset.turnstileWidgetId = widgetId;
   return widgetId;
+}
+
+export async function ensureTurnstileToken(
+  container: HTMLElement | null,
+  timeoutMs = 10_000,
+): Promise<boolean> {
+  if (!container) return false;
+  const widgetId = await renderTurnstile(container);
+  if (!widgetId) return false;
+
+  const api = targetWindow().turnstile;
+  if (api?.getResponse(widgetId)) return true;
+
+  return new Promise<boolean>((resolve) => {
+    let settled = false;
+    const finish = (value: boolean) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      container.removeEventListener("zbt:turnstile-ready", onReady);
+      container.removeEventListener("zbt:turnstile-error", onError);
+      resolve(value);
+    };
+    const onReady = () => finish(true);
+    const onError = () => finish(false);
+    const timer = window.setTimeout(() => finish(Boolean(api?.getResponse(widgetId))), timeoutMs);
+
+    container.addEventListener("zbt:turnstile-ready", onReady, { once: true });
+    container.addEventListener("zbt:turnstile-error", onError, { once: true });
+  });
 }
 
 export function resetTurnstile(container: HTMLElement | null): void {
