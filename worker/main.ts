@@ -7,6 +7,7 @@ import {
   handleNewsletterDispatchApi,
   type NewsletterDispatchEnv,
 } from "./newsletter-dispatch";
+import { handlePublicStatusApi } from "./public-status";
 import {
   captureSentryException,
   captureSentryMessage,
@@ -44,6 +45,21 @@ export default {
     try {
       const clientErrorResponse = await handleSentryClientApi(request, env);
       if (clientErrorResponse) return clientErrorResponse;
+
+      const publicStatusResponse = await handlePublicStatusApi(request);
+      if (publicStatusResponse) {
+        if (publicStatusResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte public status proxy is unavailable", {
+              request,
+              component: "public-status",
+              status: publicStatusResponse.status,
+            }),
+          );
+        }
+        return publicStatusResponse;
+      }
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
