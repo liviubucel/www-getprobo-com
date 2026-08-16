@@ -28,8 +28,8 @@ const websiteSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
-  <animated-hero
-    class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+  <section
+    class="home-hero relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
   >
     <div
       class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8"
@@ -87,11 +87,11 @@ const websiteSchema = {
       </h2>
       <Logos class="animate-slide-in animation-delay-300" constrained />
     </section>
-  </animated-hero>
+  </section>
 
   <ComplianceTrack />
 
-  <section class="container py-10 sm:py-20">
+  <section class="deferred-home-section container py-10 sm:py-20">
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
       Pune conformitatea și securitatea pe pilot automat
     </h2>
@@ -156,9 +156,29 @@ const websiteSchema = {
   <Stories />
 </Layout>
 
-<script>
-  import { AnimatedHero } from "../lib/elements/hero";
-  import { customElementDefine } from "../lib/dom";
+<style>
+  .home-hero {
+    background:
+      radial-gradient(circle at 24% 22%, rgba(230, 255, 190, 0.72), transparent 34%),
+      radial-gradient(circle at 78% 34%, rgba(242, 255, 218, 0.72), transparent 32%),
+      #f8faf4;
+  }
 
-  customElementDefine("animated-hero", () => AnimatedHero);
-</script>
+  .deferred-home-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1500px;
+  }
+
+  @media (max-width: 639px), (prefers-reduced-motion: reduce) {
+    .home-hero :global(.animate-perspective-in),
+    .home-hero :global(.animate-slide-in) {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .home-hero :global(.yc-btn)::before {
+      animation: none !important;
+    }
+  }
+</style>
