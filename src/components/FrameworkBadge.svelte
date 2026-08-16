@@ -6,13 +6,22 @@
     class: className,
     priority = false,
   }: { name: string; class?: string; priority?: boolean } = $props();
-  const assetName = name.replaceAll(" ", "");
+
+  const requestedAssetName = name.replaceAll(" ", "");
+  const darkVariant = requestedAssetName.endsWith("_dark");
+  const assetName = darkVariant
+    ? requestedAssetName.replace(/_dark$/, "")
+    : requestedAssetName;
+  const resolvedClassName = [className, darkVariant ? "invert" : ""]
+    .filter(Boolean)
+    .join(" ");
+  const altName = name.replace(/_dark$/, "").replaceAll("_", " ");
 </script>
 
 <img
-  src={`/frameworks/${assetName}.svg?v=3`}
-  class={className}
-  alt={`${name} ${browserT("badge de conformitate", "framework badge")}`}
+  src={`/frameworks/${assetName}.svg?v=4`}
+  class={resolvedClassName}
+  alt={`${altName} ${browserT("badge de conformitate", "framework badge")}`}
   width="64"
   height="64"
   loading={priority ? "eager" : "lazy"}
