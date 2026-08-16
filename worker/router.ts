@@ -1,4 +1,5 @@
 import app from "./index";
+import { legacyWixBlogRedirects } from "./blog-legacy-redirects";
 import { isEnglishPath, stripEnglishPrefix, toEnglishPath } from "./i18n";
 import {
   apiLocaleFromRequest,
@@ -137,12 +138,14 @@ function legacyWixBlogRedirect(request: Request): Response | null {
   const english = isEnglishPath(url.pathname);
   const normalizedPath = english ? stripEnglishPrefix(url.pathname) : url.pathname;
   const match = normalizedPath.match(
-    /^\/blog\/blogul-nostru-1\/([a-z0-9][a-z0-9-]*?)-(\d+)\/?$/i,
+    /^\/(?:ro\/)?blog\/blogul-nostru-1\/([a-z0-9][a-z0-9-]*?)-(\d+)\/?$/i,
   );
   if (!match) return null;
 
-  const slug = match[1].toLowerCase();
-  url.pathname = english ? `/en/blog/${slug}` : `/blog/${slug}`;
+  const baseSlug = match[1].toLowerCase();
+  const legacyKey = `${baseSlug}-${match[2]}`;
+  const targetSlug = legacyWixBlogRedirects[legacyKey] ?? baseSlug;
+  url.pathname = english ? `/en/blog/${targetSlug}` : `/blog/${targetSlug}`;
   return Response.redirect(url.toString(), 301);
 }
 
