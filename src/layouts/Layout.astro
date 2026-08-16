@@ -1,6 +1,5 @@
 ---
 import "../styles/global.css";
-import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
@@ -57,8 +56,6 @@ const geistStylesheet =
       onload="this.media='all'"
     />
     <noscript><link href={geistStylesheet} rel="stylesheet" /></noscript>
-
-    <ClientRouter />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title="ZebraByte Changelog" href="/changelog.xml" />
@@ -135,5 +132,16 @@ const geistStylesheet =
       <slot />
     </div>
     <Footer noFrameworks={Astro.props.noFrameworks} />
+
+    <script>
+      // A few legacy components still subscribe to Astro's page-load event.
+      // The marketing site now uses normal document navigation instead of the
+      // ClientRouter, so emit the initial event once after module scripts bind.
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => document.dispatchEvent(new Event("astro:page-load")),
+        { once: true },
+      );
+    </script>
   </body>
 </html>
