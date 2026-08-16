@@ -151,9 +151,9 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
             </label>
 
             <div
-              class="cf-turnstile"
+              data-turnstile-container
               data-sitekey={turnstileSiteKey}
-              data-theme="auto"
+              aria-label="Verificare de securitate"
             ></div>
 
             <div id="contact-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
@@ -176,6 +176,11 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
   import { AnimatedHero } from "../lib/elements/hero";
   import { customElementDefine } from "../lib/dom";
   import { browserT, getBrowserLocale } from "../lib/browser-i18n";
+  import {
+    ensureTurnstileToken,
+    lazyRenderTurnstile,
+    resetTurnstile,
+  } from "../lib/turnstile";
 
   customElementDefine("animated-hero", () => AnimatedHero);
 
@@ -183,9 +188,12 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
     const form = document.querySelector<HTMLFormElement>("#contact-form");
     const status = document.querySelector<HTMLElement>("#contact-status");
     const submit = document.querySelector<HTMLButtonElement>("#contact-submit");
+    const turnstile = form?.querySelector<HTMLElement>("[data-turnstile-container]");
 
     if (!form || !status || !submit || form.dataset.ready === "true") return;
     form.dataset.ready = "true";
+    const cleanupTurnstile = lazyRenderTurnstile(turnstile);
+    document.addEventListener("astro:before-swap", cleanupTurnstile, { once: true });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -193,6 +201,16 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       status.classList.add("hidden");
 
       try {
+        const verified = await ensureTurnstileToken(turnstile);
+        if (!verified) {
+          status.classList.remove("hidden");
+          status.textContent = browserT(
+            "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+            "Security verification is not ready yet. Please try again.",
+          );
+          return;
+        }
+
         const response = await fetch("/api/contact", {
           method: "POST",
           headers: { "Accept-Language": getBrowserLocale() },
@@ -217,10 +235,6 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           "Your message has been sent. Thank you!",
         );
         form.reset();
-        const turnstile = (window as Window & {
-          turnstile?: { reset: () => void };
-        }).turnstile;
-        turnstile?.reset();
       } catch {
         status.classList.remove("hidden");
         status.textContent = browserT(
@@ -228,6 +242,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           "A network error occurred. Please try again.",
         );
       } finally {
+        resetTurnstile(turnstile);
         submit.disabled = false;
       }
     });
