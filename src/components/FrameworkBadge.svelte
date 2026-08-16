@@ -1,31 +1,54 @@
 <script lang="ts">
+  import lottie, { type AnimationItem } from "lottie-web";
+  import { onDestroy } from "svelte";
   import { browserT } from "../lib/browser-i18n";
+  import { useIntersectionObserver } from "../lib/runes/useIntersectionObserver.svelte.ts";
 
   const {
     name,
     class: className,
-    priority = false,
   }: { name: string; class?: string; priority?: boolean } = $props();
+  let animation: AnimationItem | null = null;
+  let intersection = useIntersectionObserver();
 
-  const requestedAssetName = name.replaceAll(" ", "");
-  const darkVariant = requestedAssetName.endsWith("_dark");
-  const assetName = darkVariant
-    ? requestedAssetName.replace(/_dark$/, "")
-    : requestedAssetName;
-  const resolvedClassName = [className, darkVariant ? "invert" : ""]
-    .filter(Boolean)
-    .join(" ");
-  const altName = name.replace(/_dark$/, "").replaceAll("_", " ");
+  $effect(() => {
+    if (intersection.observed && !animation && intersection.ref) {
+      animation = lottie.loadAnimation({
+        container: intersection.ref,
+        renderer: "svg",
+        loop: false,
+        autoplay: true,
+        path: `/frameworks/${name.replaceAll(" ", "")}.json`,
+      });
+      animation.addEventListener("complete", () => {
+        if (!animation) {
+          return;
+        }
+        animation.goToAndPlay(300, true);
+      });
+      return;
+    }
+
+    if (!animation) {
+      return;
+    }
+
+    if (!intersection.observed) {
+      animation.stop();
+      return;
+    }
+
+    animation.play();
+  });
+
+  onDestroy(() => {
+    animation?.destroy();
+  });
 </script>
 
-<img
-  src={`/frameworks/${assetName}.svg?v=4`}
-  class={resolvedClassName}
-  alt={`${altName} ${browserT("badge de conformitate", "framework badge")}`}
-  width="64"
-  height="64"
-  loading={priority ? "eager" : "lazy"}
-  fetchpriority={priority ? "high" : "auto"}
-  decoding="async"
-  draggable="false"
-/>
+<div
+  bind:this={intersection.ref}
+  class={className}
+  role="img"
+  aria-label={`${name.replace(/_dark$/, "").replaceAll("_", " ")} ${browserT("badge de conformitate", "framework badge")}`}
+></div>
