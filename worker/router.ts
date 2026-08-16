@@ -130,6 +130,22 @@ function legacyFrenchRedirect(request: Request): Response | null {
   return Response.redirect(url.toString(), 308);
 }
 
+function legacyWixBlogRedirect(request: Request): Response | null {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const url = new URL(request.url);
+  const english = isEnglishPath(url.pathname);
+  const normalizedPath = english ? stripEnglishPrefix(url.pathname) : url.pathname;
+  const match = normalizedPath.match(
+    /^\/blog\/blogul-nostru-1\/([a-z0-9][a-z0-9-]*?)-(\d+)\/?$/i,
+  );
+  if (!match) return null;
+
+  const slug = match[1].toLowerCase();
+  url.pathname = english ? `/en/blog/${slug}` : `/blog/${slug}`;
+  return Response.redirect(url.toString(), 301);
+}
+
 function isApiRequestPath(pathname: string): boolean {
   const normalized = isEnglishPath(pathname) ? stripEnglishPrefix(pathname) : pathname;
   return normalized === "/api" || normalized.startsWith("/api/");
@@ -139,6 +155,9 @@ export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
     const frenchRedirect = legacyFrenchRedirect(request);
     if (frenchRedirect) return frenchRedirect;
+
+    const wixBlogRedirect = legacyWixBlogRedirect(request);
+    if (wixBlogRedirect) return wixBlogRedirect;
 
     const url = new URL(request.url);
     const english = isEnglishPath(url.pathname);
