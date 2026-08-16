@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "npm run sync:zebrabyte-blog && npm run check:zebrabyte-content && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n",
-    "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog.mjs",
+    "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog-v2.mjs",
     "check:zebrabyte-content": "node tools/check-zebrabyte-content.mjs",
     "check:i18n": "node tools/check-i18n.mjs",
     "llms:normalize": "node tools/normalize-llms-assets.mjs",
@@ -34,7 +34,7 @@
     "@probo/cookie-banner": "^0.13.0",
     "@splidejs/splide": "^4.1.4",
     "@splidejs/splide-extension-auto-scroll": "^0.5.3",
-    "@splidejs/splide-extension-intersection": "^0.2.0",
+    "@splidejs/splide-extension-intersection": "^0.2.9",
     "@splidejs/svelte-splide": "^0.2.9",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.0",
