@@ -5,6 +5,8 @@ import WrittenBy from "../../../components/block/WrittenBy.astro";
 import type { Page } from "astro";
 import Pagination from "../../../components/Pagination.astro";
 import { pageSize } from "../../../content.config.ts";
+import { getBlogHref } from "../../../lib/blog";
+
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const allPosts = (await getCollection("blog")).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -49,7 +51,7 @@ const dateFormatter = Intl.DateTimeFormat("ro-RO", {
               </div>
               <h2>
                 <a
-                  href={`/blog/${post.id.split("/").at(-1)}`}
+                  href={getBlogHref(post)}
                   class="text-h4 mt-4 mb-2 block font-medium hover:underline"
                 >
                   {post.data.title}
