@@ -36,7 +36,8 @@ function stripMarkdown(value) {
       .replace(/^\s*[-*+]\s+/gm, "")
       .replace(/^\s*\d+\.\s+/gm, "")
       .replace(/[`*_~>|]/g, " ")
-      .replace(/<[^>]+>/g, " "),
+      .replace(/<[^>]+>/g, " ")
+      .replace(/[{}<>]/g, " "),
   );
 }
 
@@ -98,6 +99,7 @@ function publicationMetadata(pr) {
   if (!pr?.merged_at || pr.base?.ref !== "main") return null;
 
   const body = String(pr.body ?? "");
+  const publicSection = extractPublicSection(body);
   const labels = unique([
     ...(pr.labels ?? []).map((label) => clean(label?.name).toLowerCase()),
     ...[...body.matchAll(/changelog:(publish|feature|platform|security|compliance|integration|integrations|docs|documentation|privacy|infrastructure|iam|access-review|skip)/gi)]
@@ -105,12 +107,15 @@ function publicationMetadata(pr) {
   ]);
 
   if (labels.includes("changelog:skip")) return null;
-  if (!labels.some((label) => label === "changelog:publish" || categoryLabels.has(label))) return null;
+  const explicitlyRequested = labels.some(
+    (label) => label === "changelog:publish" || categoryLabels.has(label),
+  );
+  if (!explicitlyRequested && !publicSection) return null;
 
   const tags = unique(labels.map((label) => categoryLabels.get(label)));
   return {
     tags: tags.length ? tags : ["Platformă"],
-    publicSection: extractPublicSection(body),
+    publicSection,
   };
 }
 
