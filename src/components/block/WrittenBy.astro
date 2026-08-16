@@ -13,105 +13,83 @@ interface Props {
 
 const { class: className, author } = Astro.props;
 
-const showBoth = !author;
+const showEditorial = !author;
 const isAntoine = author === "Antoine Bouchardy";
 const isArthur = author === "Arthur Mayoux";
-const isBryan = author === "Bryan Frimin";
+const isBryan = author === "Bryan Frimin" || author === "Bryan Firmin";
 const isEmile = author === "Émile Ré";
+const isKnownProboAuthor = isAntoine || isArthur || isBryan || isEmile;
+const showZebraByteAuthor = Boolean(author) && !isKnownProboAuthor;
 ---
 
 {
-  showBoth && (
-    <div class={clsx("flex flex-col gap-8 sm:gap-10", className)}>
-      <div class="text-xs font-medium">
-        Written by Antoine Bouchardy, Bryan Frimin, Arthur Mayoux and Émile Ré
-      </div>
-
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
-        <div class="flex flex-col gap-2">
-          <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/antoinebouchardy/" class="text-success">Antoine Bouchardy</a>
-            {" "}writes about the challenges founders and security teams face when balancing growth, compliance and regulation.
-          </div>
-        </div>
-        <Image densities={[1, 2]} src={AntoinePortrait} alt="Portrait Antoine Bouchardy" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
-      </div>
-
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
-        <div class="flex flex-col gap-2">
-          <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/gearnode/" class="text-success">Bryan Frimin</a>
-            {" "}writes about cyber security, engineering and practical compliance automation.
-          </div>
-        </div>
-        <Image src={BryanPortrait} alt="Portrait Bryan Frimin" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
-      </div>
-
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
-        <div class="flex flex-col gap-2">
-          <div class="text-muted-foreground text-xs">
-            <a href="https://www.linkedin.com/in/arthurmayoux/" class="text-success">Arthur Mayoux</a>
-            {" "}writes about operations, compliance programs and the work required to scale security processes.
-          </div>
-        </div>
-        <Image src={ArthurPortrait} alt="Portrait Arthur Mayoux" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
-      </div>
-
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
-        <div class="flex flex-col gap-2">
-          <div class="text-muted-foreground text-xs">
-            Émile Ré writes about the technical side of compliance platforms, integrations and engineering workflows.
-          </div>
-        </div>
-        <Image src={EmilePortrait} alt="Portrait Émile Ré" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />
-      </div>
+  showEditorial && (
+    <div class={clsx("flex flex-col gap-3", className)}>
+      <div class="text-xs font-medium">Editorial ZebraByte</div>
+      <p class="text-muted-foreground text-xs leading-relaxed">
+        Analize tehnice, ghiduri și comentarii despre securitate cibernetică,
+        conformitate, privacy și infrastructură. Arhiva păstrează separat
+        atribuirea autorilor materialelor editoriale Probo importate anterior.
+      </p>
     </div>
   )
 }
 
 {
-  (isAntoine || isArthur || isBryan || isEmile) && (
+  isKnownProboAuthor && (
     <div class={clsx("flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10", className)}>
       <div class="flex flex-col gap-2">
         {isAntoine && (
           <>
-            <div class="text-xs font-medium">Written by Antoine Bouchardy</div>
+            <div class="text-xs font-medium">Scris de Antoine Bouchardy</div>
             <div class="text-muted-foreground text-xs">
               <a href="https://www.linkedin.com/in/antoinebouchardy/" class="text-success">Antoine Bouchardy</a>
-              {" "}writes about the challenges founders and security teams face when balancing growth, compliance and regulation.
+              {" "}scrie despre provocările de securitate, conformitate și reglementare întâlnite de echipele aflate în creștere.
             </div>
           </>
         )}
         {isArthur && (
           <>
-            <div class="text-xs font-medium">Written by Arthur Mayoux</div>
+            <div class="text-xs font-medium">Scris de Arthur Mayoux</div>
             <div class="text-muted-foreground text-xs">
               <a href="https://www.linkedin.com/in/arthurmayoux/" class="text-success">Arthur Mayoux</a>
-              {" "}writes about operations, compliance programs and scaling security processes.
+              {" "}scrie despre operațiuni, programe de conformitate și scalarea proceselor de securitate.
             </div>
           </>
         )}
         {isBryan && (
           <>
-            <div class="text-xs font-medium">Written by Bryan Frimin</div>
+            <div class="text-xs font-medium">Scris de Bryan Firmin</div>
             <div class="text-muted-foreground text-xs">
-              <a href="https://www.linkedin.com/in/gearnode/" class="text-success">Bryan Frimin</a>
-              {" "}writes about cyber security, engineering and practical compliance automation.
+              <a href="https://www.linkedin.com/in/gearnode/" class="text-success">Bryan Firmin</a>
+              {" "}scrie despre cyber security, engineering și automatizarea practică a conformității.
             </div>
           </>
         )}
         {isEmile && (
           <>
-            <div class="text-xs font-medium">Written by Émile Ré</div>
-            <div class="text-muted-foreground text-xs">Émile Ré writes about integrations, engineering workflows and the technical side of compliance platforms.</div>
+            <div class="text-xs font-medium">Scris de Émile Ré</div>
+            <div class="text-muted-foreground text-xs">Émile Ré scrie despre integrări, engineering workflows și partea tehnică a platformelor de conformitate.</div>
           </>
         )}
       </div>
 
-      {isAntoine && <Image densities={[1, 2]} src={AntoinePortrait} alt="Portrait Antoine Bouchardy" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isArthur && <Image src={ArthurPortrait} alt="Portrait Arthur Mayoux" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isBryan && <Image src={BryanPortrait} alt="Portrait Bryan Frimin" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
-      {isEmile && <Image src={EmilePortrait} alt="Portrait Émile Ré" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+      {isAntoine && <Image densities={[1, 2]} src={AntoinePortrait} alt="Portret Antoine Bouchardy" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+      {isArthur && <Image src={ArthurPortrait} alt="Portret Arthur Mayoux" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+      {isBryan && <Image src={BryanPortrait} alt="Portret Bryan Firmin" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+      {isEmile && <Image src={EmilePortrait} alt="Portret Émile Ré" class="mx-auto block shrink-0 sm:mx-0 sm:size-25" width={164} height={164} />}
+    </div>
+  )
+}
+
+{
+  showZebraByteAuthor && (
+    <div class={clsx("flex flex-col gap-2", className)}>
+      <div class="text-xs font-medium">Scris de {author}</div>
+      <p class="text-muted-foreground text-xs leading-relaxed">
+        Material editorial ZebraByte despre securitate digitală, infrastructură,
+        privacy și conformitate, păstrat în arhiva tehnică a companiei.
+      </p>
     </div>
   )
 }
