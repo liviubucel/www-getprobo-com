@@ -53,7 +53,7 @@ const categoryRules: Array<{ slug: BlogCategorySlug; pattern: RegExp }> = [
   {
     slug: "ai-tehnologie",
     pattern:
-      /inteligen[țt]a artificial|\bai\b|\bllm\b|deepfake|machine learning|artificial intelligence|prompt injection|data poisoning/i,
+      /inteligen[țt]a artificial|artificial intelligence|ai generativ|generative ai|\bllm\b|deepfake|machine learning|prompt injection|data poisoning/i,
   },
   {
     slug: "brese-incidente",
@@ -73,11 +73,7 @@ const categoryRules: Array<{ slug: BlogCategorySlug; pattern: RegExp }> = [
 ];
 
 function searchableText(post: CollectionEntry<"blog">): string {
-  return [
-    post.data.title,
-    post.data.excerpt,
-    ...(post.data.tags ?? []),
-  ]
+  return [post.data.title, post.data.excerpt, ...(post.data.tags ?? [])]
     .filter(Boolean)
     .join(" ")
     .normalize("NFD")
