@@ -7,42 +7,253 @@ const entries = (await getCollection("changelog")).sort(
 );
 
 const dateFormatter = Intl.DateTimeFormat("ro-RO", {
-  year: "numeric",
-  month: "long",
+  month: "short",
   day: "numeric",
 });
+
+const monthFormatter = Intl.DateTimeFormat("ro-RO", {
+  month: "long",
+  year: "numeric",
+});
+
+const tagLabels: Record<string, string> = {
+  Console: "Platformă",
+  Documents: "Documente",
+  IAM: "IAM",
+  "Access Review": "Revizuire acces",
+  "Compliance Portal": "Portal conformitate",
+  Governance: "Guvernanță",
+  "Cookie Banner": "Cookie Banner",
+  Integrations: "Integrări",
+  Integration: "Integrări",
+  "Open-source": "Open source",
+  "Open Source": "Open source",
+  Assets: "Active",
+  n8n: "Automatizări",
+  MCP: "MCP",
+  CLI: "CLI",
+};
+
+const displayTag = (tag: string) => tagLabels[tag] ?? tag;
+
+const categoryCounts = new Map<string, number>();
+for (const entry of entries) {
+  for (const tag of entry.data.tags) {
+    categoryCounts.set(tag, (categoryCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const categories = [...categoryCounts.keys()].sort((a, b) => {
+  const countDifference = (categoryCounts.get(b) ?? 0) - (categoryCounts.get(a) ?? 0);
+  return countDifference || displayTag(a).localeCompare(displayTag(b), "ro");
+});
+
+const groupedEntries = new Map<
+  string,
+  { label: string; entries: typeof entries }
+>();
+
+for (const entry of entries) {
+  const date = new Date(entry.data.date);
+  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  const existing = groupedEntries.get(key);
+  if (existing) {
+    existing.entries.push(entry);
+  } else {
+    groupedEntries.set(key, {
+      label: monthFormatter.format(date),
+      entries: [entry],
+    });
+  }
+}
+
+const changelogSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Changelog ZebraByte",
+  description:
+    "Actualizări și îmbunătățiri ZebraByte pentru platformă, securitate, conformitate și integrări.",
+  url: "https://www.zebrabyte.ro/changelog",
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: entries.slice(0, 30).map((entry, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://www.zebrabyte.ro/changelog/${entry.id}`,
+      name: entry.data.title,
+    })),
+  },
+};
 ---
 
 <Layout
   title="Changelog ZebraByte"
   description="Actualizări ZebraByte privind platforma, securitatea, conformitatea, integrarea serviciilor și îmbunătățirile produselor."
 >
-  <main class="container my-10 max-w-[720px] sm:my-20">
-    <h1 class="text-h2 animate-slide-in mb-3 font-medium">Changelog</h1>
-    <p
-      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-base sm:mb-16"
-    >
-      Actualizări și îmbunătățiri ZebraByte.
-    </p>
-    <ul class="animate-slide-in animation-delay-300 space-y-2">
+  <script type="application/ld+json" set:html={JSON.stringify(changelogSchema)} />
+
+  <main class="container my-10 max-w-[860px] sm:my-20">
+    <header class="mb-8 sm:mb-10">
+      <h1 class="text-h2 animate-slide-in mb-3 font-medium">Changelog</h1>
+      <p
+        class="text-muted-foreground animate-slide-in animation-delay-100 text-base sm:text-lg"
+      >
+        Fiecare schimbare importantă ZebraByte, explicată clar.
+      </p>
+    </header>
+
+    {
+      categories.length > 0 && (
+        <nav
+          class="animate-slide-in animation-delay-200 -mx-1 mb-10 overflow-x-auto px-1 pb-2 sm:mb-12"
+          aria-label="Filtre Changelog"
+        >
+          <div class="flex min-w-max items-center gap-2" data-changelog-filters>
+            <button
+              type="button"
+              class="border-primary bg-primary text-primary-foreground rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+              data-category="all"
+              aria-pressed="true"
+            >
+              Toate
+            </button>
+            {categories.map((category) => (
+              <button
+                type="button"
+                class="border-border-mid text-muted-foreground hover:border-primary/40 hover:text-primary rounded-full border bg-transparent px-4 py-2 text-sm font-medium transition-colors"
+                data-category={category}
+                aria-pressed="false"
+              >
+                {displayTag(category)}
+              </button>
+            ))}
+          </div>
+        </nav>
+      )
+    }
+
+    <div class="animate-slide-in animation-delay-300" data-changelog-groups>
       {
-        entries.map((entry) => (
-          <li class="flex items-baseline gap-3">
-            <time class="text-muted-foreground shrink-0 text-sm">
-              {dateFormatter.format(new Date(entry.data.date))}
-            </time>
-            <a href={`/changelog/${entry.id}`} class="hover:underline">
-              {entry.data.title}
-            </a>
-            {entry.data.tags.length > 0 &&
-              entry.data.tags.map((tag) => (
-                <span class="bg-highlight shrink-0 rounded-full px-2 py-0.5 text-xs font-medium">
-                  {tag}
-                </span>
+        [...groupedEntries.entries()].map(([monthKey, group]) => (
+          <section class="mb-12 last:mb-0" data-month-group={monthKey}>
+            <div class="mb-3 flex items-center gap-3">
+              <h2 class="shrink-0 text-sm font-medium capitalize">{group.label}</h2>
+              <div class="bg-border-mid h-px flex-1" />
+              <span
+                class="text-muted-foreground shrink-0 text-xs"
+                data-month-count
+                data-total={group.entries.length}
+              >
+                {group.entries.length} {group.entries.length === 1 ? "schimbare" : "schimbări"}
+              </span>
+            </div>
+
+            <div class="divide-border-mid divide-y">
+              {group.entries.map((entry) => (
+                <article
+                  class="grid gap-2 py-5 first:pt-4 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:gap-4"
+                  data-changelog-entry
+                  data-tags={entry.data.tags.join("|")}
+                >
+                  <time
+                    class="text-muted-foreground pt-0.5 text-sm"
+                    datetime={entry.data.date.toISOString()}
+                  >
+                    {dateFormatter.format(new Date(entry.data.date))}
+                  </time>
+
+                  <div class="min-w-0">
+                    <a
+                      href={`/changelog/${entry.id}`}
+                      class="text-primary font-medium leading-snug hover:underline"
+                    >
+                      {entry.data.title}
+                    </a>
+                    <p class="text-muted-foreground mt-1 max-w-[610px] text-sm leading-relaxed">
+                      {entry.data.description}
+                    </p>
+                  </div>
+
+                  {entry.data.tags.length > 0 && (
+                    <div class="flex flex-wrap items-start gap-1.5 sm:justify-end">
+                      {entry.data.tags.map((tag) => (
+                        <span class="border-border-mid text-muted-foreground rounded-full border px-2.5 py-0.5 text-xs font-medium">
+                          {displayTag(tag)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </article>
               ))}
-          </li>
+            </div>
+          </section>
         ))
       }
-    </ul>
+    </div>
+
+    <p
+      class="text-muted-foreground hidden py-16 text-center text-sm"
+      data-changelog-empty
+      aria-live="polite"
+    >
+      Nu există actualizări în această categorie.
+    </p>
   </main>
 </Layout>
+
+<script>
+  const setupChangelogFilters = () => {
+    const root = document.querySelector<HTMLElement>("[data-changelog-filters]");
+    if (!root || root.dataset.ready === "true") return;
+    root.dataset.ready = "true";
+
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-category]"));
+    const entries = Array.from(document.querySelectorAll<HTMLElement>("[data-changelog-entry]"));
+    const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-month-group]"));
+    const empty = document.querySelector<HTMLElement>("[data-changelog-empty]");
+
+    const countLabel = (count: number) => {
+      const english = document.documentElement.lang.toLowerCase().startsWith("en");
+      if (english) return `${count} ${count === 1 ? "change" : "changes"}`;
+      return `${count} ${count === 1 ? "schimbare" : "schimbări"}`;
+    };
+
+    const applyFilter = (category: string) => {
+      let visibleTotal = 0;
+
+      for (const entry of entries) {
+        const tags = (entry.dataset.tags || "").split("|").filter(Boolean);
+        const visible = category === "all" || tags.includes(category);
+        entry.hidden = !visible;
+        if (visible) visibleTotal += 1;
+      }
+
+      for (const group of groups) {
+        const groupEntries = Array.from(group.querySelectorAll<HTMLElement>("[data-changelog-entry]"));
+        const visibleCount = groupEntries.filter((entry) => !entry.hidden).length;
+        group.hidden = visibleCount === 0;
+        const counter = group.querySelector<HTMLElement>("[data-month-count]");
+        if (counter) counter.textContent = countLabel(visibleCount);
+      }
+
+      if (empty) empty.classList.toggle("hidden", visibleTotal !== 0);
+
+      for (const button of buttons) {
+        const selected = button.dataset.category === category;
+        button.setAttribute("aria-pressed", String(selected));
+        button.classList.toggle("bg-primary", selected);
+        button.classList.toggle("text-primary-foreground", selected);
+        button.classList.toggle("border-primary", selected);
+        button.classList.toggle("text-muted-foreground", !selected);
+        button.classList.toggle("border-border-mid", !selected);
+      }
+    };
+
+    for (const button of buttons) {
+      button.addEventListener("click", () => applyFilter(button.dataset.category || "all"));
+    }
+  };
+
+  document.addEventListener("astro:page-load", setupChangelogFilters);
+  setupChangelogFilters();
+</script>
