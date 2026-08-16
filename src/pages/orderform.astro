@@ -1,62 +1,159 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 ---
 
-<Layout title="Order Details" description="Complete your order details">
-  <main>
-    <animated-hero class="relative block overflow-hidden py-10 sm:py-20">
-      <section class="container">
-        <h1 class="text-h2 animate-slide-in mb-10 text-center font-medium">
-          Order Details
-        </h1>
-        <iframe
-          id="tally-form"
-          data-tally-src="https://tally.so/embed/QKVaXk?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-          loading="lazy"
-          width="100%"
-          height="729"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          title="Probo - Order Form"></iframe>
-      </section>
-    </animated-hero>
+<Layout
+  title="Detalii solicitare ZebraByte"
+  description="Trimite direct către ZebraByte detaliile unei solicitări sau ale unui proiect, prin formular securizat first-party."
+>
+  <main class="container my-10 max-w-[820px] sm:my-20">
+    <header class="mb-10 max-w-[650px]">
+      <h1 class="text-h2 animate-slide-in mb-4 font-medium">Detalii solicitare</h1>
+      <p class="text-muted-foreground text-lg leading-relaxed">
+        Completează informațiile de bază despre companie și proiect. Formularul este procesat direct de ZebraByte și nu mai depinde de servicii externe de formulare.
+      </p>
+    </header>
+
+    <form id="order-form" class="space-y-6 border-t pt-8">
+      <input type="hidden" name="phone" value="" />
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="space-y-2 text-sm font-medium">
+          <span>Nume *</span>
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="name" required maxlength="100" autocomplete="name" />
+        </label>
+        <label class="space-y-2 text-sm font-medium">
+          <span>Email *</span>
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="email" type="email" required maxlength="254" autocomplete="email" />
+        </label>
+      </div>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Companie *</span>
+        <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="company" required maxlength="150" autocomplete="organization" />
+      </label>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Serviciu / proiect *</span>
+        <select id="order-service" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" required>
+          <option value="">Selectează</option>
+          <option value="Managed Compliance">Managed Compliance</option>
+          <option value="SOC 2">SOC 2</option>
+          <option value="ISO/IEC 27001">ISO/IEC 27001</option>
+          <option value="GDPR & Privacy">GDPR & Privacy</option>
+          <option value="NIS2 & Compliance">NIS2 & Compliance</option>
+          <option value="Cyber Security">Cyber Security</option>
+          <option value="Security Assessment">Security Assessment</option>
+          <option value="Website Security">Website Security</option>
+          <option value="Email Security">Email Security</option>
+          <option value="Secure Managed Hosting">Secure Managed Hosting</option>
+          <option value="Altceva">Altceva</option>
+        </select>
+        <input id="order-service-value" type="hidden" name="service" />
+      </label>
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="space-y-2 text-sm font-medium">
+          <span>Website / domeniu</span>
+          <input id="order-domain" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" type="text" maxlength="250" placeholder="example.com" />
+        </label>
+        <label class="space-y-2 text-sm font-medium">
+          <span>Termen orientativ</span>
+          <select id="order-timeline" class="bg-level-0 w-full rounded-lg border px-3 py-2.5">
+            <option value="Nespecificat">Nespecificat</option>
+            <option value="Urgent">Urgent</option>
+            <option value="1-2 săptămâni">1–2 săptămâni</option>
+            <option value="1 lună">În aproximativ o lună</option>
+            <option value="2-3 luni">2–3 luni</option>
+            <option value="Planificare">Doar planificăm momentan</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Ce trebuie să știm? *</span>
+        <textarea id="order-details" class="bg-level-0 min-h-44 w-full resize-y rounded-lg border px-3 py-2.5" required maxlength="4000" placeholder="Scope, cerințe, context, ce ai încercat deja sau ce rezultat urmărești."></textarea>
+      </label>
+      <input id="order-message" type="hidden" name="message" />
+
+      <label class="flex items-start gap-3 text-sm">
+        <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+        <span class="text-muted-foreground">
+          Sunt de acord ca datele furnizate să fie procesate pentru gestionarea solicitării, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.
+        </span>
+      </label>
+
+      <div data-turnstile-container data-sitekey={turnstileSiteKey} aria-label="Verificare de securitate"></div>
+      <div id="order-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+      <button id="order-submit" type="submit" class="bg-primary text-primary-foreground h-11 rounded-lg px-5 text-sm font-medium disabled:opacity-50">
+        Trimite detaliile
+      </button>
+    </form>
   </main>
 </Layout>
 
 <script>
-  import { AnimatedHero } from "../lib/elements/hero";
-  import { customElementDefine } from "../lib/dom";
+  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
+  import { ensureTurnstileToken, lazyRenderTurnstile, resetTurnstile } from "../lib/turnstile";
 
-  customElementDefine("animated-hero", () => AnimatedHero);
+  function setupOrderForm() {
+    const form = document.querySelector<HTMLFormElement>("#order-form");
+    const status = document.querySelector<HTMLElement>("#order-status");
+    const submit = document.querySelector<HTMLButtonElement>("#order-submit");
+    const service = document.querySelector<HTMLSelectElement>("#order-service");
+    const serviceValue = document.querySelector<HTMLInputElement>("#order-service-value");
+    const domain = document.querySelector<HTMLInputElement>("#order-domain");
+    const timeline = document.querySelector<HTMLSelectElement>("#order-timeline");
+    const details = document.querySelector<HTMLTextAreaElement>("#order-details");
+    const message = document.querySelector<HTMLInputElement>("#order-message");
+    const turnstile = form?.querySelector<HTMLElement>("[data-turnstile-container]");
+    if (!form || !status || !submit || !service || !serviceValue || !domain || !timeline || !details || !message || form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
 
-  // Load Tally form on page load (including client-side navigation)
-  function loadTallyForm() {
-    const iframe = document.getElementById("tally-form") as HTMLIFrameElement;
-    if (!iframe || iframe.src) return;
+    const cleanup = lazyRenderTurnstile(turnstile);
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
 
-    const tallySrc = iframe.dataset.tallySrc;
-    if (!tallySrc) return;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      serviceValue.value = service.value;
+      message.value = [
+        "[PROJECT / ORDER DETAILS]",
+        `Website / domeniu: ${domain.value || "Nespecificat"}`,
+        `Termen: ${timeline.value || "Nespecificat"}`,
+        "",
+        details.value,
+      ].join("\n");
+      submit.disabled = true;
+      status.classList.add("hidden");
 
-    const w = "https://tally.so/widgets/embed.js";
-
-    if (typeof (window as any).Tally !== "undefined") {
-      iframe.src = tallySrc;
-      (window as any).Tally.loadEmbeds();
-    } else if (!document.querySelector(`script[src="${w}"]`)) {
-      const s = document.createElement("script");
-      s.src = w;
-      s.onload = () => {
-        iframe.src = tallySrc;
-        if (typeof (window as any).Tally !== "undefined") {
-          (window as any).Tally.loadEmbeds();
+      try {
+        const verified = await ensureTurnstileToken(turnstile);
+        if (!verified) throw new Error("turnstile");
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Accept-Language": getBrowserLocale() },
+          body: new FormData(form),
+        });
+        const payload = (await response.json()) as { success?: boolean };
+        status.classList.remove("hidden");
+        if (!response.ok || !payload.success) {
+          status.textContent = browserT("Solicitarea nu a putut fi trimisă.", "Your request could not be sent.");
+          return;
         }
-      };
-      document.body.appendChild(s);
-    } else {
-      iframe.src = tallySrc;
-    }
+        status.textContent = browserT("Detaliile au fost trimise către ZebraByte.", "Your details were sent to ZebraByte.");
+        form.reset();
+      } catch {
+        status.classList.remove("hidden");
+        status.textContent = browserT("A apărut o eroare. Încearcă din nou.", "An error occurred. Please try again.");
+      } finally {
+        resetTurnstile(turnstile);
+        submit.disabled = false;
+      }
+    });
   }
 
-  document.addEventListener("astro:page-load", loadTallyForm);
+  document.addEventListener("astro:page-load", setupOrderForm);
+  setupOrderForm();
 </script>
