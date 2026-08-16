@@ -2,9 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import WrittenBy from "../components/block/WrittenBy.astro";
+import BlogCategoryNav from "../components/BlogCategoryNav.astro";
 import { pageSize } from "../content.config.ts";
 import Pagination from "../components/Pagination.astro";
 import { getBlogHref } from "../lib/blog";
+import { getBlogCategory, getBlogCategoryHref } from "../lib/blog-categories";
 
 const allPosts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -25,34 +27,47 @@ const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   <main class="container my-10 sm:my-20">
     <h1 class="text-h2 animate-slide-in mb-3 font-medium">Blog</h1>
     <p
-      class="text-muted-foreground animate-slide-in animation-delay-100 mb-10 text-base sm:mb-16"
+      class="text-muted-foreground animate-slide-in animation-delay-100 mb-7 max-w-3xl text-base sm:mb-9"
     >
-      Analize, ghiduri și noutăți de la ZebraByte
+      Analize, ghiduri și noutăți de la ZebraByte, organizate pe subiecte ca să găsești rapid informația relevantă.
     </p>
+    <BlogCategoryNav active="all" class="animate-slide-in animation-delay-200 mb-12 sm:mb-16" />
+
     <div
       class="animate-slide-in animation-delay-300 flex flex-col items-start gap-10 sm:grid sm:grid-cols-[1fr_320px] sm:gap-30"
     >
-      <section>
+      <section class="w-full">
         {
-          posts.map((post) => (
-            <article class="space-y-3 border-b py-10 first:pt-0 last:border-b-0">
-              <div class="text-muted-foreground">
-                {dateFormatter.format(new Date(post.data.date))}, de{" "}
-                {post.data.author.name}
-              </div>
-              <h2>
-                <a
-                  href={getBlogHref(post)}
-                  class="text-h4 block font-medium hover:opacity-80"
-                >
-                  {post.data.title}
-                </a>
-              </h2>
-              <p class="text-muted-foreground text-lg whitespace-pre-line">
-                {post.data.excerpt}
-              </p>
-            </article>
-          ))
+          posts.map((post) => {
+            const category = getBlogCategory(post);
+            return (
+              <article class="space-y-3 border-b py-10 first:pt-0 last:border-b-0">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+                  <span class="text-muted-foreground">
+                    {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
+                  </span>
+                  <span aria-hidden="true" class="text-border">•</span>
+                  <a
+                    href={getBlogCategoryHref(category)}
+                    class="font-medium hover:opacity-70"
+                  >
+                    {category.label}
+                  </a>
+                </div>
+                <h2>
+                  <a
+                    href={getBlogHref(post)}
+                    class="text-h4 block font-medium hover:opacity-80"
+                  >
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="text-muted-foreground text-lg whitespace-pre-line">
+                  {post.data.excerpt}
+                </p>
+              </article>
+            );
+          })
         }
         <Pagination currentPage={1} lastPage={lastPage} url="/blog" />
       </section>
