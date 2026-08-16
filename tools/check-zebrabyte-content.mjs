@@ -37,15 +37,22 @@ async function checkBlog() {
     return;
   }
 
+  const documents = Number(manifest?.source?.documentCount ?? 0);
   const unique = Number(manifest?.source?.uniqueSlugCount ?? 0);
   const imported = Number(manifest?.importedCount ?? 0);
   const failures = Number(manifest?.failureCount ?? 0);
 
-  if (unique <= 0) fail("Sanity migration produced zero unique blog slugs.");
+  if (documents <= 0) fail("Sanity migration produced zero published blog documents.");
+  if (unique !== documents) {
+    fail(`published-document slug parity failed: ${unique}/${documents} have unique valid slugs.`);
+  }
   if (failures !== 0) fail(`blog manifest contains ${failures} conversion failure(s).`);
-  if (imported !== unique) fail(`blog parity failed: imported ${imported}/${unique} unique posts.`);
+  if (imported !== documents || imported !== unique) {
+    fail(`blog parity failed: imported ${imported}/${documents} published documents (${unique} unique slugs).`);
+  }
 
   const slugs = new Set();
+  const legacyIds = new Set();
   for (const item of manifest.imported ?? []) {
     const slug = String(item?.slug ?? "");
     if (!slug) {
@@ -67,6 +74,10 @@ async function checkBlog() {
       }
       if (!frontmatter.legacyId) {
         fail(`generated article ${slug} is missing its legacy document ID.`);
+      } else if (legacyIds.has(frontmatter.legacyId)) {
+        fail(`duplicate legacy Sanity document ID: ${frontmatter.legacyId}`);
+      } else {
+        legacyIds.add(frontmatter.legacyId);
       }
     } catch (error) {
       fail(`invalid generated MDX for ${slug}: ${error instanceof Error ? error.message : error}`);
@@ -74,6 +85,9 @@ async function checkBlog() {
   }
 
   if (slugs.size !== imported) fail(`manifest slug uniqueness failed: ${slugs.size}/${imported}.`);
+  if (legacyIds.size !== imported) {
+    fail(`legacy document ID parity failed: ${legacyIds.size}/${imported}.`);
+  }
 
   const blogRoute = await read("src/pages/blog/[id].astro");
   const blogIndex = await read("src/pages/blog.astro");
@@ -85,7 +99,9 @@ async function checkBlog() {
   if (!blogPagination.includes("getBlogHref(post)")) fail("blog pagination is not using stable imported slugs.");
   if (!rss.includes("getBlogHref(post)")) fail("RSS is not using stable imported slugs.");
 
-  console.log(`[zebrabyte-content] blog parity OK: ${imported}/${unique} ZebraByte posts generated.`);
+  console.log(
+    `[zebrabyte-content] strict blog parity OK: ${imported}/${documents} published ZebraByte posts generated.`,
+  );
 }
 
 async function checkIndustries() {
