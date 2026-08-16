@@ -30,6 +30,8 @@
     "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAABBpDfopxKwUIKF_",
     "CONTACT_TO_EMAIL": "info@zebrabyte.ro",
     "CONTACT_FROM_EMAIL": "noreply@zebrabyte.ro",
-    "NEWSLETTER_FROM_EMAIL": "newsletter@zebrabyte.ro"
+    "NEWSLETTER_FROM_EMAIL": "newsletter@zebrabyte.ro",
+    "SENTRY_DSN": "https://3911779244253b927f077fff97216671@o4511598677852160.ingest.de.sentry.io/4511598685323344",
+    "SENTRY_ENVIRONMENT": "production"
   }
 }
