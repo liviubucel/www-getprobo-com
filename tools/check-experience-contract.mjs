@@ -17,6 +17,7 @@ const [
   wrangler,
   workerMain,
   index,
+  badges,
   testimonials,
   testimonialScroll,
   stories,
@@ -39,6 +40,7 @@ const [
   read("wrangler.jsonc"),
   read("worker/main.ts"),
   read("src/pages/index.astro"),
+  read("src/components/Badges.svelte"),
   read("src/components/block/ZebraByteTestimonials.astro"),
   read("src/components/block/TestimonialsScroll.svelte"),
   read("src/components/block/Stories.astro"),
@@ -72,6 +74,10 @@ requireText(index, "client:load", "homepage framework grid hydration");
 requireText(index, "<animated-hero", "homepage animated hero");
 requireText(index, "AnimatedHero", "homepage animated hero registration");
 forbidText(index, "BadgesStatic", "homepage framework grid");
+requireText(badges, "badgeAnimationSrc", "live badge animation preloader");
+requireText(badges, ".json`", "live badge animation preloader");
+requireText(badges, "fetch(badgeAnimationSrc", "live badge animation cache warmup");
+forbidText(badges, ".svg?v=3", "live badge animation preloader");
 
 requireText(testimonials, 'import Scroll from "./TestimonialsScroll.svelte"', "testimonial carousel");
 requireText(testimonials, "<Scroll client:load>", "testimonial carousel hydration");

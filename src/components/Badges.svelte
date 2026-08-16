@@ -49,30 +49,25 @@
   let intersection = useIntersectionObserver({ threshold: 0 });
   let visibleFrameworks = $state(orderedFrameworks.slice(0, count));
 
-  const badgeSrc = (badge: string) =>
-    `/frameworks/${badge.replaceAll(" ", "")}.svg?v=3`;
+  const badgeAnimationSrc = (badge: string) =>
+    `/frameworks/${badge.replaceAll(" ", "")}.json`;
 
-  // For SVGs, onload is enough to guarantee the resource is available for the
-  // next frame. Do not await img.decode(): Safari can delay SVG decode and make
-  // the rotation appear frozen.
-  const preloadFramework = (framework: (typeof frameworks)[number]) =>
-    new Promise<boolean>((resolve) => {
-      if (typeof Image === "undefined") {
-        resolve(true);
-        return;
-      }
-
-      const image = new Image();
-      image.onload = () => resolve(true);
-      image.onerror = () => resolve(false);
-      image.src = badgeSrc(framework.badge);
-    });
+  const preloadFramework = async (framework: (typeof frameworks)[number]) => {
+    if (typeof fetch === "undefined") return true;
+    try {
+      const response = await fetch(badgeAnimationSrc(framework.badge));
+      return response.ok;
+    } catch {
+      return false;
+    }
+  };
 
   const warmFrameworkCache = () => {
-    if (typeof Image === "undefined") return;
+    if (typeof fetch === "undefined") return;
     orderedFrameworks.forEach((framework) => {
-      const image = new Image();
-      image.src = badgeSrc(framework.badge);
+      void fetch(badgeAnimationSrc(framework.badge)).catch(() => {
+        // Lottie will retry the asset itself when the badge becomes visible.
+      });
     });
   };
 
@@ -97,9 +92,8 @@
       availableFrameworks[Math.floor(Math.random() * availableFrameworks.length)];
     const randomIndex = Math.floor(Math.random() * visibleFrameworks.length);
 
-    // Preserve the original behaviour: one random tile changes every five
-    // seconds with the keyed scale transition. We only wait for the next SVG's
-    // HTTP load so the outgoing tile is never replaced by an empty frame.
+    // Warm the exact JSON animation used by FrameworkBadge before swapping the
+    // keyed tile, so the Lottie container does not briefly wait on the network.
     const loaded = await preloadFramework(randomFramework);
     if (destroyed) return;
 
