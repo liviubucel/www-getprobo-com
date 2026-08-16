@@ -38,7 +38,8 @@ function stripMarkdown(value) {
       .replace(/^\s*[-*+]\s+/gm, "")
       .replace(/^\s*\d+\.\s+/gm, "")
       .replace(/[`*_~>|]/g, " ")
-      .replace(/<[^>]+>/g, " "),
+      .replace(/<[^>]+>/g, " ")
+      .replace(/[{}<>]/g, " "),
   );
 }
 
@@ -160,10 +161,11 @@ if (eventName === "pull_request" || event.pull_request) {
     process.exit(0);
   }
 
+  const publicSection = extractPublicSection(pr.body);
   const requested = labels.some((label) => label === "changelog:publish" || categoryLabels.has(label));
-  if (!requested) {
+  if (!requested && !publicSection) {
     await setOutput("created", "false");
-    console.log("No changelog:* publication label or marker found; nothing to publish.");
+    console.log("No changelog publication marker or public section found; nothing to publish.");
     process.exit(0);
   }
 
@@ -171,7 +173,6 @@ if (eventName === "pull_request" || event.pull_request) {
   if (tags.length === 0) tags = ["Platformă"];
 
   title = cleanTitle(pr.title);
-  const publicSection = extractPublicSection(pr.body);
   descriptionSource = publicSection || pr.body || "";
   bodySource = publicSection || "";
   date = pr.merged_at ? new Date(pr.merged_at).toISOString().slice(0, 10) : date;
