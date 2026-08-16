@@ -4,7 +4,7 @@ import StoryCard from "../StoryCard.astro";
 import Slider from "../ui/Slider.svelte";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
-const stories = sortStoriesForListing(await getCollection("stories")).slice(0, 6);
+const stories = sortStoriesForListing(await getCollection("stories"));
 ---
 
 <section class="stories dark bg-level-0 text-foreground overflow-hidden">
