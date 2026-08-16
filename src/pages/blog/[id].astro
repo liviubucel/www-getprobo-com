@@ -7,13 +7,16 @@ import WrittenBy from "../../components/block/WrittenBy.astro";
 import Newsletter from "../../components/block/Newsletter.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { getCanonicalUrl } from "../../lib/i18n.ts";
+import { getBlogSlug } from "../../lib/blog";
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { id: post.id },
+    params: { id: getBlogSlug(post) },
     props: { post },
   }));
 }
+
 const { post } = Astro.props;
 const { Content } = await render(post);
 const dateFormatter = Intl.DateTimeFormat("ro-RO", {
@@ -27,6 +30,7 @@ const articleImage = post.data.ogImage
   : post.data.titleImage
     ? new URL(post.data.titleImage, "https://www.zebrabyte.ro").toString()
     : "https://www.zebrabyte.ro/og.png";
+const isZebraByteAuthor = /zebrabyte/i.test(post.data.author.name);
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -36,10 +40,16 @@ const articleSchema = {
   image: articleImage,
   datePublished: post.data.date.toISOString(),
   dateModified: (post.data.dateModified ?? post.data.date).toISOString(),
-  author: {
-    "@type": "Person",
-    name: post.data.author.name,
-  },
+  author: isZebraByteAuthor
+    ? {
+        "@type": "Organization",
+        name: post.data.author.name,
+        url: "https://www.zebrabyte.ro/about",
+      }
+    : {
+        "@type": "Person",
+        name: post.data.author.name,
+      },
   publisher: {
     "@type": "Organization",
     name: "ZebraByte",
@@ -54,7 +64,6 @@ const articleSchema = {
   },
 };
 
-// FAQ Schema (only if post has faqs in frontmatter)
 const faqSchema = post.data.faqs
   ? {
       "@context": "https://schema.org",
@@ -92,7 +101,7 @@ const faqSchema = post.data.faqs
   <meta
     slot="head"
     property="article:author"
-    content="https://www.zebrabyte.ro/about"
+    content={isZebraByteAuthor ? "https://www.zebrabyte.ro/about" : post.data.author.name}
   />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {
@@ -119,9 +128,7 @@ const faqSchema = post.data.faqs
       Înapoi la Blog
     </a>
     <div class="text-muted-foreground animate-fade-in animation-delay-100 mb-5">
-      {dateFormatter.format(new Date(post.data.date))}, de {
-        post.data.author.name
-      }
+      {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
     </div>
     {
       post.data.titleImage ? (
@@ -140,9 +147,20 @@ const faqSchema = post.data.faqs
           />
         </div>
       ) : (
-        <h1 class="text-h3 sm:text-h2 animate-slide-in mb-10 font-medium">
-          {post.data.title}
-        </h1>
+        <>
+          <h1 class="text-h3 sm:text-h2 animate-slide-in mb-8 font-medium">
+            {post.data.title}
+          </h1>
+          {post.data.source === "zebrabyte" && post.data.ogImage && (
+            <img
+              src={post.data.ogImage}
+              alt={post.data.title}
+              class="animate-slide-in animation-delay-100 mb-10 h-auto w-full rounded-2xl border object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          )}
+        </>
       )
     }
     <p
