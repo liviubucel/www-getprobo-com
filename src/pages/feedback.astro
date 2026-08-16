@@ -1,40 +1,126 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 ---
 
-<Layout title="Feedback is gift" description="Please be honest">
-  <main>
-    <section class="container my-10 sm:mt-20 sm:mb-30">
-      <h1 class="text-h2 animate-slide-in mb-3 font-medium">
-        Thank you for your trust
-      </h1>
-      <iframe
-        data-tally-src="https://tally.so/embed/XxreLO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-        loading="lazy"
-        width="100%"
-        height="986"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
-        title="Feedback is gift"></iframe>
-      <script>
-        var d = document,
-          w = "https://tally.so/widgets/embed.js",
-          v = function () {
-            "undefined" != typeof Tally
-              ? Tally.loadEmbeds()
-              : d
-                  .querySelectorAll("iframe[data-tally-src]:not([src])")
-                  .forEach(function (e) {
-                    e.src = e.dataset.tallySrc;
-                  });
-          };
-        if ("undefined" != typeof Tally) v();
-        else if (d.querySelector('script[src="' + w + '"]') == null) {
-          var s = d.createElement("script");
-          ((s.src = w), (s.onload = v), (s.onerror = v), d.body.appendChild(s));
-        }
-      </script>
-    </section>
+<Layout
+  title="Feedback ZebraByte"
+  description="Trimite feedback direct echipei ZebraByte prin formularul securizat first-party."
+>
+  <main class="container my-10 max-w-[760px] sm:my-20">
+    <header class="mb-10 max-w-[620px]">
+      <h1 class="text-h2 animate-slide-in mb-4 font-medium">Feedback</h1>
+      <p class="text-muted-foreground text-lg leading-relaxed">
+        Spune-ne ce a mers bine și ce putem îmbunătăți. Mesajul ajunge direct la ZebraByte; nu folosim un formular extern pentru această pagină.
+      </p>
+    </header>
+
+    <form id="feedback-form" class="space-y-5 border-t pt-8">
+      <input type="hidden" name="service" value="Altceva" />
+      <input type="hidden" name="phone" value="" />
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="space-y-2 text-sm font-medium">
+          <span>Nume *</span>
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="name" required maxlength="100" autocomplete="name" />
+        </label>
+        <label class="space-y-2 text-sm font-medium">
+          <span>Email *</span>
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="email" type="email" required maxlength="254" autocomplete="email" />
+        </label>
+      </div>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Companie</span>
+        <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="company" maxlength="150" autocomplete="organization" />
+      </label>
+
+      <fieldset>
+        <legend class="mb-2 text-sm font-medium">Cum a fost experiența?</legend>
+        <div class="flex flex-wrap gap-2">
+          {[1, 2, 3, 4, 5].map((rating) => (
+            <label class="cursor-pointer">
+              <input class="peer sr-only" type="radio" name="rating" value={rating} required />
+              <span class="peer-checked:bg-active grid size-10 place-items-center rounded-lg border text-sm">{rating}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Mesaj *</span>
+        <textarea id="feedback-text" class="bg-level-0 min-h-40 w-full resize-y rounded-lg border px-3 py-2.5" required maxlength="4500"></textarea>
+      </label>
+      <input id="feedback-message" type="hidden" name="message" />
+
+      <label class="flex items-start gap-3 text-sm">
+        <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+        <span class="text-muted-foreground">
+          Sunt de acord ca datele furnizate să fie procesate pentru gestionarea feedback-ului, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.
+        </span>
+      </label>
+
+      <div data-turnstile-container data-sitekey={turnstileSiteKey} aria-label="Verificare de securitate"></div>
+      <div id="feedback-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+      <button id="feedback-submit" type="submit" class="bg-primary text-primary-foreground h-11 rounded-lg px-5 text-sm font-medium disabled:opacity-50">
+        Trimite feedback
+      </button>
+    </form>
   </main>
 </Layout>
+
+<script>
+  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
+  import { ensureTurnstileToken, lazyRenderTurnstile, resetTurnstile } from "../lib/turnstile";
+
+  function setupFeedbackForm() {
+    const form = document.querySelector<HTMLFormElement>("#feedback-form");
+    const status = document.querySelector<HTMLElement>("#feedback-status");
+    const submit = document.querySelector<HTMLButtonElement>("#feedback-submit");
+    const text = document.querySelector<HTMLTextAreaElement>("#feedback-text");
+    const message = document.querySelector<HTMLInputElement>("#feedback-message");
+    const turnstile = form?.querySelector<HTMLElement>("[data-turnstile-container]");
+    if (!form || !status || !submit || !text || !message || form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
+
+    const cleanup = lazyRenderTurnstile(turnstile);
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
+      if (!rating) return;
+      message.value = `[FEEDBACK ${rating}/5]\n\n${text.value}`;
+      submit.disabled = true;
+      status.classList.add("hidden");
+
+      try {
+        const verified = await ensureTurnstileToken(turnstile);
+        if (!verified) throw new Error("turnstile");
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Accept-Language": getBrowserLocale() },
+          body: new FormData(form),
+        });
+        const payload = (await response.json()) as { success?: boolean };
+        status.classList.remove("hidden");
+        if (!response.ok || !payload.success) {
+          status.textContent = browserT("Feedback-ul nu a putut fi trimis.", "Your feedback could not be sent.");
+          return;
+        }
+        status.textContent = browserT("Mulțumim pentru feedback.", "Thank you for your feedback.");
+        form.reset();
+      } catch {
+        status.classList.remove("hidden");
+        status.textContent = browserT("A apărut o eroare. Încearcă din nou.", "An error occurred. Please try again.");
+      } finally {
+        resetTurnstile(turnstile);
+        submit.disabled = false;
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", setupFeedbackForm);
+  setupFeedbackForm();
+</script>
