@@ -84,8 +84,11 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                   <img
                     src={group.feature.asset}
                     alt={group.feature.alt}
+                    width="640"
+                    height="360"
                     loading="lazy"
                     decoding="async"
+                    fetchpriority="low"
                     data-mobile-feature-image
                     class:list={[
                       "absolute inset-0 size-full",
