@@ -8,6 +8,7 @@ import Newsletter from "../../components/block/Newsletter.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { getCanonicalUrl } from "../../lib/i18n.ts";
 import { getBlogSlug } from "../../lib/blog";
+import { getBlogCategory, getBlogCategoryHref } from "../../lib/blog-categories";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -19,6 +20,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const category = getBlogCategory(post);
 const dateFormatter = Intl.DateTimeFormat("ro-RO", {
   year: "numeric",
   month: "long",
@@ -37,6 +39,8 @@ const articleSchema = {
   "@type": "Article",
   headline: post.data.title,
   description: post.data.excerpt,
+  articleSection: category.label,
+  keywords: post.data.tags?.join(", ") || undefined,
   image: articleImage,
   datePublished: post.data.date.toISOString(),
   dateModified: (post.data.dateModified ?? post.data.date).toISOString(),
@@ -103,6 +107,7 @@ const faqSchema = post.data.faqs
     property="article:author"
     content={isZebraByteAuthor ? "https://www.zebrabyte.ro/about" : post.data.author.name}
   />
+  <meta slot="head" property="article:section" content={category.label} />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {
     faqSchema && (
@@ -111,7 +116,11 @@ const faqSchema = post.data.faqs
   }
   <main class="@container container my-10 max-w-[720px] sm:my-20">
     <Breadcrumbs
-      items={[{ label: "Blog", href: "/blog" }, { label: post.data.title }]}
+      items={[
+        { label: "Blog", href: "/blog" },
+        { label: category.label, href: getBlogCategoryHref(category) },
+        { label: post.data.title },
+      ]}
       class="animate-fade-in animation-delay-100 mb-4"
     />
     <a
@@ -127,8 +136,14 @@ const faqSchema = post.data.faqs
       >
       Înapoi la Blog
     </a>
-    <div class="text-muted-foreground animate-fade-in animation-delay-100 mb-5">
-      {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
+    <div class="animate-fade-in animation-delay-100 mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+      <span class="text-muted-foreground">
+        {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
+      </span>
+      <span aria-hidden="true" class="text-border">•</span>
+      <a href={getBlogCategoryHref(category)} class="font-medium hover:opacity-70">
+        {category.label}
+      </a>
     </div>
     {
       post.data.titleImage ? (
