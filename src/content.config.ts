@@ -139,8 +139,10 @@ const wall = defineCollection({
   schema: z.object({
     /** Display name shown on the card (company or person). */
     company: z.string(),
-    /** Person who authored the post; rendered as the overlapping avatar. */
+    /** Person who authored the post/review. */
     author: z.string().optional(),
+    /** First-party provenance label for public social/review entries. */
+    source: z.enum(["linkedin", "google", "trustpilot"]).optional(),
     /** Follower count shown under the name (e.g. 23096 -> "23,096 followers"). */
     followers: z.number().optional(),
     /** Logo asset filename in src/assets/wall (e.g. "acme-logo.svg"). */
@@ -149,7 +151,7 @@ const wall = defineCollection({
     avatar: z.string().optional(),
     /** Framework badge to display (must match a label in frameworks.ts). */
     framework: z.enum(frameworks.map((f) => f.label) as any).optional(),
-    /** The post text. Line breaks are preserved. */
+    /** The post/review text. Line breaks are preserved. */
     post: z.string(),
     /** Optional English translation, shown via the language toggle. */
     translatedPost: z.string().optional(),
@@ -159,7 +161,7 @@ const wall = defineCollection({
     thumbnail: z.string().optional(),
     likes: z.number().optional(),
     comments: z.number().optional(),
-    /** Link to the original LinkedIn post. */
+    /** Link to the original source post or review. */
     postUrl: z.string().url().optional(),
     date: z.date().optional(),
     /** Manual ordering; lower shows first. Falls back to followers desc. */

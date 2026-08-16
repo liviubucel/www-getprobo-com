@@ -47,6 +47,10 @@ The inherited auto-scrolling strip behavior is valuable and remains protected. T
 
 Only ZebraByte-sourced review content may be presented as ZebraByte customer feedback. The review wall filters for ZebraByte-owned entries and must not be padded with the inherited Probo logo strip.
 
+The public ZebraByte review set is pinned in `docs/architecture/wall-provenance.json` to the ZebraByte-owned source repository and source commit. Customer quote text must remain **verbatim**. Do not correct grammar, punctuation, spelling, capitalization or wording. A new `zebrabyte-*.mdx` wall entry is not public-proof-safe merely because its filename has the prefix; it must be added to the provenance manifest with a verified source. Do not invent follower, like or comment counts for customer reviews.
+
+When a source platform is known, the card must identify that platform accurately. A Trustpilot review must not inherit a LinkedIn glyph merely because the original Probo wall component was designed for LinkedIn posts.
+
 ### Brand assets
 
 The structure of the inherited brand page may be preserved, but public downloads and previews must use ZebraByte assets. Do not restore Probo logos.

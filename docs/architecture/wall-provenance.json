@@ -1,0 +1,66 @@
+{
+  "sourceRepository": "liviubucel/Zebrabyte-Web",
+  "sourceCommit": "5e2d1224921dc80e692a9debf450f61ba1c31a73",
+  "sourceFile": "src/data/reviews.ts",
+  "policy": "Customer review quotes must remain verbatim. Do not correct grammar, punctuation, spelling, capitalization or wording.",
+  "entries": {
+    "zebrabyte-cosmin-szavui.mdx": {
+      "author": "Cosmin Szavui",
+      "source": "google",
+      "date": "2025-12-04",
+      "quote": "Am avut site-ul plin de viruși și tot timpul îmi dădea erori. Nu mai mergea cum trebuie și nimeni nu știa ce are. Cei de la ZebraByte m-au ajutat imediat au curățat tot, au securizat site-ul și l-au mutat pe serverele lor. De atunci merge perfect și nu am mai avut nicio problemă. Se vede că știu ce fac și chiar se implică. Recomand 100%!"
+    },
+    "zebrabyte-alexandra-aless.mdx": {
+      "author": "Alexandra Aless",
+      "source": "google",
+      "date": "2025-12-04",
+      "quote": "Am început să colaborez cu Zebrabyte de câteva luni și au livrat mai mult decât m-am asteptat. Am decis să îmi mut site-ul la ei deoarece am avut probleme cu vechiul provider și era și virusat. Cei de la ZebraByte au standarde foarte ridicate in ceea ce priveste securitatea și hosting enterprise. Echipa lor este foarte profesionistă, răspunde rapid la orice întrebare, oferă soluții clare si explica pe înțelesul tuturor chiar daca nu ai cunostinte tehnice. Platformele de hosting sunt stabile, rapide și bine protejate. Recomand cu încredere oricărei companii care are nevoie de hosting enterprise sigur și de suport solid în zona de securitate IT."
+    },
+    "zebrabyte-stefania-iancu.mdx": {
+      "author": "stefania iancu",
+      "source": "google",
+      "date": "2025-12-04",
+      "quote": "Am avut o problemă urâtă cu site-ul, tot primeam alerte de securitate și linkuri ciudate apăreau peste tot. Cei de la ZebraByte au intrat imediat, au curățat tot și l-au mutat la ei. De atunci merge fără probleme, chiar și mai repede. Foarte serioși!"
+    },
+    "zebrabyte-banuta-cristina.mdx": {
+      "author": "Banuta Cristina",
+      "source": "google",
+      "date": "2025-12-04",
+      "quote": "Super profi! Am colaborat foarte bine cu aceasta echipa. Toate cerintele au fost rezolvate intr-un timp foarte scurt. Recomand!"
+    },
+    "zebrabyte-jadu-ro.mdx": {
+      "author": "Jadu Ro",
+      "source": "google",
+      "date": "2025-12-04",
+      "quote": "Am lucrat extraordinar cu aceasta echipa. Ii recomand!"
+    },
+    "zebrabyte-morosanu-gabriel.mdx": {
+      "author": "Morosanu Gabriel",
+      "source": "trustpilot",
+      "date": "2025-07-02",
+      "sourceUrl": "https://www.trustpilot.com/reviews/68654896cb2cfd6b1d9a7317",
+      "quote": "Very good team! Best cooperation i have ever seen. 10 stars!!!"
+    },
+    "zebrabyte-gabriela-ferguson.mdx": {
+      "author": "Gabriela Ferguson",
+      "source": "trustpilot",
+      "date": "2023-10-08",
+      "sourceUrl": "https://www.trustpilot.com/reviews/652286f87fb0ec8f1de56576",
+      "quote": "Excellent service, very understanding and patient with all our requests. I fully recommend ZebraByte for website designs to suit your needs!"
+    },
+    "zebrabyte-laviclinic-jacob.mdx": {
+      "author": "Laviclinic Jacob",
+      "source": "trustpilot",
+      "date": "2024-10-16",
+      "sourceUrl": "https://www.trustpilot.com/reviews/670fffff451d680c27fa37f1",
+      "quote": "It was really nice to design my website by Zebrabyte! The team was helpful and they established everything from A to Z, I liked the suggestions they gave. I’d like to thank Mr. Liviu especially for his assist."
+    },
+    "zebrabyte-florin-novac.mdx": {
+      "author": "Florin novac",
+      "source": "trustpilot",
+      "date": "2024-10-16",
+      "sourceUrl": "https://www.trustpilot.com/reviews/670fff8c4a332651f954fc4e",
+      "quote": "A expert team and very friendly. I recommend 100% and thank you for your hard work."
+    }
+  }
+}

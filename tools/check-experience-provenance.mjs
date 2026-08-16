@@ -1,4 +1,5 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
+import { parse as parseYaml } from "yaml";
 
 const failures = [];
 const read = (path) => readFile(path, "utf8");
@@ -11,6 +12,24 @@ function forbidText(content, needle, label) {
   if (content.includes(needle)) failures.push(`${label}: forbidden ${JSON.stringify(needle)}`);
 }
 
+function sameArray(a, b) {
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
+
+function parseFrontmatter(content, filename) {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) {
+    failures.push(`wall provenance: ${filename} has no YAML frontmatter`);
+    return {};
+  }
+  try {
+    return parseYaml(match[1]) ?? {};
+  } catch (error) {
+    failures.push(`wall provenance: ${filename} has invalid YAML (${error instanceof Error ? error.message : String(error)})`);
+    return {};
+  }
+}
+
 const [
   about,
   team,
@@ -21,7 +40,10 @@ const [
   industryPage,
   industryService,
   legacyPage,
+  wallCard,
+  contentConfig,
   baseline,
+  wallProvenanceRaw,
 ] = await Promise.all([
   read("src/pages/about.astro"),
   read("src/components/block/Team.astro"),
@@ -32,7 +54,10 @@ const [
   read("src/components/ZebraByteIndustryPage.astro"),
   read("src/components/ZebraByteIndustryServicePage.astro"),
   read("src/components/ZebraByteLegacyPage.astro"),
+  read("src/components/WallCard.astro"),
+  read("src/content.config.ts"),
   read("docs/architecture/experience-baseline.md"),
+  read("docs/architecture/wall-provenance.json"),
 ]);
 
 requireText(
@@ -60,6 +85,16 @@ requireText(
   baseline,
   "Avoid turning every paragraph, outcome, contact method or related link into its own floating",
   "repeated card-chrome rule",
+);
+requireText(
+  baseline,
+  "wall-provenance.json",
+  "customer review provenance manifest rule",
+);
+requireText(
+  baseline,
+  "verbatim",
+  "customer review verbatim rule",
 );
 
 requireText(about, 'import Team from "../components/block/Team.astro"', "About inherited section rhythm");
@@ -115,6 +150,71 @@ requireText(legacyPage, "grid gap-px overflow-hidden rounded-2xl border bg-borde
 requireText(legacyPage, 'class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5"', "legacy note editorial treatment");
 forbidText(legacyPage, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "legacy related card repetition");
 forbidText(legacyPage, "mt-5 rounded-xl border bg-active p-5", "legacy note floating-card treatment");
+
+requireText(contentConfig, 'source: z.enum(["linkedin", "google", "trustpilot"]).optional()', "wall source schema");
+requireText(contentConfig, "Link to the original source post or review", "wall source URL semantics");
+requireText(wallCard, 'd.source === "google"', "wall Google source label");
+requireText(wallCard, 'd.source === "trustpilot"', "wall Trustpilot source label");
+requireText(wallCard, 'd.source === "linkedin"', "wall LinkedIn source label");
+forbidText(wallCard, 'aria-label="External social post"', "wall generic source pretending to be LinkedIn");
+
+let wallProvenance;
+try {
+  wallProvenance = JSON.parse(wallProvenanceRaw);
+} catch (error) {
+  failures.push(`wall provenance manifest: invalid JSON (${error instanceof Error ? error.message : String(error)})`);
+  wallProvenance = { entries: {} };
+}
+
+if (wallProvenance.sourceRepository !== "liviubucel/Zebrabyte-Web") {
+  failures.push("wall provenance manifest: sourceRepository must remain liviubucel/Zebrabyte-Web");
+}
+if (wallProvenance.sourceCommit !== "5e2d1224921dc80e692a9debf450f61ba1c31a73") {
+  failures.push("wall provenance manifest: unexpected source commit; verify review provenance before changing it");
+}
+if (wallProvenance.sourceFile !== "src/data/reviews.ts") {
+  failures.push("wall provenance manifest: unexpected source file");
+}
+
+const wallFiles = (await readdir("src/content/wall"))
+  .filter((filename) => filename.startsWith("zebrabyte-") && filename.endsWith(".mdx"))
+  .sort();
+const manifestFiles = Object.keys(wallProvenance.entries ?? {}).sort();
+if (!sameArray(wallFiles, manifestFiles)) {
+  failures.push(
+    `wall provenance: ZebraByte wall files do not match manifest (files=${JSON.stringify(wallFiles)}, manifest=${JSON.stringify(manifestFiles)})`,
+  );
+}
+
+for (const filename of manifestFiles) {
+  const expected = wallProvenance.entries[filename];
+  const content = await read(`src/content/wall/${filename}`);
+  const data = parseFrontmatter(content, filename);
+
+  if (data.company !== "ZebraByte UK") {
+    failures.push(`wall provenance: ${filename} must use ZebraByte UK as the card identity`);
+  }
+  if (data.logo !== "zebrabyte-mark.svg") {
+    failures.push(`wall provenance: ${filename} must use the first-party ZebraByte mark`);
+  }
+  if (data.author !== expected.author) {
+    failures.push(`wall provenance: ${filename} author differs from pinned source`);
+  }
+  if (data.post !== expected.quote) {
+    failures.push(`wall provenance: ${filename} quote is not verbatim from pinned source`);
+  }
+  if (data.source !== expected.source) {
+    failures.push(`wall provenance: ${filename} source differs from pinned source`);
+  }
+  if ((data.postUrl ?? null) !== (expected.sourceUrl ?? null)) {
+    failures.push(`wall provenance: ${filename} source URL differs from pinned source`);
+  }
+  for (const unsupportedMetric of ["followers", "likes", "comments"]) {
+    if (data[unsupportedMetric] != null) {
+      failures.push(`wall provenance: ${filename} has unsourced ${unsupportedMetric} metadata`);
+    }
+  }
+}
 
 if (failures.length) {
   console.error(`[provenance] ${failures.length} provenance/baseline violation(s):`);
