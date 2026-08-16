@@ -127,3 +127,17 @@ html {
     }
   }
 }
+
+@media (max-width: 639px), (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-perspective-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .yc-btn::before {
+    animation: none !important;
+  }
+}
