@@ -1,10 +1,29 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import AboutImg from "../assets/about.png";
 import KeyFigures from "../components/block/KeyFigures.astro";
-import Team from "../components/block/Team.astro";
-import Gallery from "../components/block/Gallery.astro";
-import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
+
+const operatingAreas = [
+  {
+    name: "Managed Compliance",
+    eyebrow: "Governance",
+    description: "Controls, evidence, policies, risk reviews and continuous audit readiness kept in one operating program.",
+  },
+  {
+    name: "Cyber Security",
+    eyebrow: "Protection",
+    description: "Security engineering, vulnerability management, hardening and incident readiness tied back to business risk.",
+  },
+  {
+    name: "Secure Infrastructure",
+    eyebrow: "Infrastructure",
+    description: "Security-first hosting and infrastructure operations with monitoring, backup, isolation and controlled change.",
+  },
+  {
+    name: "Automation",
+    eyebrow: "Operations",
+    description: "Integrations and repeatable workflows that connect evidence, alerts, remediation and operational ownership.",
+  },
+];
 ---
 
 <Layout
@@ -18,19 +37,89 @@ import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
         The mission, operating model and platform experience behind ZebraByte.
       </p>
 
-      <figure class="animate-slide-in animation-delay-200 mb-10 sm:mb-30">
-        <ResponsiveImage
-          src={AboutImg}
-          class="aspect-square rounded-lg object-cover sm:aspect-1080/606"
-          mobile={[640, 640]}
-          sm={[1080, 607]}
-          alt="Platform archive team photography"
-          fetchpriority="high"
-        />
-        <figcaption class="text-muted-foreground mt-3 text-xs leading-relaxed">
-          Archive photography retained as part of the platform experience. People shown in archived imagery are not presented as ZebraByte employees unless explicitly stated.
-        </figcaption>
-      </figure>
+      <div
+        class="bg-subtle animate-slide-in animation-delay-200 relative mb-10 overflow-hidden rounded-3xl border p-5 sm:mb-30 sm:p-10"
+        aria-label="ZebraByte operating model"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 opacity-60"
+          style="background-image: linear-gradient(var(--color-border-low) 1px, transparent 1px), linear-gradient(90deg, var(--color-border-low) 1px, transparent 1px); background-size: 44px 44px;"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute top-1/2 left-[12%] right-[12%] h-px bg-border-mid"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute top-[14%] bottom-[14%] left-1/2 w-px bg-border-mid"
+          aria-hidden="true"
+        ></div>
+
+        <div class="relative z-10 mb-12 flex items-center justify-between gap-4 sm:mb-16">
+          <div>
+            <p class="text-muted-foreground text-xs font-medium uppercase tracking-[0.14em]">
+              ZebraByte operating model
+            </p>
+            <p class="mt-1 text-sm font-medium">Security, compliance and infrastructure connected.</p>
+          </div>
+          <span class="bg-level-0 hidden rounded-full border px-3 py-1.5 text-xs font-medium sm:inline-flex">
+            Security-first
+          </span>
+        </div>
+
+        <div class="relative z-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1.15fr_1fr] lg:grid-rows-2 lg:gap-6">
+          <article class="bg-level-0 rounded-2xl border p-5 shadow-sm lg:self-end">
+            <p class="text-muted-foreground mb-5 text-xs font-medium uppercase tracking-[0.12em]">Governance</p>
+            <h2 class="mb-2 text-xl font-medium">Managed Compliance</h2>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Controls, evidence, policies and risk reviews stay connected to the work that implements them.
+            </p>
+          </article>
+
+          <article class="bg-foreground text-primary-foreground row-span-2 flex min-h-64 flex-col justify-between rounded-2xl border border-foreground p-6 sm:min-h-72 lg:min-h-96 lg:p-8">
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-xs font-medium uppercase tracking-[0.14em] opacity-70">One operating model</span>
+              <span class="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true"></span>
+            </div>
+            <div>
+              <img
+                src="/images/zbt-negru.svg"
+                alt="ZebraByte"
+                width="3242"
+                height="1166"
+                class="mb-8 h-auto w-32 brightness-0 invert sm:w-36"
+              />
+              <p class="max-w-sm text-2xl font-medium leading-tight sm:text-3xl">
+                Governance decides what matters. Engineering makes it real. Operations keep it working.
+              </p>
+            </div>
+          </article>
+
+          <article class="bg-level-0 rounded-2xl border p-5 shadow-sm lg:self-end">
+            <p class="text-muted-foreground mb-5 text-xs font-medium uppercase tracking-[0.12em]">Protection</p>
+            <h2 class="mb-2 text-xl font-medium">Cyber Security</h2>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Technical controls, hardening and incident readiness are managed against the same risk picture.
+            </p>
+          </article>
+
+          <article class="bg-level-0 rounded-2xl border p-5 shadow-sm">
+            <p class="text-muted-foreground mb-5 text-xs font-medium uppercase tracking-[0.12em]">Infrastructure</p>
+            <h2 class="mb-2 text-xl font-medium">Secure Infrastructure</h2>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Hosting, backup, monitoring and change management operate as part of the security program.
+            </p>
+          </article>
+
+          <article class="bg-level-0 rounded-2xl border p-5 shadow-sm">
+            <p class="text-muted-foreground mb-5 text-xs font-medium uppercase tracking-[0.12em]">Operations</p>
+            <h2 class="mb-2 text-xl font-medium">Automation</h2>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Integrations connect evidence, alerts and remediation so routine work does not become fragmented.
+            </p>
+          </article>
+        </div>
+      </div>
 
       <h2 class="text-muted-foreground animate-slide-in animation-delay-300 mb-1">
         Mission
@@ -42,8 +131,26 @@ import ResponsiveImage from "../components/ui/ResponsiveImage.astro";
 
     <KeyFigures />
 
-    <Team />
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl sm:mb-16">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte</p>
+        <h2 class="text-h3 mb-4 font-medium">How ZebraByte operates</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          We organize the work around operational disciplines rather than personalities or a traditional agency team page. Each discipline has a clear role, but they share the same risk, evidence and remediation context.
+        </p>
+      </div>
 
-    <Gallery />
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2">
+        {operatingAreas.map((area) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <p class="text-muted-foreground mb-8 text-xs font-medium uppercase tracking-[0.12em]">
+              {area.eyebrow}
+            </p>
+            <h3 class="mb-3 text-xl font-medium">{area.name}</h3>
+            <p class="text-muted-foreground leading-relaxed">{area.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   </main>
 </Layout>
