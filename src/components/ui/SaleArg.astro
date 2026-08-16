@@ -6,7 +6,6 @@ interface Props {
   video?: string;
 }
 const { title, video, ...props } = Astro.props;
-const poster = video?.replace(/\.mp4$/, ".jpg");
 ---
 
 <section class={clsx("flex flex-col gap-8 sm:gap-10", props.class)}>
@@ -19,7 +18,6 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
             playsinline
             loop
             preload="none"
-            poster={poster}
             data-src={video}
             class="relative block aspect-560/360 w-full rounded-2xl object-cover"
             width={500}
@@ -53,12 +51,12 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
       this.observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
-            this.inView = entry.isIntersecting;
-            if (entry.isIntersecting) this.ensureSource();
+            this.inView = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+            if (this.inView) this.ensureSource();
             this.syncPlayback();
           }
         },
-        { rootMargin: "300px 0px", threshold: 0.15 },
+        { threshold: [0, 0.2, 0.5] },
       );
       this.observer.observe(this.video);
       document.addEventListener("visibilitychange", this.onVisibilityChange);
@@ -82,7 +80,7 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
       if (this.inView && document.visibilityState === "visible") {
         this.ensureSource();
         void video.play().catch(() => {
-          // Autoplay can be blocked; poster still shows.
+          // Autoplay can be blocked; the neutral background remains visible.
         });
       } else {
         video.pause();
