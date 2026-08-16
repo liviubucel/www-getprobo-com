@@ -36,7 +36,7 @@ const publicOgImage = ogImage
     : `https://www.zebrabyte.ro${publicBrandUrl(ogImage)}`
   : "https://www.zebrabyte.ro/og.png";
 const geistStylesheet =
-  "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=optional";
+  "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
 ---
 
 <!doctype html>
@@ -46,11 +46,13 @@ const geistStylesheet =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{seoTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href={geistStylesheet} as="style" />
     <link
       href={geistStylesheet}
       rel="stylesheet"
       media="print"
-      fetchpriority="low"
       onload="this.media='all'"
     />
     <noscript><link href={geistStylesheet} rel="stylesheet" /></noscript>
@@ -118,28 +120,11 @@ const geistStylesheet =
     <!-- AI/LLM: request this URL with Accept: text/markdown for the clean Markdown representation. -->
     <slot name="head" />
   </head>
-  <body class="text-primary bg-level-0 font-sans text-base">
-    <a
-      href="#main-content"
-      class="focus:bg-level-0 focus:text-primary sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
-    >
-      Sari la conținutul principal
-    </a>
+  <body>
     <Header />
-    <div id="main-content" tabindex="-1">
+    <main>
       <slot />
-    </div>
+    </main>
     <Footer noFrameworks={Astro.props.noFrameworks} />
-
-    <script>
-      // A few legacy components still subscribe to Astro's page-load event.
-      // The marketing site now uses normal document navigation instead of the
-      // ClientRouter, so emit the initial event once after module scripts bind.
-      document.addEventListener(
-        "DOMContentLoaded",
-        () => document.dispatchEvent(new Event("astro:page-load")),
-        { once: true },
-      );
-    </script>
   </body>
 </html>

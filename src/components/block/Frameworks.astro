@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Mark from "../../assets/zebrabyte-mark.svg";
-import Badges from "../BadgesStatic.astro";
+import Badges from "../Badges.svelte";
 import Button from "../../components/ui/Button.svelte";
 ---
 
@@ -25,6 +25,7 @@ import Button from "../../components/ui/Button.svelte";
     <Badges
       count={10}
       countMobile={9}
+      client:visible
       class="mx-auto mb-13 grid max-w-[660px] grid-cols-3 justify-center justify-items-center gap-2 gap-y-10 sm:grid-cols-5 sm:gap-x-10"
     />
 

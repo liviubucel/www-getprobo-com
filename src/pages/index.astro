@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import Badges from "../components/BadgesStatic.astro";
+import Badges from "../components/Badges.svelte";
 import Logos from "../components/block/Logos.astro";
 import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 import SaleArg from "../components/ui/SaleArg.astro";
@@ -28,8 +28,8 @@ const websiteSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
-  <section
-    class="home-hero relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+  <animated-hero
+    class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
   >
     <div
       class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8"
@@ -77,6 +77,7 @@ const websiteSchema = {
     <Badges
       count={10}
       countMobile={6}
+      client:load
       border
       class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
     />
@@ -87,7 +88,7 @@ const websiteSchema = {
       </h2>
       <Logos class="animate-slide-in animation-delay-300" constrained />
     </section>
-  </section>
+  </animated-hero>
 
   <ComplianceTrack />
 
@@ -156,29 +157,16 @@ const websiteSchema = {
   <Stories />
 </Layout>
 
-<style>
-  .home-hero {
-    background:
-      radial-gradient(circle at 24% 22%, rgba(230, 255, 190, 0.72), transparent 34%),
-      radial-gradient(circle at 78% 34%, rgba(242, 255, 218, 0.72), transparent 32%),
-      #f8faf4;
-  }
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
 
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
+
+<style>
   .deferred-home-section {
     content-visibility: auto;
     contain-intrinsic-size: 1500px;
-  }
-
-  @media (max-width: 639px), (prefers-reduced-motion: reduce) {
-    .home-hero :global(.animate-perspective-in),
-    .home-hero :global(.animate-slide-in) {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
-    .home-hero :global(.yc-btn)::before {
-      animation: none !important;
-    }
   }
 </style>
