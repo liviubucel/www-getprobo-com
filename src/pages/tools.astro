@@ -4,6 +4,13 @@ import Button from "../components/ui/Button.svelte";
 
 const tools = [
   {
+    label: "Compliance Framework Recommender",
+    description: "Primești instant o listă prioritizată de framework-uri și cerințe relevante pe baza piețelor, clienților, datelor și profilului organizației.",
+    href: "/hub/compliance-recommender",
+    tag: "Compliance",
+    internal: true,
+  },
+  {
     label: "Web Vulnerability Scanner",
     description: "Verificare rapidă a expunerilor și problemelor evidente ale unui website public.",
     href: "https://scan.zebrabyte.ro",
@@ -33,35 +40,29 @@ const tools = [
     href: "https://ssl-gratis.zebrabyte.ro",
     tag: "TLS",
   },
-  {
-    label: "Compliance Framework Recommender",
-    description: "Instrumentul original din Probo Hub pentru a orienta organizația către framework-urile de compliance relevante.",
-    href: "/hub/compliance-recommender",
-    tag: "Probo Tool",
-  },
 ];
 
 const boundaries = [
   "Scanările automate sunt un punct de pornire, nu un penetration test și nu o garanție că un sistem este sigur.",
+  "Recommender-ul de compliance este orientativ și nu înlocuiește o analiză juridică, un audit sau o determinare oficială a aplicabilității.",
   "Rezultatele trebuie interpretate în contextul aplicației, infrastructurii și riscului real al organizației.",
   "Nu testa sisteme pe care nu le deții sau pentru care nu ai autorizare explicită.",
-  "Pentru constatări importante, Security Assessment poate transforma rezultatul într-un plan de remediere verificat.",
 ];
 ---
 
 <Layout
-  title="Free Security Tools"
-  description="Instrumente gratuite ZebraByte pentru scanare website, securitate email, GDPR, network testing, SSL și alegerea framework-urilor de compliance."
+  title="Free Security & Compliance Tools"
+  description="Instrumente gratuite ZebraByte pentru framework-uri de compliance, scanare website, securitate email, GDPR, network testing și SSL/TLS."
 >
   <main>
     <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
       <div class="container text-center">
         <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Free Tools</div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Verificări rapide înainte să începi un proiect mai mare.</h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">Instrumentele ZebraByte oferă o primă vedere asupra website-ului, emailului, rețelei și privacy-ului. Păstrăm în același hub și Compliance Recommender-ul original Probo.</p>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Verificări utile, fără cont și fără un proiect de implementare.</h1>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">Alege framework-urile potrivite, verifică expuneri publice și validează configurații de bază înainte să intri într-un assessment mai amplu.</p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="#tools" size="lg">Vezi instrumentele</Button>
-          <Button href="/security-assessment" variant="secondary" size="lg">Ai nevoie de analiză umană?</Button>
+          <Button href="/security-assessment" variant="secondary" size="lg">Security Assessment</Button>
         </div>
       </div>
     </animated-hero>
@@ -71,8 +72,8 @@ const boundaries = [
         {tools.map((tool) => (
           <a
             href={tool.href}
-            target={tool.href.startsWith("http") ? "_blank" : undefined}
-            rel={tool.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            target={tool.internal ? undefined : "_blank"}
+            rel={tool.internal ? undefined : "noopener noreferrer"}
             class="bg-level-0 group min-h-64 rounded-2xl border p-6 transition-all hover:-translate-y-0.5 hover:bg-subtle hover:shadow-lg sm:p-8"
           >
             <span class="bg-active mb-12 inline-flex rounded-full px-3 py-1 text-xs font-medium">{tool.tag}</span>
@@ -86,9 +87,9 @@ const boundaries = [
     <section class="bg-active py-16 sm:py-24">
       <div class="container grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Limits</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un scanner automat nu înțelege singur business risk.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">Instrumentele sunt intenționat accesibile și rapide. Când rezultatul contează pentru o decizie, îl legăm de context, ownership și remediation.</p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Limite</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un tool gratuit îți spune unde să te uiți. Nu decide singur riscul.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Instrumentele sunt intenționat rapide. Când rezultatul contează pentru o decizie, trebuie legat de scope, ownership, date reale și remediation.</p>
         </div>
         <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
           <ul class="space-y-4">
