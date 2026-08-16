@@ -6,13 +6,18 @@ interface Props {
 }
 
 const { name, class: className, priority = false } = Astro.props;
-const assetName = name.replaceAll(" ", "");
+const requestedAssetName = name.replaceAll(" ", "");
+const darkVariant = requestedAssetName.endsWith("_dark");
+const assetName = darkVariant
+  ? requestedAssetName.replace(/_dark$/, "")
+  : requestedAssetName;
+const altName = name.replace(/_dark$/, "").replaceAll("_", " ");
 ---
 
 <img
-  src={`/frameworks/${assetName}.svg?v=3`}
-  class={className}
-  alt={`${name} badge de conformitate`}
+  src={`/frameworks/${assetName}.svg?v=4`}
+  class:list={[className, darkVariant && "invert"]}
+  alt={`${altName} badge de conformitate`}
   width="64"
   height="64"
   loading={priority ? "eager" : "lazy"}
