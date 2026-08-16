@@ -8,6 +8,14 @@ type SentryContext = {
   component?: string;
   level?: "error" | "warning" | "info";
   status?: number;
+  pagePath?: string;
+};
+
+type ClientErrorPayload = {
+  type?: string;
+  message?: string;
+  stack?: string;
+  pagePath?: string;
 };
 
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
@@ -35,11 +43,7 @@ function errorDetails(error: unknown): { type: string; message: string; stack?: 
   };
 }
 
-function parseDsn(dsn: string): {
-  endpoint: string;
-  publicKey: string;
-  projectId: string;
-} | null {
+function parseDsn(dsn: string): { endpoint: string } | null {
   try {
     const url = new URL(dsn);
     const publicKey = url.username;
@@ -47,7 +51,7 @@ function parseDsn(dsn: string): {
     if (!publicKey || !projectId || !url.hostname) return null;
 
     const endpoint = `${url.protocol}//${url.hostname}/api/${projectId}/envelope/?sentry_version=7&sentry_key=${encodeURIComponent(publicKey)}&sentry_client=zebrabyte-worker%2F1.0`;
-    return { endpoint, publicKey, projectId };
+    return { endpoint };
   } catch {
     return null;
   }
@@ -60,6 +64,69 @@ function requestMetadata(request?: Request): Record<string, string> | undefined 
     method: request.method,
     url: `${url.origin}${url.pathname}`,
   };
+}
+
+export async function handleSentryClientApi(
+  request: Request,
+  env: SentryEnv,
+): Promise<Response | null> {
+  const url = new URL(request.url);
+  const pathname = url.pathname.startsWith("/en/api/") ? url.pathname.slice(3) : url.pathname;
+  if (pathname !== "/api/monitoring/client-error" || request.method !== "POST") {
+    return null;
+  }
+
+  const contentLength = Number(request.headers.get("Content-Length") || "0");
+  if (contentLength > 12_000) {
+    return new Response(null, { status: 413 });
+  }
+
+  const origin = request.headers.get("Origin");
+  if (origin) {
+    try {
+      const originUrl = new URL(origin);
+      if (originUrl.origin !== url.origin) {
+        return new Response(null, { status: 403 });
+      }
+    } catch {
+      return new Response(null, { status: 403 });
+    }
+  }
+
+  const fetchSite = request.headers.get("Sec-Fetch-Site")?.toLowerCase();
+  if (fetchSite && fetchSite !== "same-origin" && fetchSite !== "same-site") {
+    return new Response(null, { status: 403 });
+  }
+
+  let payload: ClientErrorPayload;
+  try {
+    payload = (await request.json()) as ClientErrorPayload;
+  } catch {
+    return new Response(null, { status: 400 });
+  }
+
+  const message = redact(payload.message?.trim() || "").slice(0, 2000);
+  if (!message) return new Response(null, { status: 400 });
+
+  const error = new Error(message);
+  error.name = redact(payload.type?.trim() || "BrowserError").slice(0, 100);
+  if (payload.stack) error.stack = redact(payload.stack).slice(0, 6000);
+
+  const pagePath = payload.pagePath?.trim() || "";
+  const safePagePath = /^\/[A-Za-z0-9/_\-.]*$/.test(pagePath)
+    ? pagePath.slice(0, 500)
+    : undefined;
+
+  await captureSentryException(env, error, {
+    request,
+    component: "browser.client",
+    ...(safePagePath ? { pagePath: safePagePath } : {}),
+  });
+
+  return new Response(null, {
+    status: 204,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function captureSentryException(
@@ -101,6 +168,7 @@ export async function captureSentryException(
       runtime: "cloudflare-worker",
       ...(context.component ? { component: context.component } : {}),
       ...(context.status ? { http_status: String(context.status) } : {}),
+      ...(context.pagePath ? { page_path: context.pagePath } : {}),
     },
     ...(request ? { request } : {}),
     ...(details.stack ? { extra: { stack: details.stack } } : {}),
