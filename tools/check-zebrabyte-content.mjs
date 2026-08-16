@@ -1,21 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-
-const expectedIndustries = [
-  "avocatura",
-  "medical",
-  "institutii-publice",
-  "ecommerce",
-  "imobiliare",
-  "horeca",
-  "logistica",
-  "educatie",
-  "ong",
-];
+import YAML from "yaml";
 
 const root = process.cwd();
 const manifestPath = path.join(root, "src/content/blog/zebrabyte-generated/_manifest.json");
 const generatedDir = path.dirname(manifestPath);
+const legacyIndustryCount = 9;
 
 function fail(message) {
   console.error(`[zebrabyte-content] ${message}`);
@@ -24,6 +14,18 @@ function fail(message) {
 
 async function read(relativePath) {
   return fs.readFile(path.join(root, relativePath), "utf8");
+}
+
+function parseFrontmatter(content, slug) {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!match) throw new Error(`missing frontmatter for ${slug}`);
+  const parsed = YAML.parse(match[1]);
+  if (!parsed || typeof parsed !== "object") throw new Error(`invalid frontmatter for ${slug}`);
+  return parsed;
+}
+
+function setDifference(left, right) {
+  return [...left].filter((value) => !right.has(value));
 }
 
 async function checkBlog() {
@@ -56,16 +58,22 @@ async function checkBlog() {
     const file = path.join(generatedDir, `${slug}.mdx`);
     try {
       const content = await fs.readFile(file, "utf8");
-      if (!content.includes(`slug: ${JSON.stringify(slug)}`)) {
+      const frontmatter = parseFrontmatter(content, slug);
+      if (frontmatter.slug !== slug) {
         fail(`generated article ${slug} does not preserve its public slug.`);
       }
-      if (!content.includes('source: "zebrabyte"')) {
+      if (frontmatter.source !== "zebrabyte") {
         fail(`generated article ${slug} is missing ZebraByte source attribution.`);
       }
-    } catch {
-      fail(`missing generated MDX for ${slug}`);
+      if (!frontmatter.legacyId) {
+        fail(`generated article ${slug} is missing its legacy document ID.`);
+      }
+    } catch (error) {
+      fail(`invalid generated MDX for ${slug}: ${error instanceof Error ? error.message : error}`);
     }
   }
+
+  if (slugs.size !== imported) fail(`manifest slug uniqueness failed: ${slugs.size}/${imported}.`);
 
   const blogRoute = await read("src/pages/blog/[id].astro");
   const blogIndex = await read("src/pages/blog.astro");
@@ -87,17 +95,26 @@ async function checkIndustries() {
   const page = await read("src/components/ZebraByteIndustryPage.astro");
   const route = await read("src/pages/industrii/[slug].astro");
 
-  for (const slug of expectedIndustries) {
-    if (!structural.includes(`slug: "${slug}"`)) fail(`missing structural industry: ${slug}`);
-    const editorialKey = slug.includes("-") ? `"${slug}": {` : `${slug}: {`;
-    if (!editorial.includes(editorialKey)) fail(`missing adapted editorial industry: ${slug}`);
+  const structuralSlugs = new Set(
+    [...structural.matchAll(/^\s{4}slug: "([^"]+)",$/gm)].map((match) => match[1]),
+  );
+  const editorialSlugs = new Set(
+    [...editorial.matchAll(/^  (?:(?:"([^"]+)")|([a-z0-9-]+)): \{$/gm)].map(
+      (match) => match[1] ?? match[2],
+    ),
+  );
+
+  if (structuralSlugs.size !== legacyIndustryCount) {
+    fail(`expected ${legacyIndustryCount} canonical industries, found ${structuralSlugs.size}.`);
+  }
+  if (editorialSlugs.size !== legacyIndustryCount) {
+    fail(`expected ${legacyIndustryCount} adapted industry editorials, found ${editorialSlugs.size}.`);
   }
 
-  const structuralMatches = [...structural.matchAll(/\n\s+slug: "([^"]+)",/g)].map((match) => match[1]);
-  const uniqueStructural = new Set(structuralMatches);
-  for (const slug of expectedIndustries) {
-    if (!uniqueStructural.has(slug)) fail(`industry slug did not survive structural parsing: ${slug}`);
-  }
+  const missingEditorial = setDifference(structuralSlugs, editorialSlugs);
+  const orphanEditorial = setDifference(editorialSlugs, structuralSlugs);
+  if (missingEditorial.length) fail(`missing editorial content for: ${missingEditorial.join(", ")}`);
+  if (orphanEditorial.length) fail(`editorial content without canonical industry: ${orphanEditorial.join(", ")}`);
 
   if (!index.includes("zebraByteIndustries.map")) fail("industry index is not generated from the canonical industry dataset.");
   if (!index.includes("/industrii/${industry.slug}")) fail("industry cards do not link to their dedicated pages.");
@@ -106,7 +123,7 @@ async function checkIndustries() {
   }
   if (!route.includes('"@type": "FAQPage"')) fail("industry route is missing FAQ structured data.");
 
-  console.log(`[zebrabyte-content] industry parity OK: ${expectedIndustries.length}/${expectedIndustries.length} sectors enriched.`);
+  console.log(`[zebrabyte-content] industry parity OK: ${structuralSlugs.size}/${legacyIndustryCount} sectors enriched.`);
 }
 
 await checkBlog();
