@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "www-getprobo-com",
-  "main": "./worker/router.ts",
+  "main": "./worker/main.ts",
   "compatibility_date": "2026-06-11",
   "assets": {
     "directory": "./dist",
