@@ -1,6 +1,5 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import PostHog from "../posthog.astro";
 import { publicBrandText, publicBrandUrl } from "../../lib/public-brand.ts";
 
 const { head, entry, siteTitle } = Astro.locals.starlightRoute;
@@ -11,6 +10,8 @@ const markdownAlternate = publicBrandUrl(
 const publicEntryTitle = publicBrandText(entry.data.title);
 const publicDescription = publicBrandText(entry.data.description);
 const seoTitle = `${publicEntryTitle} | ${publicBrandText(siteTitle)}`;
+const geistStylesheet =
+  "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
 
 const publicHead = head.map(({ tag, attrs, content }) => ({
   tag,
@@ -46,10 +47,11 @@ const publicHead = head.map(({ tag, attrs, content }) => ({
 <meta name="twitter:title" content={seoTitle} />
 {publicDescription && <meta name="twitter:description" content={publicDescription} />}
 <meta name="twitter:image" content="https://www.zebrabyte.ro/og.png" />
-<link
-  href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
-  rel="stylesheet"
-/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" href={geistStylesheet} as="style" />
+<link href={geistStylesheet} rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href={geistStylesheet} rel="stylesheet" /></noscript>
 <link rel="alternate" type="text/markdown" href={markdownAlternate} />
 <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs index" />
 <link
@@ -60,63 +62,3 @@ const publicHead = head.map(({ tag, attrs, content }) => ({
 />
 
 <ClientRouter />
-<PostHog />
-
-<script>
-  import { publicBrandText, publicBrandUrl } from "../../lib/public-brand";
-
-  const ignoredDocsBrandingTags = new Set([
-    "CODE",
-    "PRE",
-    "SCRIPT",
-    "STYLE",
-    "TEXTAREA",
-  ]);
-
-  function shouldSkipDocsBranding(node: Node): boolean {
-    const parent = node.parentElement;
-    if (!parent) return false;
-    return Array.from(ignoredDocsBrandingTags).some(
-      (tag) => parent.closest(tag.toLowerCase()) !== null,
-    );
-  }
-
-  function applyDocsBranding() {
-    const root = document.body;
-    if (!root) return;
-
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let current: Node | null = walker.nextNode();
-    while (current) {
-      if (!shouldSkipDocsBranding(current) && current.nodeValue) {
-        const next = publicBrandText(current.nodeValue);
-        if (next !== current.nodeValue) current.nodeValue = next;
-      }
-      current = walker.nextNode();
-    }
-
-    for (const element of document.querySelectorAll<HTMLElement>(
-      "[href], [src], [alt], [title], [aria-label]",
-    )) {
-      for (const attribute of ["href", "src"]) {
-        const value = element.getAttribute(attribute);
-        if (!value) continue;
-        const next = publicBrandUrl(value);
-        if (next !== value) element.setAttribute(attribute, next);
-      }
-      for (const attribute of ["alt", "title", "aria-label"]) {
-        const value = element.getAttribute(attribute);
-        if (!value) continue;
-        const next = publicBrandText(value);
-        if (next !== value) element.setAttribute(attribute, next);
-      }
-    }
-  }
-
-  document.addEventListener("astro:page-load", applyDocsBranding);
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyDocsBranding, { once: true });
-  } else {
-    queueMicrotask(applyDocsBranding);
-  }
-</script>
