@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import FrameworkBadge from "../components/FrameworkBadge.svelte";
+import FrameworkBadge from "../components/FrameworkBadgeStatic.astro";
 
 const guides = [
   {
@@ -195,7 +195,7 @@ const hubSchema = {
           <article class:list={["md:pr-8", index > 0 && "md:border-l md:pl-8"]}>
             <div class="mb-5 flex h-9 items-center gap-2">
               {guide.badges.map((badge) => (
-                <FrameworkBadge name={badge} class="size-8" client:visible />
+                <FrameworkBadge name={badge} class="size-8" />
               ))}
             </div>
             <h3 class="mb-3 text-xl font-medium">{guide.title}</h3>
