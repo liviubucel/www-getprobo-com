@@ -7,24 +7,24 @@ const guides = [
   {
     title: "SOC 2",
     description:
-      "Ghid practic despre SOC 2: criterii de încredere, pregătirea controalelor, dovezi, diferența dintre Type 1 și Type 2 și modul în care te pregătești pentru raportare.",
-    topics: ["Ce este SOC 2", "Controale și dovezi", "Type 1 vs Type 2"],
+      "Pentru echipe care trebuie să pună în ordine controalele, dovezile și pregătirea pentru un raport SOC 2.",
+    detail: "Trust Services Criteria · dovezi · Type 1 vs Type 2",
     href: "/hub/soc2",
     badges: ["SOC2_TYPE1", "SOC2_TYPE2"],
   },
   {
     title: "ISO/IEC 27001",
     description:
-      "Înțelege cerințele ISO/IEC 27001, ISMS-ul, analiza riscurilor, controalele Annex A și etapele necesare pentru pregătirea unei organizații pentru certificare.",
-    topics: ["ISMS și analiza riscurilor", "Annex A și controale", "Pregătirea pentru audit"],
+      "De la definirea ISMS-ului și analiza riscurilor până la Annex A și pregătirea pentru auditul de certificare.",
+    detail: "ISMS · risc · Annex A · audit",
     href: "/hub/iso27001",
     badges: ["ISO27001"],
   },
   {
     title: "NIS2",
     description:
-      "Resurse pentru organizațiile care trebuie să înțeleagă NIS2: domeniul de aplicare, guvernanță, măsuri de securitate, supply-chain risk și raportarea incidentelor.",
-    topics: ["Cine intră în domeniul NIS2", "Măsuri tehnice și guvernanță", "Raportarea incidentelor"],
+      "Ce trebuie verificat dacă organizația intră în domeniul NIS2 și cum se traduc cerințele în măsuri concrete.",
+    detail: "scope · Articolul 21 · supply chain · incidente",
     href: "/hub/nis2-compliance",
     badges: ["NIS2"],
   },
@@ -32,17 +32,17 @@ const guides = [
 
 const tools = [
   {
-    tag: "Instrument gratuit",
-    title: "Recomandare framework de conformitate",
+    label: "Framework recommender",
+    title: "Ce cerințe de conformitate ți se aplică?",
     description:
-      "Identifică framework-urile de securitate și conformitate relevante pentru compania ta pe baza industriei, modelului de business, datelor procesate și piețelor în care operezi.",
+      "Un punct de pornire rapid dacă nu este clar dacă trebuie să urmărești SOC 2, ISO 27001, NIS2 sau alte cerințe.",
     href: "/hub/compliance-recommender",
   },
   {
-    tag: "Instrumente ZebraByte",
-    title: "Instrumente gratuite pentru securitate și conformitate",
+    label: "Instrumente publice",
+    title: "Verificări rapide de securitate",
     description:
-      "Accesează instrumentele publice ZebraByte pentru verificări rapide, evaluări și activități de securitate care pot susține un program de conformitate.",
+      "Instrumentele ZebraByte pentru verificări punctuale, fără cont și fără să pornești un proiect de audit.",
     href: "/tools",
   },
 ];
@@ -52,84 +52,84 @@ const curatedArticles = [
     tag: "Ghid",
     title: "Ce framework de conformitate are nevoie compania ta?",
     description:
-      "Un ghid pentru alegerea între SOC 2, ISO 27001, GDPR, NIS2 și alte cerințe, în funcție de clienți, jurisdicție, industrie și tipurile de date procesate.",
+      "SOC 2, ISO 27001, GDPR sau NIS2? Alegerea pornește de la clienți, jurisdicție, industrie și datele pe care le procesezi.",
     href: "/hub/which-compliance-framework",
   },
   {
     tag: "Checklist",
     title: "Checklist NIS2 pentru companii de tehnologie",
     description:
-      "O structură practică pentru guvernanță, controale tehnice, supply-chain security, incident response și cerințele de notificare relevante NIS2.",
+      "Guvernanță, măsuri tehnice, furnizori și raportarea incidentelor, într-o ordine utilă pentru o echipă tehnică.",
     href: "/hub/nis2-compliance-checklist-tech-companies-2026",
   },
   {
-    tag: "Ghid",
+    tag: "NIS2",
     title: "NIS2 pentru echipe tehnice",
     description:
-      "Ce se schimbă concret pentru CTO, engineering și security teams și cum se transformă cerințele de guvernanță în măsuri tehnice și dovezi verificabile.",
+      "Ce ajunge concret la CTO, engineering și security atunci când cerințele de guvernanță trebuie implementate și demonstrate.",
     href: "/hub/nis2-tech-teams",
   },
   {
-    tag: "Ghid",
+    tag: "SOC 2",
     title: "SOC 2 Type 1 vs Type 2",
     description:
-      "Diferențele dintre cele două tipuri de raport SOC 2, perioada de evaluare, tipul de dovezi necesare și situațiile în care fiecare variantă este relevantă.",
+      "Două tipuri de raport, două momente diferite. Explicăm ce verifică fiecare și când are sens să alegi unul sau celălalt.",
     href: "/hub/soc2-type1-vs-type2",
   },
   {
-    tag: "Ghid",
+    tag: "SOC 2",
     title: "Cum evaluezi calitatea unui raport SOC 2",
     description:
-      "Ce trebuie verificat într-un raport SOC 2 înainte să te bazezi pe el într-un proces de vendor risk management sau due diligence de securitate.",
+      "Ce merită verificat înainte să te bazezi pe raportul unui furnizor într-un proces de due diligence sau vendor risk management.",
     href: "/hub/evaluate-soc2-report-quality",
   },
   {
-    tag: "Ghid",
-    title: "Costurile certificării ISO 27001",
+    tag: "ISO 27001",
+    title: "Cât costă, de fapt, ISO 27001?",
     description:
-      "Factorii care influențează costul unui program ISO 27001: dimensiunea scope-ului, maturitatea controalelor, consultanța, auditul și mentenanța ISMS-ului.",
+      "Costul depinde mai ales de scope, maturitatea controalelor, audit și câtă muncă trebuie făcută înainte de certificare.",
     href: "/hub/iso27001-certification-cost",
   },
   {
-    tag: "Ghid",
+    tag: "Risk",
     title: "Third-Party Risk Management (TPRM)",
     description:
-      "Cum identifici, evaluezi și monitorizezi riscurile furnizorilor și de ce TPRM este important pentru ISO 27001, SOC 2, NIS2 și reziliența operațională.",
+      "Cum evaluezi furnizorii, ce urmărești după onboarding și unde se leagă TPRM de ISO 27001, SOC 2 și NIS2.",
     href: "/hub/third-party-risk-management",
   },
   {
-    tag: "Securitate",
+    tag: "Security",
     title: "Cloud security pentru echipe audit-ready",
     description:
-      "Practici de securitate cloud pentru reducerea configurărilor greșite, a riscului de credentiale și pentru generarea dovezilor necesare în audituri.",
+      "Configurări, identități, credentiale și logging: lucrurile care reduc riscul și, în același timp, produc dovezi utile la audit.",
     href: "/hub/cloud-security-best-practices",
   },
   {
-    tag: "Ghid",
-    title: "AI coding tools și conformitatea SOC 2",
+    tag: "Security",
+    title: "AI coding tools și SOC 2",
     description:
-      "Cum poți utiliza instrumente AI de dezvoltare fără să pierzi controlul asupra codului, datelor, accesului, furnizorilor și dovezilor necesare unui program SOC 2.",
+      "Ce trebuie controlat când echipa folosește instrumente AI pentru cod: date, acces, furnizori, politici și urmele care rămân pentru audit.",
     href: "/hub/ai-coding-tools-soc2-compliance",
   },
   {
-    tag: "Analiză",
-    title: "Ce este software-ul de conformitate?",
+    tag: "GRC",
+    title: "Ce face, de fapt, un software de conformitate?",
     description:
-      "Rolul platformelor GRC și compliance în gestionarea riscurilor, controalelor, dovezilor, politicilor, vendorilor și audit readiness.",
+      "Unde ajută o platformă GRC și unde nu: riscuri, controale, dovezi, politici, furnizori și pregătirea pentru audit.",
     href: "/hub/what-is-compliance-software",
   },
   {
     tag: "Comparație",
     title: "Instrumente GRC importante în 2026",
     description:
-      "O analiză a modului în care platformele GRC abordează guvernanța, risk management, controalele, automatizarea și colaborarea cu echipele tehnice.",
+      "O privire comparativă asupra platformelor GRC și a modului în care abordează riscul, controalele și automatizarea.",
     href: "/hub/top-grc-tools-2026",
   },
   {
     tag: "Comparație",
-    title: "Alternative pentru platformele de compliance automation",
+    title: "Alternative pentru compliance automation",
     description:
-      "Cum compari soluțiile de compliance automation și managed compliance în funcție de cost operațional, implicarea echipei și nivelul de suport necesar.",
+      "Ce diferă între software-only și managed compliance atunci când compari efortul intern, costul și nivelul de suport.",
     href: "/hub/vanta-alternatives-2026",
   },
 ];
@@ -143,7 +143,14 @@ const collectionArticles = (await getCollection("hub", ({ data }) => !data.draft
     href: `/hub/${entry.id}`,
   }));
 
-const articleMap = new Map<string, (typeof curatedArticles)[number]>();
+type HubArticle = {
+  tag: string;
+  title: string;
+  description: string;
+  href: string;
+};
+
+const articleMap = new Map<string, HubArticle>();
 for (const article of [...collectionArticles, ...curatedArticles]) {
   if (!articleMap.has(article.href)) articleMap.set(article.href, article);
 }
@@ -154,7 +161,7 @@ const hubSchema = {
   "@type": "CollectionPage",
   name: "ZebraByte Hub",
   description:
-    "Ghiduri, analize și instrumente ZebraByte despre securitate cibernetică, SOC 2, ISO 27001, NIS2, privacy, risk management și compliance.",
+    "Ghiduri și resurse ZebraByte despre securitate cibernetică, SOC 2, ISO 27001, NIS2, privacy, risk management și compliance.",
   url: "https://www.zebrabyte.ro/hub",
   hasPart: [...guides, ...tools, ...articles].map((item) => ({
     "@type": "CreativeWork",
@@ -165,128 +172,89 @@ const hubSchema = {
 ---
 
 <Layout
-  title="Hub: ghiduri de securitate, SOC 2, ISO 27001, NIS2 și GRC"
-  description="Hub-ul ZebraByte reunește ghiduri practice despre securitate cibernetică, SOC 2, ISO 27001, NIS2, GRC, privacy, cloud security și managementul riscurilor."
+  title="Hub: securitate, SOC 2, ISO 27001, NIS2 și GRC"
+  description="Ghiduri și resurse ZebraByte despre securitate cibernetică, SOC 2, ISO 27001, NIS2, GRC, cloud security și managementul riscurilor."
 >
   <script type="application/ld+json" set:html={JSON.stringify(hubSchema)} />
 
-  <main class="container my-10 max-w-[1040px] sm:my-20">
-    <header class="mx-auto mb-16 max-w-[720px] text-center sm:mb-20">
-      <p class="text-muted-foreground animate-slide-in mb-4 text-sm font-medium uppercase tracking-[0.14em]">
-        Centru de resurse
-      </p>
-      <h1 class="text-h2 sm:text-h1 animate-slide-in animation-delay-100 mb-5 font-medium">
-        Hub
-      </h1>
-      <p class="text-muted-foreground animate-slide-in animation-delay-200 text-lg leading-relaxed sm:text-xl">
-        Ghiduri, analize și instrumente practice pentru echipe care trebuie să gestioneze securitatea,
-        riscul și conformitatea fără să transforme totul într-un proiect separat.
+  <main class="container my-10 max-w-[960px] sm:my-20">
+    <header class="mb-16 max-w-[680px] sm:mb-24">
+      <h1 class="text-h2 sm:text-h1 animate-slide-in mb-5 font-medium">Hub</h1>
+      <p class="text-muted-foreground animate-slide-in animation-delay-100 text-lg leading-relaxed sm:text-xl">
+        Note, ghiduri și explicații despre lucrurile pe care le întâlnim des în proiecte de securitate și conformitate.
       </p>
     </header>
 
-    <section class="mb-18 sm:mb-24" aria-labelledby="hub-guides">
-      <div class="mb-8">
-        <h2 id="hub-guides" class="text-h3 mb-2 font-medium">Ghiduri de conformitate</h2>
-        <p class="text-muted-foreground text-base sm:text-lg">
-          Puncte de pornire pentru framework-urile și cerințele pe care le întâlnim cel mai des.
-        </p>
+    <section class="mb-16 sm:mb-24" aria-labelledby="hub-start">
+      <div class="mb-7 border-b pb-4">
+        <h2 id="hub-start" class="text-2xl font-medium">Începe de aici</h2>
       </div>
 
-      <div class="grid gap-5 md:grid-cols-3">
-        {guides.map((guide) => (
-          <article class="border-border-mid flex h-full flex-col rounded-2xl border p-6 sm:p-7">
-            <div class="mb-5 flex min-h-10 items-center gap-2">
+      <div class="grid gap-10 md:grid-cols-3 md:gap-0">
+        {guides.map((guide, index) => (
+          <article class:list={["md:pr-8", index > 0 && "md:border-l md:pl-8"]}>
+            <div class="mb-5 flex h-9 items-center gap-2">
               {guide.badges.map((badge) => (
-                <FrameworkBadge name={badge} class="size-9" client:visible />
+                <FrameworkBadge name={badge} class="size-8" client:visible />
               ))}
             </div>
-            <h3 class="mb-3 text-2xl font-medium">{guide.title}</h3>
-            <p class="text-muted-foreground mb-6 text-sm leading-relaxed">{guide.description}</p>
-            <ul class="text-muted-foreground mb-7 space-y-2 text-sm">
-              {guide.topics.map((topic) => (
-                <li class="flex gap-2"><span aria-hidden="true">✓</span><span>{topic}</span></li>
-              ))}
-            </ul>
-            <a href={guide.href} class="mt-auto inline-flex items-center gap-2 text-sm font-medium hover:underline">
-              Deschide ghidul <span aria-hidden="true">→</span>
+            <h3 class="mb-3 text-xl font-medium">{guide.title}</h3>
+            <p class="text-muted-foreground mb-4 text-sm leading-relaxed">{guide.description}</p>
+            <p class="text-quaternary mb-5 text-xs leading-relaxed">{guide.detail}</p>
+            <a href={guide.href} class="text-sm font-medium hover:underline">
+              Citește ghidul →
             </a>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="mb-18 sm:mb-24" aria-labelledby="hub-tools">
-      <div class="mb-8">
-        <h2 id="hub-tools" class="text-h3 mb-2 font-medium">Instrumente</h2>
-        <p class="text-muted-foreground text-base sm:text-lg">
-          Instrumente care te ajută să treci de la întrebare la o decizie concretă.
-        </p>
+    <section class="mb-16 sm:mb-24" aria-labelledby="hub-tools">
+      <div class="mb-3 border-b pb-4">
+        <h2 id="hub-tools" class="text-2xl font-medium">Instrumente</h2>
       </div>
 
-      <div class="grid gap-4 md:grid-cols-2">
+      <div class="divide-y">
         {tools.map((tool) => (
           <a
             href={tool.href}
-            class="border-border-mid hover:border-primary/30 group rounded-2xl border p-6 transition-colors sm:p-7"
+            class="group grid gap-2 py-6 sm:grid-cols-[170px_minmax(0,1fr)_24px] sm:gap-6"
           >
-            <span class="bg-highlight mb-4 inline-flex rounded-full px-2.5 py-1 text-xs font-medium">{tool.tag}</span>
-            <div class="flex items-start justify-between gap-5">
-              <div>
-                <h3 class="mb-2 text-xl font-medium group-hover:underline">{tool.title}</h3>
-                <p class="text-muted-foreground text-sm leading-relaxed">{tool.description}</p>
-              </div>
-              <span class="text-muted-foreground text-xl" aria-hidden="true">→</span>
+            <span class="text-muted-foreground text-sm">{tool.label}</span>
+            <div>
+              <h3 class="mb-1.5 font-medium group-hover:underline">{tool.title}</h3>
+              <p class="text-muted-foreground max-w-[620px] text-sm leading-relaxed">{tool.description}</p>
             </div>
+            <span class="text-muted-foreground hidden self-center sm:block" aria-hidden="true">→</span>
           </a>
         ))}
       </div>
     </section>
 
     <section aria-labelledby="hub-library">
-      <div class="mb-8">
-        <h2 id="hub-library" class="text-h3 mb-2 font-medium">Bibliotecă de ghiduri și analize</h2>
-        <p class="text-muted-foreground text-base sm:text-lg">
-          Resurse aprofundate pentru decizii de securitate, conformitate, audit și risk management.
-        </p>
+      <div class="mb-3 border-b pb-4">
+        <h2 id="hub-library" class="text-2xl font-medium">Ghiduri și analize</h2>
       </div>
 
-      <div class="border-border-mid divide-border-mid divide-y border-y">
+      <div class="divide-y">
         {articles.map((article) => (
           <a
             href={article.href}
-            class="group grid gap-3 py-6 sm:grid-cols-[110px_minmax(0,1fr)_24px] sm:gap-5"
+            class="group grid gap-2 py-6 sm:grid-cols-[110px_minmax(0,1fr)_24px] sm:gap-6"
           >
+            <span class="text-muted-foreground text-sm">{article.tag}</span>
             <div>
-              <span class="border-border-mid text-muted-foreground inline-flex rounded-full border px-2.5 py-1 text-xs font-medium">
-                {article.tag}
-              </span>
+              <h3 class="mb-1.5 text-[17px] font-medium leading-snug group-hover:underline">{article.title}</h3>
+              <p class="text-muted-foreground max-w-[650px] text-sm leading-relaxed">{article.description}</p>
             </div>
-            <div>
-              <h3 class="mb-1.5 text-lg font-medium group-hover:underline">{article.title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{article.description}</p>
-            </div>
-            <span class="text-muted-foreground hidden self-center text-lg sm:block" aria-hidden="true">→</span>
+            <span class="text-muted-foreground hidden self-center sm:block" aria-hidden="true">→</span>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="mt-18 border-t pt-10 sm:mt-24 sm:pt-12">
-      <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-center">
-        <div>
-          <h2 class="mb-2 text-2xl font-medium">Nu știi de unde să începi?</h2>
-          <p class="text-muted-foreground max-w-[650px] leading-relaxed">
-            Spune-ne ce tip de companie ai, unde operezi și ce îți cer clienții. Putem identifica împreună
-            framework-urile și măsurile de securitate care au prioritate.
-          </p>
-        </div>
-        <a
-          href="/contact"
-          class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-medium"
-        >
-          Discută cu un expert
-        </a>
-      </div>
-    </section>
+    <p class="text-muted-foreground mt-16 border-t pt-8 text-sm sm:mt-20">
+      Ai o întrebare care nu apare aici? <a href="/contact" class="text-primary font-medium hover:underline">Scrie-ne</a> și îți spunem de unde merită să începi.
+    </p>
   </main>
 </Layout>
