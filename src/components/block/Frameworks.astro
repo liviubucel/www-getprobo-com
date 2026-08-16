@@ -1,11 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import Mark from "../../assets/zebrabyte-mark.svg";
-import Badges from "../Badges.svelte";
+import Badges from "../BadgesStatic.astro";
 import Button from "../../components/ui/Button.svelte";
 ---
 
-<div class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
+<div class="frameworks-section bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-10 sm:py-20">
   <div class="container">
     <Image
       src={Mark}
@@ -25,7 +25,6 @@ import Button from "../../components/ui/Button.svelte";
     <Badges
       count={10}
       countMobile={9}
-      client:visible
       class="mx-auto mb-13 grid max-w-[660px] grid-cols-3 justify-center justify-items-center gap-2 gap-y-10 sm:grid-cols-5 sm:gap-x-10"
     />
 
@@ -39,3 +38,10 @@ import Button from "../../components/ui/Button.svelte";
     </Button>
   </div>
 </div>
+
+<style>
+  .frameworks-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 680px;
+  }
+</style>
