@@ -151,7 +151,10 @@ function renderSpan(span, markDefs, knownSlugs) {
         const href = normalizeHref(def.href, knownSlugs);
         if (href) {
           const safeLabel = text.replace(/([\[\]])/g, "\\$1");
-          const safeHref = String(href).replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/\s/g, "%20");
+          const safeHref = String(href)
+            .replace(/\(/g, "%28")
+            .replace(/\)/g, "%29")
+            .replace(/\s/g, "%20");
           text = `[${safeLabel}](${safeHref})`;
         }
       }
@@ -170,7 +173,9 @@ function renderPortableText(body, knownSlugs) {
     const markDefs = Array.isArray(block.markDefs) ? block.markDefs : [];
     const rawText = children.map((child) => child?.text ?? "").join("");
 
-    const allCode = children.length > 0 && children.every((child) => (child?.marks ?? []).includes("code"));
+    const allCode =
+      children.length > 0 &&
+      children.every((child) => (child?.marks ?? []).includes("code"));
     if (allCode) {
       if (out.length && previousWasList) out.push("");
       out.push(renderCodeFence(rawText));
@@ -178,7 +183,10 @@ function renderPortableText(body, knownSlugs) {
       continue;
     }
 
-    const text = children.map((child) => renderSpan(child, markDefs, knownSlugs)).join("").trim();
+    const text = children
+      .map((child) => renderSpan(child, markDefs, knownSlugs))
+      .join("")
+      .trim();
     if (!text) continue;
 
     if (block.listItem) {
@@ -243,13 +251,17 @@ async function downloadImage(post, slug) {
     await fs.writeFile(path.join(imageDir, filename), buffer);
     return `/blog/zebrabyte-generated/${filename}`;
   } catch (error) {
-    console.warn(`[blog-sync] image fallback for ${slug}: ${error instanceof Error ? error.message : error}`);
+    console.warn(
+      `[blog-sync] image fallback for ${slug}: ${error instanceof Error ? error.message : error}`,
+    );
     return post.mainImageUrl;
   }
 }
 
 async function fetchPosts() {
-  const endpoint = new URL(`https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`);
+  const endpoint = new URL(
+    `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
+  );
   endpoint.searchParams.set("query", GROQ);
   endpoint.searchParams.set("perspective", "published");
 
@@ -266,7 +278,9 @@ async function fetchPosts() {
   }
 
   const payload = await response.json();
-  if (!Array.isArray(payload.result)) throw new Error("Sanity response did not contain a result array.");
+  if (!Array.isArray(payload.result)) {
+    throw new Error("Sanity response did not contain a result array.");
+  }
   return payload.result;
 }
 
@@ -281,8 +295,72 @@ async function mapWithConcurrency(items, limit, worker) {
     }
   }
 
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => run()));
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, () => run()),
+  );
   return results;
+}
+
+function validatePublishedPosts(documents) {
+  if (documents.length === 0) {
+    throw new Error("Sanity returned no published ZebraByte blog posts.");
+  }
+
+  const bySlug = new Map();
+  const structuralFailures = [];
+
+  for (const post of documents) {
+    const id = clean(post?._id) || "unknown-document";
+    const rawTitle = clean(post?.title);
+    const rawSlug = clean(post?.slug);
+    const slug = safeSlug(rawSlug);
+    const publishedAt = new Date(post?.publishedAt);
+
+    const reasons = [];
+    if (!rawTitle) reasons.push("missing title");
+    if (!rawSlug) reasons.push("missing public slug");
+    if (!slug) reasons.push("slug normalizes to empty");
+    if (!post?.publishedAt || Number.isNaN(publishedAt.valueOf())) {
+      reasons.push("missing/invalid publishedAt");
+    }
+    if (!Array.isArray(post?.body) || post.body.length === 0) {
+      reasons.push("missing/empty Portable Text body");
+    }
+
+    if (reasons.length) {
+      structuralFailures.push({ id, slug: rawSlug || null, error: reasons.join(", ") });
+      continue;
+    }
+
+    if (bySlug.has(slug)) {
+      const existing = bySlug.get(slug);
+      structuralFailures.push({
+        id,
+        slug,
+        error: `duplicate public slug; already used by ${existing._id}`,
+      });
+      continue;
+    }
+
+    bySlug.set(slug, { ...post, slug });
+  }
+
+  if (structuralFailures.length) {
+    const detail = structuralFailures
+      .map((failure) => `  - ${failure.id}${failure.slug ? ` (${failure.slug})` : ""}: ${failure.error}`)
+      .join("\n");
+    throw new Error(
+      `Published ZebraByte blog dataset is not one-to-one importable (${structuralFailures.length} problem(s)):\n${detail}`,
+    );
+  }
+
+  if (bySlug.size !== documents.length) {
+    throw new Error(
+      `Strict blog parity failed before conversion: ${bySlug.size}/${documents.length} published documents have unique valid slugs.`,
+    );
+  }
+
+  return bySlug;
 }
 
 async function main() {
@@ -292,14 +370,7 @@ async function main() {
   await fs.mkdir(imageDir, { recursive: true });
 
   const documents = await fetchPosts();
-  const bySlug = new Map();
-  for (const post of documents) {
-    const slug = safeSlug(post.slug || post.title);
-    if (!slug || !post.title || !post.publishedAt || !Array.isArray(post.body)) continue;
-    if (!bySlug.has(slug)) bySlug.set(slug, { ...post, slug });
-  }
-
-  if (bySlug.size === 0) throw new Error("Sanity returned no publishable ZebraByte blog posts.");
+  const bySlug = validatePublishedPosts(documents);
 
   const knownSlugs = new Set(bySlug.keys());
   const failures = [];
@@ -309,10 +380,12 @@ async function main() {
   await mapWithConcurrency(entries, imageDownloadConcurrency, async ([slug, post]) => {
     try {
       const body = renderPortableText(post.body, knownSlugs);
-      if (!body) throw new Error("empty Portable Text body");
+      if (!body) throw new Error("empty Portable Text body after conversion");
 
       const excerpt = buildExcerpt(post);
-      if (excerpt.length < 120) throw new Error(`excerpt is only ${excerpt.length} characters`);
+      if (excerpt.length < 120) {
+        throw new Error(`excerpt is only ${excerpt.length} characters`);
+      }
 
       const ogImage = await downloadImage(post, slug);
       const publishedDate = new Date(post.publishedAt);
@@ -336,10 +409,18 @@ async function main() {
       if (ogImage) frontmatter.push(`ogImage: ${yamlString(ogImage)}`);
       frontmatter.push("---", "", body, "");
 
-      await fs.writeFile(path.join(contentDir, `${slug}.mdx`), frontmatter.join("\n"), "utf8");
+      await fs.writeFile(
+        path.join(contentDir, `${slug}.mdx`),
+        frontmatter.join("\n"),
+        "utf8",
+      );
       imported.push({ slug, title: post.title, id: post._id, image: Boolean(ogImage) });
     } catch (error) {
-      failures.push({ slug, id: post._id, error: error instanceof Error ? error.message : String(error) });
+      failures.push({
+        slug,
+        id: post._id,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   });
 
@@ -347,7 +428,12 @@ async function main() {
   failures.sort((a, b) => a.slug.localeCompare(b.slug));
 
   const manifest = {
-    source: { projectId, dataset, documentCount: documents.length, uniqueSlugCount: bySlug.size },
+    source: {
+      projectId,
+      dataset,
+      documentCount: documents.length,
+      uniqueSlugCount: bySlug.size,
+    },
     importedCount: imported.length,
     failureCount: failures.length,
     imported,
@@ -356,15 +442,22 @@ async function main() {
   };
   await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
-  console.log(`[blog-sync] Sanity docs: ${documents.length}; unique slugs: ${bySlug.size}; imported: ${imported.length}`);
+  console.log(
+    `[blog-sync] published Sanity docs: ${documents.length}; unique slugs: ${bySlug.size}; imported: ${imported.length}`,
+  );
+
   if (failures.length) {
     console.error(`[blog-sync] ${failures.length} article(s) failed conversion:`);
-    for (const failure of failures) console.error(`  - ${failure.slug}: ${failure.error}`);
+    for (const failure of failures) {
+      console.error(`  - ${failure.slug}: ${failure.error}`);
+    }
     process.exitCode = 1;
   }
 
-  if (imported.length !== bySlug.size) {
-    throw new Error(`Blog migration incomplete: imported ${imported.length}/${bySlug.size} unique posts.`);
+  if (imported.length !== documents.length || imported.length !== bySlug.size) {
+    throw new Error(
+      `Blog migration incomplete: imported ${imported.length}/${documents.length} published documents (${bySlug.size} unique slugs).`,
+    );
   }
 }
 
