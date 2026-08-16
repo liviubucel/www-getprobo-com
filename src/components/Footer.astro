@@ -4,7 +4,6 @@ import Frameworks from "./block/Frameworks.astro";
 import ZebraByteStatus from "../components/ZebraByteStatus.svelte";
 import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
-import { Toaster } from "svelte-sonner";
 
 const menus = [
   {
@@ -94,5 +93,3 @@ type Props = {
     <AskAi />
   </div>
 </footer>
-
-<Toaster richColors position="top-center" client:only="svelte" />
