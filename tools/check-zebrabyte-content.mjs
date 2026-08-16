@@ -93,11 +93,15 @@ async function checkBlog() {
   const blogIndex = await read("src/pages/blog.astro");
   const blogPagination = await read("src/pages/blog/page/[page].astro");
   const rss = await read("src/pages/blog.xml.ts");
+  const workerRouter = await read("worker/router.ts");
 
   if (!blogRoute.includes("getBlogSlug(post)")) fail("blog detail route is not using stable imported slugs.");
   if (!blogIndex.includes("getBlogHref(post)")) fail("blog index is not using stable imported slugs.");
   if (!blogPagination.includes("getBlogHref(post)")) fail("blog pagination is not using stable imported slugs.");
   if (!rss.includes("getBlogHref(post)")) fail("RSS is not using stable imported slugs.");
+  if (!workerRouter.includes("legacyWixBlogRedirect") || !workerRouter.includes("blogul-nostru-1")) {
+    fail("Worker is missing the legacy Wix blog redirect needed to preserve old indexed URLs.");
+  }
 
   console.log(
     `[zebrabyte-content] strict blog parity OK: ${imported}/${documents} published ZebraByte posts generated.`,
