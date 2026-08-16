@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import Badges from "../components/Badges.svelte";
+import Badges from "../components/BadgesStatic.astro";
 import Logos from "../components/block/Logos.astro";
 import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 import SaleArg from "../components/ui/SaleArg.astro";
@@ -77,7 +77,6 @@ const websiteSchema = {
     <Badges
       count={10}
       countMobile={6}
-      client:load
       border
       class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
     />
