@@ -3,527 +3,290 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import FrameworkBadge from "../components/FrameworkBadge.svelte";
 
-const frameworks = [
+const guides = [
   {
-    id: "soc2",
-    label: "SOC 2",
     title: "SOC 2",
     description:
-      "Learn everything about SOC 2 compliance: requirements, costs, timeline, and Type 1 vs Type 2 differences. Your complete guide to achieving SOC 2 certification.",
-    features: ["Understanding SOC 2", "Requirements to get compliant", "Cost and timeline"],
+      "Ghid practic despre SOC 2: criterii de încredere, pregătirea controalelor, dovezi, diferența dintre Type 1 și Type 2 și modul în care te pregătești pentru raportare.",
+    topics: ["Ce este SOC 2", "Controale și dovezi", "Type 1 vs Type 2"],
     href: "/hub/soc2",
-    accentColor: "from-emerald-400 to-teal-500",
     badges: ["SOC2_TYPE1", "SOC2_TYPE2"],
   },
   {
-    id: "iso27001",
-    label: "ISO 27001",
-    title: "ISO 27001",
+    title: "ISO/IEC 27001",
     description:
-      "Learn what ISO 27001 is, why it matters for your business, and how to achieve certification. Complete 2026 guide covering requirements, costs, and timelines.",
-    features: ["Understanding ISO 27001", "Requirements to get compliant", "Cost and timeline"],
+      "Înțelege cerințele ISO/IEC 27001, ISMS-ul, analiza riscurilor, controalele Annex A și etapele necesare pentru pregătirea unei organizații pentru certificare.",
+    topics: ["ISMS și analiza riscurilor", "Annex A și controale", "Pregătirea pentru audit"],
     href: "/hub/iso27001",
-    accentColor: "from-blue-400 to-indigo-500",
     badges: ["ISO27001"],
   },
   {
-    id: "nis2",
-    label: "NIS2",
     title: "NIS2",
     description:
-      "Everything you need to know about NIS2 compliance in 2026: requirements, costs, deadlines, and how to prepare your organization. Expert guide for tech teams.",
-    features: ["Understanding NIS2", "Requirements and Article 21", "Cost and timeline"],
+      "Resurse pentru organizațiile care trebuie să înțeleagă NIS2: domeniul de aplicare, guvernanță, măsuri de securitate, supply-chain risk și raportarea incidentelor.",
+    topics: ["Cine intră în domeniul NIS2", "Măsuri tehnice și guvernanță", "Raportarea incidentelor"],
     href: "/hub/nis2-compliance",
-    accentColor: "from-purple-400 to-violet-500",
     badges: ["NIS2"],
   },
 ];
 
 const tools = [
   {
-    id: "compliance-recommender",
-    title: "Compliance Framework Recommender",
+    tag: "Instrument gratuit",
+    title: "Recomandare framework de conformitate",
     description:
-      "Find the right security and compliance frameworks for your business. Get a free personalized report based on your industry, business model, and target customers.",
+      "Identifică framework-urile de securitate și conformitate relevante pentru compania ta pe baza industriei, modelului de business, datelor procesate și piețelor în care operezi.",
     href: "/hub/compliance-recommender",
-    accentColor: "from-yellow-400 to-lime-500",
-    tag: "Free Tool",
+  },
+  {
+    tag: "Instrumente ZebraByte",
+    title: "Instrumente gratuite pentru securitate și conformitate",
+    description:
+      "Accesează instrumentele publice ZebraByte pentru verificări rapide, evaluări și activități de securitate care pot susține un program de conformitate.",
+    href: "/tools",
   },
 ];
 
-const articles = [
+const curatedArticles = [
   {
-    id: "probo-vs-fractional-ciso",
-    title: "Probo vs Hiring a Fractional CISO",
+    tag: "Ghid",
+    title: "Ce framework de conformitate are nevoie compania ta?",
     description:
-      "Fractional CISO vs Probo: leadership and buyer narrative vs compliance execution. Role boundaries, sequencing, year-one TCO, and when to add each.",
-    href: "/hub/probo-vs-fractional-ciso",
-    accentColor: "from-slate-400 to-emerald-500",
-    tag: "Comparison",
-  },
-  {
-    id: "iso-27001-after-soc-2-the-30-percent-shortcut",
-    title: "ISO 27001 for Companies That Already Have SOC 2: The 30% Shortcut",
-    description:
-      "You are roughly 70% of the way to ISO 27001 if SOC 2 Type 2 is done. Map Annex A overlap, the reformat layer, and the 8% net-new — plus sequencing and realistic marginal cost.",
-    href: "/hub/iso-27001-after-soc-2-the-30-percent-shortcut",
-    accentColor: "from-blue-400 to-emerald-500",
-    tag: "Guide",
-  },
-  {
-    id: "which-compliance-framework",
-    title: "Which Compliance Framework Do You Need?",
-    description:
-      "Not sure if you need SOC 2, GDPR, HIPAA, or PCI DSS? Use our guide to identify the right compliance frameworks based on your business type, customers, and data.",
+      "Un ghid pentru alegerea între SOC 2, ISO 27001, GDPR, NIS2 și alte cerințe, în funcție de clienți, jurisdicție, industrie și tipurile de date procesate.",
     href: "/hub/which-compliance-framework",
-    accentColor: "from-yellow-400 to-amber-500",
-    tag: "Guide",
   },
   {
-    id: "probo-vs-vanta",
-    title: "Probo vs Vanta: Full-Service Compliance vs DIY Tools",
-    description:
-      "Probo vs Vanta: One gives you a tool, the other does the work. Compare full-service compliance with hands-off experts vs DIY automation platforms.",
-    href: "/hub/probo-vs-vanta",
-    accentColor: "from-emerald-400 to-teal-500",
-    tag: "Comparison",
-  },
-  {
-    id: "vanta-alternatives-2026",
-    title: "Vanta Alternatives in 2026: 7 Platforms Compared Honestly (Including a Free One)",
-    description:
-      "Honest comparison of 7 Vanta alternatives for compliance automation. Probo is the only open-source, free-tier option with a dedicated compliance officer included.",
-    href: "/hub/vanta-alternatives-2026",
-    accentColor: "from-teal-400 to-cyan-500",
-    tag: "Comparison",
-  },
-  {
-    id: "nis2-tech-teams",
-    title: "NIS2 for Tech Teams: What Actually Changes in 2026",
-    description:
-      "A practical NIS2 guide for CTOs and developers. Learn the 10 security measures you must implement, incident response requirements, and automation strategies.",
-    href: "/hub/nis2-tech-teams",
-    accentColor: "from-purple-400 to-violet-500",
-    tag: "Guide",
-  },
-  {
-    id: "nis2-compliance-checklist-tech-companies-2026",
-    title: "NIS2 Compliance Checklist for Tech Companies (2026 Edition)",
-    description:
-      "Practical step-by-step NIS2 checklist: governance, technical controls, supply chain, 24–72 hour notifications, registration — and what you can skip until you're in scope.",
-    href: "/hub/nis2-compliance-checklist-tech-companies-2026",
-    accentColor: "from-purple-400 to-fuchsia-500",
     tag: "Checklist",
+    title: "Checklist NIS2 pentru companii de tehnologie",
+    description:
+      "O structură practică pentru guvernanță, controale tehnice, supply-chain security, incident response și cerințele de notificare relevante NIS2.",
+    href: "/hub/nis2-compliance-checklist-tech-companies-2026",
   },
   {
-    id: "ai-coding-tools-soc2-compliance",
-    title: "Using AI Coding Tools While Staying SOC 2 Compliant",
+    tag: "Ghid",
+    title: "NIS2 pentru echipe tehnice",
     description:
-      "Can you use Claude, Copilot, or Cursor and stay SOC 2 compliant? Here's the practical checklist for startups using AI coding assistants in 2026.",
-    href: "/hub/ai-coding-tools-soc2-compliance",
-    accentColor: "from-indigo-400 to-purple-500",
-    tag: "Guide",
+      "Ce se schimbă concret pentru CTO, engineering și security teams și cum se transformă cerințele de guvernanță în măsuri tehnice și dovezi verificabile.",
+    href: "/hub/nis2-tech-teams",
   },
   {
-    id: "top-compliance-automation-tools-2026",
-    title: "Top 5 Compliance Automation Tools in 2026",
+    tag: "Ghid",
+    title: "SOC 2 Type 1 vs Type 2",
     description:
-      "Compare the top 5 compliance automation tools for 2026. Discover why open source Probo ranks #1 and how its hands-on service eliminates the DIY compliance burden.",
-    href: "/hub/top-compliance-automation-tools-2026",
-    accentColor: "from-lime-400 to-green-500",
-    tag: "Comparison",
-  },
-  {
-    id: "soc2-type1-vs-type2",
-    title: "SOC 2 Type 1 vs Type 2: Which Certification Do You Need?",
-    description:
-      "SOC 2 Type 1 vs Type 2 explained: Type 1 is point-in-time (3-6 months, $15K-$40K), Type 2 requires 6-12 month observation ($30K-$100K). Learn which fits your stage and when to upgrade.",
+      "Diferențele dintre cele două tipuri de raport SOC 2, perioada de evaluare, tipul de dovezi necesare și situațiile în care fiecare variantă este relevantă.",
     href: "/hub/soc2-type1-vs-type2",
-    accentColor: "from-emerald-400 to-teal-500",
-    tag: "Guide",
   },
   {
-    id: "evaluate-soc2-report-quality",
-    title: "How to Evaluate SOC 2 Report Quality",
+    tag: "Ghid",
+    title: "Cum evaluezi calitatea unui raport SOC 2",
     description:
-      "Learn 6 expert checks to evaluate SOC 2 report quality. Verify auditor legitimacy, test procedures, and sample sizes before relying on vendor assessments.",
+      "Ce trebuie verificat într-un raport SOC 2 înainte să te bazezi pe el într-un proces de vendor risk management sau due diligence de securitate.",
     href: "/hub/evaluate-soc2-report-quality",
-    accentColor: "from-emerald-400 to-teal-500",
-    tag: "Guide",
   },
   {
-    id: "iso27001-certification-cost",
-    title: "ISO 27001 certification cost: what founders actually pay in 2026",
+    tag: "Ghid",
+    title: "Costurile certificării ISO 27001",
     description:
-      "The real number ranges from $15,000 to over $80,000. Here is exactly what drives the difference, and how to avoid paying for things you don't need.",
+      "Factorii care influențează costul unui program ISO 27001: dimensiunea scope-ului, maturitatea controalelor, consultanța, auditul și mentenanța ISMS-ului.",
     href: "/hub/iso27001-certification-cost",
-    accentColor: "from-blue-400 to-indigo-500",
-    tag: "Guide",
   },
   {
-    id: "what-is-compliance-software",
-    title: "What is a Compliance Software?",
+    tag: "Ghid",
+    title: "Third-Party Risk Management (TPRM)",
     description:
-      "Discover what defines GRC software in 2026 and why Probo is the platform of choice for companies that want to move fast with qualitative compliance report and process.",
-    href: "/hub/what-is-compliance-software",
-    accentColor: "from-emerald-400 to-cyan-500",
-    tag: "Guide",
-  },
-  {
-    id: "top-grc-tools-2026",
-    title: "Top 5 GRC Tools in 2026",
-    description:
-      "A practical guide for modern Risk & Compliance teams. We compare Probo, Vanta, Drata, Hyperproof, and OneTrust based on risk management, governance, and compliance capabilities.",
-    href: "/hub/top-grc-tools-2026",
-    accentColor: "from-violet-400 to-purple-500",
-    tag: "Comparison",
-  },
-  {
-    id: "third-party-risk-management",
-    title: "What Is Third-Party Risk Management (TPRM)?",
-    description:
-      "Learn what TPRM is, why it matters for compliance frameworks like ISO 27001 and SOC 2, and best practices for managing vendor and supplier risks throughout the relationship lifecycle.",
+      "Cum identifici, evaluezi și monitorizezi riscurile furnizorilor și de ce TPRM este important pentru ISO 27001, SOC 2, NIS2 și reziliența operațională.",
     href: "/hub/third-party-risk-management",
-    accentColor: "from-amber-400 to-orange-500",
-    tag: "Guide",
   },
   {
-    id: "cloud-security-best-practices",
-    title: "Cloud Security Best Practices for Audit-Ready Teams",
+    tag: "Securitate",
+    title: "Cloud security pentru echipe audit-ready",
     description:
-      "Learn cloud security best practices to prevent misconfigurations, cut credential risk, and generate audit-ready evidence for SOC 2 and ISO 27001.",
+      "Practici de securitate cloud pentru reducerea configurărilor greșite, a riscului de credentiale și pentru generarea dovezilor necesare în audituri.",
     href: "/hub/cloud-security-best-practices",
-    accentColor: "from-sky-400 to-blue-500",
-    tag: "Guide",
   },
   {
-    id: "top-compliance-officer-services-2026",
-    title: "Top 5 Compliance Officer Services in 2026",
+    tag: "Ghid",
+    title: "AI coding tools și conformitatea SOC 2",
     description:
-      "For founders who don't want to become compliance experts. Compare the best compliance officer services for SOC 2 in 2026 — real teams, not just software.",
-    href: "/hub/top-compliance-officer-services-2026",
-    accentColor: "from-teal-400 to-green-500",
-    tag: "Comparison",
+      "Cum poți utiliza instrumente AI de dezvoltare fără să pierzi controlul asupra codului, datelor, accesului, furnizorilor și dovezilor necesare unui program SOC 2.",
+    href: "/hub/ai-coding-tools-soc2-compliance",
+  },
+  {
+    tag: "Analiză",
+    title: "Ce este software-ul de conformitate?",
+    description:
+      "Rolul platformelor GRC și compliance în gestionarea riscurilor, controalelor, dovezilor, politicilor, vendorilor și audit readiness.",
+    href: "/hub/what-is-compliance-software",
+  },
+  {
+    tag: "Comparație",
+    title: "Instrumente GRC importante în 2026",
+    description:
+      "O analiză a modului în care platformele GRC abordează guvernanța, risk management, controalele, automatizarea și colaborarea cu echipele tehnice.",
+    href: "/hub/top-grc-tools-2026",
+  },
+  {
+    tag: "Comparație",
+    title: "Alternative pentru platformele de compliance automation",
+    description:
+      "Cum compari soluțiile de compliance automation și managed compliance în funcție de cost operațional, implicarea echipei și nivelul de suport necesar.",
+    href: "/hub/vanta-alternatives-2026",
   },
 ];
 
-const hubArticles = (await getCollection("hub", ({ data }) => !data.draft))
+const collectionArticles = (await getCollection("hub", ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .map((entry) => ({
-    id: entry.id,
+    tag: entry.data.tag,
     title: entry.data.title,
     description: entry.data.description,
     href: `/hub/${entry.id}`,
-    accentColor: entry.data.accentColor,
-    tag: entry.data.tag,
   }));
 
-const allArticles = [...hubArticles, ...articles];
+const articleMap = new Map<string, (typeof curatedArticles)[number]>();
+for (const article of [...collectionArticles, ...curatedArticles]) {
+  if (!articleMap.has(article.href)) articleMap.set(article.href, article);
+}
+const articles = [...articleMap.values()];
+
+const hubSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "ZebraByte Hub",
+  description:
+    "Ghiduri, analize și instrumente ZebraByte despre securitate cibernetică, SOC 2, ISO 27001, NIS2, privacy, risk management și compliance.",
+  url: "https://www.zebrabyte.ro/hub",
+  hasPart: [...guides, ...tools, ...articles].map((item) => ({
+    "@type": "CreativeWork",
+    name: item.title,
+    url: new URL(item.href, "https://www.zebrabyte.ro").toString(),
+  })),
+};
 ---
 
 <Layout
-  title="Compliance Hub: SOC 2, ISO 27001, NIS2 & GRC Guides"
-  description="Your central resource for compliance knowledge: in-depth guides on SOC 2, ISO 27001, NIS2, and the tools that help you get certified faster."
+  title="Hub: ghiduri de securitate, SOC 2, ISO 27001, NIS2 și GRC"
+  description="Hub-ul ZebraByte reunește ghiduri practice despre securitate cibernetică, SOC 2, ISO 27001, NIS2, GRC, privacy, cloud security și managementul riscurilor."
 >
-  <main class="container my-10 sm:my-20">
-    <!-- Hero Section -->
-    <div class="text-center mb-10 sm:mb-16">
-      <div
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(147,201,38,0.12)] bg-white/60 backdrop-blur-[50px] text-xs text-muted-foreground mb-6 animate-slide-in"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        Resource Center
-      </div>
-      <h1
-        class="text-h2 sm:text-h1 mb-6 font-medium animate-slide-in animation-delay-100"
-      >
+  <script type="application/ld+json" set:html={JSON.stringify(hubSchema)} />
+
+  <main class="container my-10 max-w-[1040px] sm:my-20">
+    <header class="mx-auto mb-16 max-w-[720px] text-center sm:mb-20">
+      <p class="text-muted-foreground animate-slide-in mb-4 text-sm font-medium uppercase tracking-[0.14em]">
+        Centru de resurse
+      </p>
+      <h1 class="text-h2 sm:text-h1 animate-slide-in animation-delay-100 mb-5 font-medium">
         Hub
       </h1>
-      <p
-        class="text-muted-foreground text-lg sm:text-xl font-medium max-w-[600px] mx-auto animate-slide-in animation-delay-200"
-      >
-        Your central resource for compliance knowledge, guides, and tools.
+      <p class="text-muted-foreground animate-slide-in animation-delay-200 text-lg leading-relaxed sm:text-xl">
+        Ghiduri, analize și instrumente practice pentru echipe care trebuie să gestioneze securitatea,
+        riscul și conformitatea fără să transforme totul într-un proiect separat.
       </p>
-    </div>
+    </header>
 
-    <!-- Compliance Guides Section -->
-    <section class="animate-slide-in animation-delay-300">
-      <div class="mb-10">
-        <h2 class="text-h3 sm:text-[40px] sm:leading-[54px] font-medium mb-3 tracking-[-0.8px]">
-          Compliance Guides
-        </h2>
-        <p class="text-muted-foreground text-lg">
-          Start your compliance journey with our comprehensive guides
+    <section class="mb-18 sm:mb-24" aria-labelledby="hub-guides">
+      <div class="mb-8">
+        <h2 id="hub-guides" class="text-h3 mb-2 font-medium">Ghiduri de conformitate</h2>
+        <p class="text-muted-foreground text-base sm:text-lg">
+          Puncte de pornire pentru framework-urile și cerințele pe care le întâlnim cel mai des.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-        {
-          frameworks.map((framework) => (
-            <article
-              class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300"
-            >
-              <!-- Gradient Background Accent -->
-              <div class={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${framework.accentColor} opacity-10 blur-3xl transition-opacity group-hover:opacity-20`} />
-              
-              <div class="relative p-6 sm:p-8">
-                <!-- Title -->
-                <h3 class="text-[28px] sm:text-[32px] leading-[1.15] font-bold text-gray-900 mb-4 tracking-[-0.5px]">
-                  {framework.title}
-                </h3>
-
-                <!-- Description -->
-                <p class="text-gray-600 mb-8 leading-relaxed">
-                  {framework.description}
-                </p>
-
-                <!-- Topics List -->
-                <ul class="space-y-3 mb-8">
-                  {framework.features.map((feature) => (
-                    <li class="flex items-start gap-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#10b981"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="shrink-0 mt-0.5"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                      </svg>
-                      <span class="text-gray-700">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <!-- Bottom Section -->
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                  <!-- CTA Button -->
-                  <a
-                    href={framework.href}
-                    class="group/btn inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full font-medium transition-all hover:gap-3 shadow-lg hover:shadow-xl"
-                  >
-                    Access Complete Guide
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </a>
-
-                  <!-- Badges -->
-                  <div class="flex gap-2">
-                    {framework.badges.map((badge) => (
-                      <div
-                        class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200 group-hover:border-gray-300 transition-colors overflow-hidden"
-                      >
-                        <FrameworkBadge name={badge} class="size-8" client:visible />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Tools Section -->
-    <section class="mt-10 sm:mt-16 animate-slide-in animation-delay-325">
-      <div class="mb-10">
-        <h2 class="text-h3 sm:text-[40px] sm:leading-[54px] font-medium mb-3 tracking-[-0.8px]">
-          Tools
-        </h2>
-        <p class="text-muted-foreground text-lg">
-          Free tools to help you navigate your compliance journey
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 gap-6">
-        {
-          tools.map((tool) => (
-            <a
-              href={tool.href}
-              class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 block"
-            >
-              {/* Gradient Background Accent */}
-              <div class={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${tool.accentColor} opacity-10 blur-3xl transition-opacity group-hover:opacity-20`} />
-              
-              <div class="relative p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6">
-                <div class="flex-1">
-                  {/* Tag */}
-                  <span class="inline-block text-xs font-medium text-[#5d770d] bg-[#f0f7e4] px-3 py-1 rounded-full mb-4">
-                    {tool.tag}
-                  </span>
-                  
-                  {/* Title */}
-                  <h3 class="text-[24px] sm:text-[28px] leading-[1.15] font-bold text-gray-900 mb-3 tracking-[-0.5px] group-hover:text-[#5d770d] transition-colors">
-                    {tool.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p class="text-gray-600 leading-relaxed">
-                    {tool.description}
-                  </p>
-                </div>
-
-                {/* Arrow */}
-                <div class="shrink-0 hidden sm:flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 group-hover:bg-[#D7EDBA] transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="text-gray-600 group-hover:text-[#141e12] transition-colors"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
+      <div class="grid gap-5 md:grid-cols-3">
+        {guides.map((guide) => (
+          <article class="border-border-mid flex h-full flex-col rounded-2xl border p-6 sm:p-7">
+            <div class="mb-5 flex min-h-10 items-center gap-2">
+              {guide.badges.map((badge) => (
+                <FrameworkBadge name={badge} class="size-9" client:visible />
+              ))}
+            </div>
+            <h3 class="mb-3 text-2xl font-medium">{guide.title}</h3>
+            <p class="text-muted-foreground mb-6 text-sm leading-relaxed">{guide.description}</p>
+            <ul class="text-muted-foreground mb-7 space-y-2 text-sm">
+              {guide.topics.map((topic) => (
+                <li class="flex gap-2"><span aria-hidden="true">✓</span><span>{topic}</span></li>
+              ))}
+            </ul>
+            <a href={guide.href} class="mt-auto inline-flex items-center gap-2 text-sm font-medium hover:underline">
+              Deschide ghidul <span aria-hidden="true">→</span>
             </a>
-          ))
-        }
+          </article>
+        ))}
       </div>
     </section>
 
-    <!-- Articles Section -->
-    <section class="mt-10 sm:mt-16 animate-slide-in animation-delay-350">
-      <div class="mb-10">
-        <h2 class="text-h3 sm:text-[40px] sm:leading-[54px] font-medium mb-3 tracking-[-0.8px]">
-          Articles & Comparisons
-        </h2>
-        <p class="text-muted-foreground text-lg">
-          In-depth analysis and comparisons to help you make informed decisions
+    <section class="mb-18 sm:mb-24" aria-labelledby="hub-tools">
+      <div class="mb-8">
+        <h2 id="hub-tools" class="text-h3 mb-2 font-medium">Instrumente</h2>
+        <p class="text-muted-foreground text-base sm:text-lg">
+          Instrumente care te ajută să treci de la întrebare la o decizie concretă.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 gap-6">
-        {
-          allArticles.map((article) => (
-            <a
-              href={article.href}
-              class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-gray-300 block"
-            >
-              {/* Gradient Background Accent */}
-              <div class={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${article.accentColor} opacity-10 blur-3xl transition-opacity group-hover:opacity-20`} />
-              
-              <div class="relative p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6">
-                <div class="flex-1">
-                  {/* Tag */}
-                  <span class="inline-block text-xs font-medium text-[#5d770d] bg-[#f0f7e4] px-3 py-1 rounded-full mb-4">
-                    {article.tag}
-                  </span>
-                  
-                  {/* Title */}
-                  <h3 class="text-[24px] sm:text-[28px] leading-[1.15] font-bold text-gray-900 mb-3 tracking-[-0.5px] group-hover:text-[#5d770d] transition-colors">
-                    {article.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p class="text-gray-600 leading-relaxed">
-                    {article.description}
-                  </p>
-                </div>
-
-                {/* Arrow */}
-                <div class="shrink-0 hidden sm:flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 group-hover:bg-[#D7EDBA] transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="text-gray-600 group-hover:text-[#141e12] transition-colors"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Coming Soon Section -->
-    <section class="mt-10 sm:mt-16 animate-slide-in animation-delay-400">
-      <div
-        class="bg-gradient-to-br from-[#e4f7c7] to-[#d0e8b3] rounded-3xl p-8 sm:p-12"
-      >
-        <div class="flex flex-col gap-6 items-center text-center">
-          <div
-            class="bg-[#141e12] rounded-2xl size-16 flex items-center justify-center"
+      <div class="grid gap-4 md:grid-cols-2">
+        {tools.map((tool) => (
+          <a
+            href={tool.href}
+            class="border-border-mid hover:border-primary/30 group rounded-2xl border p-6 transition-colors sm:p-7"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#e4f7c7"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
-              ></path>
-            </svg>
-          </div>
-          <div class="flex flex-col gap-3">
-            <h3
-              class="text-h4 sm:text-[32px] sm:leading-[42px] font-medium text-[#141e12] tracking-[-0.8px]"
-            >
-              More guides coming soon
-            </h3>
-            <p class="text-muted-foreground text-lg max-w-[600px]">
-                              We're constantly expanding our compliance knowledge center. Stay tuned for guides on GDPR, HIPAA, and more frameworks.
-            </p>
-          </div>
+            <span class="bg-highlight mb-4 inline-flex rounded-full px-2.5 py-1 text-xs font-medium">{tool.tag}</span>
+            <div class="flex items-start justify-between gap-5">
+              <div>
+                <h3 class="mb-2 text-xl font-medium group-hover:underline">{tool.title}</h3>
+                <p class="text-muted-foreground text-sm leading-relaxed">{tool.description}</p>
+              </div>
+              <span class="text-muted-foreground text-xl" aria-hidden="true">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="hub-library">
+      <div class="mb-8">
+        <h2 id="hub-library" class="text-h3 mb-2 font-medium">Bibliotecă de ghiduri și analize</h2>
+        <p class="text-muted-foreground text-base sm:text-lg">
+          Resurse aprofundate pentru decizii de securitate, conformitate, audit și risk management.
+        </p>
+      </div>
+
+      <div class="border-border-mid divide-border-mid divide-y border-y">
+        {articles.map((article) => (
+          <a
+            href={article.href}
+            class="group grid gap-3 py-6 sm:grid-cols-[110px_minmax(0,1fr)_24px] sm:gap-5"
+          >
+            <div>
+              <span class="border-border-mid text-muted-foreground inline-flex rounded-full border px-2.5 py-1 text-xs font-medium">
+                {article.tag}
+              </span>
+            </div>
+            <div>
+              <h3 class="mb-1.5 text-lg font-medium group-hover:underline">{article.title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{article.description}</p>
+            </div>
+            <span class="text-muted-foreground hidden self-center text-lg sm:block" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-18 border-t pt-10 sm:mt-24 sm:pt-12">
+      <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div>
+          <h2 class="mb-2 text-2xl font-medium">Nu știi de unde să începi?</h2>
+          <p class="text-muted-foreground max-w-[650px] leading-relaxed">
+            Spune-ne ce tip de companie ai, unde operezi și ce îți cer clienții. Putem identifica împreună
+            framework-urile și măsurile de securitate care au prioritate.
+          </p>
         </div>
+        <a
+          href="/contact"
+          class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-medium"
+        >
+          Discută cu un expert
+        </a>
       </div>
     </section>
   </main>
 </Layout>
-
