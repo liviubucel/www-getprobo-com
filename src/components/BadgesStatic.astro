@@ -55,7 +55,7 @@ const orderedFrameworks = [
           <FrameworkBadge
             name={framework.badge}
             class="mx-auto block size-16"
-            priority={eager && index < Math.min(countMobile, 6)}
+            priority={(eager || border) && index < Math.min(countMobile, 6)}
           />
           <div class="text-xxs whitespace-nowrap">{framework.label}</div>
         </div>
