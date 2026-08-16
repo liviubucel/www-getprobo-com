@@ -4,10 +4,10 @@
 
   type PublicStatus = "operational" | "degraded" | "outage" | "no_data" | "unknown";
 
-  const STATUS_API = "https://status.zebrabyte.ro/api/status";
+  const STATUS_API = "/api/status";
   const STATUS_PAGE = "https://status.zebrabyte.ro/";
 
-  let status = $state<PublicStatus>("unknown");
+  let status = $state<PublicStatus>("no_data");
 
   const dictionary: Record<PublicStatus, { label: () => string; color: string; live: boolean }> = {
     operational: {
@@ -49,15 +49,19 @@
           headers: { Accept: "application/json" },
           cache: "no-store",
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = (await response.json()) as { overall?: string };
         const next = payload.overall;
+
         if (
           !stopped &&
           (next === "operational" || next === "degraded" || next === "outage" || next === "no_data")
         ) {
           status = next;
+          return;
         }
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!stopped) status = "unknown";
       } catch {
         if (!stopped) status = "unknown";
       }
