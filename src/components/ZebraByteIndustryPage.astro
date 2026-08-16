@@ -2,12 +2,16 @@
 import Button from "./ui/Button.svelte";
 import type { ZebraByteIndustry } from "../content/zebrabyte-industries";
 import { industryServiceMeta } from "../content/zebrabyte-industries";
+import { getIndustryEditorial } from "../content/zebrabyte-industry-editorial";
 
 interface Props {
   industry: ZebraByteIndustry;
 }
 
 const { industry } = Astro.props;
+const editorial = getIndustryEditorial(industry.slug);
+if (!editorial) throw new Error(`Missing adapted industry editorial content for ${industry.slug}`);
+
 const services = Object.entries(industry.serviceSlugs)
   .filter(([key]) => key !== "maintenance")
   .map(([key, slug]) => ({
@@ -18,10 +22,10 @@ const services = Object.entries(industry.serviceSlugs)
   }));
 ---
 
-<animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+<animated-hero class="relative -mt-16 block overflow-hidden px-5 pt-32 pb-16 sm:pt-40 sm:pb-24">
   <div class="container text-center">
     <a href="/industries" class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-2 py-0.5 text-sm font-medium hover:underline">
-      Industries · {industry.shortTitle}
+      Industrii · {industry.shortTitle}
     </a>
     <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{industry.title}</h1>
     <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">{industry.description}</p>
@@ -37,7 +41,8 @@ const services = Object.entries(industry.serviceSlugs)
     <div>
       <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Context</p>
       <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Security trebuie să reflecte modul în care funcționează organizația.</h2>
-      <p class="text-muted-foreground text-lg leading-relaxed">{industry.context}</p>
+      <p class="text-muted-foreground mb-4 text-lg leading-relaxed">{industry.context}</p>
+      <p class="text-muted-foreground text-lg leading-relaxed">{editorial.intro}</p>
       <div class="mt-8 flex flex-wrap gap-2">
         {industry.priorities.map((priority) => (
           <span class="bg-active rounded-full px-3 py-1.5 text-sm">{priority}</span>
@@ -45,7 +50,7 @@ const services = Object.entries(industry.serviceSlugs)
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-2xl border bg-level-0">
+    <div class="bg-level-0 overflow-hidden rounded-2xl border">
       <div class="border-b p-6 sm:p-8"><p class="text-muted-foreground text-sm">Suprafața de risc</p></div>
       <div class="divide-y">
         {industry.risks.map((risk, index) => (
@@ -61,24 +66,60 @@ const services = Object.entries(industry.serviceSlugs)
 
 <section class="bg-active py-16 sm:py-24">
   <div class="container">
-    <div class="mx-auto mb-12 max-w-190 text-center">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security & compliance</p>
-      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Doar servicii care reduc riscul sau susțin compliance-ul.</h2>
-      <p class="text-muted-foreground text-lg">Nu promovăm mentenanță WordPress, migrare sau alte servicii IT generale ca produse separate. Pentru această industrie, oferta rămâne security-first.</p>
+    <div class="mb-12 max-w-190">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Specific industriei</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Ce merită protejat cu prioritate în {industry.shortTitle}.</h2>
+      <p class="text-muted-foreground text-lg">Am păstrat din abordarea ZebraByte pentru această industrie doar elementele care se potrivesc ofertei actuale de cyber security, compliance și infrastructură administrată.</p>
     </div>
 
-    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-      <a href="/managed-compliance" class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
-        <p class="text-muted-foreground mb-8 text-sm">Compliance</p>
-        <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">Managed Compliance</h3>
-        <p class="text-muted-foreground leading-relaxed">Risk, controls, evidence și audit readiness gestionate într-un program continuu.</p>
+    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
+      {editorial.focusAreas.map((area, index) => (
+        <article class="bg-level-0 min-h-56 p-6 sm:p-8">
+          <div class="text-muted-foreground mb-8 text-sm">0{index + 1}</div>
+          <h3 class="mb-3 text-xl font-medium">{area.title}</h3>
+          <p class="text-muted-foreground leading-relaxed">{area.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="container py-16 sm:py-24">
+  <div class="mx-auto mb-12 max-w-190 text-center">
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security & compliance</p>
+    <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Servicii conectate la risc, nu un catalog generic de IT.</h2>
+    <p class="text-muted-foreground text-lg">Combinăm assessment, controls, evidence, website protection, email identity și infrastructură doar acolo unde reduc riscul sau susțin cerințele organizației.</p>
+  </div>
+
+  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+    <a href="/managed-compliance" class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
+      <p class="text-muted-foreground mb-8 text-sm">Compliance</p>
+      <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">Managed Compliance</h3>
+      <p class="text-muted-foreground leading-relaxed">Risk, controls, evidence și audit readiness gestionate într-un program continuu.</p>
+    </a>
+    {services.map(({ href, meta }) => (
+      <a href={href} class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
+        <p class="text-muted-foreground mb-8 text-sm">{meta.eyebrow}</p>
+        <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{meta.label}</h3>
+        <p class="text-muted-foreground leading-relaxed">{meta.description}</p>
       </a>
-      {services.map(({ href, meta }) => (
-        <a href={href} class="bg-level-0 group min-h-64 p-6 transition-colors hover:bg-subtle sm:p-8">
-          <p class="text-muted-foreground mb-8 text-sm">{meta.eyebrow}</p>
-          <h3 class="mb-3 text-xl font-medium group-hover:underline group-hover:underline-offset-4">{meta.label}</h3>
-          <p class="text-muted-foreground leading-relaxed">{meta.description}</p>
-        </a>
+    ))}
+  </div>
+</section>
+
+<section class="bg-active py-16 sm:py-24">
+  <div class="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Program integrat</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">{editorial.partner.title}</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">{editorial.partner.description}</p>
+    </div>
+    <div class="divide-y border-y">
+      {editorial.partner.points.map((point, index) => (
+        <div class="flex gap-4 py-5 sm:py-6">
+          <span class="text-muted-foreground text-xs">0{index + 1}</span>
+          <p class="font-medium leading-relaxed">{point}</p>
+        </div>
       ))}
     </div>
   </div>
@@ -87,14 +128,14 @@ const services = Object.entries(industry.serviceSlugs)
 <section class="container py-16 sm:py-24">
   <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
     <div>
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Outcomes</p>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Rezultate</p>
       <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Ce trebuie să rămână după proiect.</h2>
-      <p class="text-muted-foreground text-lg leading-relaxed">Nu urmărim doar livrarea unor documente. Scopul este o postură tehnică și operațională mai clară, care poate fi menținută și demonstrată.</p>
+      <p class="text-muted-foreground text-lg leading-relaxed">Nu urmărim doar livrarea unor documente. Scopul este o postură tehnică și operațională mai clară, care poate fi menținută, verificată și demonstrată.</p>
     </div>
     <div class="grid gap-3">
       {industry.outcomes.map((outcome, index) => (
         <div class="rounded-xl border p-5 sm:p-6">
-          <div class="mb-2 text-sm text-muted-foreground">0{index + 1}</div>
+          <div class="text-muted-foreground mb-2 text-sm">0{index + 1}</div>
           <p class="font-medium leading-relaxed">{outcome}</p>
         </div>
       ))}
@@ -102,10 +143,30 @@ const services = Object.entries(industry.serviceSlugs)
   </div>
 </section>
 
-<section class="border-t py-16 text-center sm:py-24">
+<section class="border-t py-16 sm:py-24">
+  <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">FAQ</p>
+      <h2 class="text-h3 sm:text-h2 font-medium">Întrebări frecvente pentru {industry.shortTitle}.</h2>
+    </div>
+    <div class="border-t">
+      {editorial.faqs.map((faq) => (
+        <details class="group border-b py-5 sm:py-6">
+          <summary class="flex cursor-pointer list-none items-start justify-between gap-6 font-medium">
+            <span>{faq.question}</span>
+            <span class="text-muted-foreground transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+          </summary>
+          <p class="text-muted-foreground max-w-190 pt-4 leading-relaxed">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="bg-active border-t py-16 text-center sm:py-24">
   <div class="container">
     <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium">Security, compliance și infrastructură într-un singur program.</h2>
-    <p class="text-muted-foreground mx-auto mb-8 max-w-170 text-lg">Putem începe cu un assessment punctual sau putem prelua implementarea și operarea măsurilor rezultate.</p>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-170 text-lg">Putem începe cu un assessment punctual, fără obligația de a schimba furnizorii existenți, sau putem prelua implementarea și operarea măsurilor rezultate.</p>
     <Button href="/contact" size="lg">Discută despre {industry.shortTitle}</Button>
   </div>
 </section>
