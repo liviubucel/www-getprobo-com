@@ -10,6 +10,7 @@ import {
 import {
   captureSentryException,
   captureSentryMessage,
+  handleSentryClientApi,
   type SentryEnv,
 } from "./sentry";
 
@@ -41,6 +42,9 @@ export default {
     context?: ExecutionContextLike,
   ): Promise<Response> {
     try {
+      const clientErrorResponse = await handleSentryClientApi(request, env);
+      if (clientErrorResponse) return clientErrorResponse;
+
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
 
