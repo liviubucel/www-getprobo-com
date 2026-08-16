@@ -9,8 +9,12 @@ const apiVersion = "2025-01-01";
 const contentDir = path.resolve("src/content/blog/zebrabyte-generated");
 const imageDir = path.resolve("public/blog/zebrabyte-generated");
 const manifestPath = path.join(contentDir, "_manifest.json");
+const imageDownloadConcurrency = 6;
+const sanityTimeoutMs = 20_000;
+const imageTimeoutMs = 12_000;
+const maxImageBytes = 16 * 1024 * 1024;
 
-const GROQ = `*[_type == "post" && !(_id in path("drafts.**"))] | order(_updatedAt desc) {
+const GROQ = `*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
   _id,
   _updatedAt,
   title,
@@ -81,7 +85,9 @@ function normalizeHref(href, knownSlugs) {
     return null;
   }
 
-  if (!/(^|\.)zebrabyte\.(ro|co\.uk)$/i.test(url.hostname)) return href;
+  if (!/(^|\.)zebrabyte\.(ro|co\.uk)$/i.test(url.hostname)) {
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : String(href);
+  }
 
   let pathname = url.pathname.replace(/\/+$/, "") || "/";
   const oldPost = pathname.match(/^\/blog\/blogul-nostru-1\/(.+?)-(\d+)$/i);
@@ -102,15 +108,40 @@ function normalizeHref(href, knownSlugs) {
   return `${pathname}${url.search}${url.hash}`;
 }
 
+function escapeMdxText(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/{/g, "&#123;")
+    .replace(/}/g, "&#125;");
+}
+
+function renderInlineCode(value) {
+  const raw = String(value ?? "");
+  const runs = raw.match(/`+/g) ?? [];
+  const fence = "`".repeat(Math.max(1, ...runs.map((run) => run.length + 1)));
+  const needsPadding = /^`|`$|^\s|\s$/.test(raw);
+  return `${fence}${needsPadding ? " " : ""}${raw}${needsPadding ? " " : ""}${fence}`;
+}
+
+function renderCodeFence(value) {
+  const raw = String(value ?? "");
+  const runs = raw.match(/`+/g) ?? [];
+  const fence = "`".repeat(Math.max(3, ...runs.map((run) => run.length + 1)));
+  return `${fence}\n${raw}\n${fence}`;
+}
+
 function renderSpan(span, markDefs, knownSlugs) {
-  let text = String(span?.text ?? "");
+  const raw = String(span?.text ?? "");
   const marks = Array.isArray(span?.marks) ? span.marks : [];
   const defs = new Map((markDefs ?? []).map((def) => [def?._key, def]));
 
+  if (marks.includes("code")) return renderInlineCode(raw);
+
+  let text = escapeMdxText(raw);
   for (const mark of marks) {
-    if (mark === "code") {
-      text = `\`${text.replace(/`/g, "\\`")}\``;
-    } else if (mark === "strong") {
+    if (mark === "strong") {
       text = `**${text}**`;
     } else if (mark === "em") {
       text = `*${text}*`;
@@ -118,7 +149,11 @@ function renderSpan(span, markDefs, knownSlugs) {
       const def = defs.get(mark);
       if (def?._type === "link" && def.href) {
         const href = normalizeHref(def.href, knownSlugs);
-        if (href) text = `[${text}](${href})`;
+        if (href) {
+          const safeLabel = text.replace(/([\[\]])/g, "\\$1");
+          const safeHref = String(href).replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/\s/g, "%20");
+          text = `[${safeLabel}](${safeHref})`;
+        }
       }
     }
   }
@@ -138,7 +173,7 @@ function renderPortableText(body, knownSlugs) {
     const allCode = children.length > 0 && children.every((child) => (child?.marks ?? []).includes("code"));
     if (allCode) {
       if (out.length && previousWasList) out.push("");
-      out.push(`\`\`\`\n${rawText}\n\`\`\``);
+      out.push(renderCodeFence(rawText));
       previousWasList = false;
       continue;
     }
@@ -191,11 +226,20 @@ function extensionFromContentType(contentType, sourceUrl) {
 async function downloadImage(post, slug) {
   if (!post.mainImageUrl) return undefined;
   try {
-    const response = await fetch(post.mainImageUrl, { headers: { "User-Agent": "ZebraByteBlogMigration/1.0" } });
+    const response = await fetch(post.mainImageUrl, {
+      headers: { "User-Agent": "ZebraByteBlogMigration/1.0" },
+      signal: AbortSignal.timeout(imageTimeoutMs),
+    });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const declaredLength = Number(response.headers.get("content-length") || 0);
+    if (declaredLength > maxImageBytes) throw new Error(`asset exceeds ${maxImageBytes} bytes`);
+
     const ext = extensionFromContentType(response.headers.get("content-type"), post.mainImageUrl);
     const filename = `${slug}.${ext}`;
     const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.byteLength > maxImageBytes) throw new Error(`asset exceeds ${maxImageBytes} bytes`);
+
     await fs.writeFile(path.join(imageDir, filename), buffer);
     return `/blog/zebrabyte-generated/${filename}`;
   } catch (error) {
@@ -212,7 +256,10 @@ async function fetchPosts() {
   const headers = { "User-Agent": "ZebraByteBlogMigration/1.0" };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(endpoint, { headers });
+  const response = await fetch(endpoint, {
+    headers,
+    signal: AbortSignal.timeout(sanityTimeoutMs),
+  });
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 500);
     throw new Error(`Sanity query failed (${response.status}): ${detail}`);
@@ -221,6 +268,21 @@ async function fetchPosts() {
   const payload = await response.json();
   if (!Array.isArray(payload.result)) throw new Error("Sanity response did not contain a result array.");
   return payload.result;
+}
+
+async function mapWithConcurrency(items, limit, worker) {
+  const results = new Array(items.length);
+  let cursor = 0;
+
+  async function run() {
+    while (cursor < items.length) {
+      const index = cursor++;
+      results[index] = await worker(items[index], index);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => run()));
+  return results;
 }
 
 async function main() {
@@ -242,8 +304,9 @@ async function main() {
   const knownSlugs = new Set(bySlug.keys());
   const failures = [];
   const imported = [];
+  const entries = [...bySlug.entries()];
 
-  for (const [slug, post] of bySlug) {
+  await mapWithConcurrency(entries, imageDownloadConcurrency, async ([slug, post]) => {
     try {
       const body = renderPortableText(post.body, knownSlugs);
       if (!body) throw new Error("empty Portable Text body");
@@ -255,6 +318,7 @@ async function main() {
       const publishedDate = new Date(post.publishedAt);
       const modifiedDate = new Date(post._updatedAt || post.publishedAt);
       if (Number.isNaN(publishedDate.valueOf())) throw new Error("invalid publishedAt");
+      if (Number.isNaN(modifiedDate.valueOf())) throw new Error("invalid dateModified");
 
       const frontmatter = [
         "---",
@@ -277,7 +341,10 @@ async function main() {
     } catch (error) {
       failures.push({ slug, id: post._id, error: error instanceof Error ? error.message : String(error) });
     }
-  }
+  });
+
+  imported.sort((a, b) => a.slug.localeCompare(b.slug));
+  failures.sort((a, b) => a.slug.localeCompare(b.slug));
 
   const manifest = {
     source: { projectId, dataset, documentCount: documents.length, uniqueSlugCount: bySlug.size },
