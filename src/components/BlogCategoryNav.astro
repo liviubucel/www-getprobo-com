@@ -1,0 +1,45 @@
+---
+import {
+  blogCategories,
+  getBlogCategoryHref,
+  type BlogCategorySlug,
+} from "../lib/blog-categories";
+
+interface Props {
+  active?: BlogCategorySlug | "all";
+  class?: string;
+}
+
+const { active = "all", class: className = "" } = Astro.props;
+---
+
+<nav aria-label="Categorii blog" class:list={["flex flex-wrap gap-2", className]}>
+  <a
+    href="/blog"
+    aria-current={active === "all" ? "page" : undefined}
+    class:list={[
+      "rounded-full border px-3 py-1.5 text-sm transition-colors",
+      active === "all"
+        ? "bg-foreground text-background border-foreground"
+        : "text-muted-foreground hover:text-foreground hover:border-foreground/40",
+    ]}
+  >
+    Toate articolele
+  </a>
+  {
+    blogCategories.map((category) => (
+      <a
+        href={getBlogCategoryHref(category)}
+        aria-current={active === category.slug ? "page" : undefined}
+        class:list={[
+          "rounded-full border px-3 py-1.5 text-sm transition-colors",
+          active === category.slug
+            ? "bg-foreground text-background border-foreground"
+            : "text-muted-foreground hover:text-foreground hover:border-foreground/40",
+        ]}
+      >
+        {category.label}
+      </a>
+    ))
+  }
+</nav>
