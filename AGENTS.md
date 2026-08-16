@@ -16,6 +16,31 @@ Primary language architecture:
 - English is served under `/en`, for example `/en`, `/en/blog`, `/en/docs`.
 - The Cloudflare localization layer is part of the product architecture. Do not build a second competing localization system without an explicit architectural decision.
 
+## Golden design baseline and content provenance
+
+The imported Probo snapshot at commit `7e7e7b5c18c621aae125488342a215a641c830b9` is the **golden design/behavior baseline** for inherited surfaces. The detailed classification and deliberate deviations are documented in `docs/architecture/experience-baseline.md`.
+
+The golden commit is a **design and behavior reference, not a content authority**. Compare against it when an inherited component may have lost layout, spacing, responsive behavior, animation, carousel behavior, hover/focus states or other interaction semantics.
+
+Do not restore upstream content merely because it exists in the golden snapshot. In particular:
+
+- never present Probo team photographs or people as ZebraByte staff;
+- never present Probo customer/company logos or testimonials as ZebraByte social proof without an independent ZebraByte source;
+- never rename an upstream photograph, review, customer or relationship so it appears to belong to ZebraByte;
+- never fabricate people, customers, reviews, certifications, partnerships or metrics to fill an inherited layout;
+- preserve explicit Probo author attribution only on imported content that actually carries that attribution;
+- framework badges identify frameworks and do not imply ZebraByte certification;
+- current ZebraByte runtime, security and release architecture takes precedence over upstream Probo links or deployment assumptions.
+
+Classify a meaningful difference before changing it:
+
+1. **Intentional ZebraByte adaptation** — keep and protect it.
+2. **Safe optimization** that preserves the visible/interactive contract — keep and protect it.
+3. **Experience regression** — restore/rebuild the inherited experience using current ZebraByte content.
+4. **Invalid inherited content** — preserve the useful design pattern but remove or replace the upstream identity/content with sourced ZebraByte content.
+
+When design and content conflict, preserve the strongest valid inherited design behavior while keeping the public ZebraByte content truthful.
+
 ## Non-negotiable product rule: preserve the experience
 
 When adapting, optimizing or refactoring an inherited component, preserve its **visible and interactive contract**, not merely a screenshot of its resting state.
@@ -52,14 +77,14 @@ Performance work must preserve the experience. Prefer lifecycle improvements suc
 
 ## Protected experience invariants
 
-`npm run check:experience` validates the highest-risk invariants and is part of `npm run build`. If it fails, fix the regression; do not weaken the checker to make a deliberate behavior change pass unless the product requirement itself changed.
+`npm run check:experience` validates the highest-risk invariants and is part of `npm run build`. It now includes both the behavioral contract and the design/content provenance contract. If it fails, fix the regression; do not weaken the checker to make a deliberate behavior change pass unless the product requirement itself changed.
 
 Protected behaviors currently include:
 
 1. **Homepage hero** — `AnimatedHero` remains mounted and viewport-aware.
 2. **Homepage framework grid** — uses the live `Badges.svelte` behavior, not `BadgesStatic.astro`.
 3. **Framework badges** — use Lottie JSON animation where the experience calls for animated badges.
-4. **Customer logos** — loop through `LogosScroll.svelte` with Splide AutoScroll and pause appropriately.
+4. **Capability marquee** — retains the inherited `LogosScroll.svelte` AutoScroll behavior, but inherited Probo customer identities must not be presented as ZebraByte social proof.
 5. **Client testimonials** — use `TestimonialsScroll.svelte`; desktop has the original two moving rows, including the reverse row.
 6. **Case studies** — use the interactive Slider, preserve overflow/click navigation and do not arbitrarily cap the collection.
 7. **Compliance journey** — viewport-triggered steps activate progressively.
@@ -69,6 +94,8 @@ Protected behaviors currently include:
 11. **Desktop mega-menu** — closes on outside interaction/link selection, supports Escape without immediately reopening and preserves focus semantics.
 12. **Motion on mobile** — mobile is not a reason to disable motion. Disable or reduce motion for `prefers-reduced-motion: reduce`.
 13. **Typography** — Geist is part of the visual contract. Loading strategy must not intentionally prefer a permanent fallback font.
+14. **About provenance** — do not restore the upstream Probo team photograph, people or photo gallery as ZebraByte identity; preserve the inherited page rhythm with truthful ZebraByte content.
+15. **Customer-proof provenance** — review/customer surfaces must use ZebraByte-sourced entries and must not be padded with inherited Probo company identities.
 
 ## Accessibility and motion
 
@@ -155,9 +182,11 @@ Because multiple agents/processes may work on this repository concurrently:
 
 1. Fetch the current `main` SHA immediately before making changes.
 2. Fetch the exact current file before replacing it.
-3. Do not overwrite unrelated changes from another agent.
-4. Prefer focused changes over wholesale reverts of mixed commits.
-5. If restoring a regression, inspect history so the original behavioral intent is understood.
+3. If an inherited design surface is involved, compare it with golden commit `7e7e7b5c18c621aae125488342a215a641c830b9` before simplifying or restoring it.
+4. Do not overwrite unrelated changes from another agent.
+5. Prefer focused changes over wholesale reverts of mixed commits.
+6. If restoring a regression, inspect history so the original behavioral intent is understood.
+7. Validate public identity/content provenance separately from visual parity.
 
 ## Required validation
 
@@ -189,7 +218,9 @@ When a Cloudflare build fails:
 
 Do not treat the inherited Probo design system as disposable scaffolding. ZebraByte content and IA can evolve substantially, but interaction quality, alignment and component polish should remain coherent with the existing system unless a deliberate redesign is requested.
 
-If a design change is intentional and conflicts with a protected invariant, update the implementation, this contract and `tools/check-experience-contract.mjs` together. The checker follows the product decision; it must not be weakened merely to accommodate an accidental regression.
+Do not blindly restore every historical Probo layout either. The golden snapshot establishes lineage; `docs/architecture/experience-baseline.md` records where upstream content is intentionally invalid for ZebraByte. Audit the design pattern and content provenance independently.
+
+If a design change is intentional and conflicts with a protected invariant, update the implementation, this contract, the experience baseline and the relevant checker together. The checker follows the product decision; it must not be weakened merely to accommodate an accidental regression.
 
 ## Security
 
@@ -204,6 +235,8 @@ If a design change is intentional and conflicts with a protected invariant, upda
 A change is not done merely because it compiles. It is done when:
 
 - behavior is preserved or intentionally changed;
+- inherited design changes were checked against the golden baseline where relevant;
+- public content provenance is valid and does not imply unsupported ZebraByte relationships;
 - desktop and mobile remain coherent;
 - accessibility states still work;
 - RO/EN architecture remains valid;
