@@ -1,0 +1,77 @@
+<script>
+  type ClientErrorPayload = {
+    type: string;
+    message: string;
+    stack?: string;
+    pagePath: string;
+  };
+
+  type ZebraByteWindow = Window & {
+    __zbtSentryClientInstalled?: boolean;
+  };
+
+  const targetWindow = window as ZebraByteWindow;
+
+  if (!targetWindow.__zbtSentryClientInstalled) {
+    targetWindow.__zbtSentryClientInstalled = true;
+
+    let sent = 0;
+    const maxEventsPerPage = 5;
+    const ignored = [
+      /TurnstileError/i,
+      /enableDidUserTypeOnKeyboardLogging/i,
+      /Error invoking postMessage: Java exception was raised/i,
+      /Java object is gone/i,
+      /has already been defined as a custom element/i,
+      /WebSocket connection error/i,
+    ];
+
+    const redact = (value: string) =>
+      value
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]")
+        .replace(/(?:token|secret|authorization|password)=?[^\s&]+/gi, "[redacted-secret]")
+        .slice(0, 6000);
+
+    const shouldIgnore = (message: string) => ignored.some((pattern) => pattern.test(message));
+
+    const report = (payload: ClientErrorPayload) => {
+      if (sent >= maxEventsPerPage || shouldIgnore(payload.message)) return;
+      sent += 1;
+
+      void fetch("/api/monitoring/client-error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        keepalive: true,
+        body: JSON.stringify({
+          type: redact(payload.type).slice(0, 100),
+          message: redact(payload.message).slice(0, 2000),
+          stack: payload.stack ? redact(payload.stack) : undefined,
+          pagePath: payload.pagePath.slice(0, 500),
+        }),
+      }).catch(() => undefined);
+    };
+
+    window.addEventListener("error", (event) => {
+      const error = event.error instanceof Error ? event.error : null;
+      const message = error?.message || event.message || "Unhandled browser error";
+      report({
+        type: error?.name || "Error",
+        message,
+        stack: error?.stack,
+        pagePath: window.location.pathname,
+      });
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      const reason = event.reason;
+      const error = reason instanceof Error ? reason : null;
+      report({
+        type: error?.name || "UnhandledRejection",
+        message: error?.message || String(reason || "Unhandled promise rejection"),
+        stack: error?.stack,
+        pagePath: window.location.pathname,
+      });
+    });
+  }
+</script>
