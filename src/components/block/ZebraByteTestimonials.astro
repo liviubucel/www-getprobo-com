@@ -1,18 +1,16 @@
 ---
+import Scroll from "./TestimonialsScroll.svelte";
 import ZebraByteTestimonial from "../ui/ZebraByteTestimonial.astro";
 ---
 
-<section class="testimonial-section bg-linear-to-b from-[#F8FAF4] from-[0%] to-white to-[100%] py-10 sm:py-20">
+<section class="bg-linear-to-b from-[#F8FAF4] from-[0%] to-white to-[100%] py-10 sm:py-20">
   <div class="container mb-10 max-w-3xl text-center">
     <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.14em]">Recenzii clienți</p>
     <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Ce spun clienții ZebraByte</h2>
     <p class="text-muted-foreground text-lg">Feedback real despre securizare, găzduire administrată, suport și proiecte livrate de ZebraByte.</p>
   </div>
 
-  <div
-    class="testimonial-track mx-auto flex max-w-[1440px] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 sm:px-8"
-    aria-label="Recenzii clienți ZebraByte"
-  >
+  <Scroll client:load>
     <ZebraByteTestimonial author="Cosmin Szavui" role="Recenzie Google">Am avut site-ul plin de viruși și tot timpul îmi dădea erori. Nu mai mergea cum trebuie și nimeni nu știa ce are. Cei de la ZebraByte m-au ajutat imediat au curățat tot, au securizat site-ul și l-au mutat pe serverele lor. De atunci merge perfect și nu am mai avut nicio problemă. Se vede că știu ce fac și chiar se implică. Recomand 100%!</ZebraByteTestimonial>
     <ZebraByteTestimonial author="Alexandra Aless" role="Recenzie Google">Am început să colaborez cu Zebrabyte de câteva luni și au livrat mai mult decât m-am asteptat. Am decis să îmi mut site-ul la ei deoarece am avut probleme cu vechiul provider și era și virusat. Cei de la ZebraByte au standarde foarte ridicate in ceea ce priveste securitatea și hosting enterprise. Echipa lor este foarte profesionistă, răspunde rapid la orice întrebare, oferă soluții clare si explica pe înțelesul tuturor chiar daca nu ai cunostinte tehnice. Platformele de hosting sunt stabile, rapide și bine protejate.</ZebraByteTestimonial>
     <ZebraByteTestimonial author="Stefania Iancu" role="Recenzie Google">Am avut o problemă urâtă cu site-ul, tot primeam alerte de securitate și linkuri ciudate apăreau peste tot. Cei de la ZebraByte au intrat imediat, au curățat tot și l-au mutat la ei. De atunci merge fără probleme, chiar și mai repede. Foarte serioși!</ZebraByteTestimonial>
@@ -20,28 +18,5 @@ import ZebraByteTestimonial from "../ui/ZebraByteTestimonial.astro";
     <ZebraByteTestimonial author="Jadu Ro" role="Recenzie Google">Am lucrat extraordinar cu aceasta echipa. Ii recomand!</ZebraByteTestimonial>
     <ZebraByteTestimonial author="Morosanu Gabriel" role="Recenzie Trustpilot">Very good team! Best cooperation i have ever seen. 10 stars!!!</ZebraByteTestimonial>
     <ZebraByteTestimonial author="Gabriela Ferguson" role="Recenzie Trustpilot">Excellent service, very understanding and patient with all our requests. I fully recommend ZebraByte for website designs to suit your needs!</ZebraByteTestimonial>
-  </div>
+  </Scroll>
 </section>
-
-<style>
-  .testimonial-section {
-    content-visibility: auto;
-    contain-intrinsic-size: 720px;
-  }
-
-  .testimonial-track {
-    scrollbar-width: none;
-    overscroll-behavior-inline: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .testimonial-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .testimonial-track :global(article) {
-    width: min(82vw, 450px);
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-  }
-</style>
