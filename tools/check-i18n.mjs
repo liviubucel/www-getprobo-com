@@ -55,7 +55,17 @@ for (const marker of [
 
 const wrangler = await read("wrangler.jsonc");
 requireText(wrangler, '"binding": "AI"', "Workers AI binding");
-requireText(wrangler, '"main": "./worker/router.ts"', "Worker router");
+const workerMainMatch = wrangler.match(/"main"\s*:\s*"([^"]+)"/);
+const workerMain = workerMainMatch?.[1];
+if (!workerMain) {
+  failures.push("Worker entrypoint: missing wrangler main configuration.");
+} else if (workerMain !== "./worker/main.ts" && workerMain !== "./worker/router.ts") {
+  failures.push(`Worker entrypoint: unexpected wrangler main ${JSON.stringify(workerMain)}.`);
+} else if (workerMain === "./worker/main.ts") {
+  const workerEntrypoint = await read("worker/main.ts");
+  requireText(workerEntrypoint, 'import router from "./router"', "Worker entrypoint router import");
+  requireText(workerEntrypoint, "router.fetch(request, env)", "Worker entrypoint router delegation");
+}
 
 const astroConfig = await read("astro.config.mjs");
 for (const marker of [
