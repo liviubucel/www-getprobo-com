@@ -1,0 +1,109 @@
+name: Publish changelog
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Public title for the changelog entry
+        required: true
+        type: string
+      description:
+        description: Public summary used in the changelog index and SEO metadata
+        required: true
+        type: string
+      category:
+        description: Primary changelog category
+        required: true
+        default: Platformă
+        type: choice
+        options:
+          - Platformă
+          - Securitate
+          - Conformitate
+          - Integrări
+          - Documentație
+          - Confidențialitate
+          - Infrastructură
+          - IAM
+          - Revizuire acces
+      extra_tags:
+        description: Optional additional categories, comma-separated
+        required: false
+        type: string
+      details:
+        description: Optional longer public text for the changelog article
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zebra-changelog-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Generate public changelog entry
+        id: generate
+        run: node tools/generate-changelog-from-github.mjs "$GITHUB_EVENT_PATH"
+
+      - name: Install dependencies
+        if: steps.generate.outputs.created == 'true'
+        run: npm ci
+
+      - name: Validate generated entry with Astro
+        if: steps.generate.outputs.created == 'true'
+        run: npx astro build
+
+      - name: Commit changelog entry to main
+        if: steps.generate.outputs.created == 'true'
+        env:
+          ENTRY_PATH: ${{ steps.generate.outputs.path }}
+          ENTRY_TITLE: ${{ steps.generate.outputs.title }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Rebase onto the latest main before creating the publication commit.
+          # The generated changelog path is unique, so concurrent website work
+          # can continue without the automation overwriting unrelated files.
+          git fetch origin main
+          git rebase origin/main
+
+          git add -- "$ENTRY_PATH"
+          git diff --cached --check
+          git commit -m "changelog: publish ${ENTRY_TITLE}"
+
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push raced with another main update; rebasing (attempt ${attempt}/3)."
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+
+          echo "Unable to publish changelog after three push attempts."
+          exit 1
