@@ -2,20 +2,18 @@
 import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
 ---
 
-<section class="animate-fade-in animation-delay-500 container py-10 sm:py-20">
-  <h2
-    class="text-h3 sm:text-h2 intersect-once intersect:animate-slide-in mb-3 text-center font-medium"
-  >
+<section class="compliance-track-section container py-10 sm:py-20">
+  <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
     De la haos la control
   </h2>
   <p
-    class="text-muted-foreground intersect-once intersect:animate-slide-in motion-delay-100 mx-auto mb-10 max-w-180 text-center text-lg sm:mb-16"
+    class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-16"
   >
     Specialiștii noștri coordonează întregul parcurs — de la configurare și evaluarea
     riscurilor până la audit și monitorizare continuă — astfel încât echipa ta să rămână
     concentrată pe activitatea principală.
   </p>
-  <compliance-track class="flex flex-col gap-6 sm:flex-row sm:gap-16">
+  <div class="flex flex-col gap-6 sm:flex-row sm:gap-16">
     <ComplianceTrackItem position="01" title="Analiză și plan">
       Începem cu evaluarea mediului, a riscurilor și a furnizorilor, identificăm lacunele și
       stabilim pașii prioritari. Apoi construim un program de conformitate adaptat modului în
@@ -31,63 +29,12 @@ import ComplianceTrackItem from "../ui/ComplianceTrackItem.astro";
       actualizăm controalele, reînnoim dovezile și menținem evaluările la zi pentru o pregătire
       continuă.
     </ComplianceTrackItem>
-  </compliance-track>
+  </div>
 </section>
 
-<script>
-  import { customElementDefine } from "../../lib/dom";
-
-  class ComplianceTrack extends HTMLElement {
-    observer: IntersectionObserver | null = null;
-    timer: ReturnType<typeof setTimeout> | null = null;
-
-    connectedCallback() {
-      let step = 0;
-      this.observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const tick = () => {
-              step++;
-              if (step < 3) {
-                this.timer = setTimeout(tick, 2000);
-                this.children[step - 1]?.setAttribute("data-active", "true");
-              }
-
-              this.children[step - 1]?.setAttribute("data-active", "true");
-            };
-            this.timer = setTimeout(tick, 1000);
-          }
-        });
-      });
-      this.observer.observe(this);
-    }
-
-    disconnectedCallback() {
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
-      if (this.observer) {
-        this.observer.disconnect();
-      }
-    }
-  }
-
-  customElementDefine("compliance-track", () => ComplianceTrack);
-</script>
-
 <style>
-  .compliance-item[data-active] .square {
-    animation: squareIn 0.5s ease-in-out;
-  }
-  @keyframes squareIn {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(0.5);
-    }
-    100% {
-      transform: scale(1);
-    }
+  .compliance-track-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 620px;
   }
 </style>
