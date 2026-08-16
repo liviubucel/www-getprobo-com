@@ -16,7 +16,6 @@ const menuId = "desktop-navigation-menu";
   {
     groups.map((group, index) => {
       const triggerId = `${menuId}-trigger-${index}`;
-
       return (
         <Button
           variant="navigation"
@@ -38,20 +37,19 @@ const menuId = "desktop-navigation-menu";
 
   <div
     data-hover-corridor
-    class="fixed top-12 left-1/2 z-10 h-7 w-[min(896px,calc(100vw-40px))] -translate-x-1/2"
+    class="fixed top-12 left-1/2 z-10 h-7 w-[min(1120px,calc(100vw-40px))] -translate-x-1/2"
     hidden
-  >
-  </div>
+  ></div>
 
   <div
     id={menuId}
     data-menu-viewport
-    class="fixed top-16 left-1/2 z-10 w-[min(896px,calc(100vw-40px))] pt-3"
+    class="fixed top-16 left-1/2 z-10 w-[min(1120px,calc(100vw-40px))] pt-3"
     hidden
   >
     <div
       data-menu-shell
-      class="bg-secondary relative h-111 overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_var(--color-border-low),0_16px_32px_rgba(186,193,122,0.2)]"
+      class="bg-secondary relative h-[min(29.5rem,calc(100vh-5.75rem))] overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_var(--color-border-low),0_16px_32px_rgba(186,193,122,0.2)]"
     >
       {
         groups.map((group, index) => (
@@ -60,29 +58,27 @@ const menuId = "desktop-navigation-menu";
             data-menu-index={index}
             role="group"
             aria-labelledby={`${menuId}-trigger-${index}`}
-            class="absolute inset-0 grid grid-cols-2 items-start gap-8 p-3"
+            class="absolute inset-0 grid grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)] items-start gap-5 p-3"
             hidden
           >
-            <div class="flex min-w-0 flex-col items-start gap-6 self-start px-2 py-5">
+            <div class="flex min-w-0 flex-col items-start gap-6 self-start overflow-hidden px-2 py-5">
               {group.showLabel !== false && (
                 <p class="text-muted-foreground px-3 text-sm font-medium">
                   {group.label}
                 </p>
               )}
-              <div class="flex w-full flex-col">
+              <div class="grid w-full grid-cols-2 gap-x-2.5 gap-y-1.5">
                 {group.items.map((item) => (
                   <a
                     href={item.href}
-                    class="navigation-menu-link relative isolate flex min-w-0 items-center gap-4 rounded-2xl p-3 outline-none"
+                    class="navigation-menu-link relative isolate flex min-h-19 min-w-0 items-start gap-3 rounded-2xl p-3 outline-none"
                   >
-                    <span class="grid size-12 shrink-0 place-items-center rounded-[10px] border">
+                    <span class="grid size-11 shrink-0 place-items-center rounded-[10px] border">
                       <MenuIcon name={item.icon} />
                     </span>
-                    <span class="min-w-0 text-base leading-6">
-                      <span class="block truncate font-semibold">
-                        {item.label}
-                      </span>
-                      <span class="text-muted-foreground block truncate">
+                    <span class="min-w-0 pt-0.5 text-[14.8px] leading-5">
+                      <span class="block font-semibold">{item.label}</span>
+                      <span class="text-muted-foreground mt-0.5 block text-[12.8px] leading-[17px]">
                         {item.description}
                       </span>
                     </span>
@@ -97,8 +93,13 @@ const menuId = "desktop-navigation-menu";
               aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
             >
               <img
-                src={group.feature.asset}
+                data-menu-feature-image
+                data-src={group.feature.asset}
                 alt={group.feature.alt}
+                width="640"
+                height="640"
+                decoding="async"
+                fetchpriority="low"
                 class:list={[
                   "navigation-feature-media absolute max-w-none",
                   group.feature.variant === "story" &&
@@ -111,7 +112,7 @@ const menuId = "desktop-navigation-menu";
               />
 
               {group.feature.variant === "story" && (
-                <div class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]" />
+                <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]" />
               )}
               {group.feature.variant !== "story" && (
                 <span class="navigation-feature-halo" aria-hidden="true" />
@@ -120,7 +121,7 @@ const menuId = "desktop-navigation-menu";
               <span
                 class:list={[
                   "absolute top-5 right-5 left-5 z-10 flex flex-col items-start gap-1 [word-break:break-word]",
-                  { "text-[#fff]": group.feature.variant === "story" },
+                  group.feature.variant === "story" && "text-white",
                 ]}
               >
                 <span
@@ -148,297 +149,124 @@ const menuId = "desktop-navigation-menu";
 <script>
   import { customElementDefine } from "../lib/dom";
 
-  const closeDelay = 160;
-  const shellDuration = 180;
-  const contentPhaseDuration = 120;
-  const contentSwitchOpacity = 0.35;
-  const contentTravelDistance = 48;
-  const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
-  const exitEasing = "cubic-bezier(0.64, 0, 0.78, 0)";
-
   class HeaderMenu extends HTMLElement {
-    triggers: HTMLButtonElement[] = [];
-    panels: HTMLElement[] = [];
-    links: HTMLAnchorElement[] = [];
-    viewport: HTMLElement | null = null;
-    corridor: HTMLElement | null = null;
-    activeIndex = -1;
-    closeTimer: number | null = null;
-    hideTimer: number | null = null;
-    transitionToken = 0;
-    lastPointerType = "";
-    suppressNextFocus = false;
+    private triggers: HTMLElement[] = [];
+    private panels: HTMLElement[] = [];
+    private viewport: HTMLElement | null = null;
+    private corridor: HTMLElement | null = null;
+    private activeIndex = -1;
+    private closeTimer: number | null = null;
 
     connectedCallback() {
-      this.triggers = Array.from(
-        this.querySelectorAll<HTMLButtonElement>("[data-menu-trigger]"),
-      );
-      this.panels = Array.from(
-        this.querySelectorAll<HTMLElement>("[data-menu-panel]"),
-      );
-      this.links = Array.from(
-        this.querySelectorAll<HTMLAnchorElement>("[data-menu-panel] a"),
-      );
-      this.viewport = this.querySelector("[data-menu-viewport]");
-      this.corridor = this.querySelector("[data-hover-corridor]");
+      this.triggers = Array.from(this.querySelectorAll<HTMLElement>("[data-menu-trigger]"));
+      this.panels = Array.from(this.querySelectorAll<HTMLElement>("[data-menu-panel]"));
+      this.viewport = this.querySelector<HTMLElement>("[data-menu-viewport]");
+      this.corridor = this.querySelector<HTMLElement>("[data-hover-corridor]");
 
       this.triggers.forEach((trigger) => {
         trigger.addEventListener("pointerenter", this.onTriggerPointerEnter);
-        trigger.addEventListener("pointerdown", this.onTriggerPointerDown);
         trigger.addEventListener("focus", this.onTriggerFocus);
-        trigger.addEventListener("click", this.onTriggerClick);
       });
-      this.links.forEach((link) => link.addEventListener("click", this.close));
       this.addEventListener("pointerenter", this.cancelClose);
       this.addEventListener("pointerleave", this.scheduleClose);
       this.addEventListener("focusout", this.onFocusOut);
-      document.addEventListener("pointerdown", this.onDocumentPointerDown);
       document.addEventListener("keydown", this.onKeyDown);
     }
 
     disconnectedCallback() {
       this.triggers.forEach((trigger) => {
         trigger.removeEventListener("pointerenter", this.onTriggerPointerEnter);
-        trigger.removeEventListener("pointerdown", this.onTriggerPointerDown);
         trigger.removeEventListener("focus", this.onTriggerFocus);
-        trigger.removeEventListener("click", this.onTriggerClick);
       });
-      this.links.forEach((link) =>
-        link.removeEventListener("click", this.close),
-      );
       this.removeEventListener("pointerenter", this.cancelClose);
       this.removeEventListener("pointerleave", this.scheduleClose);
       this.removeEventListener("focusout", this.onFocusOut);
-      document.removeEventListener("pointerdown", this.onDocumentPointerDown);
       document.removeEventListener("keydown", this.onKeyDown);
       this.cancelClose();
-      if (this.hideTimer !== null) window.clearTimeout(this.hideTimer);
     }
 
-    indexFromTrigger = (trigger: HTMLButtonElement) =>
-      Number(trigger.dataset.menuIndex);
+    private indexFromTrigger(trigger: HTMLElement) {
+      return Number(trigger.dataset.menuIndex);
+    }
 
-    onTriggerPointerEnter = (event: PointerEvent) => {
+    private loadPanelMedia(index: number) {
+      const image = this.panels[index]?.querySelector<HTMLImageElement>("[data-menu-feature-image]");
+      if (!image || image.getAttribute("src")) return;
+      const src = image.dataset.src;
+      if (src) image.src = src;
+    }
+
+    private open(index: number) {
+      if (!this.viewport || !this.panels[index]) return;
+      this.cancelClose();
+      this.loadPanelMedia(index);
+      this.activeIndex = index;
+      this.viewport.hidden = false;
+      if (this.corridor) this.corridor.hidden = false;
+
+      this.panels.forEach((panel, panelIndex) => {
+        panel.hidden = panelIndex !== index;
+        panel.inert = panelIndex !== index;
+        panel.setAttribute("aria-hidden", String(panelIndex !== index));
+      });
+      this.triggers.forEach((trigger, triggerIndex) => {
+        trigger.setAttribute("aria-expanded", String(triggerIndex === index));
+      });
+
+      requestAnimationFrame(() => {
+        this.dataset.open = "true";
+      });
+    }
+
+    private close = () => {
+      if (!this.viewport) return;
+      this.activeIndex = -1;
+      this.dataset.open = "false";
+      this.triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", "false"));
+      window.setTimeout(() => {
+        if (this.dataset.open === "true") return;
+        if (this.viewport) this.viewport.hidden = true;
+        if (this.corridor) this.corridor.hidden = true;
+        this.panels.forEach((panel) => {
+          panel.hidden = true;
+          panel.inert = true;
+          panel.setAttribute("aria-hidden", "true");
+        });
+      }, 180);
+    };
+
+    private onTriggerPointerEnter = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
-      this.open(
-        this.indexFromTrigger(event.currentTarget as HTMLButtonElement),
-      );
+      this.open(this.indexFromTrigger(event.currentTarget as HTMLElement));
     };
 
-    onTriggerPointerDown = (event: PointerEvent) => {
-      this.lastPointerType = event.pointerType;
+    private onTriggerFocus = (event: FocusEvent) => {
+      this.open(this.indexFromTrigger(event.currentTarget as HTMLElement));
     };
 
-    onTriggerFocus = (event: FocusEvent) => {
-      if (this.suppressNextFocus) {
-        this.suppressNextFocus = false;
-        return;
-      }
-      if (this.lastPointerType === "touch") return;
-      this.open(
-        this.indexFromTrigger(event.currentTarget as HTMLButtonElement),
-      );
-    };
-
-    onTriggerClick = (event: MouseEvent) => {
-      const index = this.indexFromTrigger(
-        event.currentTarget as HTMLButtonElement,
-      );
-      if (
-        this.lastPointerType === "touch" &&
-        event.detail > 0 &&
-        this.activeIndex === index
-      ) {
-        this.close();
-        return;
-      }
-      this.open(index);
-    };
-
-    onFocusOut = (event: FocusEvent) => {
-      if (!this.contains(event.relatedTarget as Node | null)) {
-        this.scheduleClose();
-      }
-    };
-
-    onDocumentPointerDown = (event: PointerEvent) => {
-      if (!this.contains(event.target as Node)) this.close();
-    };
-
-    onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") {
-        this.lastPointerType = "";
-        return;
-      }
-      if (this.activeIndex === -1) return;
-      event.preventDefault();
-      const trigger = this.triggers[this.activeIndex];
-      this.close();
-      this.suppressNextFocus = true;
-      trigger?.focus();
-    };
-
-    cancelClose = () => {
+    private cancelClose = () => {
       if (this.closeTimer === null) return;
       window.clearTimeout(this.closeTimer);
       this.closeTimer = null;
     };
 
-    scheduleClose = () => {
+    private scheduleClose = () => {
       this.cancelClose();
       this.closeTimer = window.setTimeout(() => {
         this.closeTimer = null;
-        const hasVisibleFocus = this.querySelector(":focus-visible") !== null;
-        if (!this.matches(":hover") && !hasVisibleFocus) {
-          this.close();
-        }
-      }, closeDelay);
+        if (!this.matches(":hover") && !this.contains(document.activeElement)) this.close();
+      }, 160);
     };
 
-    open = (index: number) => {
-      if (!this.viewport || !this.panels[index]) return;
-      this.cancelClose();
-      if (this.hideTimer !== null) {
-        window.clearTimeout(this.hideTimer);
-        this.hideTimer = null;
-      }
-
-      const previousIndex = this.activeIndex;
-      if (previousIndex === index && this.dataset.open === "true") return;
-
-      this.activeIndex = index;
-      if (this.viewport.hidden) {
-        this.dataset.open = "false";
-        this.viewport.hidden = false;
-        // Paint the closed state before starting the opening transition.
-        this.viewport.getBoundingClientRect();
-      }
-      this.dataset.open = "true";
-      if (this.corridor) this.corridor.hidden = false;
-      this.triggers.forEach((trigger, triggerIndex) => {
-        trigger.setAttribute(
-          "aria-expanded",
-          String(triggerIndex === this.activeIndex),
-        );
-      });
-
-      this.transitionPanels(index);
+    private onFocusOut = (event: FocusEvent) => {
+      if (!this.contains(event.relatedTarget as Node | null)) this.scheduleClose();
     };
 
-    transitionPanels = async (nextIndex: number) => {
-      const nextPanel = this.panels[nextIndex];
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      const token = ++this.transitionToken;
-      const visiblePanel = this.panels.find((panel) => !panel.hidden);
-      const visibleIndex = visiblePanel
-        ? Number(visiblePanel.dataset.menuIndex)
-        : -1;
-
-      this.panels.forEach((panel) => {
-        panel.getAnimations().forEach((animation) => animation.cancel());
-        if (panel !== visiblePanel) panel.hidden = true;
-      });
-
-      if (!visiblePanel) {
-        this.showPanel(nextPanel);
-        nextPanel.animate([{ opacity: 0 }, { opacity: 1 }], {
-          duration: reducedMotion ? 120 : shellDuration,
-          easing,
-        });
-        return;
-      }
-
-      if (visiblePanel === nextPanel) {
-        this.showPanel(nextPanel);
-        return;
-      }
-
-      const direction = nextIndex > visibleIndex ? 1 : -1;
-      visiblePanel.inert = true;
-      visiblePanel.setAttribute("aria-hidden", "true");
-      const exitAnimation = visiblePanel.animate(
-        reducedMotion
-          ? [{ opacity: 1 }, { opacity: contentSwitchOpacity }]
-          : [
-              { opacity: 1, transform: "translateX(0)" },
-              {
-                opacity: contentSwitchOpacity,
-                transform: `translateX(${-direction * contentTravelDistance}px)`,
-              },
-            ],
-        {
-          duration: reducedMotion ? 60 : contentPhaseDuration,
-          easing: reducedMotion ? easing : exitEasing,
-        },
-      );
-
-      try {
-        await exitAnimation.finished;
-      } catch {
-        return;
-      }
-
-      if (token !== this.transitionToken || this.activeIndex !== nextIndex) {
-        return;
-      }
-
-      visiblePanel.hidden = true;
-      this.showPanel(nextPanel);
-      const enterAnimation = nextPanel.animate(
-        reducedMotion
-          ? [{ opacity: contentSwitchOpacity }, { opacity: 1 }]
-          : [
-              {
-                opacity: contentSwitchOpacity,
-                transform: `translateX(${direction * contentTravelDistance}px)`,
-              },
-              { opacity: 1, transform: "translateX(0)" },
-            ],
-        {
-          duration: reducedMotion ? 60 : contentPhaseDuration,
-          easing,
-        },
-      );
-
-      try {
-        await enterAnimation.finished;
-      } catch {
-        return;
-      }
-
-      if (token === this.transitionToken && this.activeIndex === nextIndex) {
-        this.showPanel(nextPanel);
-      }
-    };
-
-    showPanel = (panel: HTMLElement) => {
-      panel.hidden = false;
-      panel.inert = false;
-      panel.removeAttribute("aria-hidden");
-    };
-
-    close = () => {
-      if (this.activeIndex === -1) return;
-      this.cancelClose();
-      this.transitionToken += 1;
-      this.panels.forEach((panel) =>
-        panel.getAnimations().forEach((animation) => animation.cancel()),
-      );
-      this.activeIndex = -1;
-      this.dataset.open = "false";
-      this.triggers.forEach((trigger) =>
-        trigger.setAttribute("aria-expanded", "false"),
-      );
-
-      this.hideTimer = window.setTimeout(() => {
-        if (this.dataset.open === "true") return;
-        if (this.viewport) this.viewport.hidden = true;
-        if (this.corridor) this.corridor.hidden = true;
-        this.panels.forEach((panel) => (panel.hidden = true));
-        this.hideTimer = null;
-      }, shellDuration);
+    private onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || this.activeIndex < 0) return;
+      const trigger = this.triggers[this.activeIndex];
+      this.close();
+      trigger?.focus();
     };
   }
 
@@ -455,10 +283,8 @@ const menuId = "desktop-navigation-menu";
     content: "";
     background: var(--color-subtle);
     opacity: 0;
-    transform: scale(0.9);
-    transition:
-      opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.96);
+    transition: opacity 180ms ease, transform 180ms ease;
   }
 
   .navigation-menu-link:focus-visible::before {
@@ -473,79 +299,46 @@ const menuId = "desktop-navigation-menu";
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .navigation-menu-link::before {
-      transform: none;
-      transition: none;
-    }
-  }
-
   [data-menu-viewport] {
     opacity: 0;
     pointer-events: none;
-    transform: translateX(-50%) translateY(-8px) scale(0.985);
+    transform: translateX(-50%) translateY(-6px) scale(0.99);
     transform-origin: top center;
-    transition:
-      opacity 160ms cubic-bezier(0.64, 0, 0.78, 0),
-      transform 180ms cubic-bezier(0.64, 0, 0.78, 0);
-    will-change: opacity, transform;
+    transition: opacity 150ms ease, transform 180ms ease;
   }
 
   header-menu[data-open="true"] [data-menu-viewport] {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0) scale(1);
-    transition:
-      opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .navigation-feature-halo {
     position: absolute;
-    bottom: -52px;
-    left: 50%;
-    z-index: 2;
+    inset: 18% -20% -38%;
     display: block;
-    width: 783px;
-    height: 783px;
-    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, rgba(147, 201, 38, 0.2), transparent 62%);
     pointer-events: none;
   }
 
-  .navigation-feature-halo::before {
-    position: absolute;
-    inset: -21.93%;
-    content: "";
-    background: url("/navigation/ellipse.svg") center / 100% 100% no-repeat;
-    transform: rotate(180deg) scaleY(-1);
-  }
-
   @media (prefers-reduced-motion: reduce) {
+    .navigation-menu-link::before,
     [data-menu-viewport] {
-      transform: translateX(-50%);
-      transition: opacity 120ms linear;
-    }
-
-    header-menu[data-open="true"] [data-menu-viewport] {
-      transform: translateX(-50%);
-      transition: opacity 120ms linear;
+      transition: none;
     }
   }
 
   @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
     .navigation-feature-media {
-      transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
+      transition: transform 220ms ease;
     }
-
     a:hover .navigation-feature-media--product {
       transform: translate3d(0, -4px, 0);
     }
-
     a:hover .navigation-feature-media--guide {
       transform: translate3d(-8px, 0, 0);
     }
-
     a:hover .navigation-feature-media--story {
       transform: scale(1.02);
     }
