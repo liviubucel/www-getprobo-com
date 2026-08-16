@@ -1,359 +1,807 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { Image } from "astro:assets";
-import AntoinePortrait from "../../assets/about/antoine-bourchardy.png";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
-const articleSchema = {
+const pageSchema = {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Compliance Framework Recommender",
+  "@type": "WebApplication",
+  name: "ZebraByte Compliance Framework Recommender",
   description:
-    "Find the right security and compliance frameworks for your business. Get a free personalized compliance report based on your industry, business model, and target customers.",
-  url: "https://www.probo.com/hub/compliance-recommender",
-  author: {
+    "Instrument gratuit pentru orientarea inițială către framework-uri de securitate, privacy și compliance pe baza profilului organizației.",
+  url: "https://www.zebrabyte.ro/hub/compliance-recommender",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "EUR",
+  },
+  provider: {
     "@type": "Organization",
-    name: "Probo",
-    url: "https://www.probo.com",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
   },
 };
 
-const features = [
-  { icon: "globe", label: "Industry Analysis" },
-  { icon: "building", label: "Business Model" },
-  { icon: "location", label: "Geographic Coverage" },
-  { icon: "chart", label: "Customer profiles" },
-];
-
-const benefits = [
-  "Prioritized list of recommended frameworks",
-  "Clear explanation for each framework",
-  "Mandatory vs. trust-enhancing insights",
-  "Practical guidance on next steps",
+const frameworkNames = [
+  "GDPR",
+  "UK GDPR",
+  "NIS2",
+  "DORA",
+  "EU AI Act",
+  "PCI DSS",
+  "HIPAA",
+  "CCPA / CPRA",
+  "FERPA",
+  "SOC 2 Type I",
+  "SOC 2 Type II",
+  "SOC 3",
+  "ISO/IEC 27001",
+  "ISO/IEC 27701",
+  "ISO/IEC 42001",
+  "ISO/IEC 27017 / 27018",
+  "Cyber Essentials",
 ];
 ---
 
 <Layout
-  title="Compliance Framework Recommender for Your Business"
-  description="Enter your website and we'll analyze your business to recommend the most relevant compliance frameworks for your industry and customers."
+  title="Compliance Framework Recommender | ZebraByte"
+  description="Află ce framework-uri de securitate, privacy și compliance merită evaluate pentru organizația ta: SOC 2, ISO 27001, NIS2, DORA, GDPR, PCI DSS, HIPAA și altele."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script async src="https://tally.so/widgets/embed.js"></script>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
 
-  <main class="container my-10 sm:my-20">
+  <main class="container my-10 max-w-[980px] sm:my-20">
     <Breadcrumbs
       items={[
         { label: "Hub", href: "/hub" },
         { label: "Compliance Framework Recommender" },
       ]}
-      class="mb-6"
+      class="mb-7"
     />
-    <!-- Hero Section -->
-    <div class="mx-auto mb-10 max-w-[800px] text-center sm:mb-16">
-      <div
-        class="animate-slide-in mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-[#ffffff] px-4 py-2 text-xs text-gray-900 shadow-sm"
-      >
-        <span class="h-2 w-2 rounded-full bg-[#f0ff3c]"></span>
-        Free Compliance Framework Assessment
-      </div>
 
-      <h1
-        class="text-h2 sm:text-h1 animate-slide-in animation-delay-100 mb-6 font-medium"
-      >
-        Find the Right Security Standard for
-        <span class="highlight-text">Your Business</span>
+    <header class="mb-12 max-w-[760px] sm:mb-16">
+      <div class="border-border-mid text-muted-foreground mb-5 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium">
+        <span class="bg-success size-1.5 rounded-full"></span>
+        Instrument gratuit · fără cont
+      </div>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">
+        Ce framework-uri sunt relevante pentru organizația ta?
       </h1>
-
-      <p
-        class="animate-slide-in animation-delay-200 mx-auto mb-8 max-w-[700px] text-lg text-gray-700 sm:text-xl"
-      >
-        Enter your website and we'll analyze your business to recommend you the
-        most relevant compliance frameworks.
+      <p class="text-muted-foreground max-w-[700px] text-lg leading-relaxed sm:text-xl">
+        Răspunde la câteva întrebări despre clienți, piețe și datele pe care le procesezi. Primești imediat o listă prioritizată și motivul pentru care fiecare framework merită sau nu investigat.
       </p>
+      <p class="text-muted-foreground mt-4 max-w-[700px] text-sm leading-relaxed">
+        Evaluarea este orientativă și nu înlocuiește o analiză juridică, un audit sau o determinare oficială a aplicabilității.
+      </p>
+    </header>
 
-      <!-- Feature Pills -->
-      <div
-        class="animate-slide-in animation-delay-300 flex flex-wrap items-center justify-center gap-4"
-      >
-        {
-          features.map((feature) => (
-            <div class="text-muted-foreground inline-flex items-center gap-2 text-sm">
-              {feature.icon === "globe" && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="2" y1="12" x2="22" y2="12" />
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                </svg>
-              )}
-              {feature.icon === "building" && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
-                  <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-                  <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
-                  <path d="M10 6h4" />
-                  <path d="M10 10h4" />
-                  <path d="M10 14h4" />
-                  <path d="M10 18h4" />
-                </svg>
-              )}
-              {feature.icon === "location" && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="10" r="3" />
-                  <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
-                </svg>
-              )}
-              {feature.icon === "chart" && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <line x1="18" y1="20" x2="18" y2="10" />
-                  <line x1="12" y1="20" x2="12" y2="4" />
-                  <line x1="6" y1="20" x2="6" y2="14" />
-                </svg>
-              )}
-              <span>{feature.label}</span>
-            </div>
-          ))
-        }
-      </div>
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
+      <form id="framework-assessment" class="min-w-0" novalidate>
+        <fieldset class="assessment-section">
+          <legend>1. Organizația</legend>
+
+          <label class="field-label" for="business-type">Tipul principal de activitate</label>
+          <select id="business-type" name="businessType" class="field-control" required>
+            <option value="">Selectează</option>
+            <option value="saas">Software / SaaS / platformă online</option>
+            <option value="fintech">Fintech / servicii financiare / crypto</option>
+            <option value="healthcare">Healthcare / health-tech</option>
+            <option value="ecommerce">E-commerce / marketplace</option>
+            <option value="education">Educație / ed-tech</option>
+            <option value="managed-services">IT managed services / MSP / MSSP / cloud</option>
+            <option value="critical">Infrastructură critică / servicii esențiale</option>
+            <option value="professional">Servicii profesionale</option>
+            <option value="public">Sector public</option>
+            <option value="other">Alt tip de organizație</option>
+          </select>
+
+          <label class="field-label mt-5" for="company-size">Dimensiunea organizației</label>
+          <select id="company-size" name="companySize" class="field-control" required>
+            <option value="">Selectează</option>
+            <option value="micro">Sub 10 angajați</option>
+            <option value="small">10–49 angajați</option>
+            <option value="medium">50–249 angajați</option>
+            <option value="large">250+ angajați</option>
+          </select>
+        </fieldset>
+
+        <fieldset class="assessment-section">
+          <legend>2. Unde operezi?</legend>
+          <p class="field-help">Bifează toate zonele relevante pentru clienți, utilizatori sau operațiuni.</p>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="regions" value="eu" /> <span>Uniunea Europeană / SEE</span></label>
+            <label class="choice"><input type="checkbox" name="regions" value="uk" /> <span>Regatul Unit</span></label>
+            <label class="choice"><input type="checkbox" name="regions" value="us" /> <span>Statele Unite</span></label>
+            <label class="choice"><input type="checkbox" name="regions" value="california" /> <span>California</span></label>
+            <label class="choice"><input type="checkbox" name="regions" value="global" /> <span>Alte piețe / global</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="assessment-section">
+          <legend>3. Cui vinzi sau furnizezi servicii?</legend>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="customers" value="enterprise" /> <span>Companii enterprise</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="smb" /> <span>Companii mici și medii</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="consumer" /> <span>Consumatori / utilizatori individuali</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="finance" /> <span>Bănci / servicii financiare</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="health" /> <span>Organizații medicale</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="education" /> <span>Școli / universități</span></label>
+            <label class="choice"><input type="checkbox" name="customers" value="government" /> <span>Sector public / guvernamental</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="assessment-section">
+          <legend>4. Ce tipuri de date sau sisteme sunt implicate?</legend>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="dataTypes" value="personal" /> <span>Date personale</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="sensitive" /> <span>Date sensibile / categorii speciale</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="health" /> <span>Date medicale / PHI</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="payment" /> <span>Date de card / plăți</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="financial" /> <span>Date financiare</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="student" /> <span>Date despre elevi / studenți</span></label>
+            <label class="choice"><input type="checkbox" name="dataTypes" value="ai" /> <span>Sisteme sau modele AI</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="assessment-section">
+          <legend>5. Situații care schimbă mult aplicabilitatea</legend>
+          <div class="choice-list">
+            <label class="choice"><input type="checkbox" name="context" value="nis2-sector" /> <span>Activitatea se află într-un sector NIS2 (energie, transport, sănătate, digital infrastructure, MSP/MSSP, manufacturing critic etc.)</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="financial-entity" /> <span>Organizația este o entitate financiară reglementată în UE</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="finance-ict-provider" /> <span>Furnizăm servicii ICT către entități financiare din UE</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="hipaa-covered" /> <span>Suntem covered entity / business associate în ecosistemul HIPAA</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="ferpa-school" /> <span>Suntem instituție educațională din SUA finanțată prin programe ale Department of Education</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="card-environment" /> <span>Stocăm, procesăm, transmitem date de card sau putem afecta securitatea mediului de card</span></label>
+            <label class="choice"><input type="checkbox" name="context" value="ai-provider" /> <span>Dezvoltăm, furnizăm sau operăm sisteme AI pentru utilizatori din UE</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="assessment-section">
+          <legend>6. Ce urmărești acum?</legend>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="goals" value="enterprise" /> <span>Enterprise sales / procurement</span></label>
+            <label class="choice"><input type="checkbox" name="goals" value="certification" /> <span>Certificare / audit readiness</span></label>
+            <label class="choice"><input type="checkbox" name="goals" value="privacy" /> <span>Privacy program</span></label>
+            <label class="choice"><input type="checkbox" name="goals" value="regulatory" /> <span>Cerințe legale / regulatorii</span></label>
+            <label class="choice"><input type="checkbox" name="goals" value="ai-governance" /> <span>AI governance</span></label>
+            <label class="choice"><input type="checkbox" name="goals" value="public-sector" /> <span>Contracte publice / supply chain</span></label>
+          </div>
+        </fieldset>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <button type="submit" class="bg-primary text-primary-foreground h-11 rounded-full px-5 text-sm font-medium">
+            Generează recomandarea
+          </button>
+          <button type="reset" class="border-border-mid text-muted-foreground hover:text-primary h-11 rounded-full border px-5 text-sm font-medium">
+            Resetează
+          </button>
+          <span id="assessment-error" class="text-danger hidden text-sm" role="alert"></span>
+        </div>
+      </form>
+
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <div class="border-border-mid border-t pt-5 lg:border-t-0 lg:border-l lg:pl-7 lg:pt-0">
+          <h2 class="mb-4 text-sm font-medium">Ce primești</h2>
+          <ul class="text-muted-foreground space-y-3 text-sm leading-relaxed">
+            <li>Framework-uri ordonate după prioritate</li>
+            <li>Diferențiere între legal, contractual și recomandat</li>
+            <li>Motivul pentru fiecare recomandare</li>
+            <li>Un pas concret de verificare sau implementare</li>
+          </ul>
+          <p class="text-muted-foreground mt-6 border-t pt-5 text-xs leading-relaxed">
+            Răspunsurile sunt procesate local în browser pentru această evaluare. Nu trebuie să introduci numele companiei, emailul sau domeniul.
+          </p>
+        </div>
+      </aside>
     </div>
 
-    <!-- Form Card -->
-    <div class="animate-slide-in animation-delay-400 mx-auto max-w-[640px]">
-      <div
-        class="rounded-3xl border border-gray-100 bg-[#ffffff] p-8 shadow-[0_8px_60px_rgba(0,0,0,0.12)] sm:p-10"
-      >
-        <h2
-          class="mb-8 text-center text-2xl font-semibold tracking-[-0.5px] sm:text-[28px]"
-        >
-          Get Your Free Compliance Report
-        </h2>
-
-        <!-- Tally Form Embed -->
-        <div class="tally-form-container">
-          <iframe
-            data-tally-src="https://tally.so/embed/VL5qla?hideTitle=1&transparentBackground=1&dynamicHeight=1"
-            loading="lazy"
-            width="100%"
-            height="300"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            title="Compliance Framework Assessment"></iframe>
+    <section id="assessment-results" class="mt-16 hidden scroll-mt-24 border-t pt-10 sm:mt-20 sm:pt-12" aria-live="polite">
+      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p id="result-eyebrow" class="text-muted-foreground mb-2 text-sm">Rezultat orientativ</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">Prioritățile tale de compliance</h2>
         </div>
-
-        <!-- Benefits Box -->
-        <div
-          class="mt-8 rounded-2xl bg-gradient-to-br from-[#f0ff3c] to-[#d4e834] p-6 sm:p-8"
-        >
-          <h3 class="mb-4 text-center text-lg font-semibold text-[#141e12]">
-            What you'll receive
-          </h3>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {
-              benefits.map((benefit) => (
-                <div class="flex items-start gap-3">
-                  <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#141e12]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#f0ff3c"
-                      stroke-width="3"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                  <span class="text-sm text-[#141e12]">{benefit}</span>
-                </div>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- We Handle Your Compliance Section -->
-    <section class="mt-20 text-center sm:mt-32">
-      <h2 class="text-h2 sm:text-h1 mb-4 font-medium">
-        We Handle Your
-        <span class="highlight-blue">Compliance.</span>
-      </h2>
-      <p class="mx-auto mb-12 max-w-[500px] text-lg text-gray-900 sm:text-xl">
-        Probo isn't another compliance tool -
-        <br />
-        We're your dedicated compliance team.
-      </p>
-
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <!-- Step 1 -->
-        <div
-          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
-        >
-          <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
-          >
-            <span class="font-semibold text-[#93c926]">01</span>
-            <span class="font-medium">Talk to Us</span>
-          </div>
-          <p class="text-muted-foreground text-sm">
-            Share your tech stack and process in an onboarding call
-          </p>
-        </div>
-
-        <!-- Step 2 -->
-        <div
-          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
-        >
-          <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
-          >
-            <span class="font-semibold text-[#93c926]">02</span>
-            <span class="font-medium">We Do the Work</span>
-          </div>
-          <p class="text-muted-foreground text-sm">
-            Our experts handle assessments, docs, and prepare you for audit
-          </p>
-        </div>
-
-        <!-- Step 3 -->
-        <div
-          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
-        >
-          <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
-          >
-            <span class="font-semibold text-[#93c926]">03</span>
-            <span class="font-medium">You Get Certified</span>
-          </div>
-          <p class="text-muted-foreground text-sm">
-            Achieve SOC 2, ISO 27001, or other frameworks with serious audit
-          </p>
-        </div>
-
-        <!-- Step 4 -->
-        <div
-          class="rounded-3xl border border-gray-100 bg-[#ffffff] p-6 text-center shadow-[0_4px_40px_rgba(0,0,0,0.08)]"
-        >
-          <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm"
-          >
-            <span class="font-semibold text-[#93c926]">04</span>
-            <span class="font-medium">Audit Ready</span>
-          </div>
-          <p class="text-muted-foreground text-sm">
-            Once certified, we run your compliance program in the background.
-          </p>
-        </div>
+        <button id="print-results" type="button" class="border-border-mid text-muted-foreground hover:text-primary rounded-full border px-4 py-2 text-sm font-medium">
+          Tipărește / salvează PDF
+        </button>
       </div>
 
-      <!-- CTA Button -->
-      <div class="mt-12">
-        <a
-          href="/contact"
-          class="inline-flex items-center gap-3 rounded-full bg-[#141e12] px-6 py-3 font-medium text-[#e6ff01] shadow-lg transition-all hover:bg-[#1f2e1a] hover:shadow-xl"
-        >
-          <Image
-            src={AntoinePortrait}
-            alt="Antoine Bouchardy"
-            class="h-10 w-10 rounded-full border-2 border-white/30 object-cover"
-            width={40}
-            height={40}
-          />
-          Book a call with Antoine
+      <div id="primary-results" class="divide-border-mid divide-y border-y"></div>
+
+      <details class="mt-8 border-b pb-5">
+        <summary class="cursor-pointer text-sm font-medium">Vezi și framework-urile cu prioritate redusă</summary>
+        <div id="secondary-results" class="divide-border-mid mt-4 divide-y border-t"></div>
+      </details>
+
+      <div class="mt-10 grid gap-5 border-t pt-8 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div>
+          <h3 class="mb-2 text-xl font-medium">Vrei să verificăm rezultatul în contextul real al organizației?</h3>
+          <p class="text-muted-foreground max-w-[650px] text-sm leading-relaxed">
+            Putem valida scope-ul, cerințele clienților și datele procesate înainte să investești într-un program sau într-un audit.
+          </p>
+        </div>
+        <a href="/contact?service=Managed%20Compliance" class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-medium">
+          Discută cu ZebraByte
         </a>
+      </div>
+    </section>
+
+    <section class="mt-20 border-t pt-10 sm:mt-28 sm:pt-14" aria-labelledby="frameworks-covered">
+      <div class="mb-8 max-w-[680px]">
+        <h2 id="frameworks-covered" class="text-h3 mb-3 font-medium">Framework-uri evaluate</h2>
+        <p class="text-muted-foreground leading-relaxed">
+          Recommender-ul combină obligații de privacy și cybersecurity cu standarde și cerințe întâlnite frecvent în procurement. Nu toate sunt certificări și nu toate se aplică juridic în același mod.
+        </p>
+      </div>
+      <div class="border-border-mid grid border-y sm:grid-cols-2 lg:grid-cols-3">
+        {frameworkNames.map((framework, index) => (
+          <div class:list={[
+            "py-4 text-sm font-medium",
+            index % 3 !== 0 && "lg:border-l lg:pl-5",
+            index % 2 !== 0 && "sm:border-l sm:pl-5 lg:border-l",
+          ]}>
+            {framework}
+          </div>
+        ))}
       </div>
     </section>
   </main>
 </Layout>
 
 <style>
-  .highlight-text {
-    background: linear-gradient(
-      180deg,
-      transparent 65%,
-      #f0ff3c 65%,
-      #f0ff3c 85%,
-      transparent 85%
-    );
-    display: inline;
+  .assessment-section {
+    border: 0;
+    border-top: 1px solid var(--color-border-mid);
+    padding: 1.75rem 0 0;
+    margin: 0 0 2.25rem;
   }
-  .highlight-blue {
-    background: linear-gradient(
-      180deg,
-      transparent 65%,
-      #e6ff01 65%,
-      #e6ff01 85%,
-      transparent 85%
-    );
-    display: inline;
+
+  .assessment-section > legend {
+    padding: 0 0 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .field-help {
+    margin: -0.65rem 0 1rem;
+    color: var(--color-muted-foreground);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .field-control {
+    width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid var(--color-border-mid);
+    border-radius: 0.65rem;
+    background: var(--color-level-0);
+    padding: 0 0.8rem;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+  }
+
+  .field-control:focus-visible,
+  .choice:has(input:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .choice-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    border: 1px solid var(--color-border-mid);
+    border-radius: 0.65rem;
+    padding: 0.8rem 0.9rem;
+    color: var(--color-muted-foreground);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+
+  .choice:hover,
+  .choice:has(input:checked) {
+    border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border-mid));
+    color: var(--color-primary);
+  }
+
+  .choice input {
+    margin-top: 0.18rem;
+    accent-color: currentColor;
+  }
+
+  @media (max-width: 639px) {
+    .choice-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media print {
+    header,
+    form,
+    aside,
+    #print-results,
+    #assessment-results > div:last-child,
+    section[aria-labelledby="frameworks-covered"] {
+      display: none !important;
+    }
+
+    #assessment-results {
+      display: block !important;
+      margin-top: 0;
+      border: 0;
+      padding-top: 0;
+    }
   }
 </style>
 
 <script>
-  // Initialize Tally embeds
-  declare global {
-    interface Window {
-      Tally?: {
-        loadEmbeds: () => void;
-      };
-    }
+  type Locale = "ro" | "en";
+  type Priority = "required" | "high" | "medium" | "low";
+
+  type Profile = {
+    businessType: string;
+    companySize: string;
+    regions: Set<string>;
+    customers: Set<string>;
+    dataTypes: Set<string>;
+    context: Set<string>;
+    goals: Set<string>;
+  };
+
+  type Recommendation = {
+    id: string;
+    name: string;
+    priority: Priority;
+    category: "regulatory" | "customer" | "standard";
+    reason: string;
+    next: string;
+    href?: string;
+    score: number;
+  };
+
+  const copy = {
+    ro: {
+      required: "De verificat prioritar",
+      high: "Prioritate ridicată",
+      medium: "Relevant",
+      low: "Prioritate redusă",
+      regulatory: "Legal / regulatory",
+      customer: "Customer / contractual",
+      standard: "Standard / governance",
+      noPriority: "Nu au rezultat framework-uri cu prioritate ridicată pe baza răspunsurilor. Deschide lista secundară pentru recomandări generale.",
+      missing: "Selectează tipul și dimensiunea organizației.",
+      reasonLabel: "De ce",
+      nextLabel: "Următorul pas",
+      guide: "Ghid",
+    },
+    en: {
+      required: "Validate first",
+      high: "High priority",
+      medium: "Relevant",
+      low: "Lower priority",
+      regulatory: "Legal / regulatory",
+      customer: "Customer / contractual",
+      standard: "Standard / governance",
+      noPriority: "No high-priority frameworks were identified from these answers. Open the secondary list for general recommendations.",
+      missing: "Select your organisation type and size.",
+      reasonLabel: "Why",
+      nextLabel: "Next step",
+      guide: "Guide",
+    },
+  } as const;
+
+  const locale = (): Locale => document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "ro";
+  const has = (set: Set<string>, value: string) => set.has(value);
+  const any = (set: Set<string>, values: string[]) => values.some((value) => set.has(value));
+
+  function recommendation(
+    id: string,
+    name: string,
+    priority: Priority,
+    category: Recommendation["category"],
+    reasonRo: string,
+    reasonEn: string,
+    nextRo: string,
+    nextEn: string,
+    score: number,
+    href?: string,
+  ): Recommendation {
+    const english = locale() === "en";
+    return {
+      id,
+      name,
+      priority,
+      category,
+      reason: english ? reasonEn : reasonRo,
+      next: english ? nextEn : nextRo,
+      score,
+      href,
+    };
   }
 
-  function initTally() {
-    if (window.Tally) {
-      window.Tally.loadEmbeds();
-    } else {
-      // Wait for Tally script to load
-      setTimeout(initTally, 100);
+  function assess(profile: Profile): Recommendation[] {
+    const results: Recommendation[] = [];
+    const eu = has(profile.regions, "eu");
+    const uk = has(profile.regions, "uk");
+    const us = has(profile.regions, "us");
+    const california = has(profile.regions, "california");
+    const personal = any(profile.dataTypes, ["personal", "sensitive", "health", "financial", "student"]);
+    const enterprise = has(profile.customers, "enterprise") || has(profile.goals, "enterprise");
+    const regulatedGoal = has(profile.goals, "regulatory");
+    const mediumOrLarge = profile.companySize === "medium" || profile.companySize === "large";
+    const large = profile.companySize === "large";
+    const saasLike = any(new Set([profile.businessType]), ["saas", "fintech", "healthcare", "managed-services"]);
+
+    if (eu && personal) {
+      results.push(recommendation(
+        "gdpr", "GDPR", "required", "regulatory",
+        "Procesezi date personale în contextul UE/SEE. GDPR trebuie evaluat ca cerință juridică, inclusiv rolurile controller/processor, baza legală și transferurile de date.",
+        "You process personal data in an EU/EEA context. GDPR should be validated as a legal requirement, including controller/processor roles, legal basis and data transfers.",
+        "Mapează fluxurile de date și stabilește rolul organizației pentru fiecare procesare.",
+        "Map data flows and determine the organisation's role for each processing activity.",
+        100,
+      ));
+    } else if (eu || has(profile.goals, "privacy")) {
+      results.push(recommendation(
+        "gdpr", "GDPR", "medium", "regulatory",
+        "Prezența în UE/SEE sau obiectivul de privacy justifică o verificare a aplicabilității chiar dacă răspunsurile nu indică suficientă procesare de date personale.",
+        "An EU/EEA presence or privacy objective warrants an applicability review even though the answers do not establish sufficient personal-data processing.",
+        "Confirmă dacă organizația oferă servicii persoanelor din UE sau le monitorizează comportamentul.",
+        "Confirm whether the organisation offers services to people in the EU or monitors their behaviour.",
+        58,
+      ));
     }
+
+    if (uk && personal) {
+      results.push(recommendation(
+        "uk-gdpr", "UK GDPR", "required", "regulatory",
+        "Procesezi date personale într-un context UK. UK GDPR se aplică organizațiilor din UK și poate ajunge și la organizații din afara UK care oferă bunuri sau servicii persoanelor din UK.",
+        "You process personal data in a UK context. UK GDPR applies to UK organisations and can also reach organisations outside the UK that offer goods or services to people in the UK.",
+        "Verifică rolurile controller/processor, privacy notices, contractele și transferurile internaționale.",
+        "Review controller/processor roles, privacy notices, contracts and international transfers.",
+        98,
+      ));
+    } else if (uk && has(profile.goals, "privacy")) {
+      results.push(recommendation(
+        "uk-gdpr", "UK GDPR", "medium", "regulatory",
+        "Ai activitate relevantă pentru UK și urmărești un program de privacy; aplicabilitatea trebuie confirmată pe fluxurile reale de date.",
+        "You have UK activity and a privacy objective; applicability should be confirmed against actual data flows.",
+        "Identifică persoanele vizate din UK și tipurile de date procesate.",
+        "Identify UK data subjects and the types of personal data processed.",
+        55,
+      ));
+    }
+
+    const nis2Signal = eu && has(profile.context, "nis2-sector");
+    if (nis2Signal && mediumOrLarge) {
+      results.push(recommendation(
+        "nis2", "NIS2", "required", "regulatory",
+        "Ai indicat un sector NIS2 și o organizație de dimensiune medie sau mare. Directiva folosește în general combinația sector + dimensiune, cu excepții care pot include și entități mai mici.",
+        "You selected a NIS2 sector and a medium or large organisation. The Directive generally combines sector and size, with exceptions that can also capture smaller entities.",
+        "Confirmă sectorul/subsectorul și transpunerea națională aplicabilă, apoi verifică obligațiile de risk management și incident reporting.",
+        "Confirm the sector/subsector and applicable national transposition, then review risk-management and incident-reporting obligations.",
+        96,
+        "/hub/nis2-compliance",
+      ));
+    } else if (nis2Signal) {
+      results.push(recommendation(
+        "nis2", "NIS2", "medium", "regulatory",
+        "Sectorul indicat este relevant pentru NIS2, dar dimensiunea declarată este sub pragul general folosit de directivă. Există totuși excepții și desemnări naționale indiferent de dimensiune.",
+        "The selected sector is relevant to NIS2, but the declared size is below the Directive's general size threshold. Exceptions and national designations can still apply regardless of size.",
+        "Verifică excepțiile de la criteriul de dimensiune și lista/registrul autorității naționale competente.",
+        "Check size-threshold exceptions and the competent national authority's list or registration mechanism.",
+        66,
+        "/hub/nis2-compliance",
+      ));
+    }
+
+    if (eu && has(profile.context, "financial-entity")) {
+      results.push(recommendation(
+        "dora", "DORA", "required", "regulatory",
+        "Ai indicat că organizația este o entitate financiară reglementată în UE, categoria centrală vizată de DORA pentru reziliență operațională digitală.",
+        "You indicated that the organisation is an EU-regulated financial entity, the core category covered by DORA for digital operational resilience.",
+        "Confirmă tipul exact de entitate din articolul 2 și evaluează ICT risk management, incident reporting, testing și third-party risk.",
+        "Confirm the exact Article 2 entity type and assess ICT risk management, incident reporting, testing and third-party risk.",
+        100,
+      ));
+    } else if (eu && has(profile.context, "finance-ict-provider")) {
+      results.push(recommendation(
+        "dora", "DORA", "high", "regulatory",
+        "Furnizezi servicii ICT entităților financiare din UE. Chiar dacă nu ești automat o entitate financiară, DORA introduce cerințe contractuale și de third-party risk pentru relația cu furnizorii ICT; furnizorii desemnați critici intră într-un cadru de oversight.",
+        "You provide ICT services to EU financial entities. Even if you are not automatically a financial entity, DORA creates contractual and third-party-risk requirements for ICT provider relationships; designated critical providers enter an oversight framework.",
+        "Pregătește evidența serviciilor, locațiilor de procesare, subcontractorilor, incident support, audit rights și exit/transition provisions.",
+        "Prepare service, processing-location, subcontractor, incident-support, audit-right and exit/transition documentation.",
+        82,
+      ));
+    }
+
+    if (has(profile.context, "card-environment") || has(profile.dataTypes, "payment")) {
+      results.push(recommendation(
+        "pci", "PCI DSS", "required", "regulatory",
+        "Ai indicat date de card, payment processing sau capacitatea de a afecta securitatea cardholder data environment. PCI DSS trebuie inclus în scope-ul de verificare.",
+        "You indicated card data, payment processing or the ability to affect the security of a cardholder data environment. PCI DSS should be included in the scope review.",
+        "Stabilește exact unde există CHD/SAD și dacă folosești un procesator extern; apoi identifică SAQ-ul sau metoda de validare cerută de acquirer/payment brand.",
+        "Determine where CHD/SAD exists and whether processing is outsourced; then identify the SAQ or validation method required by the acquirer/payment brand.",
+        97,
+      ));
+    }
+
+    if (has(profile.context, "hipaa-covered") || (us && has(profile.dataTypes, "health") && any(profile.customers, ["health"]))) {
+      results.push(recommendation(
+        "hipaa", "HIPAA", has(profile.context, "hipaa-covered") ? "required" : "high", "regulatory",
+        has(profile.context, "hipaa-covered")
+          ? "Ai indicat explicit un rol de covered entity sau business associate. HIPAA trebuie tratat ca cerință juridică relevantă pentru PHI."
+          : "Ai date medicale și relații cu organizații medicale din SUA. Asta nu dovedește singur aplicabilitatea HIPAA, dar este un semnal puternic pentru verificarea rolului de business associate sau covered entity.",
+        has(profile.context, "hipaa-covered")
+          ? "You explicitly indicated a covered-entity or business-associate role. HIPAA should be treated as a relevant legal requirement for PHI."
+          : "You handle health data and work with US healthcare organisations. That alone does not establish HIPAA applicability, but it is a strong signal to check for a business-associate or covered-entity role.",
+        "Confirmă rolul juridic și dacă este necesar un Business Associate Agreement; apoi delimitează ePHI și Security Rule safeguards.",
+        "Confirm the legal role and whether a Business Associate Agreement is required; then scope ePHI and Security Rule safeguards.",
+        94,
+      ));
+    }
+
+    if (california && personal) {
+      results.push(recommendation(
+        "ccpa", "CCPA / CPRA", large ? "high" : "medium", "regulatory",
+        "Procesezi informații personale ale rezidenților din California. Aplicabilitatea CCPA depinde și de criterii precum statutul for-profit, venituri și volumele de date/share/sale, deci nu poate fi stabilită doar din această evaluare.",
+        "You process personal information relating to California residents. CCPA applicability also depends on criteria such as for-profit status, revenue and data-volume/sale/share thresholds, so this assessment cannot determine it by itself.",
+        "Verifică pragurile CPPA actuale și dacă organizația determină scopurile și mijloacele procesării pentru consumatori din California.",
+        "Check the current CPPA thresholds and whether the organisation determines the purposes and means of processing for California consumers.",
+        large ? 78 : 60,
+      ));
+    }
+
+    if (has(profile.context, "ferpa-school")) {
+      results.push(recommendation(
+        "ferpa", "FERPA", "required", "regulatory",
+        "Ai indicat o instituție educațională din SUA care primește fonduri prin programe administrate de Department of Education. Acesta este criteriul central de aplicabilitate FERPA pentru instituții.",
+        "You indicated a US educational institution receiving funds through programmes administered by the Department of Education. This is the core institutional applicability criterion for FERPA.",
+        "Mapează education records, accesul legitim, contractorii care operează ca school officials și regulile de disclosure.",
+        "Map education records, legitimate-access rules, contractors acting as school officials and disclosure controls.",
+        95,
+      ));
+    } else if (us && has(profile.dataTypes, "student") && any(profile.customers, ["education"])) {
+      results.push(recommendation(
+        "ferpa", "FERPA", "medium", "regulatory",
+        "Lucrezi cu date despre elevi/studenți și instituții educaționale din SUA. Poți avea obligații contractuale și de data handling chiar dacă FERPA se aplică direct instituției, nu automat fiecărui vendor.",
+        "You work with student data and US educational institutions. Contractual and data-handling obligations may apply even where FERPA applies directly to the institution rather than automatically to every vendor.",
+        "Clarifică dacă ești tratat ca school official/contractor și ce control păstrează instituția asupra education records.",
+        "Clarify whether you are treated as a school official/contractor and what control the institution retains over education records.",
+        63,
+      ));
+    }
+
+    if (eu && (has(profile.context, "ai-provider") || has(profile.dataTypes, "ai"))) {
+      results.push(recommendation(
+        "eu-ai-act", "EU AI Act", "high", "regulatory",
+        "Dezvolți, furnizezi sau operezi sisteme AI într-un context UE. Obligațiile diferă mult în funcție de rol și clasificare; anumite obligații pentru GPAI și transparență sunt deja aplicabile, iar calendarul high-risk este etapizat.",
+        "You develop, provide or operate AI systems in an EU context. Obligations vary substantially by role and classification; some GPAI and transparency obligations already apply, while the high-risk timeline is staged.",
+        "Clasifică rolul (provider/deployer), tipul sistemului și dacă intră în transparency, GPAI sau high-risk; documentează această determinare.",
+        "Classify the role (provider/deployer), system type and whether transparency, GPAI or high-risk rules are relevant; document the determination.",
+        85,
+      ));
+    }
+
+    if (enterprise || (saasLike && any(profile.customers, ["finance", "health", "government"]))) {
+      results.push(recommendation(
+        "soc2-ii", "SOC 2 Type II", "high", "customer",
+        "Enterprise procurement și clienții reglementați cer frecvent dovezi despre funcționarea controalelor în timp. SOC 2 Type II este de obicei mai util comercial decât un Type I atunci când maturitatea permite perioada de observație.",
+        "Enterprise procurement and regulated customers frequently require evidence that controls operate over time. SOC 2 Type II is usually more commercially useful than Type I when maturity allows an observation period.",
+        "Definește scope-ul sistemului și Trust Services Criteria relevante, apoi evaluează dacă controalele sunt stabile suficient pentru o perioadă Type II.",
+        "Define system scope and relevant Trust Services Criteria, then assess whether controls are stable enough for a Type II observation period.",
+        84,
+        "/hub/soc2",
+      ));
+      results.push(recommendation(
+        "soc2-i", "SOC 2 Type I", "medium", "customer",
+        "Type I poate fi o etapă utilă când ai nevoie mai repede de o opinie asupra designului controalelor, înainte de o perioadă completă Type II.",
+        "Type I can be useful when you need an earlier opinion on control design before completing a full Type II observation period.",
+        "Compară presiunea comercială și maturitatea controalelor înainte să alegi Type I ca etapă intermediară.",
+        "Compare commercial urgency and control maturity before choosing Type I as an intermediate step.",
+        62,
+        "/hub/soc2-type1-vs-type2",
+      ));
+    }
+
+    if (has(profile.goals, "certification") || enterprise || regulatedGoal || mediumOrLarge) {
+      results.push(recommendation(
+        "iso27001", "ISO/IEC 27001", enterprise || regulatedGoal ? "high" : "medium", "standard",
+        "Un ISMS certificat oferă o structură internațională pentru risk management, politici, controale, audit intern și îmbunătățire continuă și este relevant în multe procese de procurement.",
+        "A certified ISMS provides an international structure for risk management, policies, controls, internal audit and continual improvement and is relevant in many procurement processes.",
+        "Definește scope-ul ISMS, inventarul de riscuri și Statement of Applicability înainte de proiectul de certificare.",
+        "Define the ISMS scope, risk inventory and Statement of Applicability before starting a certification project.",
+        enterprise || regulatedGoal ? 80 : 65,
+        "/hub/iso27001",
+      ));
+    }
+
+    if (personal && (has(profile.goals, "privacy") || any(profile.regions, ["eu", "uk", "california"]))) {
+      results.push(recommendation(
+        "iso27701", "ISO/IEC 27701", "medium", "standard",
+        "Ai un program de privacy sau procesezi date personale în jurisdicții cu cerințe de privacy. ISO 27701 poate extinde structura de management pentru privacy peste un ISMS.",
+        "You have a privacy programme or process personal data in privacy-regulated jurisdictions. ISO 27701 can extend a management-system structure for privacy on top of an ISMS.",
+        "Evaluează mai întâi maturitatea ISO 27001/ISMS și rolurile PII controller/processor.",
+        "Assess ISO 27001/ISMS maturity and PII controller/processor roles first.",
+        60,
+      ));
+    }
+
+    if (has(profile.dataTypes, "ai") || has(profile.goals, "ai-governance") || has(profile.context, "ai-provider")) {
+      results.push(recommendation(
+        "iso42001", "ISO/IEC 42001", "medium", "standard",
+        "AI face parte din produs, operațiuni sau obiectivele de governance. ISO 42001 oferă o structură de management pentru responsabilități, risc și control pe ciclul de viață AI.",
+        "AI is part of the product, operations or governance objectives. ISO 42001 provides a management-system structure for responsibility, risk and control across the AI lifecycle.",
+        "Inventariază sistemele AI, rolurile, use-case-urile și impacturile înainte să construiești AIMS-ul.",
+        "Inventory AI systems, roles, use cases and impacts before building the AIMS.",
+        67,
+      ));
+    }
+
+    if (saasLike && (enterprise || any(profile.regions, ["eu", "uk", "global"]))) {
+      results.push(recommendation(
+        "iso27017", "ISO/IEC 27017 / 27018", "low", "standard",
+        "Pentru servicii cloud și procesarea PII în cloud, aceste ghiduri pot completa controalele de securitate și privacy, mai ales în discuții cu clienți enterprise.",
+        "For cloud services and PII processing in cloud environments, these guides can complement security and privacy controls, especially in enterprise customer discussions.",
+        "Verifică mai întâi dacă ISO 27001 este roadmap-ul principal și ce controale cloud sunt deja acoperite contractual și tehnic.",
+        "First confirm whether ISO 27001 is the primary roadmap and which cloud controls are already covered contractually and technically.",
+        44,
+      ));
+    }
+
+    if (uk && (enterprise || has(profile.goals, "public-sector"))) {
+      results.push(recommendation(
+        "cyber-essentials", "Cyber Essentials", "medium", "customer",
+        "Pentru organizații care operează sau vând în UK, Cyber Essentials este o cerință sau un semnal de assurance întâlnit în anumite supply chains și contracte publice.",
+        "For organisations operating or selling in the UK, Cyber Essentials is a requirement or assurance signal encountered in some supply chains and public-sector contracts.",
+        "Verifică cerințele contractului sau ale buyer-ului și fă un gap check pe cele cinci control areas Cyber Essentials.",
+        "Check the contract or buyer requirements and perform a gap review across the five Cyber Essentials control areas.",
+        58,
+      ));
+    }
+
+    if (enterprise && results.some((item) => item.id === "soc2-ii")) {
+      results.push(recommendation(
+        "soc3", "SOC 3", "low", "customer",
+        "SOC 3 este o formă de raport general-use care poate avea valoare de comunicare publică după un program SOC 2 matur, dar de regulă nu înlocuiește raportul SOC 2 cerut în due diligence.",
+        "SOC 3 is a general-use report that can have public communication value after a mature SOC 2 programme, but it generally does not replace the SOC 2 report requested in due diligence.",
+        "Consideră-l abia după ce nevoia principală de SOC 2 este clară.",
+        "Consider it only after the primary SOC 2 requirement is clear.",
+        35,
+      ));
+    }
+
+    if (results.length === 0) {
+      results.push(recommendation(
+        "iso27001", "ISO/IEC 27001", "low", "standard",
+        "Răspunsurile nu indică o obligație sau cerință comercială dominantă. ISO 27001 rămâne un punct bun de referință pentru structurarea unui program de securitate bazat pe risc.",
+        "The answers do not indicate a dominant legal or commercial requirement. ISO 27001 remains a useful reference point for structuring a risk-based security programme.",
+        "Începe cu un security assessment și un risk register înainte să urmărești o certificare.",
+        "Start with a security assessment and risk register before pursuing certification.",
+        30,
+        "/hub/iso27001",
+      ));
+    }
+
+    const unique = new Map<string, Recommendation>();
+    for (const item of results) {
+      const previous = unique.get(item.id);
+      if (!previous || item.score > previous.score) unique.set(item.id, item);
+    }
+
+    return [...unique.values()].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
   }
 
-  // Run on initial load
-  initTally();
+  function values(form: HTMLFormElement, name: string): Set<string> {
+    return new Set(new FormData(form).getAll(name).map(String));
+  }
 
-  // Run on Astro page transitions
-  document.addEventListener("astro:page-load", initTally);
+  function profileFrom(form: HTMLFormElement): Profile {
+    const data = new FormData(form);
+    return {
+      businessType: String(data.get("businessType") || ""),
+      companySize: String(data.get("companySize") || ""),
+      regions: values(form, "regions"),
+      customers: values(form, "customers"),
+      dataTypes: values(form, "dataTypes"),
+      context: values(form, "context"),
+      goals: values(form, "goals"),
+    };
+  }
+
+  function resultMarkup(item: Recommendation): string {
+    const t = copy[locale()];
+    const priority = t[item.priority];
+    const category = t[item.category];
+    const guide = item.href
+      ? `<a href="${item.href}" class="text-primary mt-3 inline-flex text-sm font-medium hover:underline">${t.guide} →</a>`
+      : "";
+
+    return `
+      <article class="grid gap-4 py-6 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
+        <div>
+          <div class="text-sm font-medium">${item.name}</div>
+          <div class="text-muted-foreground mt-1 text-xs">${priority}</div>
+          <div class="text-muted-foreground mt-0.5 text-xs">${category}</div>
+        </div>
+        <div>
+          <p class="text-muted-foreground text-sm leading-relaxed"><strong class="text-primary font-medium">${t.reasonLabel}:</strong> ${item.reason}</p>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed"><strong class="text-primary font-medium">${t.nextLabel}:</strong> ${item.next}</p>
+          ${guide}
+        </div>
+      </article>`;
+  }
+
+  function render(results: Recommendation[]) {
+    const section = document.querySelector<HTMLElement>("#assessment-results");
+    const primary = document.querySelector<HTMLElement>("#primary-results");
+    const secondary = document.querySelector<HTMLElement>("#secondary-results");
+    if (!section || !primary || !secondary) return;
+
+    const primaryItems = results.filter((item) => item.priority === "required" || item.priority === "high" || item.score >= 65);
+    const secondaryItems = results.filter((item) => !primaryItems.includes(item));
+    const t = copy[locale()];
+
+    primary.innerHTML = primaryItems.length
+      ? primaryItems.map(resultMarkup).join("")
+      : `<p class="text-muted-foreground py-6 text-sm">${t.noPriority}</p>`;
+    secondary.innerHTML = secondaryItems.length
+      ? secondaryItems.map(resultMarkup).join("")
+      : `<p class="text-muted-foreground py-5 text-sm">—</p>`;
+
+    section.classList.remove("hidden");
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function setup() {
+    const form = document.querySelector<HTMLFormElement>("#framework-assessment");
+    const error = document.querySelector<HTMLElement>("#assessment-error");
+    const print = document.querySelector<HTMLButtonElement>("#print-results");
+    const results = document.querySelector<HTMLElement>("#assessment-results");
+    if (!form || form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const profile = profileFrom(form);
+      if (!profile.businessType || !profile.companySize) {
+        if (error) {
+          error.textContent = copy[locale()].missing;
+          error.classList.remove("hidden");
+        }
+        return;
+      }
+      if (error) error.classList.add("hidden");
+      render(assess(profile));
+    });
+
+    form.addEventListener("reset", () => {
+      if (error) error.classList.add("hidden");
+      results?.classList.add("hidden");
+    });
+
+    print?.addEventListener("click", () => window.print());
+  }
+
+  document.addEventListener("astro:page-load", setup);
+  setup();
 </script>
