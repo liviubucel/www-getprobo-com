@@ -138,6 +138,12 @@ export const menuGroups: MenuGroup[] = [
     label: "Resurse",
     items: [
       {
+        label: "Hub",
+        description: "Ghiduri, comparații și resurse pentru conformitate și securitate",
+        href: "/hub",
+        icon: "book-open-text",
+      },
+      {
         label: "Blog",
         description: "Analize despre conformitate, confidențialitate și securitate",
         href: "/blog",
