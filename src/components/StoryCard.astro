@@ -3,7 +3,7 @@ import type { StoryData } from "../schema.ts";
 import { dynamicImages } from "../lib/images.ts";
 import ResponsiveImage from "./ui/ResponsiveImage.astro";
 import { Image } from "astro:assets";
-import FrameworkBadge from "../components/FrameworkBadge.svelte";
+import FrameworkBadge from "./FrameworkBadgeStatic.astro";
 import { tv } from "tailwind-variants";
 import clsx from "clsx";
 import { frameworks } from "../content/frameworks.ts";
@@ -219,7 +219,6 @@ const fallbackMediaClass = clsx(
           {framework && badge && (
             <div class="shrink-0">
               <FrameworkBadge
-                client:only
                 name={badge}
                 class={clsx(
                   "block size-10 sm:size-11",
@@ -244,7 +243,6 @@ const fallbackMediaClass = clsx(
           {framework && badge && (
             <div class="badge shrink-0">
               <FrameworkBadge
-                client:only
                 name={badge}
                 class={clsx(
                   "block size-10 sm:size-11",
@@ -266,7 +264,6 @@ const fallbackMediaClass = clsx(
           <div class={classNames.badge()}>
             <div class="badge flex justify-center text-center">
               <FrameworkBadge
-                client:only
                 name={badge}
                 class={clsx("mx-auto block size-15", shouldInvert && "invert")}
               />
