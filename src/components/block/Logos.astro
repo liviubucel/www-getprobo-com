@@ -109,13 +109,19 @@ const companies = [
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  @media (max-width: 639px), (prefers-reduced-motion: reduce) {
     .logo-marquee {
       animation: none;
       max-width: 100%;
       overflow-x: auto;
       overscroll-behavior-inline: contain;
       scrollbar-width: none;
+      will-change: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .logo-marquee > :global(div:last-child) {
+      display: none;
     }
 
     .logo-marquee::-webkit-scrollbar {
