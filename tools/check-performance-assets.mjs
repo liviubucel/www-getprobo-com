@@ -1,10 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const roots = [
-  path.resolve("public/blog/zebrabyte-generated"),
-  path.resolve("public"),
-];
+const publicRoot = path.resolve("public");
+const generatedBlogRoot = path.resolve("public/blog/zebrabyte-generated");
 
 const limits = new Map([
   [".jpg", 1_500_000],
@@ -14,10 +12,6 @@ const limits = new Map([
   [".avif", 1_500_000],
   [".gif", 2_000_000],
 ]);
-
-const ignoredPrefixes = [
-  path.resolve("public/blog/zebrabyte-generated") + path.sep,
-];
 
 async function exists(target) {
   try {
@@ -37,41 +31,44 @@ async function walk(directory, files = []) {
   return files;
 }
 
-const scanned = new Set();
+if (!(await exists(publicRoot))) {
+  console.log("[performance-assets] public/ does not exist; nothing to check.");
+  process.exit(0);
+}
+
+const files = await walk(publicRoot);
 const violations = [];
 const warnings = [];
 
-for (const root of roots) {
-  if (!(await exists(root))) continue;
-  for (const file of await walk(root)) {
-    if (scanned.has(file)) continue;
-    scanned.add(file);
+for (const file of files) {
+  const extension = path.extname(file).toLowerCase();
+  const stat = await fs.stat(file);
+  const relative = path.relative(process.cwd(), file).replaceAll(path.sep, "/");
+  const generatedBlogAsset = file.startsWith(`${generatedBlogRoot}${path.sep}`);
 
-    const extension = path.extname(file).toLowerCase();
-    const stat = await fs.stat(file);
-    const relative = path.relative(process.cwd(), file).replaceAll(path.sep, "/");
+  if (limits.has(extension) && stat.size > limits.get(extension)) {
+    const label = `${relative} — ${(stat.size / 1024 / 1024).toFixed(2)} MiB`;
+    if (generatedBlogAsset) violations.push(label);
+    else warnings.push(label);
+    continue;
+  }
 
-    if (limits.has(extension) && stat.size > limits.get(extension)) {
-      violations.push(`${relative} — ${(stat.size / 1024 / 1024).toFixed(2)} MiB`);
-      continue;
-    }
-
-    if (extension === ".mp4" && stat.size > 12_000_000) {
-      warnings.push(`${relative} — ${(stat.size / 1024 / 1024).toFixed(2)} MiB video`);
-    }
+  if (extension === ".mp4" && stat.size > 12_000_000) {
+    warnings.push(`${relative} — ${(stat.size / 1024 / 1024).toFixed(2)} MiB video`);
   }
 }
 
 if (warnings.length) {
-  console.warn("[performance-assets] Large video files (allowed because videos are lazy-loaded):");
+  console.warn("[performance-assets] Legacy/public media above the preferred budget:");
   for (const warning of warnings) console.warn(`  - ${warning}`);
+  console.warn("[performance-assets] These are warnings so existing Probo media does not block deployment; lazy loading remains required.");
 }
 
 if (violations.length) {
-  console.error("[performance-assets] Oversized raster assets found:");
+  console.error("[performance-assets] Generated ZebraByte blog images exceed the 1.5 MiB budget:");
   for (const violation of violations) console.error(`  - ${violation}`);
-  console.error("Compress/resize these assets before deployment or explicitly revise the performance budget.");
+  console.error("The Sanity image sync must resize/compress these files before deployment.");
   process.exit(1);
 }
 
-console.log(`[performance-assets] ${scanned.size} public files checked; raster asset budget passed.`);
+console.log(`[performance-assets] ${files.length} public files checked; generated blog image budget passed.`);
