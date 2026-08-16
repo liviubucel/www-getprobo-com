@@ -4,6 +4,8 @@ import { getCollection } from "astro:content";
 import WrittenBy from "../components/block/WrittenBy.astro";
 import { pageSize } from "../content.config.ts";
 import Pagination from "../components/Pagination.astro";
+import { getBlogHref } from "../lib/blog";
+
 const allPosts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
@@ -32,7 +34,7 @@ const dateFormatter = Intl.DateTimeFormat("ro-RO", {
     >
       <section>
         {
-          posts.map((post: any) => (
+          posts.map((post) => (
             <article class="space-y-3 border-b py-10 first:pt-0 last:border-b-0">
               <div class="text-muted-foreground">
                 {dateFormatter.format(new Date(post.data.date))}, de{" "}
@@ -40,7 +42,7 @@ const dateFormatter = Intl.DateTimeFormat("ro-RO", {
               </div>
               <h2>
                 <a
-                  href={`/blog/${post.id.split("/").at(-1)}`}
+                  href={getBlogHref(post)}
                   class="text-h4 block font-medium hover:opacity-80"
                 >
                   {post.data.title}
