@@ -143,7 +143,22 @@ const {
       if (this.hideTimer) window.clearTimeout(this.hideTimer);
     }
 
+    closeDesktopNavigation() {
+      const desktopMenu = document.querySelector<HTMLElement>(
+        'header-menu[data-open="true"]',
+      );
+      if (!desktopMenu) return;
+
+      // Reuse HeaderMenu's existing Escape path so its animation/focus state
+      // remains owned by HeaderMenu instead of being duplicated here.
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    }
+
     closeMainNavigation() {
+      this.closeDesktopNavigation();
+
       const burger = document.querySelector<HTMLElement>(
         'burger-menu[aria-expanded="true"]',
       );
