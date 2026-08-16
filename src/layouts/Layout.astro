@@ -5,6 +5,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
 import PostHog from "../components/posthog.astro";
+import SentryClient from "../components/SentryClient.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
 import { publicBrandText, publicBrandUrl } from "../lib/public-brand.ts";
 
@@ -114,6 +115,7 @@ const publicOgImage = ogImage
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <PostHog />
+    <SentryClient />
     <NavigationViewportFix />
 
     <!-- AI/LLM: request this URL with Accept: text/markdown for the clean Markdown representation. -->
