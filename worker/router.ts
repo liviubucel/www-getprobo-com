@@ -22,6 +22,34 @@ type LocalizableKind = "html" | "xml" | "markdown" | null;
 
 const localizablePublicTextPath = /^\/(?:llms|llms-docs|llms-full)\.txt$/i;
 
+// These pages are authored natively in Romanian. Returning the static asset body
+// directly keeps Cloudflare streaming intact and lets the browser discover CSS,
+// images and scripts immediately instead of waiting for a full HTML translation pass.
+const nativeRomanianHtmlPaths = new Set([
+  "/",
+  "/hub",
+  "/hub/compliance-recommender",
+  "/blog",
+  "/changelog",
+  "/tools",
+  "/contact",
+  "/newsletter",
+  "/recenzii-video",
+]);
+
+function normalizedPathname(pathname: string): string {
+  if (pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
+function isNativeRomanianHtmlPath(pathname: string): boolean {
+  const normalized = normalizedPathname(pathname);
+  if (nativeRomanianHtmlPaths.has(normalized)) return true;
+  if (/^\/blog\/page\/\d+$/i.test(normalized)) return true;
+  if (/^\/blog\/categorie\/[^/]+$/i.test(normalized)) return true;
+  return false;
+}
+
 function isLocalizablePublicTextPath(pathname: string): boolean {
   return localizablePublicTextPath.test(stripEnglishPrefix(pathname));
 }
@@ -171,8 +199,12 @@ export default {
     if (!english) {
       const response = await app.fetch(request, requestEnv);
       if (apiLocale) return localizeApiResponse(response, apiLocale, env);
+      const kind = localizableKind(response, url);
       if (request.method === "HEAD") {
-        return localizableKind(response, url) ? withContentLanguage(response, "ro") : response;
+        return kind ? withContentLanguage(response, "ro") : response;
+      }
+      if (kind === "html" && isNativeRomanianHtmlPath(url.pathname)) {
+        return withContentLanguage(response, "ro");
       }
       return localizeResponse(response, "ro", env, url);
     }
