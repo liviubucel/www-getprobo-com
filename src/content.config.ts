@@ -17,8 +17,8 @@ const blog = defineCollection({
       .optional(),
     date: z.date(),
     dateModified: z.date().optional(),
-    /** Meta description / preview excerpt; keep 120-200 chars for SEO. */
-    excerpt: z.string().min(120).max(220),
+    /** Meta description / preview excerpt; keep 120-200 chars for new content. */
+    excerpt: z.string().min(120),
     author: z.object({
       name: z.string(),
     }),
