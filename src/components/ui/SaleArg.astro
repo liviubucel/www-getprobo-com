@@ -18,9 +18,9 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
             muted
             playsinline
             loop
-            preload="metadata"
+            preload="none"
             poster={poster}
-            src={video}
+            data-src={video}
             class="relative block aspect-560/360 w-full rounded-2xl object-cover"
             width={500}
             height={360}
@@ -48,21 +48,27 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
 
     connectedCallback() {
       this.video = this.querySelector("video");
-      if (!this.video) {
-        return;
-      }
+      if (!this.video) return;
 
       this.observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             this.inView = entry.isIntersecting;
+            if (entry.isIntersecting) this.ensureSource();
             this.syncPlayback();
           }
         },
-        { threshold: 0.35 },
+        { rootMargin: "300px 0px", threshold: 0.15 },
       );
       this.observer.observe(this.video);
       document.addEventListener("visibilitychange", this.onVisibilityChange);
+    }
+
+    private ensureSource() {
+      const video = this.video;
+      if (!video || video.src) return;
+      const src = video.dataset.src;
+      if (src) video.src = src;
     }
 
     private onVisibilityChange = () => {
@@ -71,11 +77,10 @@ const poster = video?.replace(/\.mp4$/, ".jpg");
 
     private syncPlayback() {
       const video = this.video;
-      if (!video) {
-        return;
-      }
+      if (!video) return;
 
       if (this.inView && document.visibilityState === "visible") {
+        this.ensureSource();
         void video.play().catch(() => {
           // Autoplay can be blocked; poster still shows.
         });
