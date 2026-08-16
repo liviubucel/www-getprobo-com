@@ -4,14 +4,21 @@
 # Required for /api/contact and /api/newsletter/subscribe
 TURNSTILE_SECRET_KEY=your-turnstile-secret-key
 
+# Required for the private newsletter dispatch endpoints:
+# - POST /api/newsletter/send-announcement
+# - POST /api/newsletter/notify-post
+# Send it as: Authorization: Bearer <NEWSLETTER_DISPATCH_SECRET>
+NEWSLETTER_DISPATCH_SECRET=your-newsletter-dispatch-secret
+
 # Legacy upstream Probo YC deal route — retained for compatibility.
 # Only configure these if /api/yc-deal is intentionally used.
 N8N_YC_DEAL_WEBHOOK_URL=https://your-n8n.com/webhook/yc-deal
 WEBHOOK_AUTH_USERNAME=your-username
 WEBHOOK_AUTH_PASSWORD=your-password
 
-# EMAIL, NEWSLETTER KV, destination addresses and public Turnstile site key are
-# declared as Cloudflare bindings/vars in wrangler.jsonc.
+# EMAIL, NEWSLETTER KV, destination addresses, Sentry DSN/environment and the
+# public Turnstile site key are declared as Cloudflare bindings/vars in
+# wrangler.jsonc. Production secret values stay in Cloudflare, not in Git.
 #
 # Frontend/build-time optional variables are documented separately in README:
 # - PUBLIC_POSTHOG_API_KEY
