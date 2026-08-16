@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import StoryCard from "../StoryCard.astro";
+import Slider from "../ui/Slider.svelte";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
 const stories = sortStoriesForListing(await getCollection("stories")).slice(0, 6);
@@ -43,60 +44,48 @@ const stories = sortStoriesForListing(await getCollection("stories")).slice(0, 6
       </svg>
     </a>
 
-    <div
-      class="story-track mx-auto flex snap-x snap-mandatory gap-4 overflow-x-auto px-[10vw] pb-4 sm:gap-6 sm:px-[calc((100vw-min(80vw,720px))/2)]"
-      aria-label="Studii de caz"
-    >
-      {
-        stories.map((story) => (
-          <div class="story-slide w-[80vw] max-w-[720px] shrink-0 snap-center">
-            <StoryCard size="home" story={story} />
-          </div>
-        ))
-      }
+    <div class="slider mx-auto">
+      <Slider
+        client:load
+        withOverflow
+        navigateOnClick
+        options={{
+          perPage: 1,
+          updateOnMove: true,
+          gap: 24,
+          pagination: false,
+          breakpoints: {
+            640: {
+              gap: 16,
+            },
+          },
+        }}
+      >
+        {stories.map((story) => <StoryCard size="home" story={story} />)}
+      </Slider>
     </div>
   </div>
 </section>
 
 <style>
-  .stories {
-    content-visibility: auto;
-    contain-intrinsic-size: 900px;
+  .slider {
+    width: min(80vw, 720px);
   }
 
-  .story-track {
-    width: 100vw;
-    max-width: none;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    scrollbar-width: none;
-    overscroll-behavior-inline: contain;
-    -webkit-overflow-scrolling: touch;
+  .slider :global(.splide__slide) {
+    opacity: 0.4;
   }
 
-  .story-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .story-slide {
-    opacity: 0.72;
-    transition: opacity 180ms ease;
-  }
-
-  .story-slide:focus-within,
-  .story-slide:hover {
+  .slider :global(.splide__slide.is-active) {
     opacity: 1;
   }
 
-  @media (max-width: 639px) {
-    .story-slide {
-      opacity: 1;
-    }
+  .slider :global(.badge) {
+    opacity: 0;
+    transition: 0.3s;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .story-slide {
-      transition: none;
-    }
+  .slider :global(.splide__slide.is-active .badge) {
+    opacity: 1;
   }
 </style>
