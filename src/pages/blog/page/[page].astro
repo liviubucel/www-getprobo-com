@@ -2,10 +2,12 @@
 import Layout from "../../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import WrittenBy from "../../../components/block/WrittenBy.astro";
+import BlogCategoryNav from "../../../components/BlogCategoryNav.astro";
 import type { Page } from "astro";
 import Pagination from "../../../components/Pagination.astro";
 import { pageSize } from "../../../content.config.ts";
 import { getBlogHref } from "../../../lib/blog";
+import { getBlogCategory, getBlogCategoryHref } from "../../../lib/blog-categories";
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const allPosts = (await getCollection("blog")).sort(
@@ -35,33 +37,43 @@ const dateFormatter = Intl.DateTimeFormat("ro-RO", {
     <h1 class="text-h2 mb-3 font-medium">
       Blog<span class="hidden">, pagina {page.currentPage}</span>
     </h1>
-    <p class="text-muted-foreground mb-10 text-base sm:mb-16">
-      Analize, ghiduri și noutăți de la ZebraByte
+    <p class="text-muted-foreground mb-7 max-w-3xl text-base sm:mb-9">
+      Analize, ghiduri și noutăți de la ZebraByte, organizate pe subiecte.
     </p>
+    <BlogCategoryNav active="all" class="mb-12 sm:mb-16" />
+
     <div
       class="flex flex-col items-start gap-10 sm:grid sm:grid-cols-[1fr_320px] sm:gap-30"
     >
-      <section>
+      <section class="w-full">
         {
-          page.data.map((post: any) => (
-            <article class="border-b pt-6 pb-6 first:pt-0 last:border-b-0 sm:pt-10 sm:pb-10 sm:first:pt-0">
-              <div class="text-muted-foreground">
-                {dateFormatter.format(new Date(post.data.date))}, de{" "}
-                {post.data.author.name}
-              </div>
-              <h2>
-                <a
-                  href={getBlogHref(post)}
-                  class="text-h4 mt-4 mb-2 block font-medium hover:underline"
-                >
-                  {post.data.title}
-                </a>
-              </h2>
-              <p class="text-muted-foreground text-lg whitespace-pre-line">
-                {post.data.excerpt}
-              </p>
-            </article>
-          ))
+          page.data.map((post: any) => {
+            const category = getBlogCategory(post);
+            return (
+              <article class="border-b pt-6 pb-6 first:pt-0 last:border-b-0 sm:pt-10 sm:pb-10 sm:first:pt-0">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+                  <span class="text-muted-foreground">
+                    {dateFormatter.format(new Date(post.data.date))}, de {post.data.author.name}
+                  </span>
+                  <span aria-hidden="true" class="text-border">•</span>
+                  <a href={getBlogCategoryHref(category)} class="font-medium hover:opacity-70">
+                    {category.label}
+                  </a>
+                </div>
+                <h2>
+                  <a
+                    href={getBlogHref(post)}
+                    class="text-h4 mt-4 mb-2 block font-medium hover:underline"
+                  >
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="text-muted-foreground text-lg whitespace-pre-line">
+                  {post.data.excerpt}
+                </p>
+              </article>
+            );
+          })
         }
         <Pagination
           currentPage={page.currentPage}
