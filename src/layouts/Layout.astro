@@ -4,7 +4,6 @@ import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
-import PostHog from "../components/posthog.astro";
 import SentryClient from "../components/SentryClient.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
 import { publicBrandText, publicBrandUrl } from "../lib/public-brand.ts";
@@ -37,6 +36,8 @@ const publicOgImage = ogImage
     ? publicBrandUrl(ogImage)
     : `https://www.zebrabyte.ro${publicBrandUrl(ogImage)}`
   : "https://www.zebrabyte.ro/og.png";
+const geistStylesheet =
+  "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
 ---
 
 <!doctype html>
@@ -48,10 +49,14 @@ const publicOgImage = ogImage
     <title>{seoTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href={geistStylesheet} as="style" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      href={geistStylesheet}
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript><link href={geistStylesheet} rel="stylesheet" /></noscript>
 
     <ClientRouter />
 
@@ -112,9 +117,6 @@ const publicOgImage = ogImage
       })}
     />
 
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-    <PostHog />
     <SentryClient />
     <NavigationViewportFix />
 
@@ -135,65 +137,3 @@ const publicOgImage = ogImage
     <Footer noFrameworks={Astro.props.noFrameworks} />
   </body>
 </html>
-
-<script>
-  import { publicBrandText, publicBrandUrl } from "../lib/public-brand";
-
-  const ignoredBrandingTags = new Set([
-    "CODE",
-    "PRE",
-    "SCRIPT",
-    "STYLE",
-    "TEXTAREA",
-  ]);
-
-  function shouldSkipBranding(node: Node): boolean {
-    const parent = node.parentElement;
-    if (!parent) return false;
-    return Boolean(
-      Array.from(ignoredBrandingTags).some(
-        (tag) => parent.closest(tag.toLowerCase()) !== null,
-      ),
-    );
-  }
-
-  function applyPublicBranding() {
-    const root = document.body;
-    if (!root) return;
-
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let current: Node | null = walker.nextNode();
-    while (current) {
-      if (!shouldSkipBranding(current) && current.nodeValue) {
-        const next = publicBrandText(current.nodeValue);
-        if (next !== current.nodeValue) current.nodeValue = next;
-      }
-      current = walker.nextNode();
-    }
-
-    for (const element of document.querySelectorAll<HTMLElement>(
-      "[href], [src], [alt], [title], [aria-label]",
-    )) {
-      for (const attribute of ["href", "src"]) {
-        const value = element.getAttribute(attribute);
-        if (!value) continue;
-        const next = publicBrandUrl(value);
-        if (next !== value) element.setAttribute(attribute, next);
-      }
-
-      for (const attribute of ["alt", "title", "aria-label"]) {
-        const value = element.getAttribute(attribute);
-        if (!value) continue;
-        const next = publicBrandText(value);
-        if (next !== value) element.setAttribute(attribute, next);
-      }
-    }
-  }
-
-  document.addEventListener("astro:page-load", applyPublicBranding);
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyPublicBranding, { once: true });
-  } else {
-    queueMicrotask(applyPublicBranding);
-  }
-</script>
