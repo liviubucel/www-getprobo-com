@@ -20,7 +20,7 @@ const { active = "all", class: className = "" } = Astro.props;
     class:list={[
       "rounded-full border px-3 py-1.5 text-sm transition-colors",
       active === "all"
-        ? "bg-foreground text-background border-foreground"
+        ? "bg-primary text-primary-foreground border-primary"
         : "text-muted-foreground hover:text-foreground hover:border-foreground/40",
     ]}
   >
@@ -34,7 +34,7 @@ const { active = "all", class: className = "" } = Astro.props;
         class:list={[
           "rounded-full border px-3 py-1.5 text-sm transition-colors",
           active === category.slug
-            ? "bg-foreground text-background border-foreground"
+            ? "bg-primary text-primary-foreground border-primary"
             : "text-muted-foreground hover:text-foreground hover:border-foreground/40",
         ]}
       >
