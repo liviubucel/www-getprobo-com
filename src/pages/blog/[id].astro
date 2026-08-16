@@ -32,6 +32,11 @@ const articleImage = post.data.ogImage
   : post.data.titleImage
     ? new URL(post.data.titleImage, "https://www.zebrabyte.ro").toString()
     : "https://www.zebrabyte.ro/og.png";
+const visibleHeroImage = post.data.titleImage
+  ? post.data.titleImage
+  : post.data.source === "zebrabyte"
+    ? post.data.ogImage
+    : undefined;
 const isZebraByteAuthor = /zebrabyte/i.test(post.data.author.name);
 
 const articleSchema = {
@@ -108,6 +113,7 @@ const faqSchema = post.data.faqs
     content={isZebraByteAuthor ? "https://www.zebrabyte.ro/about" : post.data.author.name}
   />
   <meta slot="head" property="article:section" content={category.label} />
+  {visibleHeroImage && <link slot="head" rel="preload" as="image" href={visibleHeroImage} />}
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {
     faqSchema && (
@@ -159,6 +165,7 @@ const faqSchema = post.data.faqs
             class="mx-auto h-auto w-full max-w-[160px] shrink-0 object-contain sm:mx-0 sm:max-w-[200px]"
             loading="eager"
             decoding="async"
+            fetchpriority="high"
           />
         </div>
       ) : (
@@ -173,6 +180,8 @@ const faqSchema = post.data.faqs
               class="animate-slide-in animation-delay-100 mb-10 h-auto w-full rounded-2xl border object-cover"
               loading="eager"
               decoding="async"
+              fetchpriority="high"
+              sizes="(max-width: 760px) calc(100vw - 2.5rem), 720px"
             />
           )}
         </>
