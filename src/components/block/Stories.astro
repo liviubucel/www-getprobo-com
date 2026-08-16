@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import StoryCard from "../StoryCard.astro";
 import { sortStoriesForListing } from "../../lib/stories.ts";
 
-const stories = sortStoriesForListing(await getCollection("stories"));
+const stories = sortStoriesForListing(await getCollection("stories")).slice(0, 6);
 ---
 
 <section class="stories dark bg-level-0 text-foreground overflow-hidden">
