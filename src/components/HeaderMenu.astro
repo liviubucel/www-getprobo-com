@@ -152,24 +152,30 @@ const menuId = "desktop-navigation-menu";
   class HeaderMenu extends HTMLElement {
     private triggers: HTMLElement[] = [];
     private panels: HTMLElement[] = [];
+    private links: HTMLAnchorElement[] = [];
     private viewport: HTMLElement | null = null;
     private corridor: HTMLElement | null = null;
     private activeIndex = -1;
     private closeTimer: number | null = null;
+    private suppressNextFocus = false;
 
     connectedCallback() {
       this.triggers = Array.from(this.querySelectorAll<HTMLElement>("[data-menu-trigger]"));
       this.panels = Array.from(this.querySelectorAll<HTMLElement>("[data-menu-panel]"));
+      this.links = Array.from(this.querySelectorAll<HTMLAnchorElement>("[data-menu-panel] a"));
       this.viewport = this.querySelector<HTMLElement>("[data-menu-viewport]");
       this.corridor = this.querySelector<HTMLElement>("[data-hover-corridor]");
 
       this.triggers.forEach((trigger) => {
         trigger.addEventListener("pointerenter", this.onTriggerPointerEnter);
         trigger.addEventListener("focus", this.onTriggerFocus);
+        trigger.addEventListener("click", this.onTriggerClick);
       });
+      this.links.forEach((link) => link.addEventListener("click", this.close));
       this.addEventListener("pointerenter", this.cancelClose);
       this.addEventListener("pointerleave", this.scheduleClose);
       this.addEventListener("focusout", this.onFocusOut);
+      document.addEventListener("pointerdown", this.onDocumentPointerDown);
       document.addEventListener("keydown", this.onKeyDown);
     }
 
@@ -177,10 +183,13 @@ const menuId = "desktop-navigation-menu";
       this.triggers.forEach((trigger) => {
         trigger.removeEventListener("pointerenter", this.onTriggerPointerEnter);
         trigger.removeEventListener("focus", this.onTriggerFocus);
+        trigger.removeEventListener("click", this.onTriggerClick);
       });
+      this.links.forEach((link) => link.removeEventListener("click", this.close));
       this.removeEventListener("pointerenter", this.cancelClose);
       this.removeEventListener("pointerleave", this.scheduleClose);
       this.removeEventListener("focusout", this.onFocusOut);
+      document.removeEventListener("pointerdown", this.onDocumentPointerDown);
       document.removeEventListener("keydown", this.onKeyDown);
       this.cancelClose();
     }
@@ -241,7 +250,27 @@ const menuId = "desktop-navigation-menu";
     };
 
     private onTriggerFocus = (event: FocusEvent) => {
+      if (this.suppressNextFocus) {
+        this.suppressNextFocus = false;
+        return;
+      }
       this.open(this.indexFromTrigger(event.currentTarget as HTMLElement));
+    };
+
+    private onTriggerClick = (event: MouseEvent) => {
+      const trigger = event.currentTarget as HTMLElement;
+      if (trigger instanceof HTMLAnchorElement && trigger.getAttribute("href")) return;
+
+      const index = this.indexFromTrigger(trigger);
+      if (this.activeIndex === index && this.dataset.open === "true") {
+        this.close();
+      } else {
+        this.open(index);
+      }
+    };
+
+    private onDocumentPointerDown = (event: PointerEvent) => {
+      if (!this.contains(event.target as Node)) this.close();
     };
 
     private cancelClose = () => {
@@ -264,8 +293,10 @@ const menuId = "desktop-navigation-menu";
 
     private onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || this.activeIndex < 0) return;
+      event.preventDefault();
       const trigger = this.triggers[this.activeIndex];
       this.close();
+      this.suppressNextFocus = true;
       trigger?.focus();
     };
   }

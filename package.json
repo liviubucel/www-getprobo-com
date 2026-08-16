@@ -7,11 +7,12 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run sync:zebrabyte-blog && npm run check:performance-assets && npm run sync:changelog && npm run check:zebrabyte-content && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n",
+    "build": "npm run sync:zebrabyte-blog && npm run check:performance-assets && npm run sync:changelog && npm run check:zebrabyte-content && npm run check:experience && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n",
     "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog-optimized.mjs",
     "sync:changelog": "node tools/sync-github-changelog.mjs",
     "check:performance-assets": "node tools/check-performance-assets.mjs",
     "check:zebrabyte-content": "node tools/check-zebrabyte-content.mjs",
+    "check:experience": "node tools/check-experience-contract.mjs",
     "check:i18n": "node tools/check-i18n.mjs",
     "llms:normalize": "node tools/normalize-llms-assets.mjs",
     "sitemap:i18n": "node tools/localize-sitemap.mjs",
