@@ -1,0 +1,272 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+
+const principles = [
+  {
+    title: "Least privilege",
+    text: "Accesul administrativ este limitat la ceea ce este necesar pentru operarea, securizarea și suportul serviciului, cu separarea responsabilităților acolo unde arhitectura o permite.",
+  },
+  {
+    title: "Schimbări controlate",
+    text: "Preferăm configurații declarative, automatizare, versionare și procese de change management pentru a reduce intervențiile manuale și deriva de configurație.",
+  },
+  {
+    title: "Defense in depth",
+    text: "Combinăm controale la edge, identitate, aplicație, infrastructură și date, în funcție de serviciu și de riscul pe care îl protejăm.",
+  },
+  {
+    title: "Supply-chain security",
+    text: "Dependențele, imaginile, pachetele și fluxurile de livrare sunt tratate ca parte din suprafața de atac și sunt gestionate prin controale adecvate mediului.",
+  },
+  {
+    title: "Observability",
+    text: "Logging-ul, monitorizarea, alertarea și semnalele de anomalie sunt folosite pentru a detecta schimbări sau comportamente care necesită investigație.",
+  },
+  {
+    title: "Privacy by design",
+    text: "Minimizarea datelor, retenția proporțională și separarea rolurilor de prelucrare sunt integrate în proiectarea serviciilor și în procesele operaționale.",
+  },
+];
+
+const controls = [
+  {
+    title: "Identitate și acces",
+    text: "MFA, politici de acces, segregarea privilegiilor și limitarea accesului administrativ sunt aplicate acolo unde platforma sau serviciul le suportă.",
+  },
+  {
+    title: "Protecția traficului și a aplicațiilor",
+    text: "TLS, filtrare la edge, rate limiting, WAF și alte măsuri de protecție sunt folosite în funcție de arhitectură, expunere și serviciul contractat.",
+  },
+  {
+    title: "Hardening și vulnerabilități",
+    text: "Configurațiile, patch-urile și vulnerabilitățile sunt evaluate și prioritizate în funcție de risc, impact și posibilitatea reală de exploatare.",
+  },
+  {
+    title: "Date și segregare",
+    text: "Folosim separare logică și controale de acces adecvate serviciului. Datele sunt criptate în tranzit și, unde serviciul și furnizorul permit, la stocare.",
+  },
+  {
+    title: "Backup și recuperare",
+    text: "Pentru serviciile care includ backup sau disaster recovery, retenția, restaurarea și obiectivele de recuperare sunt definite de planul și configurația aplicabilă.",
+  },
+  {
+    title: "Monitorizare și răspuns",
+    text: "Evenimentele relevante sunt corelate cu procese de triage, containment, remediere și recovery, cu escaladare în funcție de severitate.",
+  },
+];
+
+const partners = [
+  {
+    name: "Telekom Business Partner",
+    category: "Connectivity & enterprise IT",
+    logo: "/logos/partners/telekom-business-partner.webp",
+    logoAlt: "ZEBRABYTE LIMITED — Telekom B2B Business Partner",
+    logoClass: "max-h-20 w-auto max-w-full rounded-sm object-contain",
+    text: "Parteneriat pentru soluții business de conectivitate, IT și infrastructură, utilizate în funcție de cerințele proiectului.",
+  },
+  {
+    name: "20i",
+    category: "Cloud & hosting infrastructure",
+    logo: "/logos/partners/20i.svg",
+    logoAlt: "20i",
+    logoClass: "max-h-12 w-auto max-w-full object-contain",
+    text: "Partener tehnologic pentru componente de cloud, hosting și infrastructură utilizate în servicii ZebraByte eligibile.",
+  },
+  {
+    name: "Newfold Digital",
+    category: "Web & digital infrastructure",
+    logo: "/logos/partners/newfold-digital.svg",
+    logoAlt: "Newfold Digital",
+    logoClass: "max-h-12 w-auto max-w-full object-contain",
+    text: "Parteneriat în ecosistemul Newfold pentru servicii web, domenii și componente de infrastructură digitală selectate.",
+  },
+  {
+    name: "iubenda",
+    category: "Certified Partner · Privacy & compliance",
+    logo: "/logos/partners/iubenda-certified.svg",
+    logoAlt: "iubenda Bronze Certified Partner",
+    logoClass: "max-h-12 w-auto max-w-full object-contain",
+    text: "Parteneriat certificat pentru privacy, cookie consent și componente de conformitate digitală.",
+  },
+  {
+    name: "Xcitium",
+    category: "Cybersecurity",
+    logo: "/logos/partners/xcitium.svg",
+    logoAlt: "Xcitium",
+    logoClass: "max-h-11 w-auto max-w-full object-contain",
+    text: "Parteneriat în ecosistemul Xcitium, fost Comodo Security Solutions, pentru tehnologii de endpoint security, Zero Trust și servicii de securitate.",
+  },
+];
+
+const infrastructureAssurance = [
+  { label: "ISO 9001", src: "/logos/compliance/iso-9001.svg" },
+  { label: "ISO 22301", src: "/logos/compliance/iso-22301.svg" },
+  { label: "ISO/IEC 27001", src: "/logos/compliance/iso-27001.svg" },
+  { label: "ISAE 3000 SOC 2 Type II", src: "/logos/compliance/soc2-type2.webp" },
+  { label: "Cyber Essentials Plus", src: "/logos/compliance/cyber-essentials-plus.webp" },
+  { label: "PCI DSS", src: "/logos/compliance/pci-dss-compliance.svg" },
+];
+
+const disclosureRules = [
+  "Testează numai sisteme ZebraByte pe care ai permisiunea să le testezi și evită sistemele terților care nu se află sub controlul nostru.",
+  "Nu accesa, copia sau exfiltra mai multe date decât este strict necesar pentru a demonstra problema.",
+  "Nu menține persistență, nu modifica sau șterge date și nu efectua atacuri de tip denial-of-service ori acțiuni care degradează serviciul.",
+  "Oferă suficiente detalii pentru reproducere: activul afectat, pașii, impactul observat și o dovadă tehnică minimă.",
+];
+---
+
+<Layout
+  title="Securitate"
+  description="Practicile și principiile de securitate ZebraByte: acces, hardening, protecția aplicațiilor, supply-chain, infrastructură, parteneriate tehnologice, monitorizare, incident response și vulnerability disclosure."
+>
+  <main>
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div class="container text-center">
+        <p class="text-muted-foreground animate-perspective-in mb-5 text-sm font-medium uppercase tracking-[0.14em]">ZebraByte Security</p>
+        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-230 font-medium text-balance">Cum protejăm serviciile și datele ZebraByte.</h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
+          Securitatea este tratată ca un proces operațional continuu. Aplicăm controale proporționale cu riscul, limităm accesul, reducem suprafața de atac și proiectăm serviciile astfel încât prevenția, detecția și recuperarea să lucreze împreună.
+        </p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button size="lg" href="/security/report">Raportează o vulnerabilitate</Button>
+          <Button size="lg" variant="secondary" href="/legal">Documente juridice</Button>
+        </div>
+      </div>
+    </animated-hero>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mb-10 max-w-180">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security principles</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Principii care ghidează modul în care operăm.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">Controalele concrete diferă între servicii și furnizori. Principiile de mai jos definesc direcția comună fără a transforma o practică tehnică într-o promisiune universală pentru fiecare produs.</p>
+      </div>
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {principles.map((item) => (
+          <article class="bg-level-0 p-6 sm:p-8">
+            <h3 class="mb-3 text-xl font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container">
+        <div class="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational controls</p>
+            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Securitate pe mai multe straturi.</h2>
+            <p class="text-muted-foreground text-lg leading-relaxed">Nu ne bazăm pe un singur control. Identitatea, edge-ul, aplicația, infrastructura, datele și procesele de operare sunt tratate ca straturi complementare.</p>
+          </div>
+          <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
+            {controls.map((item, index) => (
+              <article class="bg-level-0 p-6">
+                <div class="text-muted-foreground mb-6 text-sm">0{index + 1}</div>
+                <h3 class="mb-2 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mb-10 max-w-190">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Technology & infrastructure ecosystem</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Parteneriate care extind capabilitățile ZebraByte.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">Lucrăm cu organizații specializate pentru conectivitate, infrastructură digitală, privacy și cybersecurity. Relațiile comerciale și arhitectura de livrare pot varia între servicii; ZebraByte rămâne punctul de contact contractual pentru serviciile furnizate direct clienților săi.</p>
+      </div>
+
+      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {partners.map((partner) => (
+          <article class="bg-level-0 flex min-h-72 flex-col p-6">
+            <div class="mb-7 flex min-h-20 items-center">
+              <img src={partner.logo} alt={partner.logoAlt} loading="lazy" decoding="async" class={partner.logoClass} />
+            </div>
+            <p class="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-[0.12em]">{partner.category}</p>
+            <h3 class="mb-3 text-lg font-medium">{partner.name}</h3>
+            <p class="text-muted-foreground mt-auto text-sm leading-relaxed">{partner.text}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-12 border-y py-8 sm:py-10">
+        <div class="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+          <div class="max-w-170">
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Infrastructure assurance</p>
+            <h3 class="text-h4 mb-4 font-medium">Acreditări și trust marks ale infrastructurii relevante.</h3>
+            <p class="text-muted-foreground leading-relaxed">Pentru anumite servicii eligibile, componentele de infrastructură sunt furnizate prin medii care mențin certificări, acreditări sau rapoarte de asigurare recunoscute.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-x-8 gap-y-7 sm:justify-start lg:justify-end">
+            {infrastructureAssurance.map((item) => (
+              <img
+                src={item.src}
+                alt={item.label}
+                title={item.label}
+                loading="lazy"
+                decoding="async"
+                class="max-h-16 max-w-28 shrink-0 object-contain sm:max-h-20 sm:max-w-32"
+              />
+            ))}
+          </div>
+        </div>
+        <p class="text-tertiary-foreground mt-7 max-w-210 text-xs leading-relaxed">Aceste certificări, acreditări și trust marks se aplică numai mediilor de infrastructură sau furnizorilor relevanți pentru serviciile eligibile. Ele nu sunt prezentate ca certificări emise direct către ZEBRABYTE LIMITED și nu extind domeniul unei certificări dincolo de entitatea ori infrastructura pentru care a fost emisă.</p>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Vulnerability disclosure</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Raportare responsabilă a vulnerabilităților.</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">Dacă ai identificat o problemă de securitate într-un serviciu ZebraByte, folosește <a class="text-primary underline underline-offset-4" href="/security/report">formularul dedicat de raportare</a>. Formularul solicită verificarea emailului și detalii tehnice complete. Pentru cercetători și instrumente automate publicăm în continuare și <a class="text-primary underline underline-offset-4" href="/.well-known/security.txt">security.txt</a>.</p>
+          <p class="text-muted-foreground leading-relaxed">Pentru rapoartele suficient de detaliate, ținta operațională este un răspuns inițial în aproximativ 24 de ore, fără ca aceasta să reprezinte un SLA contractual.</p>
+        </div>
+        <div class="bg-level-0 rounded-2xl border p-6 sm:p-8">
+          <h3 class="mb-5 text-xl font-medium">Reguli pentru testare responsabilă</h3>
+          <ul class="text-muted-foreground space-y-4 leading-relaxed">
+            {disclosureRules.map((rule) => (
+              <li class="flex gap-3"><span class="text-primary mt-0.5" aria-hidden="true">—</span><span>{rule}</span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-24">
+      <div class="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Incident response</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Detectare, izolare, remediere și recuperare.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Evenimentele de securitate sunt evaluate în funcție de impact și context. Când un incident afectează date sau servicii ale unui client, comunicarea și notificările sunt gestionate conform faptelor disponibile, obligațiilor contractuale și cerințelor legale aplicabile.</p>
+        </div>
+        <div>
+          <h3 class="mb-4 text-xl font-medium">Responsabilitate partajată</h3>
+          <p class="text-muted-foreground mb-5 leading-relaxed">Securitatea depinde și de configurațiile aflate sub controlul clientului. Conturile, utilizatorii, parolele, MFA, aplicațiile, pluginurile, datele încărcate și schimbările făcute în sistemele administrate de client trebuie operate în siguranță.</p>
+          <p class="text-muted-foreground leading-relaxed">Pentru servicii administrate, responsabilitățile exacte sunt stabilite de comandă, plan, SLA și documentele contractuale aplicabile.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto max-w-190 rounded-2xl border p-8 text-center sm:p-12">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security information</p>
+        <h2 class="text-h3 mb-4 font-medium">O pagină despre securitatea operațională ZebraByte.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg leading-relaxed">Aici publicăm modul în care abordăm securitatea serviciilor ZebraByte. Termenii contractuali, DPA-ul, SLA-urile și politicile de privacy sunt menținute separat în Centrul juridic.</p>
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button href="/legal">Deschide Centrul juridic</Button>
+          <Button href="/dpa" variant="secondary">Vezi DPA</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>

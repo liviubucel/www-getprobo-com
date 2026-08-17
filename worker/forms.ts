@@ -66,14 +66,34 @@ const validContactServices = new Set([
   "Altceva",
 ]);
 
+const validSecurityCategories = new Set([
+  "access-control",
+  "authentication",
+  "injection",
+  "xss",
+  "ssrf",
+  "csrf",
+  "data-exposure",
+  "misconfiguration",
+  "dependency",
+  "business-logic",
+  "other",
+]);
+
+const validSecuritySeverities = new Set(["unsure", "low", "medium", "high", "critical"]);
+const validDisclosurePreferences = new Set(["private", "coordinated", "no-preference"]);
+
 const copy = {
   ro: {
     required: "Completează toate câmpurile obligatorii.",
     tooLong: "Unul dintre câmpuri este prea lung.",
     invalidEmail: "Adresa de email nu este validă.",
     invalidPhone: "Numărul de telefon nu este valid.",
+    invalidUrl: "Linkul pentru dovezi nu este valid.",
+    invalidChoice: "Una dintre opțiunile selectate nu este validă.",
     turnstile: "Verificarea de securitate a eșuat. Încearcă din nou.",
     contactFailed: "A apărut o eroare la trimitere.",
+    securityFailed: "Raportul de securitate nu a putut fi trimis. Încearcă din nou.",
     consent: "Trebuie să fii de acord cu prelucrarea datelor pentru abonare.",
     subscribeFailed: "Abonarea nu a putut fi procesată.",
   },
@@ -82,8 +102,11 @@ const copy = {
     tooLong: "One of the fields is too long.",
     invalidEmail: "The email address is not valid.",
     invalidPhone: "The phone number is not valid.",
+    invalidUrl: "The evidence URL is not valid.",
+    invalidChoice: "One of the selected options is not valid.",
     turnstile: "The security verification failed. Please try again.",
     contactFailed: "An error occurred while sending your message.",
+    securityFailed: "The security report could not be submitted. Please try again.",
     consent: "You must agree to the data processing required for the subscription.",
     subscribeFailed: "Your subscription could not be processed.",
   },
@@ -99,6 +122,10 @@ export async function handleZebraByteFormsApi(
 
   if (pathname === "/api/contact" && request.method === "POST") {
     return handleContact(request, env, locale);
+  }
+
+  if (pathname === "/api/security-report" && request.method === "POST") {
+    return handleSecurityReport(request, env, locale);
   }
 
   if (pathname === "/api/newsletter/subscribe" && request.method === "POST") {
@@ -158,13 +185,7 @@ async function handleContact(
       return jsonResponse({ success: false, error: t.invalidPhone }, 400);
     }
 
-    if (
-      !(await verifyTurnstile(
-        env,
-        turnstileToken,
-        request.headers.get("CF-Connecting-IP") || "",
-      ))
-    ) {
+    if (!(await verifyTurnstile(env, turnstileToken, request.headers.get("CF-Connecting-IP") || ""))) {
       return jsonResponse({ success: false, error: t.turnstile }, 400);
     }
 
@@ -180,9 +201,7 @@ async function handleContact(
       message,
     ].filter(Boolean) as string[];
     const text = lines.join("\n");
-    const html = lines
-      .map((line) => `<p>${escapeHtml(line).replace(/\n/g, "<br>")}</p>`)
-      .join("");
+    const html = lines.map((line) => `<p>${escapeHtml(line).replace(/\n/g, "<br>")}</p>`).join("");
 
     await env.EMAIL.send({
       from: env.CONTACT_FROM_EMAIL,
@@ -213,6 +232,116 @@ async function handleContact(
   }
 }
 
+async function handleSecurityReport(
+  request: Request,
+  env: FormsEnv,
+  locale: EmailLocale,
+): Promise<Response> {
+  const t = copy[locale];
+
+  try {
+    const data = await request.formData();
+    const name = sanitize(data.get("name")?.toString() || "");
+    const email = sanitize(data.get("email")?.toString() || "");
+    const company = sanitize(data.get("company")?.toString() || "");
+    const asset = sanitize(data.get("asset")?.toString() || "");
+    const summary = sanitize(data.get("summary")?.toString() || "");
+    const category = sanitize(data.get("category")?.toString() || "");
+    const severity = sanitize(data.get("severity")?.toString() || "");
+    const details = sanitizeMultiline(data.get("details")?.toString() || "");
+    const impact = sanitizeMultiline(data.get("impact")?.toString() || "");
+    const evidenceUrl = sanitize(data.get("evidenceUrl")?.toString() || "");
+    const disclosure = sanitize(data.get("disclosure")?.toString() || "");
+    const consent = data.get("consent");
+    const turnstileToken = data.get("cf-turnstile-response")?.toString() || "";
+
+    if (!email || !asset || !summary || !category || !severity || !details || !impact || !disclosure || !consent) {
+      return jsonResponse({ success: false, error: t.required }, 400);
+    }
+
+    if (
+      name.length > 100 ||
+      email.length > 254 ||
+      company.length > 150 ||
+      asset.length > 500 ||
+      summary.length > 200 ||
+      details.length > 12000 ||
+      impact.length > 5000 ||
+      evidenceUrl.length > 1000
+    ) {
+      return jsonResponse({ success: false, error: t.tooLong }, 400);
+    }
+
+    if (!strictEmailRegex.test(email)) {
+      return jsonResponse({ success: false, error: t.invalidEmail }, 400);
+    }
+
+    if (!validSecurityCategories.has(category) || !validSecuritySeverities.has(severity) || !validDisclosurePreferences.has(disclosure)) {
+      return jsonResponse({ success: false, error: t.invalidChoice }, 400);
+    }
+
+    if (evidenceUrl && !isHttpUrl(evidenceUrl)) {
+      return jsonResponse({ success: false, error: t.invalidUrl }, 400);
+    }
+
+    if (!(await verifyTurnstile(env, turnstileToken, request.headers.get("CF-Connecting-IP") || ""))) {
+      return jsonResponse({ success: false, error: t.turnstile }, 400);
+    }
+
+    const referenceId = securityReferenceId();
+    const severityLabel = severity.toUpperCase();
+    const subject = `[Security report][${severityLabel}][${referenceId}] ${summary}`;
+    const lines = [
+      `Referință: ${referenceId}`,
+      `Severitate declarată: ${severityLabel}`,
+      `Categorie: ${category}`,
+      `Activ afectat: ${asset}`,
+      `Rezumat: ${summary}`,
+      `Nume: ${name || "Nespecificat"}`,
+      `Email: ${email}`,
+      `Companie: ${company || "Nespecificată"}`,
+      `Preferință disclosure: ${disclosure}`,
+      evidenceUrl && `Dovezi / referință: ${evidenceUrl}`,
+      "",
+      "Pași de reproducere / detalii:",
+      details,
+      "",
+      "Impact:",
+      impact,
+      "",
+      `IP raportor: ${request.headers.get("CF-Connecting-IP") || "necunoscut"}`,
+      `User-Agent: ${sanitize(request.headers.get("User-Agent") || "necunoscut")}`,
+    ].filter(Boolean) as string[];
+
+    await env.EMAIL.send({
+      from: env.CONTACT_FROM_EMAIL,
+      to: env.CONTACT_TO_EMAIL,
+      replyTo: email,
+      subject,
+      text: lines.join("\n"),
+      html: lines.map((line) => `<p>${escapeHtml(line).replace(/\n/g, "<br>")}</p>`).join(""),
+    });
+
+    try {
+      const confirmation = securityReportConfirmation(referenceId, locale);
+      await env.EMAIL.send({
+        from: env.CONTACT_FROM_EMAIL,
+        to: email,
+        subject: confirmation.subject,
+        text: confirmation.text,
+        html: confirmation.html,
+      });
+    } catch (error) {
+      console.error("security report confirmation email failed:", error);
+    }
+
+    return jsonResponse({ success: true, referenceId }, 200);
+  } catch (error) {
+    console.error("security report submission failed:", error);
+    return jsonResponse({ success: false, error: t.securityFailed }, 500);
+  }
+}
+
 async function handleNewsletterSubscribe(
   request: Request,
   env: FormsEnv,
@@ -234,13 +363,7 @@ async function handleNewsletterSubscribe(
       return jsonResponse({ success: false, error: t.consent }, 400);
     }
 
-    if (
-      !(await verifyTurnstile(
-        env,
-        turnstileToken,
-        request.headers.get("CF-Connecting-IP") || "",
-      ))
-    ) {
+    if (!(await verifyTurnstile(env, turnstileToken, request.headers.get("CF-Connecting-IP") || ""))) {
       return jsonResponse({ success: false, error: t.turnstile }, 400);
     }
 
@@ -420,6 +543,31 @@ function newsletterSubscriberKey(email: string): string {
   return `sub:${email.toLowerCase()}`;
 }
 
+function securityReferenceId(): string {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return `ZBT-SEC-${date}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+}
+
+function securityReportConfirmation(referenceId: string, locale: EmailLocale) {
+  if (locale === "en") {
+    const subject = `ZebraByte security report received — ${referenceId}`;
+    const text = `We received your security report. Reference: ${referenceId}. Keep this reference for follow-up. Please do not send passwords, private keys, access tokens, or unnecessary personal data by email.`;
+    return {
+      subject,
+      text,
+      html: `<p>We received your security report.</p><p><strong>Reference: ${escapeHtml(referenceId)}</strong></p><p>Keep this reference for follow-up. Please do not send passwords, private keys, access tokens, or unnecessary personal data by email.</p>`,
+    };
+  }
+
+  const subject = `Raport de securitate ZebraByte primit — ${referenceId}`;
+  const text = `Am primit raportul tău de securitate. Referință: ${referenceId}. Păstrează această referință pentru comunicările ulterioare. Nu trimite prin email parole, chei private, token-uri de acces sau date personale care nu sunt necesare.`;
+  return {
+    subject,
+    text,
+    html: `<p>Am primit raportul tău de securitate.</p><p><strong>Referință: ${escapeHtml(referenceId)}</strong></p><p>Păstrează această referință pentru comunicările ulterioare. Nu trimite prin email parole, chei private, token-uri de acces sau date personale care nu sunt necesare.</p>`,
+  };
+}
+
 function redirectNewsletterResult(
   origin: string,
   status: string,
@@ -444,6 +592,22 @@ function timingSafeEqual(a: string, b: string): boolean {
 
 function sanitize(value: string): string {
   return value.replace(/[\x00-\x1f\x7f]/g, "").trim();
+}
+
+function sanitizeMultiline(value: string): string {
+  return value
+    .replace(/\r\n/g, "\n")
+    .replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, "")
+    .trim();
+}
+
+function isHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 function escapeHtml(value: string): string {

@@ -223,9 +223,9 @@ export const menuGroups: MenuGroup[] = [
         icon: "handshake",
       },
       {
-        label: "Trust Center",
-        description: "Postura ZebraByte de securitate și conformitate",
-        href: "https://trust.zebrabyte.ro",
+        label: "Securitate ZebraByte",
+        description: "Practicile și postura operațională de securitate",
+        href: "/security",
         icon: "shield-check",
       },
       {

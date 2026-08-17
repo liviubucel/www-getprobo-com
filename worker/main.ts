@@ -12,6 +12,10 @@ import {
   type PublicStatusEnv,
 } from "./public-status";
 import {
+  handleSecurityReportApi,
+  type SecurityReportEnv,
+} from "./security-report";
+import {
   captureSentryException,
   captureSentryMessage,
   handleSentryClientApi,
@@ -22,6 +26,7 @@ type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
   NewsletterDispatchEnv &
   PublicStatusEnv &
+  SecurityReportEnv &
   SentryEnv;
 
 type ExecutionContextLike = {
@@ -67,6 +72,21 @@ export default {
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
+
+      const securityReportResponse = await handleSecurityReportApi(request, env);
+      if (securityReportResponse) {
+        if (securityReportResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte security report API returned a server error", {
+              request,
+              component: "security-report",
+              status: securityReportResponse.status,
+            }),
+          );
+        }
+        return securityReportResponse;
+      }
 
       const formsResponse = await handleZebraByteFormsApi(request, env);
       if (formsResponse) {

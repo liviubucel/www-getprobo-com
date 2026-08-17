@@ -1,0 +1,6 @@
+Contact: https://www.zebrabyte.ro/security/report
+Contact: mailto:contact@zebrabyte.ro
+Expires: 2027-08-16T23:59:59.000Z
+Preferred-Languages: ro, en
+Canonical: https://www.zebrabyte.ro/.well-known/security.txt
+Policy: https://www.zebrabyte.ro/security

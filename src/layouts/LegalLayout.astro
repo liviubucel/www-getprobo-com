@@ -1,0 +1,50 @@
+---
+import Layout from "./Layout.astro";
+import Prose from "../components/Prose.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  updated?: string;
+}
+
+const { title, description, updated = "17 august 2026" } = Astro.props;
+
+const legalLinks = [
+  { label: "Centru juridic", href: "/legal" },
+  { label: "Termeni", href: "/terms" },
+  { label: "Confidențialitate", href: "/privacy" },
+  { label: "Cookie-uri", href: "/cookie-policy" },
+  { label: "DPA", href: "/dpa" },
+  { label: "SLA găzduire", href: "/legal/hosting-sla" },
+  { label: "Domenii", href: "/legal/domain-policy" },
+  { label: "Mentenanță", href: "/legal/maintenance-terms" },
+  { label: "Suport", href: "/legal/support-terms" },
+];
+---
+
+<Layout title={title} description={description}>
+  <main class="container max-w-[860px] py-10 sm:py-20">
+    <nav aria-label="Documente juridice" class="mb-10 flex flex-wrap gap-2 text-sm">
+      {legalLinks.map((item) => (
+        <a
+          href={item.href}
+          class="border-border-low text-muted-foreground hover:text-primary rounded-lg border px-3 py-1.5 transition-colors"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <header class="mb-10 border-b pb-8">
+      <p class="text-muted-foreground mb-3 text-sm font-medium">Juridic · ZebraByte</p>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">{title}</h1>
+      <p class="text-muted-foreground max-w-[720px] text-lg leading-relaxed">{description}</p>
+      <p class="text-tertiary-foreground mt-5 text-sm">Ultima revizuire: {updated}</p>
+    </header>
+
+    <Prose>
+      <slot />
+    </Prose>
+  </main>
+</Layout>

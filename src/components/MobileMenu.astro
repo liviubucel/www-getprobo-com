@@ -86,9 +86,9 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                     alt={group.feature.alt}
                     width="640"
                     height="360"
-                    loading="lazy"
+                    loading={group.label === "Companie" ? "eager" : "lazy"}
                     decoding="async"
-                    fetchpriority="low"
+                    fetchpriority={group.label === "Companie" ? "auto" : "low"}
                     data-mobile-feature-image
                     class:list={[
                       "absolute inset-0 size-full",

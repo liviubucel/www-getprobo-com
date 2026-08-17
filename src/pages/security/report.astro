@@ -1,0 +1,131 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SecurityReportWizard from "../../components/security/SecurityReportWizard.svelte";
+
+const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
+---
+
+<Layout
+  title="Raportează o vulnerabilitate"
+  description="Canalul ZebraByte pentru raportarea responsabilă și coordonată a vulnerabilităților de securitate."
+>
+  <main>
+    <section class="container py-12 sm:py-20">
+      <div class="mx-auto max-w-220">
+        <a class="text-muted-foreground mb-7 inline-flex text-sm hover:underline" href="/security">← Înapoi la Securitate</a>
+
+        <div class="mb-10 max-w-190">
+          <p class="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-[0.14em]">Coordinated vulnerability disclosure</p>
+          <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">Raportează o vulnerabilitate.</h1>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Raportarea este ghidată pas cu pas. Îți verificăm adresa de email înainte de a continua, apoi colectăm contextul tehnic, pașii de reproducere, impactul și preferințele de disclosure. Nu include parole, chei private, token-uri de acces sau mai multe date personale decât este strict necesar pentru demonstrarea problemei.
+          </p>
+        </div>
+
+        <div class="mb-8 grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-3">
+          <div class="bg-level-0 p-5">
+            <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.12em]">01 · Identitate</p>
+            <p class="text-sm leading-relaxed">Emailul este confirmat cu un cod unic înainte ca raportul să poată avansa.</p>
+          </div>
+          <div class="bg-level-0 p-5">
+            <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.12em]">02 · Detalii tehnice</p>
+            <p class="text-sm leading-relaxed">Colectăm numai informația necesară pentru reproducere, triere și remediere.</p>
+          </div>
+          <div class="bg-level-0 p-5">
+            <p class="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-[0.12em]">03 · Coordonare</p>
+            <p class="text-sm leading-relaxed">Primești o referință ZebraByte și confirmare pe adresa de email verificată.</p>
+          </div>
+        </div>
+
+        <div class="security-report-wizard-shell">
+          <SecurityReportWizard siteKey={turnstileSiteKey} client:load />
+        </div>
+
+        <div class="text-muted-foreground mt-8 flex flex-col gap-2 text-xs leading-relaxed sm:flex-row sm:items-center sm:justify-between">
+          <p>Acest canal este pentru vulnerability disclosure, nu pentru incidente active ale clienților.</p>
+          <a class="underline underline-offset-4" href="/.well-known/security.txt">security.txt</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <style is:global>
+    .security-report-wizard-shell footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .security-report-wizard-shell footer > button {
+      width: 100%;
+      min-height: 3.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.875rem 1.15rem;
+      border-radius: 0.875rem;
+      font-size: 0.95rem;
+      line-height: 1.1;
+      font-weight: 600;
+      white-space: nowrap;
+      transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        opacity 160ms ease,
+        transform 160ms ease;
+    }
+
+    .security-report-wizard-shell footer > button:first-child {
+      border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+      background: transparent;
+      color: inherit;
+    }
+
+    .security-report-wizard-shell footer > button:first-child:disabled {
+      opacity: 0.46;
+      cursor: not-allowed;
+    }
+
+    .security-report-wizard-shell footer > button:last-child {
+      border: 1px solid #11190f;
+      background: #11190f;
+      color: #fff !important;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .security-report-wizard-shell footer > button:last-child:hover:not(:disabled) {
+      background: #1a2517;
+      border-color: #1a2517;
+      transform: translateY(-1px);
+    }
+
+    .security-report-wizard-shell footer > button:last-child:disabled {
+      color: rgba(255, 255, 255, 0.78) !important;
+      opacity: 0.64;
+      cursor: not-allowed;
+    }
+
+    .security-report-wizard-shell footer > button:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    @media (min-width: 640px) {
+      .security-report-wizard-shell footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .security-report-wizard-shell footer > button {
+        width: auto;
+        min-width: 9.5rem;
+        min-height: 3rem;
+        padding-inline: 1.35rem;
+      }
+    }
+  </style>
+</Layout>
