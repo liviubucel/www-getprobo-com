@@ -11,7 +11,7 @@ type StatusPayload = {
 };
 
 const PRIMARY_STATUS_API = "https://status.zebrabyte.ro/api/status";
-const FAILOVER_STATUS_API = "https://zebra-byte-status.vercel.app/api/status";
+const FAILOVER_STATUS_API = "https://zebra-byte-status-web.vercel.app/api/status";
 const FETCH_TIMEOUT_MS = 4_500;
 const VALID_STATUSES = new Set<PublicStatus>([
   "operational",
@@ -113,24 +113,20 @@ export async function handlePublicStatusApi(
 
   if (!primary || primary.overall === "no_data") {
     const failover = await fetchStatus(FAILOVER_STATUS_API);
-    if (
-      failover &&
-      (!primary || failover.overall !== "no_data")
-    ) {
+    if (failover && (!primary || failover.overall !== "no_data")) {
       chosen = failover;
       source = "failover";
     }
   }
 
   if (!chosen) {
-    return jsonResponse(
-      {
-        overall: "no_data",
-        updatedAt: null,
-        source: "unavailable",
-      },
-      503,
-    );
+    return jsonResponse({
+      overall: "no_data",
+      updatedAt: null,
+      source: "unavailable",
+      freshness: null,
+      publicationMode: null,
+    });
   }
 
   const payload = {
