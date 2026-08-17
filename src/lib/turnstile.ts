@@ -13,6 +13,7 @@ type TurnstileApi = {
     },
   ) => string;
   reset: (widgetId?: string) => void;
+  remove: (widgetId: string) => void;
   getResponse: (widgetId?: string) => string;
 };
 
@@ -134,6 +135,19 @@ export function resetTurnstile(container: HTMLElement | null): void {
   targetWindow().turnstile?.reset(widgetId);
 }
 
+export function destroyTurnstile(container: HTMLElement | null): void {
+  if (!container) return;
+  const widgetId = container.dataset.turnstileWidgetId;
+  if (!widgetId) return;
+
+  try {
+    targetWindow().turnstile?.remove(widgetId);
+  } catch {
+    // The widget can already be gone if Astro removed its DOM during navigation.
+  }
+  delete container.dataset.turnstileWidgetId;
+}
+
 export function lazyRenderTurnstile(container: HTMLElement | null): () => void {
   if (!container) return () => undefined;
 
@@ -145,7 +159,11 @@ export function lazyRenderTurnstile(container: HTMLElement | null): () => void {
     if (disposed || container.dataset.turnstileWidgetId) return;
     observer?.disconnect();
     observer = null;
-    void renderTurnstile(container).catch(() => undefined);
+    void renderTurnstile(container)
+      .then(() => {
+        if (disposed) destroyTurnstile(container);
+      })
+      .catch(() => undefined);
   };
 
   if ("IntersectionObserver" in window) {
@@ -168,5 +186,6 @@ export function lazyRenderTurnstile(container: HTMLElement | null): () => void {
     observer?.disconnect();
     form?.removeEventListener("focusin", trigger);
     form?.removeEventListener("pointerdown", trigger);
+    destroyTurnstile(container);
   };
 }
