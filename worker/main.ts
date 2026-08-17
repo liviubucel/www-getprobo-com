@@ -7,7 +7,10 @@ import {
   handleNewsletterDispatchApi,
   type NewsletterDispatchEnv,
 } from "./newsletter-dispatch";
-import { handlePublicStatusApi } from "./public-status";
+import {
+  handlePublicStatusApi,
+  type PublicStatusEnv,
+} from "./public-status";
 import {
   captureSentryException,
   captureSentryMessage,
@@ -18,6 +21,7 @@ import {
 type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
   NewsletterDispatchEnv &
+  PublicStatusEnv &
   SentryEnv;
 
 type ExecutionContextLike = {
@@ -46,7 +50,7 @@ export default {
       const clientErrorResponse = await handleSentryClientApi(request, env);
       if (clientErrorResponse) return clientErrorResponse;
 
-      const publicStatusResponse = await handlePublicStatusApi(request);
+      const publicStatusResponse = await handlePublicStatusApi(request, env);
       if (publicStatusResponse) {
         if (publicStatusResponse.status >= 500) {
           reportInBackground(
