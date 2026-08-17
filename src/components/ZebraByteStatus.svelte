@@ -6,8 +6,10 @@
 
   const STATUS_API = "/api/status";
   const STATUS_PAGE = "https://status.zebrabyte.ro/";
+  const FETCH_TIMEOUT_MS = 6_000;
 
   let status = $state<PublicStatus>("no_data");
+  let checking = $state(true);
 
   const dictionary: Record<PublicStatus, { label: () => string; color: string; live: boolean }> = {
     operational: {
@@ -26,7 +28,7 @@
       live: true,
     },
     no_data: {
-      label: () => browserT("Se verifică statusul", "Checking status"),
+      label: () => browserT("Status indisponibil", "Status unavailable"),
       color: "#8a8a8a",
       live: false,
     },
@@ -38,32 +40,45 @@
   };
 
   let current = $derived(dictionary[status]);
-  let label = $derived(current.label());
+  let label = $derived(
+    checking
+      ? browserT("Se verifică statusul", "Checking status")
+      : current.label(),
+  );
 
   onMount(() => {
     let stopped = false;
 
     const fetchStatus = async () => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
       try {
         const response = await fetch(STATUS_API, {
           headers: { Accept: "application/json" },
           cache: "no-store",
+          signal: controller.signal,
         });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
         const payload = (await response.json()) as { overall?: string };
         const next = payload.overall;
 
-        if (
-          !stopped &&
-          (next === "operational" || next === "degraded" || next === "outage" || next === "no_data")
-        ) {
-          status = next;
-          return;
-        }
+        if (stopped) return;
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        if (!stopped) status = "unknown";
+        if (next === "operational" || next === "degraded" || next === "outage") {
+          status = next;
+        } else if (next === "no_data") {
+          status = "no_data";
+        } else {
+          status = "unknown";
+        }
       } catch {
         if (!stopped) status = "unknown";
+      } finally {
+        window.clearTimeout(timeout);
+        if (!stopped) checking = false;
       }
     };
 
