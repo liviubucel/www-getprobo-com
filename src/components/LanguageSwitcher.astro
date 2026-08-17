@@ -14,8 +14,8 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
   data-locale-switch
   data-language-switch
   class:list={[
-    "text-muted-foreground hover:text-primary inline-flex h-10 items-center justify-center gap-1.5 rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
-    compact && "px-1.5",
+    "text-muted-foreground hover:text-primary hover:bg-highlight inline-flex items-center justify-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2",
+    compact ? "size-10 rounded-lg px-1.5" : "h-8 rounded-md px-[9px]",
     className,
   ]}
   aria-label="Switch language to English"

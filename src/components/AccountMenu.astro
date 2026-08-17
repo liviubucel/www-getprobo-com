@@ -25,10 +25,10 @@ const {
     type="button"
     data-account-trigger
     class:list={[
-      "text-primary grid size-10 place-items-center transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
+      "text-primary grid place-items-center transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/15",
       mobile
-        ? "text-muted-foreground hover:text-primary rounded-lg hover:bg-subtle aria-expanded:bg-subtle aria-expanded:text-primary aria-expanded:ring-1 aria-expanded:ring-current/10"
-        : "bg-secondary hover:bg-active rounded-full border shadow-[0_1px_2px_rgba(20,30,18,0.04)] transition-[background-color,border-color,box-shadow] hover:shadow-[0_3px_10px_rgba(20,30,18,0.09)] aria-expanded:bg-subtle aria-expanded:shadow-[0_3px_10px_rgba(20,30,18,0.10)]",
+        ? "text-muted-foreground hover:text-primary size-10 rounded-lg hover:bg-subtle aria-expanded:bg-subtle aria-expanded:text-primary aria-expanded:ring-1 aria-expanded:ring-current/10"
+        : "bg-secondary hover:bg-active shadow-btn size-8 rounded-full border transition-[background-color,border-color,box-shadow] aria-expanded:bg-subtle",
     ]}
     aria-label="Autentificare și acces clienți"
     title="Acces clienți"
@@ -75,7 +75,7 @@ const {
 
     <div
       class:list={[
-        "bg-secondary overflow-hidden border shadow-[0_16px_32px_rgba(20,30,18,0.16)]",
+        "bg-secondary overflow-hidden border shadow-[inset_0_0_0_1px_var(--color-border-low),0_16px_32px_rgba(186,193,122,0.2)]",
         mobile ? "rounded-xl" : "rounded-2xl",
       ]}
     >

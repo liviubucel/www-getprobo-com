@@ -511,11 +511,22 @@ const menuId = "desktop-navigation-menu";
 
   .navigation-feature-halo {
     position: absolute;
-    inset: 18% -20% -38%;
+    bottom: -52px;
+    left: 50%;
+    z-index: 2;
     display: block;
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 45%, rgba(147, 201, 38, 0.2), transparent 62%);
+    width: 783px;
+    height: 783px;
+    transform: translateX(-50%);
     pointer-events: none;
+  }
+
+  .navigation-feature-halo::before {
+    position: absolute;
+    inset: -21.93%;
+    content: "";
+    background: url("/navigation/ellipse.svg") center / 100% 100% no-repeat;
+    transform: rotate(180deg) scaleY(-1);
   }
 
   @media (prefers-reduced-motion: reduce) {
