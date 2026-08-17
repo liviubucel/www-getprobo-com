@@ -50,6 +50,31 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
   </main>
 
   <style is:global>
+    /*
+     * Primary wizard actions deliberately use explicit foreground/background colours.
+     * Safari/iOS can otherwise resolve the inherited `text-background` utility against
+     * the current theme in a way that makes labels disappear on dark buttons.
+     * Keep this scoped to the security-report wizard; do not promote it to global buttons.
+     */
+    .security-report-wizard-shell button.bg-foreground {
+      border-color: #11190f !important;
+      background: #11190f !important;
+      color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+
+    .security-report-wizard-shell button.bg-foreground:hover:not(:disabled) {
+      border-color: #1a2517 !important;
+      background: #1a2517 !important;
+      color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+
+    .security-report-wizard-shell button.bg-foreground:disabled {
+      color: rgba(255, 255, 255, 0.78) !important;
+      -webkit-text-fill-color: rgba(255, 255, 255, 0.78) !important;
+    }
+
     .security-report-wizard-shell footer {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -93,6 +118,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       border: 1px solid #11190f;
       background: #11190f;
       color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
       box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     }
 
@@ -104,11 +130,13 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
     .security-report-wizard-shell footer > button:last-child:disabled {
       color: rgba(255, 255, 255, 0.78) !important;
+      -webkit-text-fill-color: rgba(255, 255, 255, 0.78) !important;
       opacity: 0.64;
       cursor: not-allowed;
     }
 
-    .security-report-wizard-shell footer > button:focus-visible {
+    .security-report-wizard-shell footer > button:focus-visible,
+    .security-report-wizard-shell button.bg-foreground:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 3px;
     }
