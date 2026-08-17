@@ -1,0 +1,47 @@
+name: Polish mobile navigation
+on:
+  push:
+    branches: [fix/probo-visual-polish]
+permissions:
+  contents: write
+jobs:
+  polish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: fix/probo-visual-polish, fetch-depth: 0}
+      - name: Patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('src/components/MobileMenu.astro');s=p.read_text()
+          s=s.replace('outline-none transition-colors hover:bg-subtle/60 group-open/mobile:bg-subtle/70','outline-none transition-colors hover:bg-subtle/60 focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-inset group-open/mobile:bg-subtle/70')
+          s=s.replace('transition-shadow focus-visible:ring-2 focus-visible:ring-current/20','transition-shadow hover:shadow-mid focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2')
+          s=s.replace('from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.12)] to-[rgba(0,0,0,0.46)]','from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]')
+          old='''<span\n                      class="absolute inset-0 bg-linear-to-b from-[rgba(248,250,244,0.98)] via-[rgba(248,250,244,0.62)] to-transparent"\n                      aria-hidden="true"\n                    />'''
+          if old not in s: raise SystemExit('overlay not found')
+          s=s.replace(old,'<span class="mobile-navigation-feature-halo" aria-hidden="true" />',1)
+          s=s.replace('rounded-xl px-4 text-center text-[15px]','rounded-full px-4 text-center text-[15px]')
+          s=s.replace('rounded-xl border bg-secondary px-4 text-center text-[14px]','rounded-full border bg-secondary px-4 text-center text-[14px]')
+          marker='</div>\n\n<script>'
+          css='''</div>\n\n<style>\n.mobile-navigation-feature-halo{position:absolute;bottom:-52px;left:50%;z-index:2;display:block;width:min(783px,180vw);aspect-ratio:1;transform:translateX(-50%);pointer-events:none}.mobile-navigation-feature-halo::before{position:absolute;inset:-21.93%;content:"";background:url("/navigation/ellipse.svg") center/100% 100% no-repeat;transform:rotate(180deg) scaleY(-1)}\n</style>\n\n<script>'''
+          if marker not in s: raise SystemExit('style marker not found')
+          p.write_text(s.replace(marker,css,1))
+          a=Path('src/components/AccountMenu.astro');t=a.read_text().replace('focus-visible:ring-2 focus-visible:ring-current/15','focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2');a.write_text(t)
+          c=Path('tools/check-probo-design-contract.mjs');q=c.read_text();needle="if(failures.length){console.error('Probo visual contract failed:"
+          if 'MobileMenu: Probo halo missing' not in q:q=q.replace(needle,"const mobile=await readFile('src/components/MobileMenu.astro','utf8');if(!mobile.includes('mobile-navigation-feature-halo::before'))failures.push('MobileMenu: Probo halo missing');if(mobile.includes('rgba(248,250,244,0.98)'))failures.push('MobileMenu: custom feature wash reintroduced');"+needle,1);c.write_text(q)
+          PY
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
+      - run: npm run check:experience
+      - run: npm run build
+      - name: Commit
+        run: |
+          rm .github/workflows/visual-polish-mobile.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/MobileMenu.astro src/components/AccountMenu.astro tools/check-probo-design-contract.mjs .github/workflows/visual-polish-mobile.yml
+          git commit -s -m "Align mobile navigation with Probo visual language"
+          git push origin HEAD:fix/probo-visual-polish
