@@ -1,0 +1,71 @@
+name: Visual drift report
+on:
+  push:
+    branches: [fix/probo-visual-polish]
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ZebraByte
+        uses: actions/checkout@v4
+        with:
+          ref: fix/probo-visual-polish
+          path: zbt
+      - name: Checkout Probo v2
+        uses: actions/checkout@v4
+        with:
+          repository: getprobo/probo.com
+          ref: v2
+          path: probo
+      - name: Report presentation drift
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import difflib, re
+
+          zbt = Path('zbt')
+          probo = Path('probo')
+          roots = ['src/components', 'src/layouts', 'src/styles']
+          exts = {'.astro','.svelte','.css','.ts','.tsx'}
+          visual = re.compile(r'(class(?:=|:)|style=|@media|background|shadow|gradient|rounded|border|opacity|blur|color|transition|transform|gap-|space-|px-|py-|p-|m-|text-|bg-|ring-|size-|height|width)', re.I)
+          arbitrary = re.compile(r'(#[0-9a-fA-F]{3,8}|rgba?\(|shadow-\[|bg-\[|text-\[#|from-\[|via-\[|to-\[)')
+
+          print('=== COMMON FILE VISUAL DIFFS ===')
+          common_count = 0
+          for root in roots:
+            base = probo / root
+            if not base.exists(): continue
+            for pf in sorted(p for p in base.rglob('*') if p.is_file() and p.suffix in exts):
+              rel = pf.relative_to(probo)
+              zf = zbt / rel
+              if not zf.exists(): continue
+              a = pf.read_text(errors='ignore').splitlines()
+              b = zf.read_text(errors='ignore').splitlines()
+              if a == b: continue
+              changed=[]
+              for line in difflib.unified_diff(a,b,fromfile='probo/'+str(rel),tofile='zbt/'+str(rel),n=1):
+                if line.startswith(('+++','---','@@')): continue
+                if line[:1] in '+-' and visual.search(line[1:]): changed.append(line)
+              if changed:
+                common_count += 1
+                print(f'\n## {rel}')
+                for line in changed[:80]: print(line)
+                if len(changed)>80: print(f'... {len(changed)-80} more visual lines')
+          print(f'\nCOMMON_VISUAL_FILES={common_count}')
+
+          print('\n=== ZEBRABYTE ARBITRARY VISUAL VALUES ===')
+          hits=[]
+          for root in roots:
+            base=zbt/root
+            if not base.exists(): continue
+            for f in sorted(p for p in base.rglob('*') if p.is_file() and p.suffix in exts):
+              for i,line in enumerate(f.read_text(errors='ignore').splitlines(),1):
+                if arbitrary.search(line):
+                  hits.append((str(f.relative_to(zbt)),i,line.strip()))
+          for f,i,line in hits[:300]: print(f'{f}:{i}: {line}')
+          print(f'ARBITRARY_VALUE_HITS={len(hits)}')
+          PY
