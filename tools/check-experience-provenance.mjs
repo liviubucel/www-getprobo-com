@@ -100,6 +100,9 @@ requireText(
 requireText(about, 'import Team from "../components/block/Team.astro"', "About inherited section rhythm");
 requireText(about, "<Team />", "About capability/team geometry");
 requireText(about, "/images/zbt-negru.svg", "About ZebraByte hero identity");
+requireText(about, 'width="3242"', "About ZebraByte wordmark intrinsic width");
+requireText(about, 'height="1166"', "About ZebraByte wordmark intrinsic height");
+forbidText(about, 'width="420"', "About distorted ZebraByte wordmark ratio");
 forbidText(about, "../assets/about.png", "About Probo team photo provenance");
 forbidText(about, "const principles =", "About invented principles replacement");
 
@@ -112,22 +115,24 @@ forbidText(team, "Bryan Frimin", "About Probo people provenance");
 forbidText(team, "Platform archive", "About legacy archive presentation");
 forbidText(team, "rounded-xl border p-6 sm:p-8", "About invented bordered-card replacement");
 
-requireText(logos, 'LogosScroll from "../LogosScroll.svelte"', "capability marquee motion");
-requireText(logos, "client:load", "capability marquee hydration");
-requireText(logos, "/managed-compliance", "capability marquee first-party content");
-requireText(logos, "/cyber-security", "capability marquee first-party content");
-requireText(logos, "/secure-hosting", "capability marquee first-party content");
-forbidText(logos, "https://ahrefs.com", "Probo customer social-proof provenance");
-forbidText(logos, "traceforgood.com", "Probo customer social-proof provenance");
-forbidText(logos, "typebot.io", "Probo customer social-proof provenance");
-forbidText(logos, "Morphik", "Probo customer social-proof provenance");
+requireText(logos, 'LogosScroll from "../LogosScroll.svelte"', "reference logo marquee motion");
+requireText(logos, "client:load", "reference logo marquee hydration");
+requireText(logos, "const companies = [", "reference logo marquee inherited company set");
+requireText(logos, 'image: "ahrefs.svg"', "reference logo marquee Ahrefs asset");
+requireText(logos, 'image: "trace_for_good.svg"', "reference logo marquee Trace for Good asset");
+requireText(logos, 'image: "typebot.svg"', "reference logo marquee Typebot asset");
+requireText(logos, 'image: "wafer_logo.svg"', "reference logo marquee Wafer asset");
+requireText(logos, 'src={`/clients/${company.image}`}', "reference logo marquee client asset rendering");
+forbidText(logos, 'import MenuIcon from "../MenuIcon.astro"', "reference logo marquee capability-icon replacement");
+forbidText(logos, "/managed-compliance", "reference logo marquee capability-link replacement");
 
-forbidText(home, "Organizații din biblioteca de referință a platformei", "homepage inherited customer-logo workaround");
 requireText(
   home,
-  "Conformitate, securitate și infrastructură într-un singur program",
-  "homepage capability marquee context",
+  "Organizații din biblioteca de referință a platformei",
+  "homepage neutral reference-logo context",
 );
+forbidText(home, "Trusted by", "homepage unsupported customer-proof label");
+forbidText(home, "Clienți ZebraByte", "homepage unsupported customer-proof label");
 
 requireText(love, 'post.id.startsWith("zebrabyte-")', "customer wall ZebraByte-only source filter");
 forbidText(love, 'import Logos from "../components/block/Logos.astro"', "customer wall inherited company marquee");
