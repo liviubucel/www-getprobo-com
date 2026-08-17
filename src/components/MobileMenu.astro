@@ -34,7 +34,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
             class="group/mobile border-b last:border-b-0"
             open={isGroupActive(group)}
           >
-            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-inset group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
               <span>{group.label}</span>
               <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
                 <Icon name="caret-down" size={17} />
@@ -77,7 +77,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                 href={group.feature.href}
                 target={group.feature.href.startsWith("http") ? "_blank" : undefined}
                 rel={group.feature.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                class="bg-secondary group/feature mx-1 mt-2 block overflow-hidden rounded-xl border outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-current/20"
+                class="bg-secondary group/feature mx-1 mt-2 block overflow-hidden rounded-xl border outline-none transition-shadow hover:shadow-mid focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
                 aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
               >
                 <div class="relative aspect-[16/9] overflow-hidden">
@@ -101,14 +101,11 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
                   />
 
                   {group.feature.variant === "story" && (
-                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.12)] to-[rgba(0,0,0,0.46)]" />
+                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]" />
                   )}
 
                   {group.feature.variant !== "story" && (
-                    <span
-                      class="absolute inset-0 bg-linear-to-b from-[rgba(248,250,244,0.98)] via-[rgba(248,250,244,0.62)] to-transparent"
-                      aria-hidden="true"
-                    />
+                    <span class="mobile-navigation-feature-halo" aria-hidden="true" />
                   )}
 
                   <span
@@ -142,19 +139,23 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
     <div class="mt-4 grid gap-2.5">
       <a
         href="/contact"
-        class="bg-primary text-primary-foreground flex min-h-12 items-center justify-center rounded-xl px-4 text-center text-[15px] font-semibold transition-opacity hover:opacity-90"
+        class="bg-primary text-primary-foreground flex min-h-12 items-center justify-center rounded-full px-4 text-center text-[15px] font-semibold transition-opacity hover:opacity-90"
       >
         Discută cu un expert
       </a>
       <a
         href="/compliance-portal"
-        class="flex min-h-11 items-center justify-center rounded-xl border bg-secondary px-4 text-center text-[14px] font-semibold transition-colors hover:bg-subtle"
+        class="flex min-h-11 items-center justify-center rounded-full border bg-secondary px-4 text-center text-[14px] font-semibold transition-colors hover:bg-subtle"
       >
         Vezi platforma ZebraByte
       </a>
     </div>
   </div>
 </div>
+
+<style>
+.mobile-navigation-feature-halo{position:absolute;bottom:-52px;left:50%;z-index:2;display:block;width:min(783px,180vw);aspect-ratio:1;transform:translateX(-50%);pointer-events:none}.mobile-navigation-feature-halo::before{position:absolute;inset:-21.93%;content:"";background:url("/navigation/ellipse.svg") center/100% 100% no-repeat;transform:rotate(180deg) scaleY(-1)}
+</style>
 
 <script>
   const warmedFeatureUrls = new Set<string>();
