@@ -6,7 +6,8 @@ interface Props {
   video?: string;
   poster?: string;
 }
-const { title, video, poster, ...props } = Astro.props;
+const { title, video, poster: posterProp, ...props } = Astro.props;
+const poster = posterProp;
 ---
 
 <section class={clsx("flex flex-col gap-8 sm:gap-10", props.class)}>
