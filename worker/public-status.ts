@@ -11,6 +11,8 @@ export type PublicStatusEnv = {
   };
 };
 
+const STATUS_FALLBACK_API = "https://status.zebrabyte.ro/api/status";
+const FALLBACK_TIMEOUT_MS = 4_500;
 const VALID_STATUSES = new Set<PublicStatus>([
   "operational",
   "degraded",
@@ -32,9 +34,10 @@ function normalizeUpdatedAt(value: unknown): string | null {
 async function readWorkerStatus(env?: PublicStatusEnv): Promise<{
   overall: PublicStatus;
   updatedAt: string | null;
+  source: "binding" | "binding-unavailable";
 }> {
   if (!env?.STATUS_ENGINE?.getStatus) {
-    return { overall: "no_data", updatedAt: null };
+    return { overall: "no_data", updatedAt: null, source: "binding-unavailable" };
   }
 
   try {
@@ -42,9 +45,46 @@ async function readWorkerStatus(env?: PublicStatusEnv): Promise<{
     return {
       overall: normalizeStatus(payload?.overall),
       updatedAt: normalizeUpdatedAt(payload?.updatedAt),
+      source: "binding",
     };
   } catch {
-    return { overall: "no_data", updatedAt: null };
+    return { overall: "no_data", updatedAt: null, source: "binding-unavailable" };
+  }
+}
+
+async function readPublicFallback(): Promise<{
+  overall: PublicStatus;
+  updatedAt: string | null;
+  source: "public-fallback";
+} | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FALLBACK_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(STATUS_FALLBACK_API, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "ZebraByte-Website-Status/2.0",
+      },
+      cache: "no-store",
+      redirect: "follow",
+      signal: controller.signal,
+    });
+    if (!response.ok) return null;
+
+    const payload = (await response.json()) as FooterStatusPayload;
+    const overall = normalizeStatus(payload?.overall);
+    if (overall === "no_data") return null;
+
+    return {
+      overall,
+      updatedAt: normalizeUpdatedAt(payload?.updatedAt),
+      source: "public-fallback",
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -77,7 +117,11 @@ export async function handlePublicStatusApi(
     });
   }
 
-  const payload = await readWorkerStatus(env);
+  const bindingPayload = await readWorkerStatus(env);
+  const payload =
+    bindingPayload.overall === "no_data"
+      ? (await readPublicFallback()) ?? bindingPayload
+      : bindingPayload;
 
   if (request.method === "HEAD") {
     return new Response(null, {
