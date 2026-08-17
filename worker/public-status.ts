@@ -10,8 +10,8 @@ type StatusPayload = {
   publicationMode?: unknown;
 };
 
-const PRIMARY_STATUS_API = "https://status.zebrabyte.ro/api/status";
-const FAILOVER_STATUS_API = "https://zebra-byte-status-web.vercel.app/api/status";
+const PRIMARY_STATUS_API = "https://zebra-byte-status-web.vercel.app/api/status";
+const FAILOVER_STATUS_API = "https://status.zebrabyte.ro/api/status";
 const FETCH_TIMEOUT_MS = 4_500;
 const VALID_STATUSES = new Set<PublicStatus>([
   "operational",
@@ -42,7 +42,7 @@ async function fetchStatus(url: string): Promise<{
         "User-Agent": "ZebraByte-Website-Status/1.0",
       },
       cache: "no-store",
-      redirect: "error",
+      redirect: "follow",
       signal: controller.signal,
     });
     if (!response.ok) return null;
