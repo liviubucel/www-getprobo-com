@@ -1,0 +1,43 @@
+name: Visual polish cleanup v2
+on:
+  push:
+    branches: [fix/probo-visual-polish]
+permissions:
+  contents: write
+jobs:
+  clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/probo-visual-polish
+          fetch-depth: 0
+      - name: Remove build-only generated artifacts
+        run: |
+          rm -f \
+            public/logos/compliance/cyber-essentials-plus.webp \
+            public/logos/compliance/iso-22301.svg \
+            public/logos/compliance/iso-27001.svg \
+            public/logos/compliance/iso-9001.svg \
+            public/logos/compliance/soc2-type2.webp \
+            public/logos/partners/20i.svg \
+            public/logos/partners/xcitium.svg
+          git checkout origin/feat/legal-center-audit -- \
+            worker/blog-legacy-redirects.ts \
+            worker/blog-zebrabyte-slugs.ts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Revalidate presentation contracts
+        run: npm run check:experience
+      - name: Commit clean scope
+        run: |
+          rm -f .github/workflows/visual-polish-cleanup.yml .github/workflows/visual-polish-cleanup-v2.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/logos worker/blog-legacy-redirects.ts worker/blog-zebrabyte-slugs.ts .github/workflows/visual-polish-cleanup.yml .github/workflows/visual-polish-cleanup-v2.yml
+          git commit -s -m "Keep visual polish scoped to presentation"
+          git push origin HEAD:fix/probo-visual-polish
