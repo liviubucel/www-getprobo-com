@@ -132,6 +132,12 @@ Treat these as sensitive architectural surfaces:
 
 Do not bypass them with a static-only shortcut.
 
+### Footer live-status contract
+
+The footer live-status badge is a cross-repository runtime surface, not a static footer label. Before changing `ZebraByteStatus.svelte`, `/api/status`, `STATUS_ENGINE`, `worker/public-status.ts`, the status Service Binding, or related status copy, read `docs/architecture/footer-status.md`.
+
+The private `STATUS_ENGINE -> status-page / FooterStatusEntrypoint` binding is primary. Public HTTP is a bounded resilience/backwards-compatibility fallback, not a replacement architecture. The compact footer must not expose provider/source implementation details or hidden service IDs. Keep the badge mobile-safe and keep the documented browser/Worker timeouts.
+
 ## i18n rules
 
 - Root is Romanian; `/en` is English.
