@@ -27,6 +27,7 @@ Every meaningful difference from the golden reference must be classified before 
 
 - Never rename a Probo team photograph, person, customer, testimonial or company logo so it appears to belong to ZebraByte.
 - Never present Probo customer logos as ZebraByte social proof unless a separate ZebraByte source establishes that relationship.
+- The inherited homepage logo marquee may retain its original company/logo set only as a clearly neutral **reference library**. Its surrounding copy must not call those organizations ZebraByte customers, partners, users or endorsements.
 - Never fabricate people, portraits, reviews, certifications, customers, partnerships or metrics to fill an inherited layout.
 - Real ZebraByte reviews may be migrated from ZebraByte-owned source repositories when the text/source can be traced.
 - Imported Probo authors may remain attached to articles that explicitly attribute those authors, but they must not be described as ZebraByte staff.
@@ -39,9 +40,15 @@ Every meaningful difference from the golden reference must be classified before 
 
 The Probo snapshot uses a Probo team photograph, named Probo people and a Probo-specific photo gallery. Those assets are not valid ZebraByte identity. ZebraByte keeps the inherited large visual rhythm and two-tier team/capability geometry without presenting those people or photographs as ZebraByte.
 
-### Capability marquee
+The ZebraByte wordmark asset is `public/images/zbt-negru.svg`, whose intrinsic viewBox ratio is `3242 × 1166`. When rendered as an image, preserve that ratio; do not substitute arbitrary width/height attributes that distort the wordmark.
 
-The inherited auto-scrolling strip behavior is valuable and remains protected. The Probo company/customer identities inside the old strip are not ZebraByte social proof. The current strip represents ZebraByte capabilities and links to first-party ZebraByte service routes.
+### Reference logo marquee
+
+The inherited auto-scrolling logo strip is part of the original visual language and remains protected. Keep the original SVG/logo set and the `LogosScroll.svelte` AutoScroll behavior unless there is an explicit product decision to replace the strip.
+
+Because those organizations are not established here as ZebraByte customers, the homepage must frame the strip neutrally as **„Organizații din biblioteca de referință a platformei”** (or an equivalent non-customer reference label). Do not relabel it as „Trusted by”, „Clienți ZebraByte”, „Parteneri” or another unsupported relationship claim.
+
+Do not replace the logo strip with service-name pills or generic capability icons merely to avoid this distinction; that changes the inherited visual composition.
 
 ### Customer reviews
 
@@ -53,7 +60,7 @@ When a source platform is known, the card must identify that platform accurately
 
 ### Brand assets
 
-The structure of the inherited brand page may be preserved, but public downloads and previews must use ZebraByte assets. Do not restore Probo logos.
+The structure of the inherited brand page may be preserved, but public downloads and previews must use ZebraByte assets. Do not restore Probo logos as ZebraByte brand assets.
 
 ### Careers
 
