@@ -4,9 +4,9 @@ interface Props {
   title: string;
   class?: string;
   video?: string;
+  poster?: string;
 }
-const { title, video, ...props } = Astro.props;
-const poster = video?.replace(/\.mp4$/i, ".jpg");
+const { title, video, poster, ...props } = Astro.props;
 ---
 
 <section class={clsx("flex flex-col gap-8 sm:gap-10", props.class)}>
@@ -82,7 +82,7 @@ const poster = video?.replace(/\.mp4$/i, ".jpg");
       if (this.inView && document.visibilityState === "visible") {
         this.ensureSource();
         void video.play().catch(() => {
-          // Autoplay can be blocked; the poster remains visible.
+          // Autoplay can be blocked; the neutral video shell remains visible.
         });
       } else {
         video.pause();
