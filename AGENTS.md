@@ -26,6 +26,7 @@ Do not restore upstream content merely because it exists in the golden snapshot.
 
 - never present Probo team photographs or people as ZebraByte staff;
 - never present Probo customer/company logos or testimonials as ZebraByte social proof without an independent ZebraByte source;
+- the inherited homepage logo marquee may retain the original logo set only under a neutral reference-library label; do not call those organizations ZebraByte customers, partners or endorsements without a separate source;
 - never rename an upstream photograph, review, customer or relationship so it appears to belong to ZebraByte;
 - never fabricate people, customers, reviews, certifications, partnerships or metrics to fill an inherited layout;
 - preserve explicit Probo author attribution only on imported content that actually carries that attribution;
@@ -84,7 +85,7 @@ Protected behaviors currently include:
 1. **Homepage hero** — `AnimatedHero` remains mounted and viewport-aware.
 2. **Homepage framework grid** — uses the live `Badges.svelte` behavior, not `BadgesStatic.astro`.
 3. **Framework badges** — use Lottie JSON animation where the experience calls for animated badges.
-4. **Capability marquee** — retains the inherited `LogosScroll.svelte` AutoScroll behavior, but inherited Probo customer identities must not be presented as ZebraByte social proof.
+4. **Reference logo marquee** — retains the inherited SVG/logo set and `LogosScroll.svelte` AutoScroll behavior. Keep its framing neutral; do not replace it with capability/service pills merely to avoid provenance wording.
 5. **Client testimonials** — use `TestimonialsScroll.svelte`; desktop has the original two moving rows, including the reverse row.
 6. **Case studies** — use the interactive Slider, preserve overflow/click navigation and do not arbitrarily cap the collection.
 7. **Compliance journey** — viewport-triggered steps activate progressively.
@@ -94,7 +95,7 @@ Protected behaviors currently include:
 11. **Desktop mega-menu** — closes on outside interaction/link selection, supports Escape without immediately reopening and preserves focus semantics.
 12. **Motion on mobile** — mobile is not a reason to disable motion. Disable or reduce motion for `prefers-reduced-motion: reduce`.
 13. **Typography** — Geist is part of the visual contract. Loading strategy must not intentionally prefer a permanent fallback font.
-14. **About provenance** — do not restore the upstream Probo team photograph, people or photo gallery as ZebraByte identity; preserve the inherited page rhythm with truthful ZebraByte content.
+14. **About provenance** — do not restore the upstream Probo team photograph, people or photo gallery as ZebraByte identity; preserve the inherited page rhythm with truthful ZebraByte content. The ZebraByte wordmark must preserve its intrinsic `3242 × 1166` aspect ratio when rendered.
 15. **Customer-proof provenance** — review/customer surfaces must use ZebraByte-sourced entries and must not be padded with inherited Probo company identities.
 
 ## Accessibility and motion
