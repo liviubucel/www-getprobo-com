@@ -1,18 +1,16 @@
 type PublicStatus = "operational" | "degraded" | "outage" | "no_data";
 
-type StatusPayload = {
+type FooterStatusPayload = {
   overall?: unknown;
   updatedAt?: unknown;
-  generatedAt?: unknown;
-  services?: unknown;
-  events?: unknown;
-  freshness?: unknown;
-  publicationMode?: unknown;
 };
 
-const PRIMARY_STATUS_API = "https://zebra-byte-status-web.vercel.app/api/status";
-const FAILOVER_STATUS_API = "https://status.zebrabyte.ro/api/status";
-const FETCH_TIMEOUT_MS = 4_500;
+export type PublicStatusEnv = {
+  STATUS_ENGINE?: {
+    getStatus: () => Promise<FooterStatusPayload>;
+  };
+};
+
 const VALID_STATUSES = new Set<PublicStatus>([
   "operational",
   "degraded",
@@ -20,62 +18,33 @@ const VALID_STATUSES = new Set<PublicStatus>([
   "no_data",
 ]);
 
-function normalizeStatus(value: unknown): PublicStatus | null {
+function normalizeStatus(value: unknown): PublicStatus {
   return typeof value === "string" && VALID_STATUSES.has(value as PublicStatus)
     ? (value as PublicStatus)
-    : null;
+    : "no_data";
 }
 
-async function fetchStatus(url: string): Promise<{
+function normalizeUpdatedAt(value: unknown): string | null {
+  if (typeof value !== "string" || !Number.isFinite(Date.parse(value))) return null;
+  return new Date(value).toISOString();
+}
+
+async function readWorkerStatus(env?: PublicStatusEnv): Promise<{
   overall: PublicStatus;
   updatedAt: string | null;
-  freshness: string | null;
-  publicationMode: string | null;
-} | null> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+}> {
+  if (!env?.STATUS_ENGINE?.getStatus) {
+    return { overall: "no_data", updatedAt: null };
+  }
 
   try {
-    const response = await fetch(url, {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "ZebraByte-Website-Status/1.0",
-      },
-      cache: "no-store",
-      redirect: "follow",
-      signal: controller.signal,
-    });
-    if (!response.ok) return null;
-
-    const payload = (await response.json()) as StatusPayload;
-    const overall = normalizeStatus(payload.overall);
-    if (!overall) return null;
-
-    const rawUpdatedAt =
-      typeof payload.updatedAt === "string"
-        ? payload.updatedAt
-        : typeof payload.generatedAt === "string"
-          ? payload.generatedAt
-          : null;
-    const updatedAt =
-      rawUpdatedAt && Number.isFinite(Date.parse(rawUpdatedAt))
-        ? new Date(rawUpdatedAt).toISOString()
-        : null;
-
+    const payload = await env.STATUS_ENGINE.getStatus();
     return {
-      overall,
-      updatedAt,
-      freshness:
-        typeof payload.freshness === "string" ? payload.freshness.slice(0, 32) : null,
-      publicationMode:
-        typeof payload.publicationMode === "string"
-          ? payload.publicationMode.slice(0, 48)
-          : null,
+      overall: normalizeStatus(payload?.overall),
+      updatedAt: normalizeUpdatedAt(payload?.updatedAt),
     };
   } catch {
-    return null;
-  } finally {
-    clearTimeout(timer);
+    return { overall: "no_data", updatedAt: null };
   }
 }
 
@@ -96,6 +65,7 @@ function jsonResponse(
 
 export async function handlePublicStatusApi(
   request: Request,
+  env?: PublicStatusEnv,
 ): Promise<Response | null> {
   const url = new URL(request.url);
   if (url.pathname !== "/api/status") return null;
@@ -107,35 +77,7 @@ export async function handlePublicStatusApi(
     });
   }
 
-  const primary = await fetchStatus(PRIMARY_STATUS_API);
-  let chosen = primary;
-  let source = "primary";
-
-  if (!primary || primary.overall === "no_data") {
-    const failover = await fetchStatus(FAILOVER_STATUS_API);
-    if (failover && (!primary || failover.overall !== "no_data")) {
-      chosen = failover;
-      source = "failover";
-    }
-  }
-
-  if (!chosen) {
-    return jsonResponse({
-      overall: "no_data",
-      updatedAt: null,
-      source: "unavailable",
-      freshness: null,
-      publicationMode: null,
-    });
-  }
-
-  const payload = {
-    overall: chosen.overall,
-    updatedAt: chosen.updatedAt,
-    source,
-    freshness: chosen.freshness,
-    publicationMode: chosen.publicationMode,
-  };
+  const payload = await readWorkerStatus(env);
 
   if (request.method === "HEAD") {
     return new Response(null, {
