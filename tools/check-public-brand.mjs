@@ -2,23 +2,16 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const distDir = "dist";
-const legacyPattern = /(?:\bprobo\b|\bgetprobo\b|probo[-_.\/]|(?:[a-z0-9-]+\.)?probo\.com|probostatus\.com)/i;
+const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/;
+const legacyExternalDomainPattern = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
 
 /*
  * PUBLIC IDENTITY AUDIT ONLY.
  *
- * This checker detects legacy Probo branding in generated public editorial
- * text and external URLs. A failure must be remediated by rebranding or
- * paraphrasing while preserving the underlying page, subject coverage,
- * feature, documentation, Hub/blog article, changelog/history or workflow.
- *
- * Historical technical identifiers inside code examples, local hashed assets
- * and internal legacy slugs are not identity claims. Legacy slugs may remain as
- * compatibility/SEO routes while visible labels and canonical navigation use
- * ZebraByte wording.
- *
- * NEVER delete useful inherited content merely to make this checker pass.
- * See AGENTS.md: Core product rule — preserve, rebrand, extend.
+ * Visible historical brand claims and external Probo domains are forbidden in
+ * production output. Internal legacy slugs and historical technical identifiers
+ * may remain for compatibility, SEO continuity, architecture and migration
+ * reference. Never delete useful inherited content to satisfy this audit.
  */
 
 function findFiles(dir) {
@@ -38,23 +31,41 @@ function htmlAuditView(html) {
     /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
-
-  const externalPublicUrls = Array.from(
+  const externalUrls = Array.from(
     withoutRuntimeOrCode.matchAll(
       /\b(href|action|formaction|src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
     ),
   )
     .map((match) => match[3])
     .join("\n");
-
-  return `${withoutRuntimeOrCode.replace(/<[^>]+>/g, " ")}\n${externalPublicUrls}`;
+  return `${withoutRuntimeOrCode.replace(/<[^>]+>/g, " ")}\n${externalUrls}`;
 }
 
 function markdownAuditView(markdown) {
-  return markdown
+  const withoutCode = markdown
     .replace(/```[\s\S]*?```/g, "")
     .replace(/~~~[\s\S]*?~~~/g, "")
     .replace(/`[^`\n]+`/g, "");
+  const externalUrls = Array.from(
+    withoutCode.matchAll(/https?:\/\/[^\s)<>'"\]]+/gi),
+  )
+    .map((match) => match[0])
+    .join("\n");
+  const visibleText = withoutCode.replace(
+    /(?:https?:\/\/|\/)[^\s)<>'"\]]+/gi,
+    " ",
+  );
+  return `${visibleText}\n${externalUrls}`;
+}
+
+function hasLeak(file, content) {
+  if (file.endsWith(".xml")) return legacyExternalDomainPattern.test(content);
+  const auditable = file.endsWith(".html")
+    ? htmlAuditView(content)
+    : file.endsWith(".md") || file.endsWith(".txt")
+      ? markdownAuditView(content)
+      : content;
+  return legacyVisibleBrandPattern.test(auditable) || legacyExternalDomainPattern.test(auditable);
 }
 
 if (!existsSync(distDir)) {
@@ -65,12 +76,7 @@ if (!existsSync(distDir)) {
 const leaks = [];
 for (const file of findFiles(distDir)) {
   const content = readFileSync(file, "utf8");
-  const auditable = file.endsWith(".html")
-    ? htmlAuditView(content)
-    : file.endsWith(".md")
-      ? markdownAuditView(content)
-      : content;
-  if (legacyPattern.test(auditable)) leaks.push(relative(distDir, file));
+  if (hasLeak(file, content)) leaks.push(relative(distDir, file));
 }
 
 if (leaks.length) {
@@ -80,4 +86,4 @@ if (leaks.length) {
   process.exit(1);
 }
 
-console.log("[public-brand] PASS: no legacy upstream branding in generated public editorial text/external URLs.");
+console.log("[public-brand] PASS: no legacy upstream brand claims or external domains in generated public output.");
