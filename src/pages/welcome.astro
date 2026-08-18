@@ -3,47 +3,55 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout
-  title="Welcome aboard"
-  description="Welcome to Probo - Next steps for new customers"
+  title="Bun venit la ZebraByte"
+  description="Pașii următori pentru activarea și onboarding-ul serviciilor ZebraByte."
   noIndex={true}
   noFrameworks={true}
 >
   <main>
     <section class="container py-20 sm:py-32">
       <div class="mx-auto max-w-2xl">
-        <h1 class="text-h1 mb-10 font-medium">Welcome aboard 👋</h1>
+        <p class="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-[0.12em]">Onboarding</p>
+        <h1 class="text-h2 sm:text-h1 mb-10 font-medium">Bun venit la ZebraByte.</h1>
 
-        <h2 class="text-h3 mb-6 font-medium">What's next?</h2>
+        <h2 class="text-h3 mb-6 font-medium">Ce urmează?</h2>
 
-        <ul class="space-y-6 text-lg">
-          <li class="flex gap-4">
-            <span class="text-2xl">💬</span>
-            <span
-              >You should already have received a <strong
-                >Slack Connect invite</strong
-              > from our team.</span
-            >
+        <ol class="border-y text-lg">
+          <li class="grid grid-cols-[44px_1fr] gap-4 border-b py-6 sm:grid-cols-[56px_1fr] sm:gap-6">
+            <span class="text-muted-foreground font-mono text-sm">01</span>
+            <div>
+              <strong class="mb-1 block font-medium">Confirmarea scope-ului</strong>
+              <p class="text-muted-foreground leading-relaxed">
+                Verificăm serviciile, activele și responsabilitățile agreate, astfel încât implementarea să înceapă cu un scope clar.
+              </p>
+            </div>
           </li>
 
-          <li class="flex gap-4">
-            <span class="text-2xl">📝</span>
-            <span
-              >You'll soon receive your <strong
-                >contract and legal documents</strong
-              > via DocuSign.</span
-            >
+          <li class="grid grid-cols-[44px_1fr] gap-4 border-b py-6 sm:grid-cols-[56px_1fr] sm:gap-6">
+            <span class="text-muted-foreground font-mono text-sm">02</span>
+            <div>
+              <strong class="mb-1 block font-medium">Acces și documente</strong>
+              <p class="text-muted-foreground leading-relaxed">
+                Primești documentele și instrucțiunile de acces relevante serviciului. Dacă portalul de client este deja activ, îl poți deschide la <a href="https://portal.zebrabyte.ro" class="text-foreground underline underline-offset-4">portal.zebrabyte.ro</a>.
+              </p>
+            </div>
           </li>
 
-          <li class="flex gap-4">
-            <span class="text-2xl">📞</span>
-            <span
-              >Once everything is signed, we'll schedule a <strong
-                >30-minute onboarding call</strong
-              > to walk you through the next steps and kick off your compliance work
-              together.</span
-            >
+          <li class="grid grid-cols-[44px_1fr] gap-4 py-6 sm:grid-cols-[56px_1fr] sm:gap-6">
+            <span class="text-muted-foreground font-mono text-sm">03</span>
+            <div>
+              <strong class="mb-1 block font-medium">Pornirea programului</strong>
+              <p class="text-muted-foreground leading-relaxed">
+                Pentru serviciile care includ onboarding administrat, stabilim pașii de implementare, accesul necesar, prioritățile și modul de comunicare înainte de prima schimbare tehnică.
+              </p>
+            </div>
           </li>
-        </ul>
+        </ol>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a href="https://portal.zebrabyte.ro" class="bg-primary text-primary-foreground inline-flex min-h-12 items-center justify-center rounded-full px-5 text-base font-medium">Deschide portalul</a>
+          <a href="/contact" class="bg-secondary inline-flex min-h-12 items-center justify-center rounded-full border px-5 text-base font-medium">Ai nevoie de ajutor?</a>
+        </div>
       </div>
     </section>
   </main>
