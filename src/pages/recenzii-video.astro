@@ -88,7 +88,7 @@ const reviews = (await getCollection("wall"))
                   {[1, 2, 3, 4, 5].map((rating) => (
                     <label class="cursor-pointer border-r last:border-r-0">
                       <input class="peer sr-only" type="radio" name="rating" value={rating} required />
-                      <span class="peer-checked:bg-level-3 peer-checked:text-level-0-foreground grid h-11 place-items-center text-sm transition-colors">{rating}</span>
+                      <span class="peer-checked:bg-level-3 peer-checked:text-invert grid h-11 place-items-center text-sm transition-colors">{rating}</span>
                     </label>
                   ))}
                 </div>
