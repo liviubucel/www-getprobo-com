@@ -3,150 +3,46 @@ import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 
 const partnerTypes = [
-  {
-    number: "01",
-    title: "Agencies & developers",
-    text: "Pentru echipe care construiesc sau administrează website-uri și aplicații și vor să adauge security, compliance ori managed infrastructure fără să își construiască intern toate capabilitățile.",
-  },
-  {
-    number: "02",
-    title: "Security & compliance specialists",
-    text: "Pentru consultanți, DPO, adviser-i și echipe GRC care au nevoie de platformă, evidence workflows sau suport tehnic în proiectele clienților lor.",
-  },
-  {
-    number: "03",
-    title: "Technology & integration partners",
-    text: "Pentru furnizori SaaS și integratori care vor să conecteze produse, API-uri sau workflow-uri la platforma și serviciile ZebraByte.",
-  },
-  {
-    number: "04",
-    title: "White-label & co-delivery",
-    text: "Pentru parteneri care vor să păstreze relația comercială cu clientul final, în timp ce responsabilitățile tehnice sau operaționale ZebraByte sunt definite clar în spate.",
-  },
+  { number: "01", title: "Agencies & developers", text: "Pentru echipe care construiesc sau administrează website-uri și aplicații și vor să adauge security, compliance ori managed infrastructure fără să își construiască intern toate capabilitățile." },
+  { number: "02", title: "Security & compliance specialists", text: "Pentru consultanți, DPO, adviser-i și echipe GRC care au nevoie de platformă, evidence workflows sau suport tehnic în proiectele clienților lor." },
+  { number: "03", title: "Technology & integration partners", text: "Pentru furnizori SaaS și integratori care vor să conecteze produse, API-uri sau workflow-uri la platforma și serviciile ZebraByte." },
+  { number: "04", title: "White-label & co-delivery", text: "Pentru parteneri care vor să păstreze relația comercială cu clientul final, în timp ce responsabilitățile tehnice sau operaționale ZebraByte sunt definite clar în spate." },
 ];
 
 const deliveryModels = [
-  {
-    title: "Referral",
-    text: "Partenerul face introducerea, iar ZebraByte gestionează relația și livrarea direct cu clientul atunci când acesta este modelul potrivit.",
-    partnerRole: "Introduce",
-    zebraRole: "Contractează & livrează",
-  },
-  {
-    title: "Co-delivery",
-    text: "Fiecare parte păstrează propriul scope și lucrăm împreună pe același proiect, cu ownership și comunicare definite de la început.",
-    partnerRole: "Livrează propriul scope",
-    zebraRole: "Livrează capabilitățile agreate",
-  },
-  {
-    title: "White-label",
-    text: "ZebraByte poate rămâne în spatele relației comerciale pentru capabilitățile convenite, cu limite clare privind suportul, accesul, branding-ul și responsabilitățile.",
-    partnerRole: "Păstrează clientul",
-    zebraRole: "Livrează în spate",
-  },
-  {
-    title: "Platform / adviser",
-    text: "Consultanții și specialiștii pot utiliza platforma pentru a administra programele organizațiilor pe care le consiliază, fără ca ZebraByte să preia automat engagement-ul lor profesional.",
-    partnerRole: "Conduce engagement-ul",
-    zebraRole: "Platformă & suport în scope",
-  },
+  { title: "Referral", text: "Partenerul face introducerea, iar ZebraByte gestionează relația și livrarea direct cu clientul atunci când acesta este modelul potrivit.", partnerRole: "Introduce", zebraRole: "Contractează & livrează" },
+  { title: "Co-delivery", text: "Fiecare parte păstrează propriul scope și lucrăm împreună pe același proiect, cu ownership și comunicare definite de la început.", partnerRole: "Livrează propriul scope", zebraRole: "Livrează capabilitățile agreate" },
+  { title: "White-label", text: "ZebraByte poate rămâne în spatele relației comerciale pentru capabilitățile convenite, cu limite clare privind suportul, accesul, branding-ul și responsabilitățile.", partnerRole: "Păstrează clientul", zebraRole: "Livrează în spate" },
+  { title: "Platform / adviser", text: "Consultanții și specialiștii pot utiliza platforma pentru a administra programele organizațiilor pe care le consiliază, fără ca ZebraByte să preia automat engagement-ul lor profesional.", partnerRole: "Conduce engagement-ul", zebraRole: "Platformă & suport în scope" },
 ];
 
 const capabilities = [
-  {
-    title: "Compliance Platform",
-    text: "Framework-uri, controls, evidence, risks, privacy, vendors și audit workflows într-un workspace comun.",
-    href: "/compliance-platform",
-  },
-  {
-    title: "Managed Compliance",
-    text: "Mai mult ownership operațional pentru programe care au nevoie de coordonare, evidence și audit readiness continuu.",
-    href: "/managed-compliance",
-  },
-  {
-    title: "Cyber Security",
-    text: "Assessment, website/email security, hardening, incident response și remediation tehnică pentru proiectele unde riscul trebuie tratat, nu doar documentat.",
-    href: "/cyber-security",
-  },
-  {
-    title: "Secure Managed Hosting",
-    text: "Infrastructură administrată, migration, monitoring și recovery pentru workload-uri care au nevoie de ownership după deploy.",
-    href: "/secure-hosting",
-  },
+  { title: "Compliance Platform", text: "Framework-uri, controls, evidence, risks, privacy, vendors și audit workflows într-un workspace comun.", href: "/compliance-platform" },
+  { title: "Managed Compliance", text: "Mai mult ownership operațional pentru programe care au nevoie de coordonare, evidence și audit readiness continuu.", href: "/managed-compliance" },
+  { title: "Cyber Security", text: "Assessment, website/email security, hardening, incident response și remediation tehnică pentru proiectele unde riscul trebuie tratat, nu doar documentat.", href: "/cyber-security" },
+  { title: "Secure Managed Hosting", text: "Infrastructură administrată, migration, monitoring și recovery pentru workload-uri care au nevoie de ownership după deploy.", href: "/secure-hosting" },
 ];
 
 const responsibilities = [
-  {
-    area: "Commercial relationship",
-    partner: "Poate rămâne la partener în modelele white-label/co-delivery sau poate fi preluată de ZebraByte într-un referral direct.",
-    zebra: "Respectă modelul agreat și nu contactează clientul în afara rolului convenit.",
-  },
-  {
-    area: "Scope & delivery",
-    partner: "Definește ce promite clientului și ce responsabilități păstrează intern.",
-    zebra: "Livrează doar capabilitățile și rezultatele incluse explicit în scope-ul comun.",
-  },
-  {
-    area: "Access & data",
-    partner: "Furnizează accesul aprobat și contextul necesar pentru proiect.",
-    zebra: "Folosește accesul și datele numai pentru scopul agreat și în limitele operaționale stabilite.",
-  },
-  {
-    area: "Support & escalation",
-    partner: "Păstrează primul nivel de suport dacă acesta este modelul ales sau escaladează direct conform procesului stabilit.",
-    zebra: "Preia escaladările tehnice/operationale care intră în responsabilitatea sa și păstrează un traseu clar de comunicare.",
-  },
+  { area: "Commercial relationship", partner: "Poate rămâne la partener în modelele white-label/co-delivery sau poate fi preluată de ZebraByte într-un referral direct.", zebra: "Respectă modelul agreat și nu contactează clientul în afara rolului convenit." },
+  { area: "Scope & delivery", partner: "Definește ce promite clientului și ce responsabilități păstrează intern.", zebra: "Livrează doar capabilitățile și rezultatele incluse explicit în scope-ul comun." },
+  { area: "Access & data", partner: "Furnizează accesul aprobat și contextul necesar pentru proiect.", zebra: "Folosește accesul și datele numai pentru scopul agreat și în limitele operaționale stabilite." },
+  { area: "Support & escalation", partner: "Păstrează primul nivel de suport dacă acesta este modelul ales sau escaladează direct conform procesului stabilit.", zebra: "Preia escaladările tehnice/operationale care intră în responsabilitatea sa și păstrează un traseu clar de comunicare." },
 ];
 
 const onboarding = [
-  {
-    step: "01",
-    title: "Context",
-    text: "Înțelegem modelul de business, tipul de client, serviciul pe care vrei să îl adaugi și ce relație vrei să păstrezi.",
-  },
-  {
-    step: "02",
-    title: "Boundary",
-    text: "Stabilim cine vinde, cine livrează, cine oferă suport, cine are acces și ce rămâne sub branding-ul partenerului.",
-  },
-  {
-    step: "03",
-    title: "Delivery model",
-    text: "Alegem referral, co-delivery, white-label, adviser/platform sau un model documentat pentru cazul respectiv.",
-  },
-  {
-    step: "04",
-    title: "Operation",
-    text: "Definim comunicarea, escaladările, evidence-ul și eventualele SLA-uri aplicabile înainte de primul client live.",
-  },
+  { step: "01", title: "Context", text: "Înțelegem modelul de business, tipul de client, serviciul pe care vrei să îl adaugi și ce relație vrei să păstrezi." },
+  { step: "02", title: "Boundary", text: "Stabilim cine vinde, cine livrează, cine oferă suport, cine are acces și ce rămâne sub branding-ul partenerului." },
+  { step: "03", title: "Delivery model", text: "Alegem referral, co-delivery, white-label, adviser/platform sau un model documentat pentru cazul respectiv." },
+  { step: "04", title: "Operation", text: "Definim comunicarea, escaladările, evidence-ul și eventualele SLA-uri aplicabile înainte de primul client live." },
 ];
 
 const faqs = [
-  {
-    question: "Există un program public cu comisioane fixe?",
-    answer:
-      "Nu publicăm un tabel universal de comisioane sau niveluri ca promisiune pentru orice partener. Modelul comercial depinde de tipul colaborării, volum, responsabilități, suport și cine deține relația cu clientul.",
-  },
-  {
-    question: "Pot păstra clientul sub brandul meu?",
-    answer:
-      "Da, un model white-label sau co-delivery poate fi posibil, dar trebuie stabilite clar branding-ul, comunicarea, accesul, suportul și obligațiile fiecărei părți înainte de livrare.",
-  },
-  {
-    question: "Pot folosi doar platforma pentru clienții mei?",
-    answer:
-      "Da. Modelul Professional / Adviser permite utilizarea platformei pentru organizarea muncii de compliance a clienților, fără ca ZebraByte să devină automat consultantul sau owner-ul programului lor.",
-  },
-  {
-    question: "ZebraByte poate prelua partea tehnică a unui proiect de compliance?",
-    answer:
-      "Da, dacă intră în scope. Security assessment, hardening, website/email security, incident response sau managed infrastructure pot fi legate de controls și findings pe care partenerul le gestionează la nivel de GRC sau consultanță.",
-  },
-  {
-    question: "Putem integra prin API sau automatizări?",
-    answer:
-      "Da, în funcție de workflow. Platforma are suprafețe pentru integrare și automatizare, iar modelul exact se stabilește după ce știm ce sistem trebuie conectat și ce date trebuie schimbate.",
-  },
+  { question: "Există un program public cu comisioane fixe?", answer: "Nu publicăm un tabel universal de comisioane sau niveluri ca promisiune pentru orice partener. Modelul comercial depinde de tipul colaborării, volum, responsabilități, suport și cine deține relația cu clientul." },
+  { question: "Pot păstra clientul sub brandul meu?", answer: "Da, un model white-label sau co-delivery poate fi posibil, dar trebuie stabilite clar branding-ul, comunicarea, accesul, suportul și obligațiile fiecărei părți înainte de livrare." },
+  { question: "Pot folosi doar platforma pentru clienții mei?", answer: "Da. Modelul Professional / Adviser permite utilizarea platformei pentru organizarea muncii de compliance a clienților, fără ca ZebraByte să devină automat consultantul sau owner-ul programului lor." },
+  { question: "ZebraByte poate prelua partea tehnică a unui proiect de compliance?", answer: "Da, dacă intră în scope. Security assessment, hardening, website/email security, incident response sau managed infrastructure pot fi legate de controls și findings pe care partenerul le gestionează la nivel de GRC sau consultanță." },
+  { question: "Putem integra prin API sau automatizări?", answer: "Da, în funcție de workflow. Platforma are suprafețe pentru integrare și automatizare, iar modelul exact se stabilește după ce știm ce sistem trebuie conectat și ce date trebuie schimbate." },
 ];
 ---
 
@@ -154,41 +50,34 @@ const faqs = [
   title="Partnerships"
   description="Parteneriate ZebraByte pentru agenții, dezvoltatori, consultanți, adviser-i și integratori care vor compliance, cyber security și managed infrastructure într-un model de referral, co-delivery sau white-label."
 >
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">Partnerships</div>
-
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">Extinde ce poți livra,</span>
-        <span class="animate-perspective-in block delay-50"> fără să pierzi ownership-ul relației. </span>
-      </h1>
-
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Referral, co-delivery, white-label sau adviser/platform — alegem modelul după cine
-        deține clientul, cine livrează și ce responsabilități trebuie să rămână vizibile sau în spatele scenei.
-      </p>
-
-      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/compliance-platform">Vezi platforma</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre parteneriat</Button>
-      </div>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">Partnerships</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">Extinde ce poți livra,</span>
+          <span class="animate-perspective-in animation-delay-100 block">fără să pierzi ownership-ul relației.</span>
+        </h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">Referral, co-delivery, white-label sau adviser/platform — alegem modelul după cine deține clientul, cine livrează și ce responsabilități trebuie să rămână vizibile sau în spatele scenei.</p>
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/compliance-platform">Vezi platforma</Button>
+          <Button size="lg" href="/contact">Discută despre parteneriat</Button>
+        </div>
+      </section>
     </animated-hero>
 
-    <section class="container pb-12 sm:pb-24">
-      <div class="grid gap-12 lg:grid-cols-[0.52fr_1.48fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Who we work with</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Adaugi capabilități fără să reconstruiești totul intern.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Modelul pornește de la modul în care lucrezi deja și de la ce vrei să rămână în responsabilitatea ta.
-          </p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Who we work with</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Adaugi capabilități fără să reconstruiești totul intern.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Modelul pornește de la modul în care lucrezi deja și de la ce vrei să rămână în responsabilitatea ta.</p>
         </div>
-
-        <div class="grid sm:grid-cols-2">
-          {partnerTypes.map((item, index) => (
-            <article class:list={["min-h-64 border-t py-7 sm:px-7", index % 2 === 1 && "sm:border-l"]}>
-              <span class="text-muted-foreground mb-9 block font-mono text-sm">{item.number}</span>
-              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+        <div class="divide-y border-y">
+          {partnerTypes.map((item) => (
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.75fr_1.25fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">{item.number}</span>
+              <h3 class="font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
@@ -196,26 +85,20 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-invert sm:py-24">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
       <div class="container">
-        <div class="mb-12 max-w-3xl">
-          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Delivery topology</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Delivery topology</p>
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Alege modelul înainte de primul client.</h2>
-          <p class="text-lg leading-relaxed opacity-65">
-            Diferența principală este cine păstrează relația, cine livrează și cât din experiența ZebraByte este vizibilă clientului final.
-          </p>
+          <p class="text-lg leading-relaxed opacity-65">Diferența principală este cine păstrează relația, cine livrează și cât din experiența ZebraByte este vizibilă clientului final.</p>
         </div>
-
-        <div class="grid border-y border-invert/15 lg:grid-cols-4">
+        <div class="grid border-y border-invert/15 lg:grid-cols-4 lg:divide-x lg:divide-white/15">
           {deliveryModels.map((item, index) => (
-            <article class:list={["min-h-80 p-6 sm:p-7", index < deliveryModels.length - 1 && "border-b border-invert/15 lg:border-b-0 lg:border-r"]}>
-              <div class="mb-10 flex items-center justify-between gap-4">
-                <span class="font-mono text-xs opacity-40">MODEL-{index + 1}</span>
-                <span class="size-2 rounded-full bg-level-0"></span>
-              </div>
-              <h3 class="text-h4 mb-4 font-medium">{item.title}</h3>
-              <p class="mb-8 text-sm leading-relaxed opacity-65">{item.text}</p>
-              <div class="mt-auto border-t border-invert/15 pt-4 text-xs">
+            <article class="border-b border-invert/15 p-7 last:border-b-0 sm:p-8 lg:border-b-0">
+              <span class="mb-8 block font-mono text-xs opacity-40">MODEL-{index + 1}</span>
+              <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+              <p class="mb-7 text-sm leading-relaxed opacity-65">{item.text}</p>
+              <div class="border-t border-invert/15 pt-4 text-xs">
                 <div class="grid grid-cols-[76px_1fr] gap-3 py-2"><span class="opacity-40">Partener</span><span class="opacity-80">{item.partnerRole}</span></div>
                 <div class="grid grid-cols-[76px_1fr] gap-3 py-2"><span class="opacity-40">ZebraByte</span><span class="opacity-80">{item.zebraRole}</span></div>
               </div>
@@ -225,19 +108,16 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.56fr_1.44fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Capability layer</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Adaugi doar ce cere proiectul.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Scope-ul poate fi platform-only sau poate include execuție managed și security engineering. Nu trebuie să cumperi tot ecosistemul pentru fiecare client.
-          </p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Capability layer</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Adaugi doar ce cere proiectul.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Scope-ul poate fi platform-only sau poate include execuție managed și security engineering. Nu trebuie să cumperi tot ecosistemul pentru fiecare client.</p>
         </div>
-
-        <div class="border-y">
+        <div class="divide-y border-y">
           {capabilities.map((item, index) => (
-            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[54px_0.7fr_1.3fr] sm:gap-7">
+            <a href={item.href} class="group grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
               <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
               <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
@@ -247,54 +127,46 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-12 sm:py-24">
+    <section class="bg-active py-16 sm:py-28">
       <div class="container">
-        <div class="mb-10 max-w-3xl">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Responsibility matrix</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Responsibility matrix</p>
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Responsabilități clare înainte de branding.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            White-label-ul funcționează doar dacă client experience, support, access și ownership sunt definite înainte de livrare.
-          </p>
+          <p class="text-muted-foreground text-lg leading-relaxed">White-label-ul funcționează doar dacă client experience, support, access și ownership sunt definite înainte de livrare.</p>
         </div>
-
-        <div class="overflow-x-auto">
-          <div class="min-w-[820px] border-y bg-level-0 px-6 sm:px-8">
-            <div class="text-muted-foreground grid grid-cols-[0.52fr_1.24fr_1.24fr] gap-8 border-b py-4 text-sm">
-              <span>Arie</span><span>Partener</span><span>ZebraByte</span>
-            </div>
-            {responsibilities.map((item) => (
-              <div class="grid grid-cols-[0.52fr_1.24fr_1.24fr] gap-8 border-b py-6 last:border-b-0">
-                <h3 class="font-medium">{item.area}</h3>
-                <p class="text-muted-foreground leading-relaxed">{item.partner}</p>
-                <p class="text-muted-foreground leading-relaxed">{item.zebra}</p>
-              </div>
-            ))}
+        <div class="mx-auto max-w-5xl border-y bg-level-0 px-5 sm:px-8">
+          <div class="text-muted-foreground hidden grid-cols-[0.7fr_1.15fr_1.15fr] gap-8 border-b py-4 text-sm sm:grid">
+            <span>Arie</span><span>Partener</span><span>ZebraByte</span>
           </div>
+          {responsibilities.map((item) => (
+            <article class="grid gap-4 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.15fr_1.15fr] sm:gap-8">
+              <h3 class="font-medium">{item.area}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.partner}</p>
+              <p class="text-muted-foreground leading-relaxed">{item.zebra}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mb-10 max-w-3xl">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Onboarding</p>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Onboarding</p>
         <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Clarificăm modelul înainte de primul ticket.</h2>
       </div>
-
-      <div class="relative border-l pl-8 sm:ml-4 sm:pl-12">
+      <div class="mx-auto max-w-5xl border-y">
         {onboarding.map((item, index) => (
-          <article class="relative grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-            <span class="bg-level-0 absolute -left-[38px] top-8 flex size-5 items-center justify-center rounded-full border sm:-left-[54px]"><span class="bg-level-3 size-2 rounded-full"></span></span>
-            <div>
-              <span class="text-muted-foreground mb-3 block font-mono text-xs">{item.step}</span>
-              <h3 class="text-h5 font-medium">{item.title}</h3>
-            </div>
+          <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
             <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            <span class="text-muted-foreground hidden font-mono text-xs sm:block">{index < onboarding.length - 1 ? "→" : "↻"}</span>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
+    <section class="container py-16 sm:py-28">
       <div class="mx-auto max-w-3xl">
         <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
@@ -311,12 +183,10 @@ const faqs = [
       </div>
     </section>
 
-    <section class="border-t py-16 text-center sm:py-24">
+    <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
         <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Spune-ne ce vrei să livrezi și ce vrei să rămână în spatele scenei.</h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-          Construim modelul de colaborare în jurul clientului, scope-ului și ownership-ului — nu în jurul unui nivel generic de partener.
-        </p>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Construim modelul de colaborare în jurul clientului, scope-ului și ownership-ului — nu în jurul unui nivel generic de partener.</p>
         <Button href="/contact" size="lg">Discută despre parteneriat</Button>
       </div>
     </section>
