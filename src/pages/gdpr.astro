@@ -131,66 +131,75 @@ const regulationSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(regulationSchema)} />
 
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
-        GDPR · Privacy · Security
-      </div>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">
+          GDPR · Privacy · Security
+        </div>
 
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">Privacy governance</span>
-        <span class="animate-perspective-in block delay-50"> conectat la operațiunile reale. </span>
-      </h1>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">Privacy governance</span>
+          <span class="animate-perspective-in animation-delay-100 block">conectat la operațiunile reale.</span>
+        </h1>
 
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Date, processing activities, DPIA, transferuri, furnizori, rights requests și
-        evidence — organizate în același program cu risks, controls și măsurile tehnice de securitate.
-      </p>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">
+          Date, processing activities, DPIA, transferuri, furnizori, rights requests și
+          evidence — organizate în același program cu risks, controls și măsurile tehnice de securitate.
+        </p>
 
-      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/compliance-platform">Vezi platforma</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre GDPR</Button>
-      </div>
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/compliance-platform">Vezi platforma</Button>
+          <Button size="lg" href="/contact">Discută despre GDPR</Button>
+        </div>
+      </section>
     </animated-hero>
 
-    <section class="container pb-12 sm:pb-24">
-      <div class="grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:items-start lg:gap-20">
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto grid max-w-6xl gap-12 border-y py-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20 sm:py-14">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Privacy graph</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Privacy management este un sistem de records conectate.</h2>
-          <p class="text-muted-foreground mb-5 text-lg leading-relaxed">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Privacy graph</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Privacy management este un sistem de records conectate.</h2>
+        </div>
+        <div class="text-muted-foreground space-y-5 text-lg leading-relaxed">
+          <p>
             RoPA, DPIA, vendor reviews și security nu trebuie să trăiască în documente fără
             legătură între ele. În ZebraByte, processing activities, risks, vendors, controls și
             evidence pot fi urmărite ca elemente ale aceluiași program cloud.
           </p>
-          <p class="text-muted-foreground leading-relaxed">
+          <p>
             Platforma ajută la organizare și trasabilitate. Nu determină singură ce lege se
             aplică și nu înlocuiește interpretarea juridică atunci când aceasta este necesară.
           </p>
         </div>
-
-        <div class="relative border p-5 sm:p-8">
-          <div class="absolute left-1/2 top-10 bottom-10 hidden w-px -translate-x-1/2 bg-border sm:block"></div>
-          {privacyFlow.map((item, index) => (
-            <article class:list={["relative grid gap-4 py-5 sm:grid-cols-[1fr_62px_1fr] sm:items-center", index > 0 && "border-t sm:border-t-0"]}>
-              <div class:list={[index % 2 === 0 ? "sm:text-right" : "sm:col-start-3", index % 2 === 1 && "sm:col-start-3"]}>
-                <h3 class="mb-2 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-              </div>
-              <div class:list={["z-10 flex size-11 items-center justify-center rounded-full border bg-level-0 font-mono text-xs sm:col-start-2 sm:row-start-1 sm:mx-auto", index % 2 === 1 && "sm:col-start-2"]}>
-                {item.step}
-              </div>
-              {index % 2 === 1 && <div class="hidden sm:col-start-1 sm:row-start-1 sm:block"></div>}
-            </article>
-          ))}
-        </div>
       </div>
     </section>
 
-    <section class="bg-active py-12 sm:py-24">
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Privacy lifecycle</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Records, evaluări și review continuu într-un singur flux.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Programul pornește de la datele și activitățile reale și păstrează legătura dintre risc, proces și dovadă.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {privacyFlow.map((item, index) => (
+          <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8 sm:py-7">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            <span class="text-muted-foreground hidden font-mono text-xs sm:block">{index < privacyFlow.length - 1 ? "→" : "↻"}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-28">
       <div class="container">
-        <div class="mb-10 max-w-3xl">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">RoPA / processing record</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">RoPA / processing record</p>
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">RoPA trebuie să reflecte processing-ul real.</h2>
           <p class="text-muted-foreground text-lg leading-relaxed">
             Evidența activităților de prelucrare devine utilă când păstrează context suficient
@@ -199,12 +208,12 @@ const regulationSchema = {
         </div>
 
         <div class="overflow-hidden border bg-level-0">
-          <div class="grid grid-cols-[1fr_auto] gap-4 border-b bg-level-0 px-6 py-4 font-mono text-xs text-muted-foreground">
+          <div class="grid grid-cols-[1fr_auto] gap-4 border-b px-6 py-4 font-mono text-xs text-muted-foreground">
             <span>PROCESSING ACTIVITY / RECORD</span><span>6 CORE FIELDS</span>
           </div>
           <div class="grid sm:grid-cols-2 lg:grid-cols-3">
             {processingFields.map(([field, text], index) => (
-              <article class:list={["min-h-48 p-6", index % 3 !== 2 && "lg:border-r", index < 3 && "lg:border-b", index % 2 === 0 && "sm:border-r lg:border-r", index < 4 && "sm:border-b"]}>
+              <article class:list={["p-6 sm:p-7", index % 3 !== 2 && "lg:border-r", index < 3 && "lg:border-b", index % 2 === 0 && "sm:border-r lg:border-r", index < 4 && "sm:border-b"]}>
                 <span class="text-muted-foreground mb-7 block font-mono text-xs">FIELD-{String(index + 1).padStart(2, "0")}</span>
                 <h3 class="mb-3 font-medium">{field}</h3>
                 <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
@@ -215,22 +224,20 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-16">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Impact assessments</p>
-          <h2 class="text-h3 sm:text-h2 font-medium">Evaluarea rămâne legată de context.</h2>
-        </div>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Impact assessments</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Evaluarea rămâne legată de context.</h2>
         <p class="text-muted-foreground text-lg leading-relaxed">
           DPIA și TIA nu trebuie să fie fișiere izolate. Le legăm de processing, transferuri,
           furnizori, risks și măsurile care justifică decizia.
         </p>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-2">
+      <div class="grid overflow-hidden border lg:grid-cols-2">
         {assessments.map((assessment, index) => (
-          <article class="border p-7 sm:p-9">
-            <div class="mb-12 flex items-start justify-between gap-5">
+          <article class:list={["p-7 sm:p-10", index === 0 ? "lg:border-r" : "border-t lg:border-t-0"]}>
+            <div class="mb-10 flex items-start justify-between gap-5">
               <div>
                 <div class="text-h2 font-medium">{assessment.title}</div>
                 <p class="text-muted-foreground mt-2 text-sm">{assessment.subtitle}</p>
@@ -243,49 +250,51 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="border-y py-12 sm:py-24">
-      <div class="container grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Data subject requests</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Rights requests ca workflow, nu inbox improvizat.</h2>
-          <p class="text-muted-foreground mb-5 text-lg leading-relaxed">
-            Cererile persoanelor vizate pot fi urmărite printr-un proces controlat, cu owner,
-            task-uri și status, fără să împrăștii informația între email, documente și liste separate.
-          </p>
-          <p class="text-muted-foreground mb-6 leading-relaxed">
-            Accesul trebuie limitat la persoanele care au nevoie să proceseze cererea, iar
-            datele personale inutile nu trebuie introduse în câmpuri libere doar pentru comoditate.
-          </p>
-          <Button href="/docs/product/privacy-management" variant="secondary">Vezi documentația Privacy Management</Button>
-        </div>
-        <div class="bg-active p-6 sm:p-10">
-          <img
-            src="/trust-center/data-requests.svg"
-            alt="Workflow pentru data rights requests în platforma ZebraByte"
-            width="1024"
-            height="192"
-            loading="lazy"
-            decoding="async"
-            class="h-auto w-full"
-          />
+    <section class="border-y py-16 sm:py-28">
+      <div class="container">
+        <div class="grid overflow-hidden rounded-2xl border lg:grid-cols-2">
+          <div class="p-7 sm:p-10 lg:p-12">
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Data subject requests</p>
+            <h2 class="text-h3 mb-4 font-medium text-balance">Rights requests ca workflow, nu inbox improvizat.</h2>
+            <p class="text-muted-foreground mb-5 text-lg leading-relaxed">
+              Cererile persoanelor vizate pot fi urmărite printr-un proces controlat, cu owner,
+              task-uri și status, fără să împrăștii informația între email, documente și liste separate.
+            </p>
+            <p class="text-muted-foreground mb-7 leading-relaxed">
+              Accesul trebuie limitat la persoanele care au nevoie să proceseze cererea, iar
+              datele personale inutile nu trebuie introduse în câmpuri libere doar pentru comoditate.
+            </p>
+            <Button href="/docs/product/privacy-management" variant="secondary">Vezi documentația Privacy Management</Button>
+          </div>
+          <div class="min-h-72 border-t bg-active p-7 sm:p-10 lg:border-t-0 lg:border-l">
+            <img
+              src="/trust-center/data-requests.svg"
+              alt="Workflow pentru data rights requests în platforma ZebraByte"
+              width="1024"
+              height="192"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-contain"
+            />
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.66fr_1.34fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Processor chain</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Third parties fac parte din privacy program.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Processor chain</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Third parties fac parte din privacy program.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">
             Vendors, processors, subprocessors și transferurile trebuie urmărite împreună cu
             processing activities și riscurile pe care le introduc.
           </p>
         </div>
 
-        <div class="border-y">
+        <div class="divide-y border-y">
           {thirdPartyRows.map((item, index) => (
-            <article class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[48px_0.75fr_1.25fr] sm:gap-7">
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
               <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
               <h3 class="font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
@@ -295,12 +304,12 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-invert sm:py-24">
-      <div class="container grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
+      <div class="container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Technical measures</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">GDPR nu este separat de cybersecurity.</h2>
-          <p class="mb-7 text-lg leading-relaxed opacity-65">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Technical measures</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">GDPR nu este separat de cybersecurity.</h2>
+          <p class="mb-8 max-w-150 text-lg leading-relaxed opacity-65">
             Riscul pentru datele personale nu poate fi tratat doar prin policies și notices.
             Măsurile tehnice și organizatorice trebuie legate de riscurile și processing activities
             pentru care există.
@@ -308,9 +317,9 @@ const regulationSchema = {
           <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
         </div>
 
-        <div class="grid sm:grid-cols-2">
+        <div class="divide-y divide-white/15 border-y border-white/15">
           {securityMeasures.map((item, index) => (
-            <div class="grid min-h-28 grid-cols-[42px_1fr] gap-4 border-t border-invert/15 py-5 sm:px-5">
+            <div class="grid grid-cols-[46px_1fr] gap-4 py-5 sm:py-6">
               <span class="font-mono text-xs opacity-40">0{index + 1}</span>
               <span class="leading-relaxed opacity-80">{item}</span>
             </div>
@@ -319,11 +328,11 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-20">
-      <div class="mx-auto max-w-4xl border-y py-8 sm:py-10">
-        <div class="grid gap-6 sm:grid-cols-[0.72fr_1.28fr] sm:gap-12">
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto max-w-5xl border-y py-9 sm:py-12">
+        <div class="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <div>
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Legal reference</p>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Legal reference</p>
             <h2 class="text-h3 font-medium">Cadrul legal</h2>
           </div>
           <div>
@@ -345,7 +354,7 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
+    <section class="container py-16 sm:py-28">
       <div class="mx-auto max-w-3xl">
         <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
@@ -362,7 +371,7 @@ const regulationSchema = {
       </div>
     </section>
 
-    <section class="border-t py-16 text-center sm:py-24">
+    <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
         <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium text-balance">Privacy devine administrabil când records, risks și evidence sunt conectate.</h2>
         <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
