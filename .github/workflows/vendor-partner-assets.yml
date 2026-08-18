@@ -1,9 +1,9 @@
-name: Vendor partner assets locally
+name: Vendor security assets locally
 
 on:
   push:
     branches:
-      - feat/legal-center-audit
+      - release/production-readiness
     paths:
       - .github/workflows/vendor-partner-assets.yml
 
@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/legal-center-audit
+          ref: release/production-readiness
           fetch-depth: 0
 
-      - name: Download official/local-source partner assets
+      - name: Download vendor-controlled security assets
         shell: bash
         run: |
           set -euo pipefail
@@ -42,39 +42,38 @@ jobs:
           fi
 
           curl --fail --location --retry 4 --retry-all-errors --user-agent "$UA" \
-            --referer 'https://www.iubenda.com/en/help/142513-partner-kit/' \
-            'https://www.iubenda.com/wp-content/uploads/2026/04/Bronze.png.webp' \
-            --output public/logos/partners/iubenda-certified-partner.webp
+            'https://www.20i.com/blog/wp-content/uploads/2025/05/ISO-9001.svg' \
+            --output public/logos/compliance/iso-9001.svg
 
-          curl --fail --location --retry 4 --retry-all-errors \
-            'https://raw.githubusercontent.com/liviubucel/Zebrabyte-Web/main/public/logos/compliance/telekom-business-partner.png' \
-            --output public/logos/partners/telekom-business-partner.png
+          curl --fail --location --retry 4 --retry-all-errors --user-agent "$UA" \
+            'https://www.20i.com/blog/wp-content/uploads/2025/05/ISO-22301.svg' \
+            --output public/logos/compliance/iso-22301.svg
 
-          curl --fail --location --retry 4 --retry-all-errors \
-            'https://raw.githubusercontent.com/liviubucel/Zebrabyte-Web/main/public/logos/compliance/iso-27001.svg' \
+          curl --fail --location --retry 4 --retry-all-errors --user-agent "$UA" \
+            'https://www.20i.com/blog/wp-content/uploads/2025/05/ISO-27001.svg' \
             --output public/logos/compliance/iso-27001.svg
 
-          curl --fail --location --retry 4 --retry-all-errors \
-            'https://raw.githubusercontent.com/liviubucel/Zebrabyte-Web/main/public/logos/compliance/isae3000-type2.svg' \
-            --output public/logos/compliance/isae3000-type2.svg
+          curl --fail --location --retry 4 --retry-all-errors --user-agent "$UA" \
+            'https://www.20i.com/blog/wp-content/smush-webp/2025/05/cyberEssentials_PLUS-300x142.png.webp' \
+            --output public/logos/compliance/cyber-essentials-plus.webp
 
-          curl --fail --location --retry 4 --retry-all-errors \
-            'https://raw.githubusercontent.com/liviubucel/Zebrabyte-Web/main/public/logos/compliance/cyber-essentials-plus.svg' \
-            --output public/logos/compliance/cyber-essentials-plus.svg
+          curl --fail --location --retry 4 --retry-all-errors --user-agent "$UA" \
+            'https://www.20i.com/blog/wp-content/smush-webp/2025/05/soc2-logo-300x300.png.webp' \
+            --output public/logos/compliance/soc2-type2.webp
 
           test -s public/logos/partners/20i.svg
           test -s public/logos/partners/xcitium.svg
-          test -s public/logos/partners/iubenda-certified-partner.webp
-          test -s public/logos/partners/telekom-business-partner.png
+          test -s public/logos/compliance/iso-9001.svg
+          test -s public/logos/compliance/iso-22301.svg
           test -s public/logos/compliance/iso-27001.svg
-          test -s public/logos/compliance/isae3000-type2.svg
-          test -s public/logos/compliance/cyber-essentials-plus.svg
+          test -s public/logos/compliance/cyber-essentials-plus.webp
+          test -s public/logos/compliance/soc2-type2.webp
 
           grep -qi '<svg' public/logos/partners/20i.svg
           grep -qi '<svg' public/logos/partners/xcitium.svg
+          grep -qi '<svg' public/logos/compliance/iso-9001.svg
+          grep -qi '<svg' public/logos/compliance/iso-22301.svg
           grep -qi '<svg' public/logos/compliance/iso-27001.svg
-          grep -qi '<svg' public/logos/compliance/isae3000-type2.svg
-          grep -qi '<svg' public/logos/compliance/cyber-essentials-plus.svg
 
       - name: Commit vendored assets
         shell: bash
@@ -82,10 +81,16 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/logos/partners public/logos/compliance
+          git add public/logos/partners/20i.svg \
+            public/logos/partners/xcitium.svg \
+            public/logos/compliance/iso-9001.svg \
+            public/logos/compliance/iso-22301.svg \
+            public/logos/compliance/iso-27001.svg \
+            public/logos/compliance/cyber-essentials-plus.webp \
+            public/logos/compliance/soc2-type2.webp
           if git diff --cached --quiet; then
             echo 'Assets already current.'
             exit 0
           fi
-          git commit -m 'Security: vendor official partner assets [vendor-assets]'
-          git push origin HEAD:feat/legal-center-audit
+          git commit -m 'Security: vendor official security assets [vendor-assets]'
+          git push origin HEAD:release/production-readiness
