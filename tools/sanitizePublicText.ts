@@ -12,8 +12,13 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { publicBrandText, publicBrandUrl } from "../src/lib/public-brand.ts";
 
-const legacyPublicBrandPattern =
-  /(?:\bprobo\b|\bgetprobo\b|probo[-_.\/]|(?:[a-z0-9-]+\.)?probo\.com|probostatus\.com)/i;
+// Public prose uses the historical brand with normal capitalization. Lowercase
+// `probo-*` tokens can legitimately remain inside compatibility slugs and
+// historical technical identifiers, so they are not identity claims by
+// themselves.
+const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/;
+const legacyExternalDomainPattern =
+  /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
 
 function sanitizePublicOutput(content: string): string {
   return publicBrandText(publicBrandUrl(content))
@@ -33,27 +38,39 @@ function sanitizePublicOutput(content: string): string {
     .replace(/\bZebraByte open-source\b/gi, "ZebraByte");
 }
 
-function protectMarkdownCode(content: string): {
+type ProtectedText = {
   content: string;
   restore: (value: string) => string;
-} {
-  const protectedCode: string[] = [];
-  const protect = (block: string) => {
-    const marker = `___ZBT_PROTECTED_MD_CODE_${protectedCode.length}___`;
-    protectedCode.push(block);
+};
+
+function protectMarkdownTechnicalReferences(content: string): ProtectedText {
+  const protectedValues: Array<{ value: string; kind: "code" | "url" }> = [];
+  const protect = (value: string, kind: "code" | "url") => {
+    const marker = `___ZBT_PROTECTED_MD_${protectedValues.length}___`;
+    protectedValues.push({ value, kind });
     return marker;
   };
 
-  let result = content.replace(/```[\s\S]*?```/g, protect);
-  result = result.replace(/~~~[\s\S]*?~~~/g, protect);
-  result = result.replace(/`[^`\n]+`/g, protect);
+  let result = content.replace(/```[\s\S]*?```/g, (value) => protect(value, "code"));
+  result = result.replace(/~~~[\s\S]*?~~~/g, (value) => protect(value, "code"));
+  result = result.replace(/`[^`\n]+`/g, (value) => protect(value, "code"));
+
+  // Preserve route identity (including legacy slugs) while still rebranding
+  // known external Probo domains and explicit branded aliases via publicBrandUrl.
+  result = result.replace(
+    /(?:https?:\/\/|\/)[^\s)<>'"\]]+/gi,
+    (value) => protect(value, "url"),
+  );
 
   return {
     content: result,
     restore: (value: string) => {
       let restored = value;
-      protectedCode.forEach((block, index) => {
-        restored = restored.replace(`___ZBT_PROTECTED_MD_CODE_${index}___`, block);
+      protectedValues.forEach((entry, index) => {
+        const marker = `___ZBT_PROTECTED_MD_${index}___`;
+        const replacement =
+          entry.kind === "url" ? publicBrandUrl(entry.value) : entry.value;
+        restored = restored.replace(marker, replacement);
       });
       return restored;
     },
@@ -61,13 +78,25 @@ function protectMarkdownCode(content: string): {
 }
 
 function sanitizeMarkdownOutput(content: string): string {
-  const protectedMarkdown = protectMarkdownCode(content);
+  const protectedMarkdown = protectMarkdownTechnicalReferences(content);
   return protectedMarkdown.restore(sanitizePublicOutput(protectedMarkdown.content));
 }
 
 function markdownAuditView(content: string): string {
-  const protectedMarkdown = protectMarkdownCode(content);
-  return protectedMarkdown.content;
+  const withoutCode = content
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/~~~[\s\S]*?~~~/g, "")
+    .replace(/`[^`\n]+`/g, "");
+  const externalUrls = Array.from(
+    withoutCode.matchAll(/https?:\/\/[^\s)<>'"\]]+/gi),
+  )
+    .map((match) => match[0])
+    .join("\n");
+  const visibleText = withoutCode.replace(
+    /(?:https?:\/\/|\/)[^\s)<>'"\]]+/gi,
+    " ",
+  );
+  return `${visibleText}\n${externalUrls}`;
 }
 
 function sanitizeTag(tag: string): string {
@@ -77,9 +106,6 @@ function sanitizeTag(tag: string): string {
       `${name}=${quote}${publicBrandUrl(value)}${quote}`,
   );
 
-  // External source URLs are public architecture; local hashed asset names are
-  // implementation details and must never be text-rewritten because doing so
-  // would break the generated asset URL.
   result = result.replace(
     /\b(src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
     (_match, name: string, quote: string, value: string) =>
@@ -94,18 +120,12 @@ function sanitizeTag(tag: string): string {
 }
 
 function sanitizeHtmlOutput(content: string): string {
-  // Structured data is public metadata, so sanitize it before protecting the
-  // remaining runtime and technical-reference blocks from text replacement.
   let html = content.replace(
     /<script([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi,
     (_match, attrs: string, json: string) =>
       `<script${attrs}>${sanitizePublicOutput(json)}</script>`,
   );
 
-  // JavaScript, CSS, textarea and rendered code examples can contain runtime or
-  // historical architecture identifiers. Preserve them byte-for-byte. In the
-  // self-hosting lineage docs, those identifiers are factual reference material,
-  // not current ZebraByte product branding.
   const protectedBlocks: string[] = [];
   html = html.replace(
     /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
@@ -116,8 +136,6 @@ function sanitizeHtmlOutput(content: string): string {
     },
   );
 
-  // Protect markup separately so brand text replacement cannot mutate hashed
-  // asset filenames, CSS classes, data attributes or other runtime identifiers.
   const protectedTags: string[] = [];
   html = html.replace(/<[^>]+>/g, (tag) => {
     const marker = `___ZBT_PROTECTED_TAG_${protectedTags.length}___`;
@@ -143,10 +161,6 @@ function publicAuditView(content: string): string {
     "",
   );
 
-  // Visible editorial text is the actual public brand surface. External URLs are
-  // audited as well. Internal legacy slugs are intentionally excluded: they are
-  // compatibility/SEO routes, not identity claims, and some must remain stable
-  // while their visible labels and canonical navigation use ZebraByte wording.
   const externalPublicUrls = Array.from(
     withoutRuntimeOrCode.matchAll(
       /\b(href|action|formaction|src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
@@ -160,12 +174,20 @@ function publicAuditView(content: string): string {
 }
 
 function hasLegacyPublicBrand(file: string, content: string): boolean {
+  if (file.endsWith(".xml")) {
+    return legacyExternalDomainPattern.test(content);
+  }
+
   const auditable = file.endsWith(".html")
     ? publicAuditView(content)
-    : file.endsWith(".md")
+    : file.endsWith(".md") || file.endsWith(".txt")
       ? markdownAuditView(content)
       : content;
-  return legacyPublicBrandPattern.test(auditable);
+
+  return (
+    legacyVisibleBrandPattern.test(auditable) ||
+    legacyExternalDomainPattern.test(auditable)
+  );
 }
 
 function findPublicFiles(dir: string): string[] {
@@ -209,7 +231,9 @@ function pruneEmptyDirectories(dir: string, preserveRoot = true): void {
     const fullPath = join(dir, entry);
     if (statSync(fullPath).isDirectory()) pruneEmptyDirectories(fullPath, false);
   }
-  if (!preserveRoot && readdirSync(dir).length === 0) rmSync(dir, { recursive: true, force: true });
+  if (!preserveRoot && readdirSync(dir).length === 0) {
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 function publicRouteForMarkdown(distDir: string, file: string): string {
@@ -219,7 +243,9 @@ function publicRouteForMarkdown(distDir: string, file: string): string {
 }
 
 function canonicalPublicUrl(route: string): string {
-  return route === "/" ? "https://www.zebrabyte.ro/" : `https://www.zebrabyte.ro${route}`;
+  return route === "/"
+    ? "https://www.zebrabyte.ro/"
+    : `https://www.zebrabyte.ro${route}`;
 }
 
 function pruneGeneratedMarkdownAndRebuildLlms(distDir: string): void {
@@ -290,9 +316,6 @@ export function sanitizePublicText(): AstroIntegration {
       "astro:build:done": ({ dir }) => {
         const distDir = fileURLToPath(dir);
 
-        // generateMarkdown historically emitted source files even when no
-        // corresponding public route existed. Production output is constrained
-        // to Markdown alternates for HTML pages that were actually built.
         pruneGeneratedMarkdownAndRebuildLlms(distDir);
 
         const files = findPublicFiles(distDir);
@@ -302,9 +325,12 @@ export function sanitizePublicText(): AstroIntegration {
           const content = readFileSync(file, "utf-8");
           const sanitized = file.endsWith(".html")
             ? sanitizeHtmlOutput(content)
-            : file.endsWith(".md")
+            : file.endsWith(".md") || file.endsWith(".txt")
               ? sanitizeMarkdownOutput(content)
-              : sanitizePublicOutput(content);
+              : file.endsWith(".xml")
+                ? publicBrandUrl(content)
+                : sanitizePublicOutput(content);
+
           if (sanitized !== content) writeFileSync(file, sanitized);
           writeDeviceAgentAlias(distDir, file);
 
