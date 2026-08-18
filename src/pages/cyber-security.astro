@@ -190,7 +190,7 @@ const faqs = [
             <p class="text-muted-foreground leading-relaxed">{services[0].text}</p>
           </a>
 
-          <div class="bg-level-3 flex min-h-64 flex-col justify-between p-6 text-level-0-foreground sm:p-8">
+          <div class="bg-level-3 flex min-h-64 flex-col justify-between p-6 text-invert sm:p-8">
             <div class="font-mono text-xs opacity-45">ZEBRABYTE / SECURITY</div>
             <div>
               <div class="mb-3 text-4xl font-medium tracking-tight">Risk → Control</div>
@@ -248,7 +248,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-3xl">
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Security lifecycle</p>
@@ -256,9 +256,9 @@ const faqs = [
           <p class="text-lg leading-relaxed opacity-65">Riscul se schimbă odată cu aplicația, utilizatorii, furnizorii și infrastructura.</p>
         </div>
 
-        <div class="grid border border-level-0-foreground/15 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid border border-invert/15 sm:grid-cols-2 lg:grid-cols-3">
           {lifecycle.map((item, index) => (
-            <article class="min-h-64 border-b border-level-0-foreground/15 p-6 sm:border-r [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-last-child(-n+3)]:border-b-0">
+            <article class="min-h-64 border-b border-invert/15 p-6 sm:border-r [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-last-child(-n+3)]:border-b-0">
               <div class="mb-10 flex items-center justify-between gap-4">
                 <span class="font-mono text-xs opacity-40">{item.step}</span>
                 <span class="font-mono text-xs opacity-35">{index === lifecycle.length - 1 ? "↻" : "→"}</span>
