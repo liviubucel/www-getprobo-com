@@ -88,7 +88,7 @@ const softwareApplicationSchema = {
       </div>
 
       <div class="relative z-10 container pb-10 sm:pb-20">
-        <div class="mx-auto max-w-6xl overflow-hidden rounded-[24px] border bg-[#f8faf4] px-5 pt-8 sm:px-10 sm:pt-12">
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-[24px] border bg-[#f8faf4] px-3 pt-5 sm:px-8 sm:pt-10 lg:px-10 lg:pt-12">
           <img
             src="/navigation/frameworks.svg"
             alt="Framework-uri și controale în ecosistemul ZebraByte"
@@ -96,7 +96,7 @@ const softwareApplicationSchema = {
             height="720"
             loading="eager"
             decoding="async"
-            class="mx-auto block h-auto w-full max-w-5xl translate-y-3 sm:translate-y-6"
+            class="mx-auto block aspect-[3/2] h-auto w-full max-w-5xl object-contain lg:translate-y-6"
           />
         </div>
       </div>
@@ -120,7 +120,7 @@ const softwareApplicationSchema = {
           </div>
         </div>
 
-        <div class="relative overflow-hidden rounded-[26px] bg-active px-5 py-10 sm:px-10 sm:py-14">
+        <div class="overflow-hidden rounded-[26px] bg-active px-4 py-7 sm:px-8 sm:py-10 lg:px-10 lg:py-14">
           <img
             src="/navigation/frameworks.svg"
             alt="Vizualizarea framework-urilor și controalelor"
@@ -128,7 +128,7 @@ const softwareApplicationSchema = {
             height="520"
             loading="lazy"
             decoding="async"
-            class="mx-auto h-auto w-full"
+            class="mx-auto block aspect-[19/13] h-auto w-full object-contain"
           />
         </div>
       </div>
@@ -136,7 +136,7 @@ const softwareApplicationSchema = {
 
     <section class="bg-[#f8faf4] py-14 sm:py-24">
       <div class="container grid items-center gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-        <div class="relative min-h-[420px] overflow-hidden rounded-[28px] border bg-level-0 p-5 sm:min-h-[500px] sm:p-8">
+        <div class="grid gap-3 overflow-hidden rounded-[28px] border bg-level-0 p-4 sm:p-6 lg:relative lg:min-h-[500px] lg:block lg:p-8">
           <img
             src="/trust-center/data-requests.svg"
             alt="Workflow pentru privacy și data requests"
@@ -144,13 +144,13 @@ const softwareApplicationSchema = {
             height="192"
             loading="lazy"
             decoding="async"
-            class="absolute top-8 left-5 w-[88%] rounded-xl border bg-white shadow-sm sm:left-8"
+            class="block h-auto w-full rounded-xl border bg-white object-contain shadow-sm lg:absolute lg:top-8 lg:left-8 lg:w-[88%]"
           />
-          <div class="absolute right-5 bottom-7 left-5 grid grid-cols-2 gap-3 sm:right-8 sm:bottom-9 sm:left-8 sm:grid-cols-4">
-            <img src="/trust-center/subprocessor-docusign.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-xl border bg-white" />
-            <img src="/trust-center/subprocessor-hubspot.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-xl border bg-white" />
-            <img src="/trust-center/subprocessor-linear.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-xl border bg-white" />
-            <img src="/trust-center/subprocessor-stripe.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-xl border bg-white" />
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:absolute lg:right-8 lg:bottom-9 lg:left-8">
+            <img src="/trust-center/subprocessor-docusign.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
+            <img src="/trust-center/subprocessor-hubspot.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
+            <img src="/trust-center/subprocessor-linear.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
+            <img src="/trust-center/subprocessor-stripe.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
           </div>
         </div>
 
@@ -177,13 +177,13 @@ const softwareApplicationSchema = {
           <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
             Documentele controlate au versiuni și aprobări, iar scope-ul auditului, evidence-ul și findings rămân conectate la controls. Nu trebuie să reconstruiești programul într-un folder nou de fiecare dată când apare un reviewer.
           </p>
-          <div class="flex gap-3">
+          <div class="flex flex-wrap gap-3">
             <Button href="/soc2" variant="secondary">SOC 2</Button>
             <Button href="/iso-27001" variant="secondary">ISO 27001</Button>
           </div>
         </div>
 
-        <div class="relative min-h-[470px] overflow-hidden rounded-[28px] bg-[#001a00] p-5 sm:min-h-[560px] sm:p-8">
+        <div class="grid gap-3 overflow-hidden rounded-[28px] bg-[#001a00] p-4 sm:p-6 lg:relative lg:min-h-[560px] lg:block lg:p-8">
           <img
             src="/trust-center/documents.svg"
             alt="Documente controlate în programul de conformitate"
@@ -191,12 +191,12 @@ const softwareApplicationSchema = {
             height="420"
             loading="lazy"
             decoding="async"
-            class="absolute top-8 right-5 left-5 w-[calc(100%-2.5rem)] rounded-xl bg-white sm:right-8 sm:left-8 sm:w-[calc(100%-4rem)]"
+            class="block h-auto w-full rounded-xl bg-white object-contain lg:absolute lg:top-8 lg:right-8 lg:left-8 lg:w-[calc(100%-4rem)]"
           />
-          <div class="absolute right-5 bottom-6 left-5 space-y-2 sm:right-8 sm:bottom-8 sm:left-8">
-            <img src="/trust-center/audit-row-1.svg" alt="" width="900" height="72" loading="lazy" class="w-full rounded-lg bg-white" />
-            <img src="/trust-center/audit-row-2.svg" alt="" width="900" height="72" loading="lazy" class="w-full rounded-lg bg-white" />
-            <img src="/trust-center/audit-row-3.svg" alt="" width="900" height="72" loading="lazy" class="w-full rounded-lg bg-white" />
+          <div class="space-y-2 lg:absolute lg:right-8 lg:bottom-8 lg:left-8">
+            <img src="/trust-center/audit-row-1.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
+            <img src="/trust-center/audit-row-2.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
+            <img src="/trust-center/audit-row-3.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
           </div>
         </div>
       </div>
@@ -250,17 +250,19 @@ const softwareApplicationSchema = {
           <Button href="/docs/developers" variant="secondary">Documentație pentru dezvoltatori</Button>
         </div>
 
-        <div class="relative overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-6 sm:p-10">
-          <img
-            src="/navigation/docs.svg"
-            alt="Documentație și integrări ZebraByte"
-            width="760"
-            height="520"
-            loading="lazy"
-            decoding="async"
-            class="mx-auto mb-8 h-auto w-full max-w-2xl rounded-xl bg-white"
-          />
-          <div class="flex flex-wrap gap-2.5">
+        <div class="overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-4 sm:p-7 lg:p-10">
+          <div class="rounded-2xl bg-white p-3 sm:p-5">
+            <img
+              src="/navigation/docs.svg"
+              alt="Documentație și integrări ZebraByte"
+              width="760"
+              height="520"
+              loading="lazy"
+              decoding="async"
+              class="mx-auto block aspect-[19/13] h-auto w-full max-w-2xl object-contain"
+            />
+          </div>
+          <div class="mt-6 flex flex-wrap gap-2.5 sm:mt-8">
             {automation.map((item) => (
               <span class="rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/80">{item}</span>
             ))}
@@ -280,7 +282,7 @@ const softwareApplicationSchema = {
           <Button href="/compliance-portal">Vezi Trust Center</Button>
         </div>
 
-        <div class="overflow-hidden rounded-[28px] bg-[#E6FF03]/18 p-5 sm:p-8">
+        <div class="overflow-hidden rounded-[28px] bg-[#E6FF03]/18 p-4 sm:p-7 lg:p-8">
           <img
             src="/trust-center/browser.svg"
             alt="Trust Center conectat la platforma ZebraByte"
@@ -288,7 +290,7 @@ const softwareApplicationSchema = {
             height="786"
             loading="lazy"
             decoding="async"
-            class="h-auto w-full"
+            class="mx-auto block aspect-[573/393] h-auto w-full object-contain"
           />
         </div>
       </div>
