@@ -126,7 +126,7 @@ const capabilities = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-3xl">
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Cross-sector operating model</p>
@@ -137,9 +137,9 @@ const capabilities = [
         </div>
 
         <div class="overflow-x-auto pb-3">
-          <div class="grid min-w-[980px] grid-cols-6 border-y border-level-0-foreground/15">
+          <div class="grid min-w-[980px] grid-cols-6 border-y border-invert/15">
             {operatingModel.map((item, index) => (
-              <article class:list={["relative min-h-72 px-5 py-6", index < operatingModel.length - 1 && "border-r border-level-0-foreground/15"]}>
+              <article class:list={["relative min-h-72 px-5 py-6", index < operatingModel.length - 1 && "border-r border-invert/15"]}>
                 <div class="mb-10 flex items-center justify-between gap-4">
                   <span class="font-mono text-xs opacity-40">{item.step}</span>
                   <span class="font-mono text-xs opacity-35">{index < operatingModel.length - 1 ? "→" : "↻"}</span>
