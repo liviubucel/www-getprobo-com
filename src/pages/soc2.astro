@@ -1,79 +1,500 @@
 ---
+import "@phosphor-icons/web/regular";
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import SaleArg from "../components/ui/SaleArg.astro";
-import Badges from "../components/Badges.svelte";
+import FrameworkBadge from "../components/FrameworkBadge.svelte";
+
+const trustCriteria = [
+  {
+    key: "Security",
+    note: "Baza fiecărui raport SOC 2",
+    text: "Access control, change management, monitoring, incident response și alte controale care protejează sistemele împotriva accesului neautorizat.",
+  },
+  {
+    key: "Availability",
+    note: "Când disponibilitatea este parte din angajamente",
+    text: "Capacitate, backup, recovery, continuitate și monitorizarea serviciilor atunci când organizația face commitments privind disponibilitatea.",
+  },
+  {
+    key: "Processing Integrity",
+    note: "Pentru procesare completă, validă și la timp",
+    text: "Controale care susțin acuratețea, autorizarea și integritatea proceselor relevante pentru serviciul evaluat.",
+  },
+  {
+    key: "Confidentiality",
+    note: "Pentru informații desemnate confidențiale",
+    text: "Clasificare, acces, protecție și eliminare controlată a informațiilor pe care organizația s-a angajat să le trateze ca fiind confidențiale.",
+  },
+  {
+    key: "Privacy",
+    note: "Când privacy intră în scope",
+    text: "Procese pentru colectare, utilizare, retenție, disclosure și alte obligații relevante privind informațiile personale.",
+  },
+];
+
+const readinessFlow = [
+  {
+    step: "01",
+    title: "Scope & criteria",
+    text: "Definim serviciile, sistemele, locațiile, furnizorii și Trust Services Criteria relevante pentru engagement.",
+  },
+  {
+    step: "02",
+    title: "Risk & control design",
+    text: "Legăm riscurile de controalele existente și identificăm gap-urile care trebuie remediated înainte de audit.",
+  },
+  {
+    step: "03",
+    title: "Implementation",
+    text: "Owners, politici, access reviews, vulnerability management, change management și celelalte activități intră într-un program operabil.",
+  },
+  {
+    step: "04",
+    title: "Evidence lifecycle",
+    text: "Colectăm, revizuim și aprobăm dovezile lângă controalele pe care le susțin, fără un sprint separat înainte de audit.",
+  },
+  {
+    step: "05",
+    title: "Audit preparation",
+    text: "Organizăm materialele, verificăm gap-urile rămase și pregătim ownerii pentru întrebările și sample-urile auditorului.",
+  },
+  {
+    step: "06",
+    title: "Continuous operation",
+    text: "După raport, controalele, evidence-ul și remediation continuă; SOC 2 nu se termină la data emiterii raportului.",
+  },
+];
+
+const evidenceQueue = [
+  { label: "Quarterly access review", control: "Logical access", state: "Approved" },
+  { label: "Change sample", control: "Change management", state: "Ready" },
+  { label: "Incident exercise", control: "Incident response", state: "Reviewed" },
+  { label: "Vendor review", control: "Risk management", state: "Action open" },
+  { label: "Backup restore test", control: "Availability", state: "Scheduled" },
+];
+
+const roles = [
+  {
+    title: "ZebraByte",
+    icon: "ph-path",
+    text: "Readiness, control mapping, evidence structure, remediation tracking și operarea continuă a programului în scope-ul agreat.",
+  },
+  {
+    title: "Organizația ta",
+    icon: "ph-buildings",
+    text: "Deține procesele, controalele reale, deciziile de business și informațiile pe care doar ownerii interni le pot confirma sau opera.",
+  },
+  {
+    title: "Auditorul independent",
+    icon: "ph-seal-check",
+    text: "Efectuează engagement-ul de atestare și emite raportul. ZebraByte nu se prezintă drept firmă CPA și nu emite raportul SOC 2.",
+  },
+];
+
+const technicalControls = [
+  "identity, MFA și access reviews",
+  "change management și SDLC evidence",
+  "vulnerability management și remediation",
+  "logging, monitoring și alerting",
+  "incident response și lessons learned",
+  "backup, recovery și availability controls",
+  "vendor / third-party risk management",
+  "security policies și review cadence",
+];
+
+const referenceJourneys = [
+  {
+    company: "Blaxel",
+    label: "SOC 2 reference case",
+    text: "Un exemplu despre cum un workflow structurat poate reduce fricțiunea dintre product, security și audit readiness.",
+    href: "/stories/blaxel-soc2",
+  },
+  {
+    company: "Vybe",
+    label: "SOC 2 reference case",
+    text: "O perspectivă asupra modului în care evidence, ownership și suportul hands-on pot face procesul mai ușor de operat.",
+    href: "/stories/vybe-soc2",
+  },
+  {
+    company: "HelixDB",
+    label: "SOC 2 reference case",
+    text: "Un exemplu de parcurs pentru o echipă tehnică care își structurează programul fără să transforme compliance-ul într-un proiect izolat.",
+    href: "/stories/helixdb-soc2",
+  },
+];
+
+const faqs = [
+  {
+    q: "SOC 2 este o certificare?",
+    a: "Nu. SOC 2 este un engagement de atestare care rezultă într-un raport emis de un auditor independent calificat. ZebraByte ajută la readiness și operarea programului, nu emite raportul.",
+  },
+  {
+    q: "Care este diferența dintre SOC 2 Type I și Type II?",
+    a: "Type I evaluează designul controalelor la un moment dat. Type II evaluează designul și operarea controalelor pe o perioadă definită. Alegerea depinde de obiectivul comercial, maturitatea programului și cerințele clienților sau auditorului.",
+  },
+  {
+    q: "Trebuie să includ toate cele cinci Trust Services Criteria?",
+    a: "Nu. Security este criteriul de bază pentru fiecare raport, iar celelalte criterii se selectează în funcție de serviciu, commitments și contextul organizației. Scope-ul trebuie stabilit înainte de a construi controale inutile.",
+  },
+  {
+    q: "Putem reutiliza controale din ISO 27001 sau alte framework-uri?",
+    a: "Da. Platforma permite ca aceleași măsuri, riscuri și dovezi să susțină mai multe obligații atunci când cerințele se suprapun, în loc să duplicăm munca doar pentru că framework-ul are alt nume.",
+  },
+  {
+    q: "Ce se întâmplă după emiterea raportului?",
+    a: "Programul continuă: controls trebuie operate, evidence-ul trebuie actualizat, findings trebuie remediate, iar raportul și documentele de trust pot fi distribuite controlat prin Trust Center acolo unde este potrivit.",
+  },
+  {
+    q: "Putem începe cu un readiness assessment fără să avem auditorul ales?",
+    a: "Da. Putem structura scope-ul, riscurile, controalele și gap-urile înainte, dar auditorul independent rămâne autoritatea pentru engagement-ul de atestare și poate avea cerințe specifice de sampling sau evidence.",
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "SOC 2 Readiness",
+  provider: {
+    "@type": "Organization",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
+  },
+  serviceType: "SOC 2 readiness and continuous compliance operations",
+  url: "https://www.zebrabyte.ro/soc2",
+};
 ---
 
 <Layout
   title="SOC 2 Readiness"
-  description="SOC 2 readiness gestionat de ZebraByte: scoping, risk assessment, controls, evidence, remediation și audit preparation într-un program continuu."
+  description="SOC 2 readiness ZebraByte: scope, Trust Services Criteria, controls, evidence, remediation, audit preparation și operare continuă într-o platformă cloud."
 >
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
-        Managed Compliance · SOC 2
-      </div>
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">SOC 2 readiness,</span>
-        <span class="animate-perspective-in block delay-50"> gestionat cap-coadă.</span>
-      </h1>
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Construim programul de controale, organizăm evidence-ul, urmărim remediation și pregătim organizația pentru audit fără să transformăm SOC 2 într-un proiect separat de securitatea reală.
-      </p>
-      <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/managed-compliance">Managed Compliance</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută cu un expert</Button>
-      </div>
-      <Badges count={10} countMobile={6} client:load border class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5" />
-    </animated-hero>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
-    <section class="container py-10 sm:py-20">
-      <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">De la scope la audit readiness</h2>
-      <p class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12">
-        Programul este construit în jurul mediului tău real, al riscurilor și al controalelor pe care organizația le poate opera și demonstra.
-      </p>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-[var(--color-border-low)] sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["01", "Scope & risk", "Stabilim sistemele, procesele, furnizorii și riscurile relevante pentru program."],
-          ["02", "Controls", "Definim controale cu owner clar și le legăm de procesele și măsurile tehnice existente."],
-          ["03", "Evidence", "Centralizăm dovezile și urmărim gap-urile, reviews și approvals într-un flux continuu."],
-          ["04", "Audit preparation", "Pregătim materialele și acțiunile necesare pentru ca auditul să nu înceapă cu reconstrucția programului."],
-        ].map(([step, title, text]) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <p class="text-muted-foreground mb-8 text-sm">{step}</p>
-            <h3 class="mb-3 text-xl font-medium">{title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{text}</p>
-          </article>
+  <main class="overflow-hidden">
+    <section class="relative isolate -mt-16 overflow-hidden pt-16">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute top-[-1320px] left-1/2 z-0 size-[2265px] -translate-x-1/2 rounded-full border-[350px] border-[#E6FF03] blur-[96px]"
+      ></div>
+
+      <div class="relative z-10 container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium">
+          Managed Compliance · SOC 2
+        </div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
+          <span class="animate-perspective-in block">SOC 2 readiness,</span>
+          <span class="animate-perspective-in animation-delay-100 block">fără sprintul de panică înainte de audit.</span>
+        </h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-8 max-w-190 text-lg text-balance">
+          Construim programul de controale, organizăm evidence-ul, urmărim remediation și pregătim organizația pentru engagement-ul auditorului independent. După raport, același program continuă să funcționeze.
+        </p>
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button size="lg" href="/contact">Discută despre SOC 2</Button>
+          <Button size="lg" variant="secondary" href="/managed-compliance">Vezi Managed Compliance</Button>
+        </div>
+
+        <div class="mx-auto mt-12 flex max-w-xl items-center justify-center gap-8 rounded-2xl border bg-level-0/80 p-6 backdrop-blur sm:gap-12">
+          <div class="text-center">
+            <FrameworkBadge name="SOC2_TYPE1" class="mx-auto size-14 sm:size-16" client:visible />
+            <p class="mt-3 text-sm font-medium">SOC 2 Type I</p>
+          </div>
+          <div class="h-16 w-px bg-border"></div>
+          <div class="text-center">
+            <FrameworkBadge name="SOC2_TYPE2" class="mx-auto size-14 sm:size-16" client:visible />
+            <p class="mt-3 text-sm font-medium">SOC 2 Type II</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">SOC 2, pe scurt</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Un raport de assurance despre cum operează controalele tale.</h2>
+          <p class="text-muted-foreground mb-5 text-lg leading-relaxed">
+            SOC 2 este un framework de assurance dezvoltat de AICPA pentru organizații de servicii. Raportul rezultat oferă clienților și reviewerilor o evaluare independentă a controalelor aflate în scope.
+          </p>
+          <p class="text-muted-foreground leading-relaxed">
+            Pentru ZebraByte, readiness înseamnă să construim un program care poate fi demonstrat în audit și operat după audit — nu să producem documente care există doar pentru perioada engagement-ului.
+          </p>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border bg-level-0">
+          <div class="border-b px-5 py-4 sm:px-7">
+            <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Readiness workspace</p>
+            <p class="mt-1 font-medium">Audit scope · Current cycle</p>
+          </div>
+          <div class="grid sm:grid-cols-[0.78fr_1.22fr]">
+            <div class="border-b p-6 sm:border-r sm:border-b-0 sm:p-7">
+              <p class="text-muted-foreground mb-4 text-sm">Criteria in scope</p>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between gap-4"><span>Security</span><span class="rounded-full border px-2.5 py-1 text-xs">Required</span></div>
+                <div class="flex items-center justify-between gap-4"><span>Availability</span><span class="text-muted-foreground text-xs">Selected</span></div>
+                <div class="flex items-center justify-between gap-4"><span>Confidentiality</span><span class="text-muted-foreground text-xs">Selected</span></div>
+              </div>
+            </div>
+            <div class="bg-active p-6 sm:p-7">
+              <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-xl border bg-level-0 p-4"><p class="text-muted-foreground text-xs">Controls</p><p class="mt-2 text-2xl font-medium">Mapped</p></div>
+                <div class="rounded-xl border bg-level-0 p-4"><p class="text-muted-foreground text-xs">Evidence</p><p class="mt-2 text-2xl font-medium">Continuous</p></div>
+                <div class="rounded-xl border bg-level-0 p-4"><p class="text-muted-foreground text-xs">Findings</p><p class="mt-2 text-2xl font-medium">Tracked</p></div>
+                <div class="rounded-xl border bg-level-0 p-4"><p class="text-muted-foreground text-xs">Audit prep</p><p class="mt-2 text-2xl font-medium">Visible</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y bg-level-0 py-16 sm:py-28">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Trust Services Criteria</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Alegi criteriile pentru serviciul real, nu pentru o listă mai lungă.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Security este criteriul de bază al raportului. Celelalte criterii se adaugă atunci când commitments, produsul sau cerințele clienților justifică includerea lor în scope.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl divide-y border-y">
+          {trustCriteria.map((criterion, index) => (
+            <article class="grid gap-4 py-6 sm:grid-cols-[56px_0.72fr_1.28fr] sm:items-start sm:gap-8 sm:py-7">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <div>
+                <h3 class="font-medium">{criterion.key}</h3>
+                <p class="text-muted-foreground mt-1 text-sm">{criterion.note}</p>
+              </div>
+              <p class="text-muted-foreground leading-relaxed">{criterion.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div class="rounded-2xl border p-7 sm:p-9">
+          <div class="mb-8 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">SOC 2 Type I</p>
+              <h2 class="mt-2 text-h4 font-medium">Design la un moment dat</h2>
+            </div>
+            <FrameworkBadge name="SOC2_TYPE1" class="size-12" client:visible />
+          </div>
+          <p class="text-muted-foreground mb-6 leading-relaxed">
+            Evaluează dacă descrierea sistemului și designul controalelor sunt adecvate la data relevantă pentru engagement.
+          </p>
+          <div class="divide-y border-y text-sm">
+            <div class="flex justify-between gap-4 py-3"><span>Focus</span><span class="text-muted-foreground text-right">Control design</span></div>
+            <div class="flex justify-between gap-4 py-3"><span>Evidence</span><span class="text-muted-foreground text-right">Starea la data evaluată</span></div>
+            <div class="flex justify-between gap-4 py-3"><span>Util</span><span class="text-muted-foreground text-right">Primul milestone de assurance</span></div>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border bg-active p-7 sm:p-9">
+          <div class="mb-8 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">SOC 2 Type II</p>
+              <h2 class="mt-2 text-h4 font-medium">Design + operare în timp</h2>
+            </div>
+            <FrameworkBadge name="SOC2_TYPE2" class="size-12" client:visible />
+          </div>
+          <p class="text-muted-foreground mb-6 leading-relaxed">
+            Evaluează designul și modul în care controalele au operat într-o perioadă definită, ceea ce face disciplina de evidence continuu mult mai importantă.
+          </p>
+          <div class="divide-y border-y text-sm">
+            <div class="flex justify-between gap-4 py-3"><span>Focus</span><span class="text-muted-foreground text-right">Design + operating effectiveness</span></div>
+            <div class="flex justify-between gap-4 py-3"><span>Evidence</span><span class="text-muted-foreground text-right">Sample-uri și activități din perioadă</span></div>
+            <div class="flex justify-between gap-4 py-3"><span>Util</span><span class="text-muted-foreground text-right">Assurance continuu pentru clienți</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-28">
+      <div class="container grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Readiness workflow</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">De la scope la un program care poate fi auditat.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu construim controls în vid. Fiecare etapă se leagă de sistemele și procesele reale ale organizației, apoi rămâne într-un ciclu continuu de review și evidence.
+          </p>
+        </div>
+
+        <div class="border-y">
+          {readinessFlow.map((item) => (
+            <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[72px_0.82fr_1.18fr] sm:gap-8 sm:py-8">
+              <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Evidence lifecycle</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Dovezile sunt un flux, nu un upload de ultim moment.</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            Evidence-ul trebuie să arate că activitatea s-a întâmplat, că a fost revizuită și că poate fi legată de controlul relevant. Platforma păstrează această relație vizibilă pe tot parcursul ciclului.
+          </p>
+          <a href="/docs/product" class="font-medium underline underline-offset-4">Vezi modelul de produs în documentație</a>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border bg-level-0">
+          <div class="border-b px-5 py-4 sm:px-6">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Evidence queue</p>
+                <p class="mt-1 font-medium">Current review cycle</p>
+              </div>
+              <span class="rounded-full border px-3 py-1 text-xs">5 items</span>
+            </div>
+          </div>
+          <div class="divide-y">
+            {evidenceQueue.map((item) => (
+              <div class="grid gap-2 px-5 py-4 sm:grid-cols-[1fr_0.8fr_auto] sm:items-center sm:gap-6 sm:px-6">
+                <span class="font-medium">{item.label}</span>
+                <span class="text-muted-foreground text-sm">{item.control}</span>
+                <span class="text-muted-foreground text-xs sm:text-right">{item.state}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y bg-level-0 py-16 sm:py-28">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Roluri clare</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Readiness, operare și audit sunt trei responsabilități diferite.</h2>
+          <p class="text-muted-foreground text-lg">
+            Separăm deliberat munca ZebraByte de ownership-ul clientului și de opinia auditorului independent.
+          </p>
+        </div>
+
+        <div class="grid border-y lg:grid-cols-3 lg:divide-x">
+          {roles.map((role) => (
+            <article class="border-b p-7 last:border-b-0 sm:p-9 lg:border-b-0">
+              <i class={`ph ${role.icon} mb-7 block text-[2rem]`} aria-hidden="true"></i>
+              <h3 class="text-h4 mb-3 font-medium">{role.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{role.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security + SOC 2</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Controalele trebuie să existe în infrastructură, nu doar în policy.</h2>
+          <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
+            Când readiness-ul descoperă un gap tehnic, acesta poate continua în security assessment, hardening, website/email security sau infrastructure operations și se întoarce în program ca evidence verificabil.
+          </p>
+          <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
+        </div>
+
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          {technicalControls.map((item, index) => (
+            <div class="flex gap-4 border-t py-5 first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-28">
+      <div class="container">
+        <div class="grid overflow-hidden rounded-2xl border bg-level-0 lg:grid-cols-[0.9fr_1.1fr]">
+          <div class="p-7 sm:p-10 lg:p-12">
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">După raport</p>
+            <h2 class="text-h3 mb-4 font-medium text-balance">Transformă assurance-ul într-un trust asset.</h2>
+            <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
+              După emiterea raportului, Trust Center-ul poate centraliza documentele și informațiile pe care alegi să le distribui către clienți și prospects, cu access control, NDA și documente protejate acolo unde este nevoie.
+            </p>
+            <Button href="/compliance-portal">Vezi Trust Center</Button>
+          </div>
+          <div class="min-h-80 border-t bg-[#E6FF03]/20 p-5 sm:p-8 lg:border-t-0 lg:border-l">
+            <img
+              src="/trust-center/browser.svg"
+              alt="Trust Center ZebraByte pentru distribuirea controlată a documentelor de assurance"
+              width="1146"
+              height="786"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="mb-12 max-w-190">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Reference journeys</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">SOC 2 în echipe tehnice reale.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Aceste exemple sunt păstrate ca studii de referință din parcursuri reale de compliance. Ele ilustrează metode și rezultate ale unui model platformă + expert și nu sunt prezentate ca testimoniale ale clienților ZebraByte.
+        </p>
+      </div>
+
+      <div class="grid gap-4 lg:grid-cols-3">
+        {referenceJourneys.map((story) => (
+          <a href={story.href} class="group flex min-h-64 flex-col justify-between rounded-2xl border p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-8">
+            <div>
+              <p class="font-medium">{story.company}</p>
+              <p class="text-muted-foreground mt-1 text-sm">{story.label}</p>
+              <h3 class="text-h5 mt-8 font-medium text-balance">{story.text}</h3>
+            </div>
+            <span class="text-muted-foreground mt-8 text-sm group-hover:underline group-hover:underline-offset-4">Citește studiul de referință</span>
+          </a>
         ))}
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-12">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Compliance-ul trebuie susținut de security.</h2>
-          <p class="text-muted-foreground text-lg">Când un control cere o măsură tehnică, ZebraByte poate lega remediation de security assessment, hardening, email security, application protection și infrastructură securizată.</p>
+    <section class="border-y bg-level-0 py-16 sm:py-28">
+      <div class="container grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">FAQ</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">Întrebări care merită clarificate înainte de scope.</h2>
+          <p class="text-muted-foreground mt-4 leading-relaxed">
+            Pentru explicații mai detaliate despre criterii, istoric și comparații, păstrăm și ghidul complet din Hub.
+          </p>
+          <a href="/hub/soc2" class="mt-5 inline-block font-medium underline underline-offset-4">Citește ghidul SOC 2</a>
         </div>
-        <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
-          <SaleArg title="Expert dedicat" video="/videos/keyshot1.mp4"><p>Un owner clar coordonează programul, evidence-ul, reviews și acțiunile necesare.</p></SaleArg>
-          <SaleArg title="Evidence continuu" video="/videos/keyshot2.mp4"><p>Nu reconstruim dovezile înainte de audit; le menținem în ritmul normal al programului.</p></SaleArg>
-          <SaleArg title="Trust și customer reviews" video="/videos/keyshot3.mp4"><p>Compliance Portal ajută la distribuirea controlată a documentelor și informațiilor de trust.</p></SaleArg>
-          <SaleArg title="Security conectat la controls" video="/videos/keyshot4.mp4"><p>Remediation tehnică și risk treatment rămân legate de programul de compliance.</p></SaleArg>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-start justify-between gap-6 font-medium [&::-webkit-details-marker]:hidden">
+                <span>{faq.q}</span>
+                <span class="grid size-7 shrink-0 place-items-center rounded-full border transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-3xl pt-4 leading-relaxed">{faq.a}</p>
+            </details>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">SOC 2 ca program continuu, nu ca sprint înainte de audit.</h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Putem începe cu un readiness assessment și continua cu implementarea și operarea programului.</p>
-      <Button href="/contact" size="lg">Discută despre SOC 2</Button>
+    <section class="container py-16 text-center sm:py-28">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Începe cu readiness</p>
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">SOC 2 ca program continuu, nu ca sprint înainte de audit.</h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg leading-relaxed">
+        Putem începe cu scope și gap assessment, apoi continua cu implementarea, evidence, remediation și pregătirea pentru auditorul independent.
+      </p>
+      <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/contact" size="lg">Discută despre SOC 2</Button>
+        <Button href="/compliance-platform" variant="secondary" size="lg">Explorează platforma</Button>
+      </div>
     </section>
   </main>
 </Layout>
-
-<script>
-  import { AnimatedHero } from "../lib/elements/hero";
-  import { customElementDefine } from "../lib/dom";
-  customElementDefine("animated-hero", () => AnimatedHero);
-</script>
