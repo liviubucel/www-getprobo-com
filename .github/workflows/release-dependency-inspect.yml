@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - release/production-readiness
+  pull_request:
 
 permissions:
   contents: read
 
 jobs:
   inspect:
+    if: github.event_name == 'push' || github.head_ref == 'release/production-readiness'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
