@@ -158,138 +158,77 @@ const faqs = [
   description="Security Assessment ZebraByte pentru website, domeniu, email și servicii expuse public, cu findings tehnice, evidence și plan de remediere prioritizat."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Security Assessment
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Înțelege suprafața de atac</span>
         <span class="animate-perspective-in block delay-50"> înainte să alegi remedierea. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         Evaluăm website-ul, domeniul, emailul și serviciile expuse public, validăm
         constatările și le transformăm într-un plan tehnic prioritizat după risc și impact.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/cyber-security"
-        >
-          Vezi Cyber Security
-        </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
-          Solicită o evaluare
-        </Button>
+      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/cyber-security">Vezi Cyber Security</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Solicită o evaluare</Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Ce intră în evaluare</h2>
-        <p class="text-muted-foreground text-lg">
-          Scope-ul se adaptează mediului și obiectivului engagement-ului. Nu adăugăm active
-          sau tehnici de testare în afara autorizării doar pentru a produce un raport mai lung.
-        </p>
-      </div>
-
-      <div class="mx-auto max-w-5xl border-y">
-        {scope.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.number}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Metodologie de la scope la verification</h2>
-          <p class="text-muted-foreground text-lg">
-            Tool-urile sunt doar o parte din proces. Valoarea vine din validare, context și
-            prioritizarea constatărilor în jurul serviciului real.
+    <section class="container pb-12 sm:pb-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Scope map</p>
+            <h2 class="text-h3 sm:text-h2 font-medium">Patru suprafețe, același context de risc.</h2>
+          </div>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Scope-ul se adaptează mediului și obiectivului engagement-ului. Nu adăugăm active
+            sau tehnici de testare în afara autorizării doar pentru a produce un raport mai lung.
           </p>
         </div>
 
-        <div class="mx-auto max-w-5xl border-y">
-          {methodology.map((item) => (
-            <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-              <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-              <h3 class="text-h5 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+        <div class="grid border sm:grid-cols-2">
+          {scope.map((item, index) => (
+            <article class:list={["min-h-64 p-6 sm:p-8", index % 2 === 0 && "sm:border-r", index < 2 && "border-b"]}>
+              <div class="mb-12 flex items-center justify-between gap-4">
+                <span class="text-muted-foreground font-mono text-sm">SCOPE / {item.number}</span>
+                <span class="text-muted-foreground font-mono text-xs">IN REVIEW</span>
+              </div>
+              <h3 class="text-h4 mb-4 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground max-w-xl leading-relaxed">{item.description}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un finding trebuie să poată fi folosit</h2>
-        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
-          Nu livrăm doar un nume de vulnerabilitate și un scor. Finding-ul trebuie să ofere
-          suficient context pentru ca owner-ul tehnic să înțeleagă problema, să decidă ordinea
-          și să poată verifica remedierea.
-        </p>
-
-        <div class="border-y">
-          {findingAnatomy.map(([label, text]) => (
-            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.6fr_1.4fr] sm:gap-10">
-              <h3 class="font-medium">{label}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-10 sm:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce primești la final</h2>
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container">
+        <div class="mb-12 max-w-3xl">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Methodology</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la scope la verification, fără pași misterioși.</h2>
           <p class="text-muted-foreground text-lg leading-relaxed">
-            Raportul trebuie să reducă incertitudinea și să permită execuția. Separăm riscul
-            imediat de hardening-ul recomandat și indicăm ce trebuie verificat după schimbare.
+            Tool-urile sunt doar o parte din proces. Valoarea vine din validare, context și
+            prioritizarea constatărilor în jurul serviciului real.
           </p>
         </div>
-        <ul class="border-y">
-          {deliverables.map((item) => (
-            <li class="border-b py-4 last:border-b-0">{item}</li>
-          ))}
-        </ul>
-      </div>
-    </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto max-w-5xl">
-          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Limitele assessment-ului sunt parte din securitate</h2>
-          <div class="border-y">
-            {boundaries.map((item) => (
-              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-                <h3 class="text-h5 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+        <div class="overflow-x-auto pb-3">
+          <div class="grid min-w-[960px] grid-cols-6 border-y">
+            {methodology.map((item, index) => (
+              <article class:list={["relative min-h-72 px-5 py-6", index < methodology.length - 1 && "border-r"]}>
+                <div class="mb-8 flex items-center gap-3">
+                  <span class="bg-level-3 size-2 rounded-full"></span>
+                  <span class="text-muted-foreground font-mono text-xs">{item.step}</span>
+                </div>
+                <h3 class="mb-4 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
+                {index < methodology.length - 1 && <span class="text-muted-foreground absolute right-[-7px] top-6 z-10 bg-active px-1 text-sm">→</span>}
               </article>
             ))}
           </div>
@@ -297,30 +236,114 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">După assessment</h2>
-        <p class="text-muted-foreground text-lg">
-          Raportul nu te blochează într-un singur model de execuție. Poți remedia intern,
-          împreună cu furnizorii existenți sau cu ZebraByte acolo unde are sens.
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Finding anatomy</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un finding trebuie să poată fi folosit.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu livrăm doar un nume de vulnerabilitate și un scor. Finding-ul trebuie să ofere
+            suficient context pentru ca owner-ul tehnic să înțeleagă problema, să decidă ordinea
+            și să poată verifica remedierea.
+          </p>
+        </div>
+
+        <div class="overflow-hidden border bg-level-0">
+          <div class="flex flex-col justify-between gap-5 border-b bg-active px-6 py-5 sm:flex-row sm:items-center sm:px-8">
+            <div>
+              <p class="text-muted-foreground mb-1 font-mono text-xs">EXEMPLU DE STRUCTURĂ · FINDING-07</p>
+              <h3 class="text-h5 font-medium">Configurare defensivă care necesită remediere</h3>
+            </div>
+            <span class="w-max rounded-full border px-3 py-1 font-mono text-xs">DEMO / PRIORITIZED</span>
+          </div>
+
+          <div class="px-6 sm:px-8">
+            {findingAnatomy.map(([label, text], index) => (
+              <div class="grid gap-2 border-b py-5 last:border-b-0 sm:grid-cols-[120px_1fr] sm:gap-8">
+                <div class="flex items-start gap-3">
+                  <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+                  <h4 class="font-medium">{label}</h4>
+                </div>
+                <p class="text-muted-foreground leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Deliverables</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Raportul trebuie să reducă incertitudinea.</h2>
+          <p class="text-lg leading-relaxed opacity-65">
+            Separăm riscul imediat de hardening-ul recomandat și indicăm ce trebuie verificat
+            după schimbare, astfel încât raportul să poată fi transformat în execuție.
+          </p>
+        </div>
+
+        <ol class="border-y border-level-0-foreground/15">
+          {deliverables.map((item, index) => (
+            <li class="grid grid-cols-[48px_1fr_auto] gap-4 border-b border-level-0-foreground/15 py-4 last:border-b-0 sm:gap-6">
+              <span class="font-mono text-sm opacity-40">0{index + 1}</span>
+              <span class="leading-relaxed opacity-85">{item}</span>
+              <span class="hidden font-mono text-xs opacity-35 sm:block">included</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Rules of engagement</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Limitele assessment-ului sunt parte din securitate.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Un assessment bun este explicit despre ce poate testa, cât de departe validează și
+          ce active rămân în afara autorizării.
         </p>
       </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {nextSteps.map((item) => (
-          <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </a>
+      <div class="grid gap-x-10 sm:grid-cols-2">
+        {boundaries.map((item, index) => (
+          <article class="border-t py-7 sm:py-8">
+            <div class="text-muted-foreground mb-7 font-mono text-xs">RULE-{String(index + 1).padStart(2, "0")}</div>
+            <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground max-w-xl leading-relaxed">{item.text}</p>
+          </article>
         ))}
+      </div>
+    </section>
+
+    <section class="border-y py-12 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Handoff</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">După assessment, alegi cine execută.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Raportul nu te blochează într-un singur model. Poți remedia intern, împreună cu
+            furnizorii existenți sau cu ZebraByte acolo unde are sens.
+          </p>
+        </div>
+
+        <div class="border-y">
+          {nextSteps.map((item, index) => (
+            <a href={item.href} class="group grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[52px_0.7fr_1.3fr] sm:gap-7">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 
     <ZebraByteTestimonials />
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -335,15 +358,15 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Începem cu scope-ul corect, nu cu o listă de tool-uri.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Spune-ne ce vrei să evaluăm și care este contextul de business. Stabilim limitele
-        engagement-ului înainte de orice testare.
-      </p>
-      <Button href="/contact" size="lg">Discută despre assessment</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începem cu scope-ul corect, nu cu o listă de tool-uri.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Spune-ne ce vrei să evaluăm și care este contextul de business. Stabilim limitele
+          engagement-ului înainte de orice testare.
+        </p>
+        <Button href="/contact" size="lg">Discută despre assessment</Button>
+      </div>
     </section>
   </main>
 </Layout>
