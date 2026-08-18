@@ -7,19 +7,24 @@
 /blog/page/1 /blog 301
 /probo-newsletter /newsletter 301
 
-# ZebraByte branded aliases for preserved comparison pages
+# Retired upstream campaign/onboarding surfaces.
+/yc /managed-compliance 302
+/fr/yc /managed-compliance 302
+/whats-next/soc2 /soc2 301
+/whats-next/ISO27001 /iso-27001 301
+/whats-next/iso27001 /iso-27001 301
+
+# ZebraByte branded aliases for preserved comparison pages.
 /hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
 /hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
 
-# Preserve old technical URLs while the public documentation uses Device Agent.
-/docs/product/probo-agent/contributing /docs/developers/api/agent/contributing 301
-/docs/product/probo-agent/installation /docs/product/device-agent/macos 301
-/docs/product/probo-agent/desktop-install /docs/product/device-agent/macos 301
-/docs/product/probo-agent/server-install /docs/product/device-agent/linux 301
-/docs/product/probo-agent /docs/product/device-agent/overview 301
-/docs/product/probo-agent/* /docs/product/device-agent/:splat 301
-/md/docs/product/probo-agent /md/docs/product/device-agent/overview.md 301
-/md/docs/product/probo-agent/* /md/docs/product/device-agent/:splat 301
+# Public Probo documentation is intentionally withheld until it is deliberately
+# migrated and validated for ZebraByte. Avoid deep 404s without making a
+# permanent SEO claim about the future documentation location.
+/docs /hub 302
+/docs/* /hub 302
+/md/docs /hub 302
+/md/docs/* /hub 302
 
 /fr / 301
 /fr/about /about 301
@@ -34,45 +39,6 @@
 /fr/stories /stories 301
 /fr/stories/:id /stories/:id 301
 /fr/terms /terms 301
-/fr/yc /yc 301
-/docs/getting-started /docs/product/getting-started 301
-/docs/getting-started/* /docs/product/getting-started/:splat 301
-/docs/cli /docs/developers/cli 301
-/docs/cli/* /docs/developers/cli/:splat 301
-/docs/api /docs/developers/api 301
-/docs/api/* /docs/developers/api/:splat 301
-/docs/developers/cli/commands/controls /docs/developers/cli/commands/control 301
-/docs/developers/cli/commands/findings /docs/developers/cli/commands/finding 301
-/docs/developers/cli/commands/frameworks /docs/developers/cli/commands/framework 301
-/docs/developers/cli/commands/organizations /docs/developers/cli/commands/org 301
-/docs/developers/cli/commands/risks /docs/developers/cli/commands/risk 301
-/docs/developers/cli/commands/users /docs/developers/cli/commands/user 301
-/docs/developers/cli/commands/webhooks /docs/developers/cli/commands/webhook 301
-/docs/self-hosting /docs/deployment/self-hosting 301
-/docs/self-hosting/* /docs/deployment/self-hosting/:splat 301
-/docs/developers/api/n8n/graphql /docs/developers/api/n8n/resources/execute 301
-/docs/configuration /docs/deployment/configuration 301
-/docs/configuration/* /docs/deployment/configuration/:splat 301
-/docs/product/access-review/infrastructure-security /docs/deployment/infrastructure-security 301
-/docs/product/access-review/clerk /docs/product/access-review/directory 301
-/docs/developers/api/mcp/tools/assets /docs/developers/api/mcp/tools/catalog/assets-and-data 301
-/docs/developers/api/mcp/tools/audits /docs/developers/api/mcp/tools/catalog/audits-and-findings 301
-/docs/developers/api/mcp/tools/controls /docs/developers/api/mcp/tools/catalog/frameworks-and-controls 301
-/docs/developers/api/mcp/tools/data-classification /docs/developers/api/mcp/tools/catalog/assets-and-data 301
-/docs/developers/api/mcp/tools/documents /docs/developers/api/mcp/tools/catalog/documents-and-approvals 301
-/docs/developers/api/mcp/tools/dpias /docs/developers/api/mcp/tools/catalog/privacy 301
-/docs/developers/api/mcp/tools/findings /docs/developers/api/mcp/tools/catalog/audits-and-findings 301
-/docs/developers/api/mcp/tools/frameworks /docs/developers/api/mcp/tools/catalog/frameworks-and-controls 301
-/docs/developers/api/mcp/tools/measures /docs/developers/api/mcp/tools/catalog/measures-tasks-and-evidence 301
-/docs/developers/api/mcp/tools/obligations /docs/developers/api/mcp/tools/catalog/obligations 301
-/docs/developers/api/mcp/tools/organizations /docs/developers/api/mcp/tools/catalog/organizations 301
-/docs/developers/api/mcp/tools/processing-activities /docs/developers/api/mcp/tools/catalog/privacy 301
-/docs/developers/api/mcp/tools/risks /docs/developers/api/mcp/tools/catalog/risks 301
-/docs/developers/api/mcp/tools/states-of-applicability /docs/developers/api/mcp/tools/catalog/statements-of-applicability 301
-/docs/developers/api/mcp/tools/tasks /docs/developers/api/mcp/tools/catalog/measures-tasks-and-evidence 301
-/docs/developers/api/mcp/tools/third-parties /docs/developers/api/mcp/tools/catalog/third-parties 301
-/docs/developers/api/mcp/tools/tias /docs/developers/api/mcp/tools/catalog/privacy 301
-/docs/developers/api/mcp/tools/users /docs/developers/api/mcp/tools/catalog/identity-and-provisioning 301
 /fr/* /:splat 301
 
 # Accessibility: only the standard public widget install remains public.
@@ -84,7 +50,7 @@
 /accesibilitate/vs-sienna /accessibility 301
 /accesibilitate/* /accessibility 301
 
-# Legacy ZebraByte URLs - preserve SEO continuity while mapping old services to current areas
+# Legacy ZebraByte URLs - preserve SEO continuity while mapping old services to current areas.
 /accesibilitate /accessibility 301
 /am-fost-atacat-cibernetic /incident-response 301
 /cyber-audit /security-assessment 301
