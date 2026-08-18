@@ -128,78 +128,58 @@ const faqs = [
   title="Incident Response"
   description="Incident Response ZebraByte pentru website-uri, conturi, infrastructură și incidente de securitate: triage, containment, investigation, recovery și remediation post-incident."
 >
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
-        Incident Response
-      </div>
-
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">Limitează impactul.</span>
-        <span class="animate-perspective-in block delay-50"> Păstrează controlul și informația. </span>
-      </h1>
-
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Triage, containment, investigation support și recovery pentru website-uri, conturi,
-        aplicații și infrastructură. Evităm cleanup-ul orb înainte să înțelegem suficient din incident.
-      </p>
-
-      <div class="mb-5 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/cyber-security">Cyber Security</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Contactează ZebraByte</Button>
-      </div>
-
-      <p class="text-muted-foreground mx-auto max-w-160 text-center text-sm">
-        Nu trimite parole, private keys, recovery codes sau token-uri prin formularul public.
-      </p>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">Incident Response</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">Limitează impactul.</span>
+          <span class="animate-perspective-in animation-delay-100 block">Păstrează controlul și informația.</span>
+        </h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">
+          Triage, containment, investigation support și recovery pentru website-uri, conturi,
+          aplicații și infrastructură. Evităm cleanup-ul orb înainte să înțelegem suficient din incident.
+        </p>
+        <div class="animate-perspective-in animation-delay-300 mb-5 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/cyber-security">Cyber Security</Button>
+          <Button size="lg" href="/contact">Contactează ZebraByte</Button>
+        </div>
+        <p class="text-muted-foreground mx-auto max-w-160 text-sm">Nu trimite parole, private keys, recovery codes sau token-uri prin formularul public.</p>
+      </section>
     </animated-hero>
 
-    <section class="bg-level-3 py-12 text-invert sm:py-24">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
       <div class="container">
-        <div class="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <div class="max-w-3xl">
-            <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Incident log</p>
-            <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Răspuns structurat, nu improvizație.</h2>
-            <p class="text-lg leading-relaxed opacity-65">
-              Ordinea exactă poate varia, dar incidentul trebuie să aibă un flux clar de decizie,
-              containment și recovery.
-            </p>
-          </div>
-          <span class="font-mono text-sm opacity-40">IR / ACTIVE WORKFLOW</span>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Incident workflow</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Răspuns structurat, nu improvizație.</h2>
+          <p class="text-lg leading-relaxed opacity-65">Ordinea exactă poate varia, dar incidentul trebuie să aibă un flux clar de decizie, containment și recovery.</p>
         </div>
-
-        <div class="border-y border-invert/15 font-mono">
+        <div class="mx-auto max-w-5xl border-y border-invert/15">
           {phases.map((item, index) => (
-            <article class="grid gap-4 border-b border-invert/15 py-6 last:border-b-0 sm:grid-cols-[88px_0.7fr_1.3fr] sm:gap-8">
-              <div class="flex items-start gap-3 text-sm opacity-45">
-                <span>{item.step}</span><span>+</span><span>{String(index * 17 + 4).padStart(2, "0")}m</span>
-              </div>
-              <h3 class="font-sans text-h5 font-medium">{item.title}</h3>
-              <p class="font-sans leading-relaxed opacity-70">{item.text}</p>
+            <article class="grid gap-3 border-b border-invert/15 py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8 sm:py-7">
+              <span class="font-mono text-sm opacity-40">{item.step}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="leading-relaxed opacity-70">{item.text}</p>
+              <span class="hidden font-mono text-xs opacity-35 sm:block">{index < phases.length - 1 ? "→" : "↻"}</span>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Evidence discipline</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Reacția prea rapidă poate șterge contextul.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Obiectivul nu este să păstrăm orice bit de date cu orice preț, ci să evităm
-            distrugerea inutilă a informației care poate explica vectorul inițial, persistența
-            sau impactul real.
-          </p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Evidence discipline</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Reacția prea rapidă poate șterge contextul.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Obiectivul nu este să păstrăm orice bit de date cu orice preț, ci să evităm distrugerea inutilă a informației care poate explica vectorul inițial, persistența sau impactul real.</p>
         </div>
-
-        <div class="border-l pl-6 sm:pl-10">
+        <div class="divide-y border-y">
           {evidencePrinciples.map((item, index) => (
-            <article class="relative pb-9 last:pb-0">
-              <span class="bg-level-0 absolute -left-[31px] top-1 size-3 rounded-full border sm:-left-[45px]"></span>
-              <div class="text-muted-foreground mb-2 font-mono text-xs">EVIDENCE-{String(index + 1).padStart(2, "0")}</div>
-              <h3 class="text-h5 mb-2 font-medium">{item.title}</h3>
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
@@ -207,22 +187,18 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-12 sm:py-24">
+    <section class="bg-active py-16 sm:py-28">
       <div class="container">
-        <div class="mb-10 max-w-3xl">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Escalation triggers</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Escalation triggers</p>
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Situații care merită tratate metodic.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Nu orice alertă este un incident major. Dar accesul neautorizat, indisponibilitatea,
-            malware-ul sau riscul pentru date nu trebuie reduse la „restart și vedem”.
-          </p>
+          <p class="text-muted-foreground text-lg leading-relaxed">Nu orice alertă este un incident major. Dar accesul neautorizat, indisponibilitatea, malware-ul sau riscul pentru date nu trebuie reduse la „restart și vedem”.</p>
         </div>
-
-        <div class="grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid border-y lg:grid-cols-3 lg:divide-x">
           {scenarios.map(([title, text], index) => (
-            <article class="border-t py-7">
-              <span class="text-muted-foreground mb-6 block font-mono text-sm">0{index + 1}</span>
-              <h3 class="mb-3 font-medium">{title}</h3>
+            <article class="border-b p-7 last:border-b-0 sm:p-8 lg:border-b-0">
+              <span class="text-muted-foreground mb-7 block font-mono text-xs">0{index + 1}</span>
+              <h3 class="text-h5 mb-3 font-medium">{title}</h3>
               <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
             </article>
           ))}
@@ -230,38 +206,32 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mb-10 max-w-3xl">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Decision chain</p>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Decision chain</p>
         <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Un singur incident, mai mulți owners.</h2>
       </div>
-
-      <div class="grid border-y sm:grid-cols-2 lg:grid-cols-4">
-        {roles.map((item, index) => (
-          <article class:list={["min-h-64 py-7 sm:px-7", index > 0 && "sm:border-l"]}>
-            <span class="text-muted-foreground mb-10 block font-mono text-sm">ROLE-{index + 1}</span>
-            <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+      <div class="grid border-y lg:grid-cols-4 lg:divide-x">
+        {roles.map((item) => (
+          <article class="border-b p-7 last:border-b-0 sm:p-8 lg:border-b-0">
+            <h3 class="text-h5 mb-4 font-medium">{item.title}</h3>
             <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="border-y py-12 sm:py-24">
-      <div class="container grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+    <section class="border-y py-16 sm:py-28">
+      <div class="container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Recovery gate</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">„Site-ul merge” nu înseamnă recovery complet.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Serviciul poate reveni online înainte ca riscul să fie suficient tratat. Revenirea
-            în producție trebuie să aibă criterii clare.
-          </p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Recovery gate</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">„Site-ul merge” nu înseamnă recovery complet.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Serviciul poate reveni online înainte ca riscul să fie suficient tratat. Revenirea în producție trebuie să aibă criterii clare.</p>
         </div>
-
         <div class="divide-y border-y">
           {recoveryChecks.map((item, index) => (
-            <div class="grid grid-cols-[40px_1fr] gap-4 py-4">
-              <span class="font-mono text-sm text-muted-foreground">✓{index + 1}</span>
+            <div class="grid grid-cols-[48px_1fr] gap-4 py-5 sm:py-6">
+              <span class="text-muted-foreground font-mono text-sm">✓{index + 1}</span>
               <span class="leading-relaxed">{item}</span>
             </div>
           ))}
@@ -269,21 +239,17 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Post-incident record</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Incidentul trebuie să lase în urmă un program mai bun.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Când recovery-ul se încheie, findings și deciziile trebuie transformate în acțiuni
-            urmărite — altfel următorul incident începe din același loc.
-          </p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Post-incident record</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Incidentul trebuie să lase în urmă un program mai bun.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Când recovery-ul se încheie, findings și deciziile trebuie transformate în acțiuni urmărite — altfel următorul incident începe din același loc.</p>
         </div>
-
-        <div class="border-y">
+        <div class="divide-y border-y">
           {outputs.map(([title, text], index) => (
-            <article class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[54px_0.7fr_1.3fr] sm:gap-7">
-              <span class="text-muted-foreground font-mono text-xs">OUT-{index + 1}</span>
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
               <h3 class="font-medium">{title}</h3>
               <p class="text-muted-foreground leading-relaxed">{text}</p>
             </article>
@@ -294,7 +260,7 @@ const faqs = [
 
     <ZebraByteTestimonials />
 
-    <section class="container py-12 sm:py-24">
+    <section class="container py-16 sm:py-28">
       <div class="mx-auto max-w-3xl">
         <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
@@ -311,7 +277,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-16 text-center text-invert sm:py-24">
+    <section class="bg-level-3 py-16 text-center text-invert sm:py-28">
       <div class="container">
         <p class="mb-4 font-mono text-sm opacity-45">INCIDENT / ESCALATION</p>
         <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Dacă există un incident activ, prioritatea este controlul impactului.</h2>
