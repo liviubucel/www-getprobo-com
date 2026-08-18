@@ -23,6 +23,23 @@ export function publicBrandText(value: string | undefined | null): string {
       "Case studies from the platform reference library explore SOC 2, ISO 27001 and practical compliance programs.",
     )
     .replace(
+      /\bTrusted by 130\+ companies\b/gi,
+      "Reference cases from 130+ companies",
+    )
+    .replace(
+      /Security teams use Probo to share the right materials, protect sensitive documents, and keep access requests moving\.?/gi,
+      "Reference teams used this compliance-portal model to share the right materials, protect sensitive documents and keep access requests moving.",
+    )
+    .replace(
+      /Probo handled our SOC 2 and compliance, so we could focus on building\.?/gi,
+      "Reference outcome: much of the SOC 2 and compliance workload was handled outside the product team so it could stay focused on building.",
+    )
+    .replace(
+      /\bTrusted by teams building compliance-ready workflows\b/gi,
+      "Reference teams and compliance-ready workflows",
+    )
+    .replace(/\bTrusted companies\b/gi, "Reference companies")
+    .replace(
       /Compare the top 5 compliance automation tools for 2026\. Discover why open[- ]source Probo ranks #1 and how its(?: hands-on)? service eliminates the DIY compliance burden\.?/gi,
       "Compare leading compliance automation approaches for 2026, including software-led tools and managed compliance services.",
     )
@@ -80,9 +97,7 @@ export function publicBrandText(value: string | undefined | null): string {
     .replace(/\bZebraByte,? backed by Y Combinator\b/gi, "ZebraByte")
     .replace(/\bZebraByte went through YC(?: in Spring 25)?\b/gi, "ZebraByte serves fast-moving technology teams")
     .replace(/\bthe platform went through YC(?: in Spring 25)?\b/gi, "the platform serves fast-moving technology teams")
-    .replace(/\bthe platform is YC-backed\b/gi, "the platform")
-    .replace(/\bYC company\b/gi, "technology company")
-    .replace(/\bYC startup\b/gi, "early-stage technology company");
+    .replace(/\bthe platform is YC-backed\b/gi, "the platform");
 }
 
 export function publicBrandUrl(value: string | undefined | null): string {
