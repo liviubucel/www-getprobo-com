@@ -1,35 +1,35 @@
 ---
 title: Get started
-description: ZebraByte documentation hub covering the compliance platform's product areas, developer interfaces, and Cloud or self-hosted deployment options.
+description: ZebraByte documentation hub covering the cloud compliance platform, product workflows, professional and managed operating models, developer interfaces, and architecture references.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-ZebraByte brings governance, risk, compliance, privacy and security workflows together for engineering, security and compliance teams. Use these docs to understand the product model, operate a compliance program, automate records and choose a deployment.
+ZebraByte brings governance, risk, compliance, privacy and security workflows together for engineering, security, compliance teams and professional advisers. The platform is delivered as **ZebraByte Cloud SaaS**. Organizations can operate it directly, advisers can use it across client work, or ZebraByte can run the program through Managed Compliance.
 
 ## Choose your path
 
-Start with the path that matches your role.
+Start with the path that matches how you want to use the platform.
 
 <CardGrid>
   <LinkCard
-    title="Compliance lead"
-    description="Learn the product model, import a framework, and operate the compliance program"
+    title="Company / compliance team"
+    description="Set up an organization, import frameworks and operate the compliance program directly in ZebraByte Cloud"
     href="/docs/product/getting-started"
   />
   <LinkCard
-    title="Cloud customer"
-    description="Review Cloud regions, shared responsibility, and first-organization setup"
-    href="/docs/deployment/cloud"
+    title="Professional / adviser"
+    description="Use the cloud platform as a structured operating system for compliance work delivered to client organizations"
+    href="/docs/product/getting-started/product-overview"
   />
   <LinkCard
-    title="Self-host operator"
-    description="Deploy with Docker Compose or Kubernetes, then configure the platform"
-    href="/docs/deployment/self-hosting"
+    title="Managed Compliance"
+    description="Have ZebraByte specialists operate more of the controls, evidence, remediation and audit-readiness work"
+    href="/managed-compliance"
   />
   <LinkCard
     title="Integrator"
-    description="Automate the platform through GraphQL, the CLI, MCP, n8n, and webhooks"
+    description="Automate the platform through GraphQL, the CLI, MCP, n8n and webhooks"
     href="/docs/developers"
   />
 </CardGrid>
@@ -39,22 +39,22 @@ Start with the path that matches your role.
 <CardGrid>
   <LinkCard
     title="Product overview"
-    description="Understand the platform scope, users, interfaces, and deployment options"
+    description="Understand the platform scope, users, operating models and main product areas"
     href="/docs/product/getting-started/product-overview"
   />
   <LinkCard
     title="Product"
-    description="Explore compliance, risk, privacy, audit, trust, identity, consent, and device capabilities"
+    description="Explore compliance, risk, privacy, audit, trust, identity, consent and device capabilities"
     href="/docs/product"
   />
   <LinkCard
     title="Developers"
-    description="Automate the platform through GraphQL, the CLI, MCP, n8n, and webhooks"
+    description="Automate the cloud platform through GraphQL, the CLI, MCP, n8n and webhooks"
     href="/docs/developers"
   />
   <LinkCard
-    title="Deployment"
-    description="Compare managed Cloud and self-hosting, then review configuration and operations"
+    title="Cloud & architecture"
+    description="Review ZebraByte Cloud, shared responsibility, security boundaries and preserved architecture references"
     href="/docs/deployment"
   />
 </CardGrid>
@@ -66,22 +66,22 @@ The platform connects the records used throughout a compliance program instead o
 <CardGrid>
   <LinkCard
     title="Compliance program"
-    description="Frameworks, controls, measures, tasks, evidence, and applicability"
+    description="Frameworks, controls, measures, tasks, evidence and applicability"
     href="/docs/product/compliance-program"
   />
   <LinkCard
     title="Risk and third parties"
-    description="Risk registers, threat-based assessments, vendors, services, and subprocessors"
+    description="Risk registers, threat-based assessments, vendors, services and subprocessors"
     href="/docs/product/risk-management"
   />
   <LinkCard
     title="Privacy and trust"
-    description="Processing activities, impact assessments, documents, and the Compliance Portal"
+    description="Processing activities, impact assessments, documents and the Compliance Portal"
     href="/docs/product/privacy-management"
   />
   <LinkCard
     title="Identity and access"
-    description="Members, roles, SSO, SCIM, and access-review campaigns"
+    description="Members, roles, SSO, SCIM and access-review campaigns"
     href="/docs/product/identity-and-access"
   />
 </CardGrid>
@@ -96,12 +96,12 @@ The platform connects the records used throughout a compliance program instead o
   />
   <LinkCard
     title="Glossary"
-    description="Look up product, security, privacy, and compliance terminology"
+    description="Look up product, security, privacy and compliance terminology"
     href="/docs/product/getting-started/glossary"
   />
   <LinkCard
-    title="Choose a deployment"
-    description="Compare managed Cloud, Docker Compose, and Kubernetes"
+    title="Choose an operating model"
+    description="Compare self-service Cloud, professional/adviser use and ZebraByte Managed Compliance"
     href="/docs/product/getting-started/choose-deployment"
   />
 </CardGrid>
@@ -121,7 +121,11 @@ The platform connects the records used throughout a compliance program instead o
   />
   <LinkCard
     title="Accessibility"
-    description="Free accessibility tooling and WCAG remediation integrated into Compliance"
+    description="Accessibility tooling and WCAG remediation integrated into the wider compliance offering"
     href="/accessibility"
   />
 </CardGrid>
+
+## Architecture and migration reference
+
+The documentation also preserves technical material from the platform's earlier deployment lineage, including Docker Compose and Kubernetes architecture. ZebraByte itself is **not distributed as open-source or self-hosted software**. Those pages remain available as architecture, security and migration reference rather than as supported ZebraByte installation instructions.
