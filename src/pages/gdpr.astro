@@ -84,24 +84,26 @@ const regulationSchema = {
           </div>
         </div>
 
-        <div class="relative min-h-[500px] overflow-hidden rounded-[32px] bg-[#f8faf4] p-5 sm:min-h-[600px] sm:p-8">
+        <div class="grid gap-3 overflow-hidden rounded-[32px] bg-[#f8faf4] p-4 sm:p-6 lg:relative lg:min-h-[600px] lg:block lg:p-8">
           <img
             src="/trust-center/security-privacy.svg"
             alt="Privacy management în ZebraByte"
             width="331"
             height="272"
             loading="eager"
-            class="absolute top-8 left-7 w-[58%] rounded-2xl border bg-white shadow-sm sm:top-12 sm:left-10"
+            decoding="async"
+            class="block aspect-[331/272] h-auto w-full max-w-[420px] rounded-2xl border bg-white object-contain shadow-sm lg:absolute lg:top-12 lg:left-10 lg:w-[58%] lg:max-w-none"
           />
+          <div class="w-max rounded-full border bg-level-0 px-4 py-2 text-sm font-medium shadow-sm lg:absolute lg:top-[42%] lg:right-12">Processing activity</div>
           <img
             src="/trust-center/data-requests.svg"
             alt="Data rights request workflow"
             width="1024"
             height="192"
             loading="eager"
-            class="absolute right-7 bottom-9 w-[82%] rounded-2xl border bg-white shadow-[0_16px_36px_rgba(30,42,20,0.10)] sm:right-10 sm:bottom-12"
+            decoding="async"
+            class="block h-auto w-full rounded-2xl border bg-white object-contain shadow-[0_16px_36px_rgba(30,42,20,0.10)] lg:absolute lg:right-10 lg:bottom-12 lg:w-[82%]"
           />
-          <div class="absolute top-[42%] right-8 rounded-full border bg-level-0 px-4 py-2 text-sm font-medium shadow-sm sm:right-12">Processing activity</div>
         </div>
       </div>
     </section>
@@ -118,12 +120,12 @@ const regulationSchema = {
           <div class="grid lg:grid-cols-[0.9fr_1.1fr]">
             <div class="bg-[#001a00] p-7 text-white sm:p-10">
               <p class="mb-4 text-sm font-medium text-[#e6ff03]">Processing activity</p>
-              <h3 class="text-h3 mb-5 font-medium">Customer account management</h3>
+              <h3 class="text-h3 mb-5 font-medium text-white">Customer account management</h3>
               <p class="mb-10 max-w-110 leading-relaxed text-white/65">Un exemplu conceptual de structură: scopul, datele, destinatarii și controls rămân legate de aceeași activitate, nu împrăștiate în documente independente.</p>
               <div class="space-y-3 text-sm text-white/75">
-                <div class="flex justify-between border-b border-white/10 pb-3"><span>Owner</span><span>Privacy / Operations</span></div>
-                <div class="flex justify-between border-b border-white/10 pb-3"><span>Risk link</span><span>Connected</span></div>
-                <div class="flex justify-between"><span>Review</span><span>Continuous</span></div>
+                <div class="grid grid-cols-[auto_1fr] gap-4 border-b border-white/10 pb-3"><span>Owner</span><span class="text-right">Privacy / Operations</span></div>
+                <div class="grid grid-cols-[auto_1fr] gap-4 border-b border-white/10 pb-3"><span>Risk link</span><span class="text-right">Connected</span></div>
+                <div class="grid grid-cols-[auto_1fr] gap-4"><span>Review</span><span class="text-right">Continuous</span></div>
               </div>
             </div>
             <div class="grid sm:grid-cols-2">
@@ -142,15 +144,18 @@ const regulationSchema = {
 
     <section class="container py-14 sm:py-24">
       <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
-        <div class="relative min-h-[430px] overflow-hidden rounded-[28px] border bg-[#f8faf4] p-5 sm:min-h-[500px] sm:p-8">
-          <img
-            src="/trust-center/data-requests.svg"
-            alt="Workflow pentru cereri privind drepturile persoanelor vizate"
-            width="1024"
-            height="192"
-            loading="lazy"
-            class="absolute top-1/2 left-1/2 w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border bg-white shadow-sm"
-          />
+        <div class="overflow-hidden rounded-[28px] border bg-[#f8faf4] p-4 sm:p-7 lg:p-8">
+          <div class="rounded-2xl bg-white p-2 sm:p-4">
+            <img
+              src="/trust-center/data-requests.svg"
+              alt="Workflow pentru cereri privind drepturile persoanelor vizate"
+              width="1024"
+              height="192"
+              loading="lazy"
+              decoding="async"
+              class="mx-auto block aspect-[16/3] h-auto w-full object-contain"
+            />
+          </div>
         </div>
         <div>
           <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Data subject rights</p>
@@ -166,22 +171,22 @@ const regulationSchema = {
       <div class="container">
         <div class="mb-12 max-w-175">
           <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#e6ff03]">Impact & transfers</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">DPIA și TIA rămân legate de contextul care le-a făcut necesare.</h2>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-white">DPIA și TIA rămân legate de contextul care le-a făcut necesare.</h2>
           <p class="text-lg leading-relaxed text-white/65">Evaluările nu sunt formulare izolate; ele trebuie să păstreze relația cu processing-ul, risk-ul, vendors și măsurile care reduc riscul.</p>
         </div>
 
         <div class="grid gap-5 lg:grid-cols-2">
-          <article class="relative min-h-[360px] overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-7 sm:p-9">
+          <article class="flex flex-col overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-7 sm:min-h-[360px] sm:p-9">
             <p class="mb-5 text-sm font-medium text-[#e6ff03]">DPIA</p>
-            <h3 class="text-h3 mb-4 max-w-115 font-medium">Data Protection Impact Assessment</h3>
+            <h3 class="text-h3 mb-4 max-w-115 font-medium text-white">Data Protection Impact Assessment</h3>
             <p class="max-w-120 leading-relaxed text-white/65">Pentru processing susceptibil să genereze risc ridicat, structurăm riscurile, măsurile, residual risk și deciziile care trebuie documentate.</p>
-            <div class="absolute right-8 bottom-8 grid size-24 place-items-center rounded-full border border-white/15 text-3xl">D</div>
+            <div class="mt-8 grid size-20 place-items-center self-end rounded-full border border-white/15 text-2xl text-white sm:mt-auto sm:size-24 sm:text-3xl">D</div>
           </article>
-          <article class="relative min-h-[360px] overflow-hidden rounded-[28px] bg-[#e6ff03] p-7 text-[#001a00] sm:p-9">
-            <p class="mb-5 text-sm font-medium">TIA</p>
-            <h3 class="text-h3 mb-4 max-w-115 font-medium">Transfer Impact Assessment</h3>
+          <article class="flex flex-col overflow-hidden rounded-[28px] bg-[#e6ff03] p-7 text-[#001a00] sm:min-h-[360px] sm:p-9">
+            <p class="mb-5 text-sm font-medium text-[#001a00]">TIA</p>
+            <h3 class="text-h3 mb-4 max-w-115 font-medium text-[#001a00]">Transfer Impact Assessment</h3>
             <p class="max-w-120 leading-relaxed text-[#001a00]/65">Pentru transferurile internaționale relevante, păstrăm contextul transferului, garanțiile și măsurile suplimentare lângă furnizor și processing.</p>
-            <div class="absolute right-8 bottom-8 grid size-24 place-items-center rounded-full border border-[#001a00]/15 text-3xl">T</div>
+            <div class="mt-8 grid size-20 place-items-center self-end rounded-full border border-[#001a00]/15 text-2xl sm:mt-auto sm:size-24 sm:text-3xl">T</div>
           </article>
         </div>
       </div>
@@ -196,10 +201,10 @@ const regulationSchema = {
         </div>
         <div>
           <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <img src="/trust-center/subprocessor-docusign.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-2xl border bg-level-0" />
-            <img src="/trust-center/subprocessor-hubspot.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-2xl border bg-level-0" />
-            <img src="/trust-center/subprocessor-linear.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-2xl border bg-level-0" />
-            <img src="/trust-center/subprocessor-stripe.svg" alt="" width="200" height="120" loading="lazy" class="w-full rounded-2xl border bg-level-0" />
+            <img src="/trust-center/subprocessor-docusign.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-2xl border bg-level-0 object-contain" />
+            <img src="/trust-center/subprocessor-hubspot.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-2xl border bg-level-0 object-contain" />
+            <img src="/trust-center/subprocessor-linear.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-2xl border bg-level-0 object-contain" />
+            <img src="/trust-center/subprocessor-stripe.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-2xl border bg-level-0 object-contain" />
           </div>
           <div class="border-y">
             {thirdPartyRows.map(([title, text]) => (
@@ -215,9 +220,9 @@ const regulationSchema = {
 
     <section class="bg-[#f8faf4] py-14 sm:py-24">
       <div class="container grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-20">
-        <div class="relative min-h-[470px] overflow-hidden rounded-[28px] border bg-level-0 p-6 sm:min-h-[540px] sm:p-9">
-          <img src="/trust-center/security-encryption.svg" alt="Encryption și privacy security" width="600" height="360" loading="lazy" class="absolute top-8 left-8 w-[64%] rounded-xl border bg-white" />
-          <img src="/trust-center/security-vulnerability.svg" alt="Vulnerability management" width="600" height="360" loading="lazy" class="absolute right-8 bottom-8 w-[64%] rounded-xl border bg-white shadow-sm" />
+        <div class="grid gap-3 overflow-hidden rounded-[28px] border bg-level-0 p-4 sm:p-6 lg:relative lg:min-h-[540px] lg:block lg:p-9">
+          <img src="/trust-center/security-encryption.svg" alt="Encryption și privacy security" width="600" height="360" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain lg:absolute lg:top-8 lg:left-8 lg:w-[64%]" />
+          <img src="/trust-center/security-vulnerability.svg" alt="Vulnerability management" width="600" height="360" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain shadow-sm lg:absolute lg:right-8 lg:bottom-8 lg:w-[64%]" />
         </div>
         <div>
           <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Technical & organisational measures</p>
@@ -240,13 +245,13 @@ const regulationSchema = {
     </section>
 
     <section class="container py-14 sm:py-24">
-      <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
-        <div class="border-y">
+      <div class="mx-auto max-w-[768px]">
+        <h2 class="text-h3 sm:text-h2 mb-7 text-center font-medium">Întrebări frecvente</h2>
+        <div class="divide-y border-y">
           {faqs.map((faq) => (
-            <details class="group border-b py-5 last:border-b-0">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium"><span>{faq.question}</span><span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span></summary>
-              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            <details class="group py-1">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-medium"><span>{faq.question}</span><span class="text-muted-foreground text-xl leading-none transition-transform group-open:rotate-45">+</span></summary>
+              <p class="text-muted-foreground max-w-2xl pb-5 pr-8 leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>
