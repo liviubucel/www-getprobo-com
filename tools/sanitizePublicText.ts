@@ -143,36 +143,20 @@ function publicAuditView(content: string): string {
     "",
   );
 
-  // Visible editorial text is the primary brand surface. Audit navigation/action
-  // URLs and external media URLs, but deliberately ignore local implementation
-  // assets and technical code examples.
-  const publicUrls = Array.from(
+  // Visible editorial text is the actual public brand surface. External URLs are
+  // audited as well. Internal legacy slugs are intentionally excluded: they are
+  // compatibility/SEO routes, not identity claims, and some must remain stable
+  // while their visible labels and canonical navigation use ZebraByte wording.
+  const externalPublicUrls = Array.from(
     withoutRuntimeOrCode.matchAll(
-      /\b(href|action|formaction|src|poster)=(['"])([\s\S]*?)\2/gi,
+      /\b(href|action|formaction|src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
     ),
   )
-    .map((match) => ({ name: match[1].toLowerCase(), value: match[3] }))
-    .filter(({ name, value }) => {
-      const external = /^https?:\/\//i.test(value);
-
-      if (name === "src" || name === "poster") return external;
-
-      if (
-        name === "href" &&
-        !external &&
-        (/(?:^|\/)\_astro\//i.test(value) ||
-          /\.(?:css|m?js|map|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|otf)(?:[?#]|$)/i.test(value))
-      ) {
-        return false;
-      }
-
-      return true;
-    })
-    .map(({ value }) => value)
+    .map((match) => match[3])
     .join("\n");
 
   const visibleText = withoutRuntimeOrCode.replace(/<[^>]+>/g, " ");
-  return `${visibleText}\n${publicUrls}`;
+  return `${visibleText}\n${externalPublicUrls}`;
 }
 
 function hasLegacyPublicBrand(file: string, content: string): boolean {
