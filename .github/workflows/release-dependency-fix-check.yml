@@ -1,0 +1,33 @@
+name: Release dependency fix check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.head_ref == 'release/production-readiness'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Resolve guarded dependency update in workspace
+        run: |
+          npm pkg set name=zebrabyte-website
+          npm install --save-dev 'wrangler@^4.123.0' --package-lock-only
+          npm update nanoid --package-lock-only
+      - name: Show resolved versions
+        run: |
+          node -e "const l=require('./package-lock.json'); console.log('root='+l.name); console.log('wranglerSpec='+l.packages[''].devDependencies.wrangler); console.log('nanoid='+l.packages['node_modules/nanoid'].version); console.log('wrangler='+l.packages['node_modules/wrangler'].version); console.log('undici='+l.packages['node_modules/undici'].version)"
+      - run: npm ci
+      - name: Production audit
+        run: npm audit --omit=dev --audit-level=high
+      - name: Full audit
+        run: npm audit --audit-level=high
+      - name: Build
+        run: npm run build
