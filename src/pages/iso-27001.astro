@@ -1,158 +1,56 @@
 ---
-import "@phosphor-icons/web/regular";
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 import FrameworkBadge from "../components/FrameworkBadge.svelte";
-
-const workstreams = [
-  {
-    icon: "ph-bounding-box",
-    title: "ISMS scope & context",
-    description:
-      "Definim scope-ul, contextul organizației, părțile interesate și limitele sistemului de management astfel încât programul să reflecte business-ul și infrastructura reală.",
-  },
-  {
-    icon: "ph-warning-circle",
-    title: "Asset & risk management",
-    description:
-      "Construim inventarul relevant, identificăm amenințările și vulnerabilitățile și documentăm tratamentul riscului, ownership-ul și criteriile de acceptare.",
-  },
-  {
-    icon: "ph-list-checks",
-    title: "Controls & Statement of Applicability",
-    description:
-      "Mapăm controalele relevante la riscuri și cerințe, documentăm aplicabilitatea și menținem o Statement of Applicability justificată prin decizii și dovezi reale.",
-  },
-  {
-    icon: "ph-files",
-    title: "Policies & operational evidence",
-    description:
-      "Politicile sunt conectate la procesele tehnice și la evidence: access reviews, patching, backup, logging, vulnerability management, incident handling și supplier reviews.",
-  },
-  {
-    icon: "ph-magnifying-glass",
-    title: "Internal audit readiness",
-    description:
-      "Pregătim organizația pentru verificarea internă a ISMS-ului, urmărim neconformitățile și acțiunile corective și centralizăm materialele necesare review-urilor.",
-  },
-  {
-    icon: "ph-arrows-clockwise",
-    title: "Management review & continual improvement",
-    description:
-      "Stabilim indicatorii, review-urile și mecanismul de îmbunătățire continuă pentru ca ISMS-ul să rămână activ după implementarea inițială.",
-  },
-];
+import Stories from "../components/block/Stories.astro";
 
 const clauses = [
-  {
-    clause: "04",
-    title: "Context",
-    description: "Organizație, părți interesate, nevoi, limite și scope-ul ISMS-ului.",
-  },
-  {
-    clause: "05",
-    title: "Leadership",
-    description: "Politică, responsabilități și implicarea managementului în program.",
-  },
-  {
-    clause: "06",
-    title: "Planning",
-    description: "Riscuri, oportunități, obiective și metodologia de tratare a riscului.",
-  },
-  {
-    clause: "07",
-    title: "Support",
-    description: "Resurse, competențe, awareness, comunicare și informație documentată.",
-  },
-  {
-    clause: "08",
-    title: "Operation",
-    description: "Execuția planului de tratament și operarea controalelor alese.",
-  },
-  {
-    clause: "09",
-    title: "Performance",
-    description: "Monitoring, măsurare, internal audit și management review.",
-  },
-  {
-    clause: "10",
-    title: "Improvement",
-    description: "Neconformități, corrective actions și îmbunătățire continuă.",
-  },
+  ["04", "Context", "Organizație, părți interesate, nevoi, limite și scope-ul ISMS-ului."],
+  ["05", "Leadership", "Politică, responsabilități și implicarea managementului în program."],
+  ["06", "Planning", "Riscuri, oportunități, obiective și metodologia de tratare a riscului."],
+  ["07", "Support", "Resurse, competențe, awareness, comunicare și informație documentată."],
+  ["08", "Operation", "Execuția planului de tratament și operarea controalelor alese."],
+  ["09", "Performance", "Monitoring, măsurare, internal audit și management review."],
+  ["10", "Improvement", "Neconformități, corrective actions și îmbunătățire continuă."],
 ];
 
 const annexThemes = [
-  {
-    count: "37",
-    title: "Organizational",
-    description:
-      "Politici, roluri, supplier relationships, threat intelligence, incident management și alte controale de guvernanță.",
-  },
-  {
-    count: "8",
-    title: "People",
-    description:
-      "Screening, termeni de angajare, awareness, responsabilități și procese care reduc riscul uman.",
-  },
-  {
-    count: "14",
-    title: "Physical",
-    description:
-      "Zone securizate, echipamente, medii de lucru și protecția fizică a informației și infrastructurii.",
-  },
-  {
-    count: "34",
-    title: "Technological",
-    description:
-      "Identitate, access control, logging, vulnerability management, criptografie, rețele și secure development.",
-  },
+  ["37", "Organizational", "Politici, roluri, supplier relationships, threat intelligence, incident management și alte controale de guvernanță."],
+  ["8", "People", "Screening, termeni de angajare, awareness, responsabilități și procese care reduc riscul uman."],
+  ["14", "Physical", "Zone securizate, echipamente, medii de lucru și protecția fizică a informației și infrastructurii."],
+  ["34", "Technological", "Identitate, access control, logging, vulnerability management, criptografie, rețele și secure development."],
 ];
 
 const riskLifecycle = [
   {
     step: "01",
-    title: "Identifici contextul și activele",
+    title: "Context și active",
     text: "Sisteme, informații, procese, furnizori și dependențe care intră în scope.",
   },
   {
     step: "02",
-    title: "Evaluezi scenariile de risc",
+    title: "Evaluarea riscului",
     text: "Threat-uri, vulnerabilități, impact, probabilitate și criteriile proprii de evaluare.",
   },
   {
     step: "03",
-    title: "Alegi tratamentul",
+    title: "Tratamentul riscului",
     text: "Reduce, evită, transferă sau acceptă riscul printr-o decizie documentată.",
   },
   {
     step: "04",
-    title: "Mapezi controalele",
-    text: "Legi măsurile și controalele relevante de riscurile și obligațiile pe care le tratează.",
+    title: "Controls & SoA",
+    text: "Legi controalele relevante de riscuri și documentezi aplicabilitatea în Statement of Applicability.",
   },
   {
     step: "05",
-    title: "Demonstrezi operarea",
-    text: "Evidence, reviews, approvals, logs și rezultate care arată că măsurile funcționează în practică.",
+    title: "Evidence",
+    text: "Reviews, approvals, logs și rezultate care arată că măsurile sunt operate în practică.",
   },
   {
     step: "06",
-    title: "Revizuiești continuu",
+    title: "Continual improvement",
     text: "Riscurile, scope-ul și controalele sunt actualizate când business-ul sau infrastructura se schimbă.",
-  },
-];
-
-const distinction = [
-  {
-    title: "ZebraByte",
-    text: "Ajută la readiness, designul ISMS, implementarea controalelor, evidence, remediation și operarea continuă a programului.",
-  },
-  {
-    title: "Organizația ta",
-    text: "Deține deciziile, riscul, responsabilitățile și operarea efectivă a sistemului de management al securității informației.",
-  },
-  {
-    title: "Certification body",
-    text: "Evaluează independent ISMS-ul și, atunci când cerințele sunt îndeplinite, emite certificarea. ZebraByte nu se prezintă drept organism de certificare.",
   },
 ];
 
@@ -160,7 +58,7 @@ const certificationJourney = [
   {
     phase: "Readiness",
     title: "Construiești ISMS-ul",
-    text: "Scope, risk assessment, controale, politici, evidence și remediation înainte de evaluarea independentă.",
+    text: "Scope, risk assessment, controls, policies, evidence și remediation înainte de evaluarea independentă.",
   },
   {
     phase: "Internal assurance",
@@ -170,7 +68,7 @@ const certificationJourney = [
   {
     phase: "Stage 1",
     title: "Documentație și pregătire",
-    text: "Organismul de certificare verifică pregătirea ISMS-ului și dacă există baza necesară pentru evaluarea detaliată.",
+    text: "Organismul de certificare verifică pregătirea ISMS-ului și baza necesară pentru evaluarea detaliată.",
   },
   {
     phase: "Stage 2",
@@ -178,49 +76,41 @@ const certificationJourney = [
     text: "Evaluatorii verifică dacă ISMS-ul și controalele selectate sunt implementate și operate în scope-ul declarat.",
   },
   {
-    phase: "After certification",
+    phase: "Continuous",
     title: "Menții sistemul viu",
-    text: "Riscurile, evidence-ul, auditurile interne, management reviews și îmbunătățirea continuă nu se opresc după obținerea certificatului.",
+    text: "Risk reviews, internal audits, management reviews și îmbunătățirea continuă nu se opresc după certificare.",
   },
 ];
 
-const continuousEvidence = [
-  { label: "Risk register", value: "Reviewed" },
-  { label: "Statement of Applicability", value: "Approved" },
-  { label: "Access review", value: "Evidence attached" },
-  { label: "Supplier review", value: "In progress" },
-  { label: "Internal audit finding", value: "Remediation tracked" },
-  { label: "Management review", value: "Scheduled" },
+const roles = [
+  {
+    title: "ZebraByte",
+    text: "Readiness, designul ISMS, risk management, controls, evidence, remediation și operarea continuă în scope-ul agreat.",
+  },
+  {
+    title: "Organizația ta",
+    text: "Deține deciziile, riscul, responsabilitățile și operarea efectivă a sistemului de management al securității informației.",
+  },
+  {
+    title: "Certification body",
+    text: "Evaluează independent ISMS-ul și, atunci când cerințele sunt îndeplinite, emite certificarea. ZebraByte nu este organism de certificare.",
+  },
 ];
 
 const securityConnections = [
-  {
-    title: "Identity & access",
-    text: "MFA, SSO, joiner-mover-leaver, privilege management și access reviews trebuie să existe operațional, nu doar în policy.",
-    href: "/security-assessment",
-  },
-  {
-    title: "Vulnerability & hardening",
-    text: "Assessment, patching, configuration hardening și reducerea suprafeței de atac pot furniza evidence pentru măsurile tehnice.",
-    href: "/cyber-security",
-  },
-  {
-    title: "Website & application security",
-    text: "WAF, monitoring, TLS, logging și protecția aplicației pot fi legate de riscuri și controalele tehnologice relevante.",
-    href: "/website-security",
-  },
-  {
-    title: "Incident & recovery",
-    text: "Incident handling, backup, recovery și lessons learned trebuie să fie testabile și urmărite ca procese continue.",
-    href: "/incident-response",
-  },
+  "identity, MFA, SSO și access reviews",
+  "vulnerability management, patching și hardening",
+  "logging, monitoring și incident handling",
+  "backup, recovery și business continuity",
+  "supplier și third-party security",
+  "secure development și change management",
 ];
 
 const faqs = [
   {
     question: "ZebraByte poate emite certificarea ISO/IEC 27001?",
     answer:
-      "Nu. ZebraByte poate ajuta cu readiness, ISMS design, risk management, controls, evidence și remediation. Certificarea este emisă de un organism de certificare independent după evaluarea propriului scope și sistem.",
+      "Nu. ZebraByte poate ajuta cu readiness, ISMS design, risk management, controls, evidence și remediation. Certificarea este emisă de un organism de certificare independent după evaluarea scope-ului și a sistemului.",
   },
   {
     question: "Trebuie implementate toate cele 93 de controale din Annex A?",
@@ -230,22 +120,17 @@ const faqs = [
   {
     question: "Ce este Statement of Applicability?",
     answer:
-      "Este documentul care leagă tratamentul riscului de controalele relevante din Annex A și explică aplicabilitatea lor. În platformă îl tratăm ca parte vie a programului, nu ca un tabel pregătit doar pentru audit.",
+      "Este documentul care leagă tratamentul riscului de controalele relevante din Annex A și explică aplicabilitatea lor. Îl tratăm ca parte vie a programului, nu ca un tabel pregătit doar pentru audit.",
   },
   {
     question: "ISO 27001 este doar un proiect de documentație?",
     answer:
-      "Nu. Politicile și documentele sunt necesare, dar auditorii se uită și la operarea proceselor și controalelor. Access reviews, supplier management, incident handling, vulnerability management și alte activități trebuie susținute prin evidence real.",
+      "Nu. Policies și documentele sunt necesare, dar certificarea se bazează pe un sistem de management operat în practică. Access reviews, supplier management, incident handling și alte procese trebuie susținute de evidence real.",
   },
   {
     question: "Ce se întâmplă după certificare?",
     answer:
       "ISMS-ul continuă: risk reviews, internal audits, management reviews, corrective actions și actualizarea controalelor. Certificarea nu transformă programul într-un artefact static.",
-  },
-  {
-    question: "Putem publica certificatul în Trust Center?",
-    answer:
-      "Da, atunci când organizația decide că documentul poate fi distribuit și respectă scope-ul și condițiile certificatului. Trust Center-ul permite distribuirea controlată a documentelor și informațiilor de assurance fără expunerea workspace-ului intern.",
   },
 ];
 
@@ -269,298 +154,256 @@ const serviceSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
-  <main class="overflow-hidden">
-    <section class="relative isolate">
-      <div aria-hidden="true" class="pointer-events-none absolute top-[-1050px] left-1/2 -z-10 size-[1850px] -translate-x-1/2 rounded-full border-[300px] border-[#E6FF03] blur-[100px]"></div>
-      <div class="container py-16 text-center sm:py-28">
-        <div class="border-border-low text-tertiary-foreground mx-auto mb-6 flex w-max items-center gap-2 rounded-lg border px-3 py-1 text-sm font-medium">
-          <FrameworkBadge name="ISO27001" class="size-6" client:visible />
-          <span>ISO/IEC 27001:2022 · ISMS · Readiness</span>
-        </div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
-          Construiește un ISMS care poate fi operat, demonstrat și îmbunătățit.
-        </h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-          ZebraByte ajută la pregătirea pentru ISO/IEC 27001 prin risk management,
-          controale, politici, evidence și procese continue. Obiectivul nu este un
-          dosar pentru audit, ci un sistem de management care rămâne activ după audit.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Solicită un readiness assessment</Button>
-          <Button href="/compliance-platform" variant="secondary" size="lg">Vezi platforma de conformitate</Button>
-        </div>
+  <main>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
+        <FrameworkBadge name="ISO27001" class="size-6" client:visible />
+        <span>ISO/IEC 27001:2022 · ISMS</span>
       </div>
 
-      <div class="container pb-16 sm:pb-24">
-        <div class="mx-auto max-w-6xl overflow-hidden rounded-3xl border bg-level-0 shadow-sm">
-          <div class="flex items-center gap-2 border-b px-5 py-3">
-            <span class="size-2.5 rounded-full border"></span>
-            <span class="size-2.5 rounded-full border"></span>
-            <span class="size-2.5 rounded-full border"></span>
-            <span class="text-muted-foreground ml-3 text-xs">ISO 27001 · ISMS workspace</span>
-          </div>
-          <div class="grid lg:grid-cols-[0.82fr_1.18fr]">
-            <div class="border-b p-7 sm:p-10 lg:border-r lg:border-b-0">
-              <p class="text-muted-foreground mb-2 text-sm">Statement of Applicability</p>
-              <h2 class="text-h3 mb-6 font-medium">Control decisions cu trasabilitate.</h2>
-              <div class="divide-y border-y">
-                <div class="flex items-center justify-between gap-4 py-4"><span>A.5 Organizational</span><span class="rounded-full bg-active px-3 py-1 text-xs">Mapped</span></div>
-                <div class="flex items-center justify-between gap-4 py-4"><span>A.6 People</span><span class="rounded-full bg-active px-3 py-1 text-xs">Mapped</span></div>
-                <div class="flex items-center justify-between gap-4 py-4"><span>A.7 Physical</span><span class="rounded-full border px-3 py-1 text-xs">Reviewed</span></div>
-                <div class="flex items-center justify-between gap-4 py-4"><span>A.8 Technological</span><span class="rounded-full bg-active px-3 py-1 text-xs">Evidence linked</span></div>
-              </div>
-            </div>
-            <div class="relative min-h-80 bg-active p-6 sm:p-10">
-              <div class="mx-auto max-w-xl rounded-2xl border bg-level-0 p-5 shadow-sm sm:p-7">
-                <div class="mb-6 flex items-center justify-between gap-4 border-b pb-4">
-                  <div>
-                    <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Risk treatment</p>
-                    <h3 class="mt-1 font-medium">Unauthorized privileged access</h3>
-                  </div>
-                  <span class="rounded-full border px-3 py-1 text-xs">Medium</span>
-                </div>
-                <div class="space-y-4 text-sm">
-                  <div class="grid grid-cols-[110px_1fr] gap-4"><span class="text-muted-foreground">Treatment</span><span>Reduce</span></div>
-                  <div class="grid grid-cols-[110px_1fr] gap-4"><span class="text-muted-foreground">Measures</span><span>MFA · least privilege · quarterly access review</span></div>
-                  <div class="grid grid-cols-[110px_1fr] gap-4"><span class="text-muted-foreground">Evidence</span><span>Review export · IdP policy · approval record</span></div>
-                  <div class="grid grid-cols-[110px_1fr] gap-4"><span class="text-muted-foreground">Owner</span><span>Security / IT</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Construiește un ISMS</span>
+        <span class="animate-perspective-in block delay-50"> care funcționează și după audit. </span>
+      </h1>
 
-    <section class="container py-16 sm:py-28">
-      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">ISMS workstreams</p>
-          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Un program care conectează managementul cu realitatea tehnică.</h2>
-        </div>
-        <div class="grid gap-x-10 sm:grid-cols-2">
-          {workstreams.map((item) => (
-            <article class="border-t py-7 first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
-              <i class={`ph ${item.icon} mb-5 block text-[2rem] leading-none`} aria-hidden="true"></i>
-              <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        ZebraByte ajută la pregătirea pentru ISO/IEC 27001 prin risk management,
+        controls, policies, evidence și procese continue. Obiectivul nu este un dosar
+        pentru audit, ci un sistem de management pe care organizația îl poate opera.
+      </p>
 
-    <section class="border-y bg-active py-16 sm:py-28">
-      <div class="container">
-        <div class="mx-auto mb-12 max-w-190 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Clauzele 4–10</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Annex A nu este întregul ISO 27001.</h2>
-          <p class="text-muted-foreground text-lg">
-            Standardul cere un sistem de management. Controalele de securitate sunt importante, dar trebuie susținute de context, leadership, planning, operațiuni, evaluarea performanței și îmbunătățire continuă.
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/managed-compliance"
+        >
+          Managed Compliance
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Discută despre ISO 27001
+        </Button>
+      </div>
+    </animated-hero>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-4xl">
+        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce este ISO/IEC 27001</h2>
+        <div class="text-muted-foreground space-y-5 text-lg leading-relaxed">
+          <p>
+            ISO/IEC 27001 este standardul internațional de cerințe pentru un Information
+            Security Management System. Accentul este pe un sistem de management bazat pe
+            risc, nu pe o listă universală de tehnologii pe care fiecare organizație trebuie
+            să le implementeze identic.
+          </p>
+          <p>
+            Scope-ul, risk assessment-ul, tratamentul riscului, controalele și evidence-ul
+            trebuie să reflecte organizația reală. Asta face diferența dintre un ISMS operabil
+            și un set de documente pregătite numai pentru certificare.
           </p>
         </div>
-        <div class="mx-auto max-w-5xl border-y">
-          {clauses.map((item) => (
-            <article class="grid gap-2 border-b py-6 last:border-b-0 sm:grid-cols-[70px_0.8fr_1.2fr] sm:items-start sm:gap-8 sm:py-7">
-              <span class="text-muted-foreground font-mono text-sm">{item.clause}</span>
-              <h3 class="font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.description}</p>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-12 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Annex A · 93 controls</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Patru teme, selectate prin risk treatment.</h2>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Clauzele 4–10 construiesc sistemul de management</h2>
         <p class="text-muted-foreground text-lg">
-          ISO/IEC 27001:2022 organizează controalele de referință din Annex A în patru teme. Nu le tratezi ca o listă care trebuie bifată orbește; aplicabilitatea este documentată în Statement of Applicability.
+          Annex A este doar o parte din standard. Cerințele de management stabilesc cum este
+          definit, condus, evaluat și îmbunătățit ISMS-ul.
         </p>
       </div>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
-        {annexThemes.map((theme) => (
-          <article class="bg-level-0 p-7 sm:p-8">
-            <div class="text-h2 mb-8 font-medium">{theme.count}</div>
-            <h3 class="text-h5 mb-3 font-medium">{theme.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{theme.description}</p>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {clauses.map(([number, title, text]) => (
+          <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.65fr_1.35fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{number}</span>
+            <h3 class="text-h5 font-medium">{title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{text}</p>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="border-y bg-level-0 py-16 sm:py-28">
-      <div class="container grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Risk-based ISMS</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Riscul decide de ce există un control.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Un ISMS matur nu pornește de la „ce control ne lipsește?”, ci de la context și risc. Asta face ca Statement of Applicability, risk treatment plan și evidence să poată explica aceeași poveste.
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Annex A: 93 controls, patru teme</h2>
+          <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+            Nu toate controalele se aplică automat fiecărei organizații. Risk assessment-ul
+            și tratamentul riscului determină ce este relevant, iar Statement of Applicability
+            documentează decizia.
           </p>
-        </div>
-        <div class="border-y">
-          {riskLifecycle.map((item) => (
-            <article class="grid grid-cols-[48px_1fr] gap-4 border-b py-5 last:border-b-0 sm:grid-cols-[60px_0.9fr_1.1fr] sm:gap-6">
-              <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-              <h3 class="font-medium">{item.title}</h3>
-              <p class="text-muted-foreground col-start-2 text-sm leading-relaxed sm:col-start-auto">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
 
-    <section class="container py-16 sm:py-28">
-      <div class="grid overflow-hidden rounded-3xl border lg:grid-cols-[0.9fr_1.1fr]">
-        <div class="p-7 sm:p-10 lg:p-12">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Evidence lifecycle</p>
-          <h2 class="text-h3 mb-5 font-medium text-balance">Nu reconstruiești programul înainte de audit.</h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Risk reviews, approvals, access reviews, supplier checks, findings și management reviews sunt urmărite pe parcurs. Auditorul vede un sistem operat în timp, nu un folder completat în ultima săptămână.
-          </p>
-          <Button href="/compliance-platform" variant="secondary">Explorează platforma</Button>
-        </div>
-        <div class="border-t bg-active p-6 sm:p-8 lg:border-t-0 lg:border-l">
-          <div class="rounded-2xl border bg-level-0 p-5 sm:p-7">
-            <div class="mb-5 flex items-center justify-between border-b pb-4">
-              <div>
-                <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Continuous evidence</p>
-                <h3 class="mt-1 text-lg font-medium">ISMS review queue</h3>
-              </div>
-              <span class="text-muted-foreground text-xs">Q3</span>
-            </div>
-            <div class="divide-y">
-              {continuousEvidence.map((item) => (
-                <div class="flex items-center justify-between gap-4 py-3.5">
-                  <span class="text-sm">{item.label}</span>
-                  <span class="text-muted-foreground text-right text-xs">{item.value}</span>
-                </div>
-              ))}
-            </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[680px] border-collapse text-left">
+              <thead>
+                <tr class="border-b">
+                  <th class="py-4 pr-6 font-medium">Controls</th>
+                  <th class="py-4 pr-6 font-medium">Temă</th>
+                  <th class="py-4 font-medium">Exemple de arii</th>
+                </tr>
+              </thead>
+              <tbody>
+                {annexThemes.map(([count, title, text]) => (
+                  <tr class="border-b last:border-b-0">
+                    <td class="py-5 pr-6 text-2xl font-medium">{count}</td>
+                    <td class="py-5 pr-6 font-medium">{title}</td>
+                    <td class="text-muted-foreground py-5 leading-relaxed">{text}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-28">
-      <div class="container">
-        <div class="mx-auto mb-12 max-w-190 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Certification journey</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Readiness și certificarea independentă sunt etape diferite.</h2>
-          <p class="text-muted-foreground text-lg">
-            ZebraByte poate construi și opera readiness-ul. Organismul de certificare rămâne evaluatorul independent al ISMS-ului și scope-ului declarat.
-          </p>
-        </div>
-        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border lg:grid-cols-5">
-          {certificationJourney.map((item, index) => (
-            <article class="bg-level-0 p-6 sm:p-7">
-              <span class="text-muted-foreground mb-8 block text-sm">0{index + 1} · {item.phase}</span>
-              <h3 class="mb-3 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Risk management stă în centrul ISMS-ului</h2>
+        <p class="text-muted-foreground text-lg">
+          Controls nu sunt alese izolat. Ele trebuie să poată fi urmărite înapoi către
+          riscuri, decizii și obiectivele organizației.
+        </p>
       </div>
-    </section>
 
-    <section class="container py-16 sm:py-28">
-      <div class="mb-12 max-w-190">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Roluri clare</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Readiness nu înseamnă că ZebraByte „emite ISO”.</h2>
-        <p class="text-muted-foreground text-lg">Separăm explicit consultanța și implementarea de certificarea independentă.</p>
-      </div>
-      <div class="grid border-y lg:grid-cols-3 lg:divide-x">
-        {distinction.map((item) => (
-          <article class="border-b p-7 last:border-b-0 sm:p-9 lg:border-b-0">
-            <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+      <div class="mx-auto max-w-5xl border-y">
+        {riskLifecycle.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.8fr_1.2fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
             <p class="text-muted-foreground leading-relaxed">{item.text}</p>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="border-y bg-level-0 py-16 sm:py-28">
-      <div class="container">
-        <div class="mx-auto mb-12 max-w-190 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security engineering</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Evidence-ul trebuie să urmărească realitatea tehnică.</h2>
-          <p class="text-muted-foreground text-lg">
-            Când risk treatment cere măsuri tehnice, ZebraByte poate lega programul GRC de assessment, hardening, application security și incident readiness.
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Policies trebuie susținute de realitatea tehnică</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            Evidence-ul pentru ISO 27001 vine din procese și controale operate în practică.
+            Acolo unde scope-ul cere măsuri tehnice, security engineering trebuie să poată
+            demonstra ce se întâmplă efectiv în infrastructură.
           </p>
+          <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul class="border-y">
           {securityConnections.map((item) => (
-            <a href={item.href} class="group rounded-2xl border bg-level-0 p-6 transition-colors hover:bg-subtle">
-              <h3 class="mb-3 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-            </a>
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">De la readiness la certificare</h2>
+        <p class="text-muted-foreground text-lg">
+          ZebraByte pregătește și operează programul. Evaluarea și certificarea rămân
+          independente.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {certificationJourney.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[0.6fr_0.9fr_1.5fr] sm:gap-8">
+            <span class="text-muted-foreground text-sm font-medium">{item.phase}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Roluri clare</h2>
+        <div class="border-y">
+          {roles.map((role) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="text-h5 font-medium">{role.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{role.text}</p>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-28">
-      <div class="grid overflow-hidden rounded-3xl border lg:grid-cols-2">
-        <div class="p-7 sm:p-10 lg:p-12">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">După certificare</p>
-          <h2 class="text-h3 mb-5 font-medium text-balance">Certificatul devine un trust asset, dar scope-ul rămâne important.</h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            După certificare poți publica informațiile aprobate în Trust Center și le poți distribui clienților sau reviewerilor. Afirmațiile trebuie să respecte exact scope-ul certificatului și să nu sugereze o acoperire mai largă decât cea evaluată.
+    <section class="container py-10 sm:py-20">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">După certificare, publici exact ce poți demonstra</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            Certificatul și materialele de assurance pot fi distribuite prin Trust Center în
+            limitele scope-ului certificat. Workspace-ul intern, risk register-ul și celelalte
+            informații sensibile rămân separate.
           </p>
           <Button href="/compliance-portal">Vezi Trust Center</Button>
         </div>
-        <div class="min-h-80 border-t bg-[#E6FF03]/20 p-5 sm:p-8 lg:border-t-0 lg:border-l">
-          <img src="/trust-center/browser.svg" alt="Trust Center pentru distribuirea controlată a informațiilor ISO 27001" width="1146" height="786" loading="lazy" decoding="async" class="h-full w-full object-contain" />
+        <img
+          src="/trust-center/browser.svg"
+          alt="Trust Center ZebraByte pentru distribuirea documentelor ISO 27001"
+          width="1146"
+          height="786"
+          loading="lazy"
+          decoding="async"
+          class="h-auto w-full"
+        />
+      </div>
+    </section>
+
+    <Stories />
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="border-y bg-active py-16 sm:py-24">
-      <div class="container grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Standardul</p>
-          <h2 class="text-h3 mb-4 font-medium">ISO/IEC 27001:2022</h2>
-          <p class="text-muted-foreground mb-5 leading-relaxed">
-            ISO/IEC 27001:2022 este standardul internațional de cerințe pentru un information security management system (ISMS). Standardul urmărește stabilirea, implementarea, menținerea și îmbunătățirea continuă a sistemului de management al securității informației.
-          </p>
-          <a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener noreferrer" class="font-medium underline underline-offset-4">ISO/IEC 27001 — pagina oficială ISO</a>
-        </div>
-        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-3">
-          <article class="bg-level-0 p-6"><div class="text-h3 mb-5 font-medium">C</div><h3 class="mb-2 font-medium">Confidentiality</h3><p class="text-muted-foreground text-sm">Informația este accesibilă persoanelor și sistemelor autorizate.</p></article>
-          <article class="bg-level-0 p-6"><div class="text-h3 mb-5 font-medium">I</div><h3 class="mb-2 font-medium">Integrity</h3><p class="text-muted-foreground text-sm">Acuratețea și completitudinea informației sunt protejate.</p></article>
-          <article class="bg-level-0 p-6"><div class="text-h3 mb-5 font-medium">A</div><h3 class="mb-2 font-medium">Availability</h3><p class="text-muted-foreground text-sm">Informația și serviciile sunt disponibile când sunt necesare.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">FAQ</p>
-        <h2 class="text-h3 sm:text-h2 font-medium">Întrebările care apar înainte de un program ISO 27001.</h2>
-      </div>
-      <div class="mx-auto max-w-4xl divide-y border-y">
-        {faqs.map((faq) => (
-          <details class="group py-6 sm:py-7">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
-              <span>{faq.question}</span>
-              <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
-            </summary>
-            <p class="text-muted-foreground mt-4 max-w-3xl leading-relaxed">{faq.answer}</p>
-          </details>
-        ))}
-      </div>
-    </section>
-
-    <section class="border-t py-16 text-center sm:py-28">
-      <div class="container">
-        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Pregătirea pentru audit începe cu un ISMS pe care echipa îl poate folosi.</h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Putem începe cu un gap assessment și transforma rezultatul într-un program urmărit continuu în platformă.</p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Discută despre ISO 27001</Button>
-          <Button href="/hub/iso27001" variant="secondary" size="lg">Citește ghidul complet</Button>
-        </div>
-      </div>
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Pregătirea pentru audit începe cu un ISMS pe care echipa îl poate folosi.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
+        Putem începe cu readiness și transforma rezultatul într-un program urmărit continuu
+        în platforma ZebraByte.
+      </p>
+      <Button href="/contact" size="lg">Discută despre ISO 27001</Button>
     </section>
   </main>
 </Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
