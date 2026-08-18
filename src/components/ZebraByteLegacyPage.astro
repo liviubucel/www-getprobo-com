@@ -11,7 +11,7 @@ const { page } = Astro.props;
 
 <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
   <div class="container text-center">
-    <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+    <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-fit max-w-full rounded-lg border px-3 py-1 text-center text-sm leading-snug font-medium">
       {page.eyebrow}
     </div>
     <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{page.title}</h1>
@@ -25,17 +25,18 @@ const { page } = Astro.props;
 
 <section class="container py-14 sm:py-20">
   <div class="mx-auto max-w-190">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Din ZebraByte</p>
-    <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Conținut păstrat și integrat în experiența Probo.</h2>
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Context ZebraByte</p>
+    <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Informația utilă, păstrată și actualizată.</h2>
     <p class="text-muted-foreground text-lg leading-relaxed">{page.intro}</p>
     {page.note && <p class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5">{page.note}</p>}
   </div>
 </section>
 
 <section class="container pb-16 sm:pb-24">
-  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-    {page.features.map((feature) => (
-      <article class="bg-level-0 min-h-60 p-6 sm:p-8">
+  <div class="grid border-y sm:grid-cols-2 lg:grid-cols-3">
+    {page.features.map((feature, index) => (
+      <article class="border-b p-6 sm:min-h-60 sm:p-8 sm:[&:nth-child(odd)]:border-r lg:[&:nth-child(odd)]:border-r-0 lg:[&:not(:nth-child(3n))]:border-r lg:[&:nth-last-child(-n+3)]:border-b-0">
+        <span class="text-muted-foreground mb-8 block font-mono text-xs">0{index + 1}</span>
         <h3 class="mb-3 text-xl font-medium">{feature.title}</h3>
         <p class="text-muted-foreground leading-relaxed">{feature.description}</p>
       </article>
@@ -44,15 +45,15 @@ const { page } = Astro.props;
 </section>
 
 <section class="bg-active py-16 sm:py-24">
-  <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+  <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
     <div>
       <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Proces</p>
       <h2 class="text-h3 sm:text-h2 font-medium">{page.processTitle}</h2>
     </div>
-    <div class="overflow-hidden rounded-2xl border bg-level-0">
+    <div class="border-y">
       {page.process.map((step, index) => (
-        <div class="grid grid-cols-[52px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
-          <span class="text-muted-foreground text-sm">0{index + 1}</span>
+        <div class="grid grid-cols-[52px_1fr] gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 sm:py-6">
+          <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
           <p class="font-medium leading-relaxed">{step}</p>
         </div>
       ))}
@@ -65,11 +66,13 @@ const { page } = Astro.props;
     <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Continuă</p>
     <h2 class="text-h3 font-medium">Servicii conectate</h2>
   </div>
-  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-    {page.related.map((item) => (
-      <a href={item.href} class="bg-level-0 group min-h-44 p-6 transition-colors hover:bg-subtle sm:p-8">
+  <div class="border-y">
+    {page.related.map((item, index) => (
+      <a href={item.href} class="group grid gap-2 border-b py-6 last:border-b-0 sm:grid-cols-[56px_0.75fr_1.25fr_auto] sm:items-center sm:gap-8">
+        <span class="text-muted-foreground hidden font-mono text-xs sm:block">0{index + 1}</span>
         <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.label}</h3>
-        <p class="text-muted-foreground mt-2 text-sm">Deschide serviciul și vezi cum se leagă de programul ZebraByte.</p>
+        <p class="text-muted-foreground text-sm leading-relaxed">Vezi cum se leagă serviciul de programul ZebraByte.</p>
+        <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
       </a>
     ))}
   </div>
