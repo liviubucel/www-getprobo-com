@@ -2,152 +2,301 @@
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 
-const controls = [
+const authenticationFlow = [
   {
+    step: "01",
+    title: "Inventory senders",
+    text: "Identificăm platformele și serviciile care trimit legitim în numele domeniului înainte să întărim politicile DNS.",
+  },
+  {
+    step: "02",
     title: "SPF",
-    description: "Definim explicit infrastructura autorizată să trimită email în numele domeniului și eliminăm sursele vechi sau necontrolate care măresc suprafața de spoofing.",
+    text: "Definim infrastructura autorizată și eliminăm sursele vechi sau necunoscute care măresc suprafața de spoofing și complexitatea recordului.",
   },
   {
+    step: "03",
     title: "DKIM",
-    description: "Validăm semnarea criptografică a mesajelor pentru furnizorii activi și verificăm selectorii, rotația și alinierea cu domeniul folosit de organizație.",
+    text: "Validăm semnarea pentru furnizorii activi, selectorii și alinierea cu domeniul folosit în fluxurile legitime.",
   },
   {
-    title: "DMARC",
-    description: "Pornim de la vizibilitate asupra surselor legitime, apoi întărim progresiv politica astfel încât spoofing-ul să fie respins fără să blocăm fluxurile valide.",
+    step: "04",
+    title: "DMARC visibility",
+    text: "Pornim de la rapoarte și aliniere pentru a vedea cine trimite și ce ar fi afectat de o politică mai strictă.",
   },
   {
-    title: "Anti-phishing & BEC",
-    description: "Combinăm autentificarea domeniului cu protecția conturilor, filtrare și procese operaționale pentru tentative de impersonation și business email compromise.",
+    step: "05",
+    title: "Enforcement",
+    text: "Întărim politica gradual, după ce sursele legitime sunt cunoscute și erorile care pot bloca emailul valid au fost remediate.",
   },
   {
-    title: "MFA & account security",
-    description: "Reducem riscul ca o parolă compromisă să fie suficientă pentru acces, cu MFA, review de acces și reguli adecvate furnizorului de email.",
-  },
-  {
-    title: "Monitoring & remediation",
-    description: "Urmărim rapoarte, erori de autentificare și modificări DNS relevante, astfel încât postura emailului să nu se degradeze după configurarea inițială.",
+    step: "06",
+    title: "Monitor & maintain",
+    text: "Schimbările de furnizori, selectori și fluxuri de trimitere trebuie urmărite pentru ca postura să nu se degradeze după rollout.",
   },
 ];
 
-const providers = ["Microsoft 365", "Google Workspace", "Proton", "Zoho", "SMTP propriu", "Furnizori multipli"];
+const identityLayers = [
+  ["MFA", "O parolă compromisă nu ar trebui să fie suficientă pentru acces la conturile critice."],
+  ["Session & sign-in review", "Investigăm sign-ins, sesiuni și comportamente neobișnuite atunci când există suspiciune de compromise."],
+  ["Forwarding & mailbox rules", "Reguli ascunse sau modificate pot menține accesul sau exfiltra conversații după compromiterea inițială."],
+  ["Privileged accounts", "Conturile administrative și rolurile cu impact mare trebuie separate și revizuite proporțional cu riscul."],
+  ["Recovery paths", "Metodele de recovery, aliasurile și canalele alternative pot deveni o cale de bypass dacă sunt lăsate necontrolate."],
+];
 
 const scenarios = [
   {
     title: "Domeniul poate fi spoofed",
-    text: "Verificăm alinierea SPF/DKIM și politica DMARC, identificăm sursele legitime și construim o trecere controlată spre enforcement.",
+    text: "Verificăm alignment-ul SPF/DKIM, politica DMARC și sursele reale de trimitere înainte să trecem la enforcement.",
   },
   {
     title: "Emailurile legitime ajung în spam",
-    text: "Analizăm autentificarea, reputația, DNS-ul și fluxurile de trimitere înainte să schimbăm politici care pot afecta livrabilitatea.",
+    text: "Separăm problemele de autentificare, reputație și configurare de schimbările care pot face mai mult rău livrabilității.",
   },
   {
     title: "Ai avut phishing sau BEC",
-    text: "Tratăm problema ca incident de identitate: conturi, sesiuni, reguli de forwarding, MFA, surse de trimitere și domenii similare.",
+    text: "Tratăm problema și ca incident de identitate: conturi, sesiuni, forwarding, MFA, resetări, surse de trimitere și domenii similare.",
   },
   {
-    title: "Folosești mai multe platforme",
+    title: "Folosești mai mulți furnizori",
     text: "Documentăm fiecare sursă autorizată și evităm recorduri SPF imposibil de întreținut sau selectori DKIM rămași din servicii vechi.",
+  },
+];
+
+const providers = [
+  ["Microsoft 365", "Domain authentication, identity controls și review în contextul tenantului existent."],
+  ["Google Workspace", "DNS authentication și account security fără migrare forțată către alt furnizor."],
+  ["Proton", "Configurarea domeniului și controalele disponibile în modelul furnizorului."],
+  ["Zoho", "SPF, DKIM, DMARC și posture review pentru organizațiile care folosesc ecosistemul Zoho."],
+  ["SMTP / transactional providers", "Mapăm sursele aplicațiilor, billing-ului, marketingului și altor sisteme care trimit email automat."],
+  ["Multiple providers", "Separăm fluxurile și ownership-ul astfel încât un serviciu nou să nu rupă politica întregului domeniu."],
+];
+
+const monitoring = [
+  "surse noi sau necunoscute observate în rapoarte",
+  "eșecuri de alignment sau signing",
+  "modificări DNS care afectează autentificarea",
+  "selectori sau servicii rămase după migrare",
+  "schimbări de provider sau platforme de marketing/transactional email",
+  "semnale de account compromise sau forwarding neobișnuit",
+];
+
+const faqs = [
+  {
+    question: "DMARC poate fi pus direct pe reject?",
+    answer:
+      "Tehnic este posibil, dar nu este o strategie bună fără inventarul surselor legitime și verificarea alignment-ului. O politică strictă aplicată prea devreme poate bloca fluxuri valide pe care organizația nu le-a documentat încă.",
+  },
+  {
+    question: "SPF, DKIM și DMARC opresc phishing-ul complet?",
+    answer:
+      "Nu. Ele reduc impersonation-ul direct al domeniului și oferă control și vizibilitate asupra autentificării mesajelor. Phishing-ul poate folosi domenii asemănătoare, conturi compromise sau alte tehnici, de aceea identity security și procesele de incident response rămân importante.",
+  },
+  {
+    question: "Trebuie să schimb furnizorul de email?",
+    answer:
+      "Nu în mod normal. Lucrăm cu platforma existentă și separăm ce trebuie schimbat în DNS, în tenant și în procesele de identity/security. Migrarea are sens doar dacă există motive separate pentru ea.",
+  },
+  {
+    question: "Ce facem dacă un mailbox este deja compromis?",
+    answer:
+      "Situația trebuie tratată ca incident: sesiuni, parole, MFA, forwarding rules, sign-ins, privilegii și alte mecanisme de persistență trebuie analizate înainte să considerăm problema închisă.",
+  },
+  {
+    question: "Email Security poate susține compliance?",
+    answer:
+      "Da. Identity controls, MFA, domain authentication, incident handling și evidence-ul asociat pot susține controls relevante din ISO 27001, SOC 2, NIS2 sau alte programe, fără ca o configurație DNS să însemne automat conformitate cu un framework.",
   },
 ];
 ---
 
 <Layout
   title="Email Security"
-  description="Email Security ZebraByte: SPF, DKIM, DMARC, anti-spoofing, anti-phishing, BEC protection și account hardening pentru Microsoft 365, Google Workspace și alte platforme."
+  description="Email Security ZebraByte: SPF, DKIM, DMARC, anti-spoofing, identity hardening, BEC response și monitoring pentru Microsoft 365, Google Workspace și alte platforme."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
-      <div class="container text-center">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Email Security</div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Protejează domeniul, conturile și încrederea din fiecare mesaj.</h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-          Configurăm și menținem SPF, DKIM și DMARC, întărim accesul la conturi și reducem riscul de phishing, spoofing și business email compromise fără să rupem livrarea mesajelor legitime.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Verifică securitatea emailului</Button>
-          <Button href="https://mail-scan.zebrabyte.ro" variant="secondary" size="lg">Rulează Email Scan</Button>
-        </div>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
+        Email Security
+      </div>
+
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Protejează domeniul și conturile</span>
+        <span class="animate-perspective-in block delay-50"> fără să rupi emailul legitim. </span>
+      </h1>
+
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        SPF, DKIM și DMARC sunt doar o parte din problemă. Le legăm de identity security,
+        furnizorii reali de trimitere și procesele necesare pentru phishing, BEC și account
+        compromise.
+      </p>
+
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="https://mail-scan.zebrabyte.ro"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Rulează Email Scan
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Discută despre Email Security
+        </Button>
       </div>
     </animated-hero>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Domain authentication</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">SPF, DKIM și DMARC sunt un sistem, nu trei bife DNS.</h2>
-        <p class="text-muted-foreground text-lg">Le configurăm în jurul fluxurilor reale de trimitere și le întărim fără să pierdem vizibilitatea asupra serviciilor legitime.</p>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">SPF, DKIM și DMARC sunt un rollout, nu trei bife</h2>
+        <p class="text-muted-foreground text-lg">
+          Începem cu sursele reale de trimitere și creștem enforcement-ul doar după ce știm
+          ce trebuie să rămână legitim.
+        </p>
       </div>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {controls.map((control) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <h3 class="text-h5 mb-3 font-medium">{control.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{control.description}</p>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {authenticationFlow.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
-      <div class="container grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Compatible workflows</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Nu te obligăm să schimbi furnizorul de email.</h2>
-          <p class="text-muted-foreground mb-8 text-lg leading-relaxed">Lucrăm cu platforma pe care o folosești deja și separăm clar ce ține de DNS, ce ține de furnizor și ce ține de securitatea conturilor.</p>
-          <div class="flex flex-wrap gap-2">
-            {providers.map((provider) => (
-              <span class="bg-level-0 rounded-full border px-3 py-1.5 text-sm">{provider}</span>
-            ))}
-          </div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Domeniul nu este singura identitate care trebuie protejată</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Un mesaj poate trece perfect SPF/DKIM/DMARC și totuși să vină dintr-un cont
+            legitim compromis. De aceea domain authentication și account security trebuie
+            tratate împreună.
+          </p>
         </div>
-        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
-          <div class="mb-6 border-b pb-5">
-            <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Example posture</p>
-            <h3 class="mt-2 text-xl font-medium">Authentication rollout</h3>
-          </div>
-          <div class="space-y-5">
-            <div class="flex items-center justify-between gap-4"><span>SPF inventory</span><span class="rounded-full bg-active px-3 py-1 text-xs">Reviewed</span></div>
-            <div class="flex items-center justify-between gap-4"><span>DKIM signing</span><span class="rounded-full bg-active px-3 py-1 text-xs">Enabled</span></div>
-            <div class="flex items-center justify-between gap-4"><span>DMARC reporting</span><span class="rounded-full bg-active px-3 py-1 text-xs">Monitoring</span></div>
-            <div class="flex items-center justify-between gap-4"><span>Enforcement</span><span class="rounded-full border px-3 py-1 text-xs">Planned</span></div>
-          </div>
+        <div class="border-y">
+          {identityLayers.map(([layer, text]) => (
+            <div class="border-b py-5 last:border-b-0">
+              <h3 class="font-medium">{layer}</h3>
+              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mb-10 max-w-180">
-        <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">Common scenarios</p>
-        <h2 class="text-h3 sm:text-h2 font-medium">Pornim de la problema reală.</h2>
-      </div>
-      <div class="grid gap-4 sm:grid-cols-2">
-        {scenarios.map((scenario) => (
-          <article class="rounded-xl border p-6 sm:p-8">
-            <h3 class="mb-3 text-xl font-medium">{scenario.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{scenario.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="border-y py-16 sm:py-24">
-      <div class="container grid gap-4 sm:grid-cols-3">
-        <a href="/security-assessment" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Security Assessment</h3>
-          <p class="text-muted-foreground text-sm">Include email posture în evaluarea mai largă a suprafeței expuse.</p>
-        </a>
-        <a href="/incident-response" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Compromised mailbox?</h3>
-          <p class="text-muted-foreground text-sm">Triage și containment pentru conturi sau sesiuni compromise.</p>
-        </a>
-        <a href="/gdpr" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Privacy & GDPR</h3>
-          <p class="text-muted-foreground text-sm">Leagă protecția comunicării de măsurile tehnice și procesele de privacy.</p>
-        </a>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Pornim de la problema reală</h2>
+        <div class="border-y">
+          {scenarios.map((item) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="container py-16 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Nu lăsa domeniul să fie identitatea atacatorului.</h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Putem începe cu o verificare a DNS-ului și a furnizorului actual, apoi stabilim ce trebuie remediat și în ce ordine.</p>
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Păstrează furnizorul care funcționează</h2>
+          <p class="text-muted-foreground text-lg">
+            Security nu trebuie să devină o migrare comercială mascată. Configurăm controls
+            în jurul platformei existente atunci când aceasta poate susține cerințele.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {providers.map(([provider, text]) => (
+            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.65fr_1.35fr] sm:gap-10">
+              <h3 class="font-medium">{provider}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Monitoring după rollout</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            O configurație bună astăzi poate deveni greșită după un provider nou, o migrare
+            sau un serviciu SaaS care începe să trimită în numele domeniului.
+          </p>
+          <Button href="/security-assessment" variant="secondary">Include emailul într-un Security Assessment</Button>
+        </div>
+        <ul class="border-y">
+          {monitoring.map((item) => (
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-10 border-y py-8 lg:grid-cols-3 lg:gap-12 sm:py-10">
+        <a href="/incident-response" class="group">
+          <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Mailbox compromis?</h3>
+          <p class="text-muted-foreground mt-3 leading-relaxed">Triage, containment și recovery pentru conturi sau sesiuni compromise.</p>
+        </a>
+        <a href="/gdpr" class="group">
+          <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Privacy & GDPR</h3>
+          <p class="text-muted-foreground mt-3 leading-relaxed">Leagă securitatea comunicării de risk și măsurile tehnice relevante.</p>
+        </a>
+        <a href="/cyber-security" class="group">
+          <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Cyber Security</h3>
+          <p class="text-muted-foreground mt-3 leading-relaxed">Integrează emailul în programul mai larg de identity, application și incident security.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Nu lăsa domeniul sau mailbox-ul să devină identitatea atacatorului.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+        Putem începe cu DNS-ul și providerul actual, apoi stabilim ce trebuie remediat și în
+        ce ordine.
+      </p>
       <Button href="/contact" size="lg">Discută despre Email Security</Button>
     </section>
   </main>
