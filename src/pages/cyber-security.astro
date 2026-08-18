@@ -1,139 +1,336 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import SaleArg from "../components/ui/SaleArg.astro";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
-const capabilities = [
+const services = [
   {
-    title: "Security assessment",
-    description:
-      "Evaluăm suprafața expusă, configurațiile, aplicațiile, domeniile și controalele existente pentru a identifica riscurile reale, nu doar problemele cosmetice.",
+    title: "Security Assessment",
+    text: "Evaluăm suprafața expusă, configurațiile, aplicațiile, domeniile și controalele existente pentru a prioritiza riscurile care merită acțiune.",
     href: "/security-assessment",
   },
   {
-    title: "Website security",
-    description:
-      "WAF, protecție DDoS, malware monitoring, TLS hardening și recovery pentru website-uri, magazine online și aplicații custom.",
+    title: "Website Security",
+    text: "WAF, DDoS protection, malware monitoring, TLS hardening, application protection și recovery pentru servicii expuse public.",
     href: "/website-security",
   },
   {
-    title: "Email security",
-    description:
-      "SPF, DKIM, DMARC, anti-spoofing, anti-phishing, MFA și hardening pentru Microsoft 365, Google Workspace și alte platforme.",
+    title: "Email Security",
+    text: "SPF, DKIM, DMARC, anti-spoofing, identity hardening și protecție împotriva phishing-ului și account compromise.",
     href: "/email-security",
   },
   {
-    title: "Incident response",
-    description:
-      "Triage, containment, eradication, recovery și lessons learned atunci când incidentul este deja activ sau compromisul trebuie investigat rapid.",
+    title: "Incident Response",
+    text: "Triage, containment, investigation support, recovery și lessons learned atunci când există un incident sau o suspiciune de compromitere.",
     href: "/incident-response",
   },
   {
-    title: "Hardening & remediation",
-    description:
-      "Transformăm constatările în acțiuni: configurare defensivă, reducerea suprafeței de atac, protecția aplicațiilor și prioritizarea patch-urilor și vulnerabilităților.",
-    href: "/security-assessment",
-  },
-  {
-    title: "Continuous security",
-    description:
-      "Monitorizăm schimbările relevante, vulnerabilitățile și controalele astfel încât securitatea să rămână un proces continuu, nu o verificare făcută o singură dată.",
-    href: "/compliance-portal",
+    title: "Secure Managed Hosting",
+    text: "Infrastructură administrată pentru proiecte unde hardening-ul, monitoring-ul, backup-ul și recovery-ul trebuie operate continuu.",
+    href: "/secure-hosting",
   },
 ];
 
 const lifecycle = [
-  { title: "Discover", text: "Active, expunere, dependențe și context de business." },
-  { title: "Prioritize", text: "Risc tehnic corelat cu impact și probabilitate." },
-  { title: "Remediate", text: "Hardening, patching, configurare și reducerea suprafeței de atac." },
-  { title: "Monitor", text: "Schimbări, vulnerabilități, evidence și semnale de incident." },
-  { title: "Respond", text: "Triage, containment, recovery și comunicare." },
-  { title: "Improve", text: "Lessons learned și actualizarea controalelor/compliance." },
+  {
+    step: "01",
+    title: "Discover",
+    text: "Active, domenii, servicii expuse, identity, furnizori și dependențe care formează suprafața reală de atac.",
+  },
+  {
+    step: "02",
+    title: "Prioritize",
+    text: "Separăm zgomotul de riscurile care pot schimba efectiv confidențialitatea, integritatea sau disponibilitatea serviciului.",
+  },
+  {
+    step: "03",
+    title: "Remediate",
+    text: "Hardening, patching, access control, configuration changes și măsuri defensive implementate în ordinea potrivită.",
+  },
+  {
+    step: "04",
+    title: "Monitor",
+    text: "Urmărim schimbările, vulnerabilitățile și semnalele relevante astfel încât postura să nu revină la starea inițială după primul proiect.",
+  },
+  {
+    step: "05",
+    title: "Respond",
+    text: "Când apare un incident, procesele de triage, containment și recovery sunt conectate la contextul tehnic deja cunoscut.",
+  },
+  {
+    step: "06",
+    title: "Improve",
+    text: "Lessons learned, findings și schimbările de risc se întorc în controls și în programul de security/compliance.",
+  },
+];
+
+const layers = [
+  ["Identity", "MFA, SSO, privilege management, account hardening și access reviews."],
+  ["Edge & network", "TLS, WAF, rate limiting, DDoS protection și reducerea expunerii inutile."],
+  ["Application", "Configuration hardening, vulnerability remediation, secure change și protecția componentelor expuse."],
+  ["Infrastructure", "Patching, isolation, backup, recovery, monitoring și controale asupra origin-ului."],
+  ["Email & domain", "SPF, DKIM, DMARC, DNS posture și reducerea riscului de impersonation."],
+  ["Operations", "Logging, alerting, incident response, supplier risk și procese de review continuu."],
+];
+
+const engagementModels = [
+  {
+    title: "Assessment",
+    text: "Ai nevoie de o imagine clară a riscului și de un plan prioritizat înainte să schimbi infrastructura sau să cumperi alte produse.",
+  },
+  {
+    title: "Remediation project",
+    text: "Există findings cunoscute și ai nevoie de implementare: hardening, configurare, cleanup, migration sau reducerea suprafeței de atac.",
+  },
+  {
+    title: "Managed security",
+    text: "Controalele trebuie operate continuu, cu monitoring, reviews și ownership după finalizarea proiectului inițial.",
+  },
+  {
+    title: "Incident response",
+    text: "Există un compromis sau o suspiciune activă și prioritatea este containment-ul, recovery-ul și păstrarea informațiilor necesare investigației.",
+  },
+];
+
+const complianceConnections = [
+  {
+    title: "ISO/IEC 27001",
+    text: "Măsurile tehnice și evidence-ul pot susține controls și risk treatment din ISMS.",
+    href: "/iso-27001",
+  },
+  {
+    title: "NIS2",
+    text: "Cyber risk, incident handling, resilience și supply-chain security trebuie să existe în operațiuni.",
+    href: "/nis2",
+  },
+  {
+    title: "GDPR",
+    text: "Technical and organisational measures trebuie legate de riscul pentru datele și processing activities relevante.",
+    href: "/gdpr",
+  },
+  {
+    title: "SOC 2",
+    text: "Controls și evidence trebuie să reflecte procese de security operate, nu doar policies.",
+    href: "/soc2",
+  },
+];
+
+const faqs = [
+  {
+    question: "Trebuie să mut infrastructura la ZebraByte pentru a folosi serviciile de cybersecurity?",
+    answer:
+      "Nu. Security assessment, website security, email security și anumite activități de remediation pot fi realizate în jurul infrastructurii existente. Managed Hosting este o opțiune separată atunci când ownership-ul infrastructurii face parte din scope.",
+  },
+  {
+    question: "Security Assessment este același lucru cu un penetration test?",
+    answer:
+      "Nu automat. Assessment-ul ZebraByte evaluează suprafața expusă, configurațiile și controalele în scope. Un penetration test este un engagement distinct, cu reguli de testare și autorizare specifice. Scope-ul trebuie stabilit înainte de orice testare activă.",
+  },
+  {
+    question: "Puteți lucra cu echipa noastră IT sau cu furnizorul existent?",
+    answer:
+      "Da. Putem livra findings și remediation împreună cu ownerii existenți. Nu este necesar ca ZebraByte să înlocuiască furnizorii care funcționează bine doar pentru a putea îmbunătăți postura de securitate.",
+  },
+  {
+    question: "Cybersecurity și compliance sunt același lucru?",
+    answer:
+      "Nu. Compliance oferă cerințe, governance și evidence; cybersecurity include măsurile tehnice și operaționale care reduc riscul. Le conectăm acolo unde un control sau o obligație trebuie susținută de o măsură reală.",
+  },
+  {
+    question: "Putem începe doar cu o singură problemă, cum ar fi website-ul sau emailul?",
+    answer:
+      "Da. Engagement-ul poate fi limitat la un serviciu clar și extins ulterior dacă assessment-ul sau schimbările din business justifică un scope mai larg.",
+  },
 ];
 ---
 
 <Layout
   title="Cyber Security"
-  description="Cyber Security ZebraByte: security assessment, website security, email security, hardening, monitoring și incident response integrate cu compliance și platforma Probo."
+  description="Cyber Security ZebraByte: security assessment, website security, email security, hardening, monitoring, incident response și secure managed hosting conectate la risk și compliance."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
-      <div class="container text-center">
-        <p class="text-muted-foreground animate-perspective-in mb-5 text-sm font-medium uppercase tracking-[0.14em]">
-          ZebraByte Cyber Security
-        </p>
-        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-230 font-medium text-balance">
-          Securitate cibernetică gestionată, nu doar un raport.
-        </h1>
-        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
-          Identificăm riscurile, implementăm măsurile tehnice și menținem controalele relevante în timp. Security engineering și compliance lucrează în același program, construit peste experiența Probo pe care o păstrăm.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button size="lg" href="/contact">Discută cu un expert</Button>
-          <Button size="lg" variant="secondary" href="/security-assessment">Solicită un assessment</Button>
-        </div>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
+        ZebraByte Cyber Security
+      </div>
+
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Securitate cibernetică,</span>
+        <span class="animate-perspective-in block delay-50"> de la finding la control operat. </span>
+      </h1>
+
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        Identificăm riscurile, implementăm măsurile tehnice și conectăm monitoring-ul,
+        remediation-ul și incident response-ul într-un program care poate continua după
+        prima evaluare.
+      </p>
+
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/security-assessment"
+        >
+          Security Assessment
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Discută cu un expert
+        </Button>
       </div>
     </animated-hero>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mb-10 max-w-180">
-        <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">Security services</p>
-        <h2 class="text-h3 sm:text-h2 font-medium">De la suprafața de atac până la recovery.</h2>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Un program, nu o colecție de produse</h2>
+        <p class="text-muted-foreground text-lg">
+          Alegem serviciul după problemă și risc. Nu forțăm fiecare client într-un stack
+          identic și nu transformăm fiecare finding într-un produs nou.
+        </p>
       </div>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {capabilities.map((capability) => (
-          <a href={capability.href} class="bg-level-0 group p-6 transition-colors hover:bg-subtle sm:p-8">
-            <h3 class="text-h5 mb-3 font-medium group-hover:underline group-hover:underline-offset-4">{capability.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{capability.description}</p>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {services.map((service) => (
+          <a
+            href={service.href}
+            class="group grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10"
+          >
+            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">
+              {service.title}
+            </h3>
+            <p class="text-muted-foreground leading-relaxed">{service.text}</p>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
+    <section class="bg-active py-10 sm:py-20">
       <div class="container">
-        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div>
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security lifecycle</p>
-            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Securitatea continuă după primul fix.</h2>
-            <p class="text-muted-foreground text-lg leading-relaxed">Folosim același model de ownership continuu pe care Probo îl aplică compliance-ului: fiecare control are context, evidence și pași următori.</p>
-          </div>
-          <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
-            {lifecycle.map((item, index) => (
-              <article class="bg-level-0 p-6">
-                <div class="text-muted-foreground mb-6 text-sm">0{index + 1}</div>
-                <h3 class="mb-2 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-              </article>
-            ))}
-          </div>
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Defense in depth, fără o singură „cutie magică”</h2>
+          <p class="text-muted-foreground text-lg">
+            Un atac nu respectă granițele dintre furnizori. Identity, edge, aplicația,
+            infrastructura și operațiunile trebuie privite împreună atunci când riscul o cere.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {layers.map(([layer, text], index) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <h3 class="font-medium">{layer}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security + Compliance</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Controalele din documente trebuie să existe și în infrastructură.</h2>
-        <p class="text-muted-foreground text-lg">GDPR, NIS2 și ISO 27001 readiness devin mai utile când evidence-ul reflectă hardening-ul, accesul, monitorizarea și procesele de incident response care funcționează efectiv.</p>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security lifecycle</h2>
+        <p class="text-muted-foreground text-lg">
+          Primul assessment este doar începutul. Riscul se schimbă odată cu aplicația,
+          utilizatorii, furnizorii și infrastructura.
+        </p>
       </div>
-      <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
-        <SaleArg title="Security evidence, menținut continuu" video="/videos/keyshot3.mp4">
-          <p>Platforma Probo rămâne în experiență pentru controls, evidence și workflows, iar ZebraByte adaugă implementarea tehnică și ownership-ul operațional.</p>
-        </SaleArg>
-        <SaleArg title="Workflow-uri și integrări, nu documente izolate" video="/videos/keyshot4.mp4">
-          <p>Legăm evenimentele, acțiunile și responsabilitățile de sistemele deja folosite de echipă, astfel încât securitatea să nu trăiască într-un spreadsheet separat.</p>
-        </SaleArg>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {lifecycle.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </article>
+        ))}
       </div>
     </section>
 
-    <section class="border-y py-16 sm:py-24">
-      <div class="container grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <a href="/gdpr" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">GDPR & Privacy</h3><p class="text-muted-foreground text-sm">Leagă măsurile tehnice de privacy governance.</p></a>
-        <a href="/nis2" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">NIS2 Readiness</h3><p class="text-muted-foreground text-sm">Risk, governance și incident readiness.</p></a>
-        <a href="/iso-27001" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">ISO 27001</h3><p class="text-muted-foreground text-sm">ISMS readiness și audit preparation.</p></a>
-        <a href="/industries" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Industries</h3><p class="text-muted-foreground text-sm">Adaptează controls la sector și date.</p></a>
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Alege modelul după problema reală</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Uneori ai nevoie doar de un assessment. Alteori finding-ul trebuie implementat,
+            controlul trebuie operat continuu sau există deja un incident. Scope-ul se schimbă
+            în funcție de aceste nevoi.
+          </p>
+        </div>
+        <div class="border-y">
+          {engagementModels.map((item) => (
+            <div class="border-b py-5 last:border-b-0">
+              <h3 class="font-medium">{item.title}</h3>
+              <p class="text-muted-foreground mt-2 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+        </div>
       </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security și compliance se întâlnesc în evidence</h2>
+          <p class="text-muted-foreground text-lg">
+            Un framework nu securizează singur infrastructura. Dar măsurile operate și
+            evidence-ul tehnic pot susține programul de compliance atunci când cerințele se
+            suprapun.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {complianceConnections.map((item) => (
+            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <ZebraByteTestimonials />
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Începe cu riscul pe care îl poți vedea și construiește de acolo.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+        Putem începe cu o evaluare a suprafeței expuse și continua doar cu măsurile care
+        schimbă efectiv postura de securitate.
+      </p>
+      <Button href="/security-assessment" size="lg">Începe cu un Security Assessment</Button>
     </section>
   </main>
 </Layout>
