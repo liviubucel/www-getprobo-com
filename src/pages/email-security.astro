@@ -114,101 +114,98 @@ const faqs = [
   description="Email Security ZebraByte: SPF, DKIM, DMARC, anti-spoofing, identity hardening, BEC response și monitoring pentru Microsoft 365, Google Workspace și alte platforme."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Email Security
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Protejează domeniul și conturile</span>
         <span class="animate-perspective-in block delay-50"> fără să rupi emailul legitim. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         SPF, DKIM și DMARC sunt doar o parte din problemă. Le legăm de identity security,
         furnizorii reali de trimitere și procesele necesare pentru phishing, BEC și account
         compromise.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="https://mail-scan.zebrabyte.ro"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="https://mail-scan.zebrabyte.ro" target="_blank" rel="noopener noreferrer">
           Rulează Email Scan
         </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">
           Discută despre Email Security
         </Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">SPF, DKIM și DMARC sunt un rollout, nu trei bife</h2>
-        <p class="text-muted-foreground text-lg">
-          Începem cu sursele reale de trimitere și creștem enforcement-ul doar după ce știm
-          ce trebuie să rămână legitim.
-        </p>
-      </div>
-
-      <div class="mx-auto max-w-5xl border-y">
-        {authenticationFlow.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Domeniul nu este singura identitate care trebuie protejată</h2>
+    <section class="container pb-12 sm:pb-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="mb-10 max-w-3xl">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Authentication rollout</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">SPF, DKIM și DMARC sunt un traseu, nu trei bife.</h2>
           <p class="text-muted-foreground text-lg leading-relaxed">
-            Un mesaj poate trece perfect SPF/DKIM/DMARC și totuși să vină dintr-un cont
-            legitim compromis. De aceea domain authentication și account security trebuie
-            tratate împreună.
+            Începem cu sursele reale de trimitere și creștem enforcement-ul doar după ce știm
+            ce trebuie să rămână legitim.
           </p>
         </div>
-        <div class="border-y">
-          {identityLayers.map(([layer, text]) => (
-            <div class="border-b py-5 last:border-b-0">
-              <h3 class="font-medium">{layer}</h3>
-              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
-            </div>
+
+        <div class="relative border-y py-3 sm:py-5">
+          <div class="absolute left-5 top-8 bottom-8 hidden w-px bg-border sm:block"></div>
+          {authenticationFlow.map((item, index) => (
+            <article class="relative grid gap-3 py-5 sm:grid-cols-[42px_0.7fr_1.3fr] sm:gap-8 sm:py-6">
+              <div class="relative z-10 flex size-10 items-center justify-center rounded-full border bg-level-0 font-mono text-xs">
+                {String(index + 1).padStart(2, "0")}
+              </div>
+              <h3 class="text-h5 font-medium sm:pt-2">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed sm:pt-2">{item.text}</p>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Pornim de la problema reală</h2>
-        <div class="border-y">
-          {scenarios.map((item) => (
-            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-              <h3 class="text-h5 font-medium">{item.title}</h3>
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-20">
+        <div>
+          <div class="mb-8 flex size-24 items-center justify-center rounded-full border bg-level-0 text-5xl font-medium">@</div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Domain + identity</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un mesaj autentic poate veni tot dintr-un cont compromis.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Domain authentication reduce spoofing-ul direct. Identity controls reduc riscul ca
+            un mailbox legitim compromis să devină canalul atacatorului. Avem nevoie de ambele.
+          </p>
+        </div>
+
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          {identityLayers.map(([layer, text], index) => (
+            <article class:list={["border-t py-6", index === identityLayers.length - 1 && "sm:col-span-2"]}>
+              <span class="text-muted-foreground mb-5 block font-mono text-xs">ID-{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="mb-2 font-medium">{layer}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Start from the symptom</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Pornim de la problema reală.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu toate problemele de email sunt probleme DMARC și nu toate incidentele de phishing
+            sunt probleme DNS. Diagnosticul corect decide unde intervenim.
+          </p>
+        </div>
+
+        <div class="grid gap-x-12 sm:grid-cols-2">
+          {scenarios.map((item, index) => (
+            <article class="border-t py-7">
+              <span class="text-muted-foreground mb-6 block font-mono text-sm">0{index + 1}</span>
+              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
@@ -216,65 +213,80 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
+    <section class="border-y py-12 sm:py-20">
       <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Păstrează furnizorul care funcționează</h2>
-          <p class="text-muted-foreground text-lg">
-            Security nu trebuie să devină o migrare comercială mascată. Configurăm controls
-            în jurul platformei existente atunci când aceasta poate susține cerințele.
-          </p>
+        <div class="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div class="max-w-3xl">
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Provider-neutral</p>
+            <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Păstrează furnizorul care funcționează.</h2>
+            <p class="text-muted-foreground text-lg leading-relaxed">
+              Security nu trebuie să devină o migrare comercială mascată. Configurăm controls
+              în jurul platformei existente atunci când aceasta poate susține cerințele.
+            </p>
+          </div>
         </div>
 
-        <div class="mx-auto max-w-5xl border-y">
-          {providers.map(([provider, text]) => (
-            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.65fr_1.35fr] sm:gap-10">
-              <h3 class="font-medium">{provider}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
+        <div class="grid border sm:grid-cols-2 lg:grid-cols-3">
+          {providers.map(([provider, text], index) => (
+            <article class:list={["min-h-48 p-6 sm:p-7", index % 3 !== 2 && "lg:border-r", index < 3 && "lg:border-b", index % 2 === 0 && "sm:border-r lg:border-r", index < 4 && "sm:border-b"]}>
+              <h3 class="mb-4 font-medium">{provider}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div>
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Live posture</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Monitoring după rollout.</h2>
+          <p class="mb-7 text-lg leading-relaxed opacity-65">
+            O configurație bună astăzi poate deveni greșită după un provider nou, o migrare
+            sau un serviciu SaaS care începe să trimită în numele domeniului.
+          </p>
+          <Button href="/security-assessment" variant="secondary">Include emailul într-un Security Assessment</Button>
+        </div>
+
+        <div class="font-mono text-sm">
+          <div class="mb-3 flex items-center justify-between border-b border-level-0-foreground/15 pb-3 opacity-55">
+            <span>signal stream</span><span>mail posture</span>
+          </div>
+          {monitoring.map((item, index) => (
+            <div class="grid grid-cols-[54px_1fr_auto] gap-4 border-b border-level-0-foreground/15 py-4 last:border-b-0">
+              <span class="opacity-40">0{index + 1}</span>
+              <span class="opacity-80">{item}</span>
+              <span class="opacity-40">watch</span>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Monitoring după rollout</h2>
-          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
-            O configurație bună astăzi poate deveni greșită după un provider nou, o migrare
-            sau un serviciu SaaS care începe să trimită în numele domeniului.
-          </p>
-          <Button href="/security-assessment" variant="secondary">Include emailul într-un Security Assessment</Button>
-        </div>
-        <ul class="border-y">
-          {monitoring.map((item) => (
-            <li class="border-b py-4 last:border-b-0">{item}</li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="grid gap-10 border-y py-8 lg:grid-cols-3 lg:gap-12 sm:py-10">
         <a href="/incident-response" class="group">
+          <p class="text-muted-foreground mb-4 text-sm">01 · Incident</p>
           <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Mailbox compromis?</h3>
           <p class="text-muted-foreground mt-3 leading-relaxed">Triage, containment și recovery pentru conturi sau sesiuni compromise.</p>
         </a>
         <a href="/gdpr" class="group">
+          <p class="text-muted-foreground mb-4 text-sm">02 · Privacy</p>
           <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Privacy & GDPR</h3>
           <p class="text-muted-foreground mt-3 leading-relaxed">Leagă securitatea comunicării de risk și măsurile tehnice relevante.</p>
         </a>
         <a href="/cyber-security" class="group">
+          <p class="text-muted-foreground mb-4 text-sm">03 · Program</p>
           <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Cyber Security</h3>
           <p class="text-muted-foreground mt-3 leading-relaxed">Integrează emailul în programul mai larg de identity, application și incident security.</p>
         </a>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -289,15 +301,12 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Nu lăsa domeniul sau mailbox-ul să devină identitatea atacatorului.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Putem începe cu DNS-ul și providerul actual, apoi stabilim ce trebuie remediat și în
-        ce ordine.
-      </p>
-      <Button href="/contact" size="lg">Discută despre Email Security</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Emailul trebuie să rămână autentic și operabil.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Începem cu domeniul și platforma existentă, apoi întărim postura fără să sacrificăm fluxurile legitime.</p>
+        <Button href="/contact" size="lg">Discută despre Email Security</Button>
+      </div>
     </section>
   </main>
 </Layout>
