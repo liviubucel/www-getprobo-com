@@ -59,7 +59,7 @@ const complianceLinks = [
     label: "GDPR",
     href: "/gdpr",
     text: "Măsuri tehnice și organizaționale pentru datele și procesele relevante.",
-    asset: "/frameworks/GDPR.svg",
+    asset: "/trust-center/security-privacy.svg",
   },
   {
     label: "SOC 2",
@@ -127,7 +127,7 @@ const faqs = [
       </p>
 
       <div
-        class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center"
+        class="mb-12 flex flex-col items-stretch justify-center gap-3 sm:mb-20 sm:flex-row sm:items-center"
       >
         <Button
           class="animate-perspective-in animation-delay-200"
@@ -146,50 +146,31 @@ const faqs = [
         </Button>
       </div>
 
-      <div class="animate-perspective-in animation-delay-300 mx-auto max-w-5xl">
-        <div class="relative min-h-[360px] overflow-hidden rounded-2xl bg-[#eef2e4] sm:min-h-[520px]">
-          <div class="absolute inset-x-[7%] top-[9%] sm:inset-x-[11%]">
-            <img
-              src="/trust-center/security-vulnerability.svg"
-              alt="Vizual Probo pentru vulnerability management"
-              width="331"
-              height="272"
-              loading="eager"
-              decoding="async"
-              class="w-[48%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.12)]"
-            />
-          </div>
-          <div class="absolute top-[22%] right-[6%] flex justify-end sm:right-[10%]">
-            <img
-              src="/trust-center/security-encryption.svg"
-              alt="Vizual Probo pentru encryption controls"
-              width="331"
-              height="272"
-              loading="eager"
-              decoding="async"
-              class="w-[44%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.12)]"
-            />
-          </div>
-          <div class="absolute right-[16%] bottom-[-6%] sm:right-[24%]">
-            <img
-              src="/trust-center/security-monitoring.svg"
-              alt="Vizual Probo pentru security monitoring"
-              width="331"
-              height="272"
-              loading="eager"
-              decoding="async"
-              class="w-[46%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.12)]"
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            class="pointer-events-none absolute -bottom-52 left-1/2 size-[620px] -translate-x-1/2 rounded-full bg-[#e6ff03]/35 blur-3xl"
-          ></div>
+      <div class="animate-perspective-in animation-delay-300 mx-auto grid max-w-5xl gap-7 border-y py-7 sm:grid-cols-4 sm:gap-8 sm:py-9">
+        <div>
+          <span class="text-muted-foreground mb-2 block font-mono text-xs">01</span>
+          <strong class="block font-medium">Assess</strong>
+          <span class="text-muted-foreground mt-1 block text-sm">Vezi expunerea și riscul real.</span>
+        </div>
+        <div>
+          <span class="text-muted-foreground mb-2 block font-mono text-xs">02</span>
+          <strong class="block font-medium">Protect</strong>
+          <span class="text-muted-foreground mt-1 block text-sm">Închide suprafețele care contează.</span>
+        </div>
+        <div>
+          <span class="text-muted-foreground mb-2 block font-mono text-xs">03</span>
+          <strong class="block font-medium">Operate</strong>
+          <span class="text-muted-foreground mt-1 block text-sm">Monitorizează după primul fix.</span>
+        </div>
+        <div>
+          <span class="text-muted-foreground mb-2 block font-mono text-xs">04</span>
+          <strong class="block font-medium">Respond</strong>
+          <span class="text-muted-foreground mt-1 block text-sm">Recuperează controlat când apare incidentul.</span>
         </div>
       </div>
     </animated-hero>
 
-    <section class="container py-14 sm:py-24">
+    <section class="container py-16 sm:py-28">
       <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
         <div>
           <p class="text-muted-foreground mb-3 text-sm font-medium">SECURITY ASSESSMENT</p>
@@ -217,7 +198,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="border-y bg-level-0 py-14 sm:py-24">
+    <section class="border-y bg-level-0 py-16 sm:py-28">
       <div class="container grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
         <div class="order-2 lg:order-1">
           <div class="relative min-h-[360px] overflow-hidden rounded-2xl bg-[#f3f4ed] sm:min-h-[470px]">
@@ -228,17 +209,12 @@ const faqs = [
               height="272"
               loading="lazy"
               decoding="async"
-              class="absolute top-[9%] left-[8%] w-[67%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.11)]"
+              class="absolute top-[12%] left-[13%] w-[74%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.11)]"
             />
-            <img
-              src="/trust-center/security-vulnerability.svg"
-              alt="Security findings și remediation"
-              width="331"
-              height="272"
-              loading="lazy"
-              decoding="async"
-              class="absolute right-[6%] bottom-[-4%] w-[58%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.11)]"
-            />
+            <div
+              aria-hidden="true"
+              class="pointer-events-none absolute -right-28 -bottom-28 size-80 rounded-full bg-[#e6ff03]/35 blur-3xl"
+            ></div>
           </div>
         </div>
 
@@ -393,8 +369,14 @@ const faqs = [
       <div class="mx-auto grid max-w-5xl gap-x-10 gap-y-10 sm:grid-cols-2">
         {complianceLinks.map((item) => (
           <a href={item.href} class="group grid grid-cols-[72px_1fr] items-start gap-5 border-t pt-6">
-            <div class="flex size-16 items-center justify-center">
-              <img src={item.asset} alt="" class="max-h-14 max-w-14" aria-hidden="true" loading="lazy" />
+            <div class="flex size-16 items-center justify-center overflow-hidden">
+              <img
+                src={item.asset}
+                alt=""
+                class="max-h-14 max-w-14 object-contain"
+                aria-hidden="true"
+                loading="lazy"
+              />
             </div>
             <div>
               <div class="mb-2 flex items-center justify-between gap-4">
