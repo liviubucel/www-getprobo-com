@@ -27,10 +27,47 @@ function sanitizePublicOutput(content: string): string {
     )
     .replace(
       /ZebraByte is open-source/gi,
-      "ZebraByte is available through its managed platform experience",
+      "ZebraByte is delivered through its Cloud SaaS platform",
     )
     .replace(/\bopen-source ZebraByte\b/gi, "ZebraByte")
     .replace(/\bZebraByte open-source\b/gi, "ZebraByte");
+}
+
+function protectMarkdownCode(content: string): {
+  content: string;
+  restore: (value: string) => string;
+} {
+  const protectedCode: string[] = [];
+  const protect = (block: string) => {
+    const marker = `___ZBT_PROTECTED_MD_CODE_${protectedCode.length}___`;
+    protectedCode.push(block);
+    return marker;
+  };
+
+  let result = content.replace(/```[\s\S]*?```/g, protect);
+  result = result.replace(/~~~[\s\S]*?~~~/g, protect);
+  result = result.replace(/`[^`\n]+`/g, protect);
+
+  return {
+    content: result,
+    restore: (value: string) => {
+      let restored = value;
+      protectedCode.forEach((block, index) => {
+        restored = restored.replace(`___ZBT_PROTECTED_MD_CODE_${index}___`, block);
+      });
+      return restored;
+    },
+  };
+}
+
+function sanitizeMarkdownOutput(content: string): string {
+  const protectedMarkdown = protectMarkdownCode(content);
+  return protectedMarkdown.restore(sanitizePublicOutput(protectedMarkdown.content));
+}
+
+function markdownAuditView(content: string): string {
+  const protectedMarkdown = protectMarkdownCode(content);
+  return protectedMarkdown.content;
 }
 
 function sanitizeTag(tag: string): string {
@@ -58,18 +95,20 @@ function sanitizeTag(tag: string): string {
 
 function sanitizeHtmlOutput(content: string): string {
   // Structured data is public metadata, so sanitize it before protecting the
-  // remaining runtime blocks from text replacement.
+  // remaining runtime and technical-reference blocks from text replacement.
   let html = content.replace(
     /<script([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi,
     (_match, attrs: string, json: string) =>
       `<script${attrs}>${sanitizePublicOutput(json)}</script>`,
   );
 
-  // JavaScript, CSS and textarea payloads can contain runtime identifiers and
-  // must remain byte-for-byte intact.
+  // JavaScript, CSS, textarea and rendered code examples can contain runtime or
+  // historical architecture identifiers. Preserve them byte-for-byte. In the
+  // self-hosting lineage docs, those identifiers are factual reference material,
+  // not current ZebraByte product branding.
   const protectedBlocks: string[] = [];
   html = html.replace(
-    /<(script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     (block) => {
       const marker = `___ZBT_PROTECTED_BLOCK_${protectedBlocks.length}___`;
       protectedBlocks.push(block);
@@ -99,17 +138,16 @@ function sanitizeHtmlOutput(content: string): string {
 }
 
 function publicAuditView(content: string): string {
-  const withoutRuntime = content.replace(
-    /<(script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
+  const withoutRuntimeOrCode = content.replace(
+    /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
 
-  // Visible text is the primary brand surface. Audit navigation/action URLs and
-  // external media URLs, but deliberately ignore local implementation assets.
-  // Astro keeps source-derived names in hashed /_astro/ files; those names are
-  // not customer-facing branding and rewriting them would break the build.
+  // Visible editorial text is the primary brand surface. Audit navigation/action
+  // URLs and external media URLs, but deliberately ignore local implementation
+  // assets and technical code examples.
   const publicUrls = Array.from(
-    withoutRuntime.matchAll(
+    withoutRuntimeOrCode.matchAll(
       /\b(href|action|formaction|src|poster)=(['"])([\s\S]*?)\2/gi,
     ),
   )
@@ -133,12 +171,16 @@ function publicAuditView(content: string): string {
     .map(({ value }) => value)
     .join("\n");
 
-  const visibleText = withoutRuntime.replace(/<[^>]+>/g, " ");
+  const visibleText = withoutRuntimeOrCode.replace(/<[^>]+>/g, " ");
   return `${visibleText}\n${publicUrls}`;
 }
 
 function hasLegacyPublicBrand(file: string, content: string): boolean {
-  const auditable = file.endsWith(".html") ? publicAuditView(content) : content;
+  const auditable = file.endsWith(".html")
+    ? publicAuditView(content)
+    : file.endsWith(".md")
+      ? markdownAuditView(content)
+      : content;
   return legacyPublicBrandPattern.test(auditable);
 }
 
@@ -276,7 +318,9 @@ export function sanitizePublicText(): AstroIntegration {
           const content = readFileSync(file, "utf-8");
           const sanitized = file.endsWith(".html")
             ? sanitizeHtmlOutput(content)
-            : sanitizePublicOutput(content);
+            : file.endsWith(".md")
+              ? sanitizeMarkdownOutput(content)
+              : sanitizePublicOutput(content);
           if (sanitized !== content) writeFileSync(file, sanitized);
           writeDeviceAgentAlias(distDir, file);
 
