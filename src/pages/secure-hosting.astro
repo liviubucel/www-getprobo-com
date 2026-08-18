@@ -1,50 +1,31 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
-const layers = [
+const architectureLayers = [
   {
-    step: "01",
-    title: "Edge & traffic",
-    text: "DNS, TLS, caching, WAF și alte controls de edge sunt configurate în jurul aplicației și al traficului legitim.",
+    title: "Edge",
+    text: "DNS, TLS, caching, WAF și trafic filtrat înainte de origin.",
   },
   {
-    step: "02",
-    title: "Application & origin",
-    text: "Hardening, access paths, runtime configuration și expunerea origin-ului sunt tratate ca parte din postura aplicației.",
+    title: "Runtime",
+    text: "Application environment, access paths și configurația origin-ului.",
   },
   {
-    step: "03",
     title: "Operations",
-    text: "Schimbările, patching-ul și activitățile administrative sunt operate controlat, cu ownership clar și reducerea intervențiilor ad-hoc.",
+    text: "Patching, changes, monitoring și intervenții administrative controlate.",
   },
   {
-    step: "04",
-    title: "Monitoring",
-    text: "Disponibilitatea și semnalele relevante sunt urmărite după deploy, nu doar în timpul migrării sau al unui incident.",
+    title: "Recovery",
+    text: "Backup, restore și decizii de revenire atunci când serviciul este afectat.",
   },
-  {
-    step: "05",
-    title: "Backup & recovery",
-    text: "Backup-ul este legat de un proces de restaurare și de deciziile necesare pentru revenirea controlată după o problemă.",
-  },
-];
-
-const workloads = [
-  ["WordPress & CMS", "Site-uri care au nevoie de patching, hardening, backup și ownership după lansare."],
-  ["E-commerce", "Magazine unde indisponibilitatea, integritatea și recovery-ul afectează direct operațiunile și veniturile."],
-  ["Web applications", "Aplicații custom și backends unde infrastructura trebuie operată împreună cu echipa care deține codul."],
-  ["APIs", "Servicii expuse care au nevoie de TLS, access controls, rate limiting și monitoring proporțional cu utilizarea lor."],
-  ["Static & modern frontends", "Proiecte moderne care pot păstra hosting-ul simplu, dar au nevoie de DNS, edge security și ownership clar."],
-  ["Sensitive workloads", "Servicii unde datele, disponibilitatea sau cerințele de recovery justifică un model administrat continuu."],
 ];
 
 const migration = [
   {
     step: "01",
     title: "Inventory",
-    text: "Aplicație, DNS, baze de date, storage, email dependencies, integrări și alte componente care pot fi afectate de mutare.",
+    text: "Aplicație, DNS, baze de date, storage, email dependencies, integrări și componente care pot fi afectate de mutare.",
   },
   {
     step: "02",
@@ -53,69 +34,60 @@ const migration = [
   },
   {
     step: "03",
-    title: "Copy & validate",
-    text: "Copiem datele și verificăm aplicația separat, inclusiv funcțiile care pot depinde de DNS, caching, webhooks sau servicii externe.",
+    title: "Validate",
+    text: "Copiem datele și testăm aplicația separat, inclusiv DNS, caching, webhooks și servicii externe.",
   },
   {
     step: "04",
     title: "Cutover",
-    text: "Mutăm traficul controlat, urmărim erorile și păstrăm o cale de revenire potrivită arhitecturii dacă apar probleme neașteptate.",
+    text: "Mutăm traficul controlat, urmărim erorile și păstrăm o cale de revenire potrivită arhitecturii.",
   },
   {
     step: "05",
     title: "Operate",
-    text: "Monitoring, patching, backup, recovery și security controls continuă după migrare. Cutover-ul nu este finalul serviciului managed.",
+    text: "Monitoring, patching, backup, recovery și security controls continuă după migrare.",
   },
 ];
 
 const responsibilities = [
   {
-    title: "Platform & infrastructure",
+    area: "Platform & infrastructure",
     zebra: "Configurația și operațiunile infrastructurii incluse în serviciul managed.",
-    client: "Cerințele aplicației și aprobarea schimbărilor care afectează business-ul.",
+    client: "Cerințele aplicației și aprobarea schimbărilor cu impact de business.",
   },
   {
-    title: "Application code",
-    zebra: "Putem identifica probleme și sprijini remediation-ul în scope-ul agreat.",
-    client: "Echipa care deține aplicația rămâne owner-ul logicii de business și al schimbărilor de cod dacă nu există un scope separat.",
+    area: "Application code",
+    zebra: "Identificăm probleme și sprijinim remediation-ul în scope-ul agreat.",
+    client: "Echipa care deține aplicația rămâne owner-ul logicii de business dacă nu există un scope separat.",
   },
   {
-    title: "Security controls",
-    zebra: "Edge, hardening, monitoring și alte controls incluse sunt operate ca parte din serviciu.",
-    client: "Identity, endpoints și sisteme din afara hosting-ului rămân în responsabilitatea ownerilor lor dacă nu sunt incluse separat.",
+    area: "Security controls",
+    zebra: "Edge, hardening, monitoring și controls incluse sunt operate ca parte din serviciu.",
+    client: "Identity, endpoints și sisteme din afara hosting-ului rămân la ownerii lor dacă nu sunt incluse separat.",
   },
   {
-    title: "Backup & recovery",
-    zebra: "Operăm procesele incluse de backup/restoration și coordonăm recovery-ul pentru mediul managed.",
+    area: "Backup & recovery",
+    zebra: "Operăm procesele incluse de backup/restoration și coordonăm recovery-ul mediului managed.",
     client: "Prioritățile de business și validarea funcțională după restore necesită contextul owner-ului aplicației.",
   },
 ];
 
 const operations = [
-  ["Changes", "Configurările importante sunt tratate ca schimbări controlate, nu ca intervenții fără context."],
-  ["Patching", "Actualizările sunt prioritizate după risc, compatibilitate și impactul asupra aplicației."],
-  ["Monitoring", "Disponibilitatea și semnalele relevante sunt urmărite pentru a identifica degradarea sau comportamentul neobișnuit."],
-  ["Backup", "Retenția și frecvența depind de serviciul și planul aplicabil, nu de o promisiune universală pentru orice workload."],
-  ["Recovery", "Restaurarea și verificarea sunt parte din procesul de recovery; existența unui backup singură nu este suficientă."],
-  ["Incidents", "Evenimentele relevante pot fi escaladate către incident response și apoi transformate în remediation și hardening."],
+  ["Changes", "Configurațiile importante sunt tratate ca schimbări controlate, nu ca intervenții fără context."],
+  ["Patching", "Actualizările sunt prioritizate după risc, compatibilitate și impact asupra aplicației."],
+  ["Monitoring", "Disponibilitatea și semnalele relevante sunt urmărite după deploy, nu doar în timpul incidentelor."],
+  ["Backup", "Frecvența și retenția depind de serviciul și planul aplicabil, nu de o promisiune universală."],
+  ["Recovery", "Restore-ul și verificarea fac parte din control; existența unui backup singură nu este suficientă."],
+  ["Incidents", "Evenimentele relevante pot fi escaladate către incident response și apoi transformate în remediation."],
 ];
 
-const choices = [
-  {
-    title: "Păstrează hosting-ul actual",
-    text: "Dacă furnizorul actual funcționează bine, Website Security poate adăuga edge controls, WAF, DNS și hardening fără o migrare inutilă.",
-    href: "/website-security",
-  },
-  {
-    title: "Migrează într-un model managed",
-    text: "Când origin-ul, patching-ul, backup-ul și recovery-ul trebuie să aibă același owner operațional, Secure Managed Hosting devine opțiunea potrivită.",
-    href: "/contact",
-  },
-  {
-    title: "Începe cu un assessment",
-    text: "Dacă nu este clar dacă problema este hosting-ul sau aplicația, evaluăm mediul înainte să recomandăm o migrare.",
-    href: "/security-assessment",
-  },
+const workloads = [
+  "WordPress & CMS",
+  "E-commerce",
+  "Web applications",
+  "APIs & backends",
+  "Modern frontends",
+  "Sensitive workloads",
 ];
 
 const faqs = [
@@ -152,127 +124,107 @@ const faqs = [
   description="Secure Managed Hosting ZebraByte pentru WordPress, e-commerce și aplicații web: hardening, WAF, monitoring, patching, backup/recovery și migrare controlată."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Secure Managed Hosting
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Hosting pentru aplicații care au</span>
         <span class="animate-perspective-in block delay-50"> nevoie de ownership după deploy. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
-        Hardening, edge protection, monitoring, patching și recovery operate împreună cu
-        infrastructura. Nu mutăm un proiect doar pentru a schimba furnizorul; migrarea trebuie
-        să rezolve o nevoie reală de securitate sau operare.
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
+        Hardening, edge protection, monitoring, patching și recovery operate împreună cu infrastructura. Migrarea are sens doar când rezolvă o nevoie reală de securitate sau operare.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/website-security"
-        >
-          Vezi Website Security
-        </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
-          Discută despre infrastructură
-        </Button>
+      <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/website-security">Vezi Website Security</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre infrastructură</Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Infrastructura este un strat din programul de securitate</h2>
-        <p class="text-muted-foreground text-lg">
-          Edge-ul, origin-ul, operațiunile și recovery-ul trebuie să poată lucra împreună.
-          Altfel, responsabilitatea se pierde între mai multe servicii care nu au același context.
-        </p>
-      </div>
-
-      <div class="mx-auto max-w-5xl border-y">
-        {layers.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Pentru workload-uri unde operarea continuă contează</h2>
-          <p class="text-muted-foreground text-lg">
-            Nu orice site are nevoie de managed hosting. Îl folosim când disponibilitatea,
-            securitatea sau recovery-ul justifică ownership-ul continuu.
-          </p>
+    <section class="container pb-12 sm:pb-24">
+      <div class="overflow-hidden rounded-2xl border bg-level-1">
+        <div class="border-b px-6 py-5 sm:px-9">
+          <span class="text-muted-foreground text-sm uppercase tracking-wide">Managed architecture</span>
         </div>
-
-        <div class="mx-auto max-w-5xl border-y">
-          {workloads.map(([title, text]) => (
-            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.65fr_1.35fr] sm:gap-10">
-              <h3 class="font-medium">{title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
-            </div>
+        <div class="grid lg:grid-cols-4">
+          {architectureLayers.map((layer, index) => (
+            <article class:list={["p-7 sm:p-9", index < architectureLayers.length - 1 && "border-b lg:border-r lg:border-b-0"]}>
+              <span class="text-muted-foreground mb-10 block font-mono text-sm">0{index + 1}</span>
+              <h2 class="text-h4 mb-3 font-medium">{layer.title}</h2>
+              <p class="text-muted-foreground leading-relaxed">{layer.text}</p>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Migrarea este un proiect de risc, nu un copy/paste</h2>
-        <p class="text-muted-foreground text-lg">
-          Pregătim și validăm mediul înainte de cutover. DNS-ul, baza de date, storage-ul,
-          webhooks și integrările pot fi la fel de importante ca fișierele aplicației.
-        </p>
-      </div>
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-0">
+        <div class="border p-8 sm:p-12 lg:rounded-l-2xl lg:border-r-0">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Option 01</p>
+          <h2 class="text-h3 mb-5 font-medium">Păstrează hosting-ul actual.</h2>
+          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
+            Dacă furnizorul actual funcționează bine, Website Security poate adăuga edge controls, DNS, WAF și hardening fără o migrare inutilă.
+          </p>
+          <Button href="/website-security" variant="secondary">Protejează infrastructura existentă</Button>
+        </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {migration.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
+        <div class="bg-level-3 p-8 text-level-0-foreground sm:p-12 lg:rounded-r-2xl">
+          <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">Option 02</p>
+          <h2 class="text-h3 mb-5 font-medium">Mută ownership-ul în managed.</h2>
+          <p class="text-level-0-foreground/65 mb-7 text-lg leading-relaxed">
+            Când origin-ul, patching-ul, backup-ul și recovery-ul trebuie să aibă același owner operațional, migrarea într-un model managed poate simplifica responsabilitatea.
+          </p>
+          <Button href="/contact" variant="secondary">Planifică migrarea</Button>
+        </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Responsabilitățile trebuie să fie clare după migrare</h2>
-        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
-          Managed nu înseamnă că orice componentă a aplicației devine automat responsabilitatea
-          ZebraByte. Scope-ul definește ce operăm și ce rămâne la owner-ul produsului.
-        </p>
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-190 text-center sm:mb-16">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Migration path</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Migrarea este un proiect de risc, nu un copy/paste.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            DNS-ul, baza de date, storage-ul, webhooks și integrările pot fi la fel de importante ca fișierele aplicației. Pregătim și validăm mediul înainte de cutover.
+          </p>
+        </div>
 
-        <div class="border-y">
-          <div class="text-muted-foreground hidden grid-cols-[0.6fr_1.2fr_1.2fr] gap-8 border-b py-4 text-sm sm:grid">
+        <div class="relative mx-auto max-w-6xl">
+          <div class="absolute top-5 right-[10%] left-[10%] hidden h-px bg-border lg:block"></div>
+          <div class="grid gap-10 lg:grid-cols-5 lg:gap-7">
+            {migration.map((item) => (
+              <article class="relative">
+                <div class="mb-5 flex size-10 items-center justify-center rounded-full border bg-background font-mono text-xs">{item.step}</div>
+                <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl sm:mb-14">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Shared responsibility</p>
+        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Managed nu înseamnă că totul devine automat responsabilitatea ZebraByte.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Scope-ul definește ce operăm și ce rămâne la owner-ul produsului. Claritatea responsabilității este parte din securitate, nu doar un detaliu contractual.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto border-y">
+        <div class="min-w-[760px]">
+          <div class="text-muted-foreground grid grid-cols-[0.7fr_1.15fr_1.15fr] gap-8 border-b py-4 text-sm">
             <span>Arie</span><span>ZebraByte</span><span>Echipa ta</span>
           </div>
           {responsibilities.map((item) => (
-            <div class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.6fr_1.2fr_1.2fr] sm:gap-8">
-              <h3 class="font-medium">{item.title}</h3>
+            <div class="grid grid-cols-[0.7fr_1.15fr_1.15fr] gap-8 border-b py-6 last:border-b-0">
+              <h3 class="font-medium">{item.area}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.zebra}</p>
               <p class="text-muted-foreground leading-relaxed">{item.client}</p>
             </div>
@@ -281,41 +233,66 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container grid gap-14 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
         <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Hosting-ul începe după deploy</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Valoarea unui model managed apare în schimbările, patching-ul, monitoring-ul și
-            recovery-ul care se întâmplă după ce aplicația este deja live.
+          <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">Operate continuously</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Cutover-ul nu este finalul serviciului managed.</h2>
+          <p class="text-level-0-foreground/65 text-lg leading-relaxed">
+            Valoarea apare după deploy: changes, patching, monitoring, backup și recovery operate cu același context și cu o cale clară de escaladare când ceva se schimbă.
           </p>
         </div>
-        <div class="border-y">
+
+        <div class="grid gap-x-12 sm:grid-cols-2">
           {operations.map(([title, text]) => (
-            <div class="border-b py-5 last:border-b-0">
-              <h3 class="font-medium">{title}</h3>
-              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
+            <article class="border-t border-level-0-foreground/15 py-6">
+              <h3 class="text-h5 mb-2 font-medium">{title}</h3>
+              <p class="text-level-0-foreground/65 leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="grid items-center gap-14 lg:grid-cols-2 lg:gap-24">
+        <div class="overflow-hidden rounded-2xl border bg-active p-8 sm:p-12">
+          <div class="mb-10 flex items-center justify-between">
+            <span class="text-muted-foreground text-sm uppercase tracking-wide">Recovery chain</span>
+            <span class="font-mono text-xs">backup ≠ recovery</span>
+          </div>
+          <div class="space-y-8">
+            <div>
+              <span class="text-muted-foreground text-sm">01</span>
+              <h3 class="text-h4 mt-2 font-medium">Known restore point</h3>
             </div>
-          ))}
+            <div class="h-px bg-border"></div>
+            <div>
+              <span class="text-muted-foreground text-sm">02</span>
+              <h3 class="text-h4 mt-2 font-medium">Controlled restoration</h3>
+            </div>
+            <div class="h-px bg-border"></div>
+            <div>
+              <span class="text-muted-foreground text-sm">03</span>
+              <h3 class="text-h4 mt-2 font-medium">Functional validation</h3>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Workloads</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Pentru proiecte unde operarea continuă chiar contează.</h2>
+          <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
+            Nu orice site are nevoie de managed hosting. Îl folosim când disponibilitatea, securitatea sau recovery-ul justifică ownership-ul continuu.
+          </p>
+          <div class="grid grid-cols-2 gap-x-8 border-y sm:grid-cols-3">
+            {workloads.map((item) => (
+              <div class="border-b py-5 font-medium">{item}</div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
-
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Nu orice problemă cere o migrare</h2>
-        <div class="border-y">
-          {choices.map((item) => (
-            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-              <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <ZebraByteTestimonials />
 
     <section class="container py-10 sm:py-20">
       <div class="mx-auto max-w-3xl">
@@ -336,11 +313,10 @@ const faqs = [
 
     <section class="container py-12 text-center sm:py-24">
       <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Mută infrastructura doar dacă managed ownership rezolvă problema reală.
+        Mută infrastructura doar dacă mutarea rezolvă o problemă reală.
       </h2>
       <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Trimite-ne stack-ul actual și cerințele de disponibilitate. Stabilim dacă este nevoie
-        de migrare sau dacă aplicația poate fi securizată acolo unde este deja.
+        Putem începe cu arhitectura actuală și decide dacă ai nevoie de edge security, remediation sau de un model managed complet.
       </p>
       <Button href="/contact" size="lg">Discută despre Secure Managed Hosting</Button>
     </section>
