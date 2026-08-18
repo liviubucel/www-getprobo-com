@@ -152,126 +152,132 @@ const faqs = [
   description="Secure Managed Hosting ZebraByte pentru WordPress, e-commerce și aplicații web: hardening, WAF, monitoring, patching, backup/recovery și migrare controlată."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Secure Managed Hosting
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Hosting pentru aplicații care au</span>
         <span class="animate-perspective-in block delay-50"> nevoie de ownership după deploy. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         Hardening, edge protection, monitoring, patching și recovery operate împreună cu
         infrastructura. Nu mutăm un proiect doar pentru a schimba furnizorul; migrarea trebuie
         să rezolve o nevoie reală de securitate sau operare.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/website-security"
-        >
-          Vezi Website Security
-        </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
-          Discută despre infrastructură
-        </Button>
+      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/website-security">Vezi Website Security</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre infrastructură</Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Infrastructura este un strat din programul de securitate</h2>
-        <p class="text-muted-foreground text-lg">
-          Edge-ul, origin-ul, operațiunile și recovery-ul trebuie să poată lucra împreună.
-          Altfel, responsabilitatea se pierde între mai multe servicii care nu au același context.
-        </p>
-      </div>
-
-      <div class="mx-auto max-w-5xl border-y">
-        {layers.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Pentru workload-uri unde operarea continuă contează</h2>
-          <p class="text-muted-foreground text-lg">
-            Nu orice site are nevoie de managed hosting. Îl folosim când disponibilitatea,
-            securitatea sau recovery-ul justifică ownership-ul continuu.
+    <section class="container pb-12 sm:pb-24">
+      <div class="grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:items-start lg:gap-20">
+        <div class="lg:sticky lg:top-28">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Managed stack</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Infrastructura este un sistem operat, nu doar un loc unde stau fișierele.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Edge-ul, origin-ul, operațiunile și recovery-ul trebuie să poată lucra împreună.
+            Altfel, responsabilitatea se pierde între servicii care nu împart același context.
           </p>
         </div>
 
-        <div class="mx-auto max-w-5xl border-y">
-          {workloads.map(([title, text]) => (
-            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.65fr_1.35fr] sm:gap-10">
-              <h3 class="font-medium">{title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
-            </div>
+        <div class="space-y-3">
+          {layers.map((item, index) => (
+            <article class:list={["border p-6 sm:p-7", index === 0 && "mx-0", index === 1 && "sm:mx-4", index === 2 && "sm:mx-8", index === 3 && "sm:mx-12", index === 4 && "sm:mx-16"]}>
+              <div class="mb-4 flex items-center justify-between gap-5">
+                <span class="text-muted-foreground font-mono text-xs">LAYER / {item.step}</span>
+                <span class="text-muted-foreground text-xs uppercase tracking-wide">managed</span>
+              </div>
+              <div class="grid gap-3 sm:grid-cols-[0.65fr_1.35fr] sm:gap-8">
+                <h3 class="text-h5 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </div>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Migrarea este un proiect de risc, nu un copy/paste</h2>
-        <p class="text-muted-foreground text-lg">
-          Pregătim și validăm mediul înainte de cutover. DNS-ul, baza de date, storage-ul,
-          webhooks și integrările pot fi la fel de importante ca fișierele aplicației.
-        </p>
-      </div>
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container">
+        <div class="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Workloads</p>
+            <h2 class="text-h3 sm:text-h2 font-medium">Managed doar când operarea continuă contează.</h2>
+          </div>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu orice site are nevoie de managed hosting. Îl folosim când disponibilitatea,
+            securitatea sau recovery-ul justifică ownership-ul continuu.
+          </p>
+        </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {migration.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
+        <div class="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {workloads.map(([title, text], index) => (
+            <article class="border-t py-7">
+              <div class="text-muted-foreground mb-7 font-mono text-sm">WL-{String(index + 1).padStart(2, "0")}</div>
+              <h3 class="text-h5 mb-3 font-medium">{title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Responsabilitățile trebuie să fie clare după migrare</h2>
-        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container">
+        <div class="mb-12 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Migration / cutover</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Migrarea este un proiect de risc, nu un copy/paste.</h2>
+          <p class="text-lg leading-relaxed opacity-65">
+            DNS-ul, baza de date, storage-ul, webhooks și integrările pot fi la fel de importante
+            ca fișierele aplicației. Pregătim și validăm înainte să schimbăm traficul.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto pb-3">
+          <div class="min-w-[900px] border-y border-level-0-foreground/15">
+            <div class="grid grid-cols-5 border-b border-level-0-foreground/15 font-mono text-xs opacity-45">
+              {migration.map((item) => <div class="px-5 py-3">{item.step}</div>)}
+            </div>
+            <div class="grid grid-cols-5">
+              {migration.map((item, index) => (
+                <article class:list={["relative min-h-72 px-5 py-7", index < migration.length - 1 && "border-r border-level-0-foreground/15"]}>
+                  <div class="mb-9 flex items-center gap-3">
+                    <span class="size-2 rounded-full bg-level-0"></span>
+                    <span class="font-mono text-xs opacity-45">phase {item.step}</span>
+                  </div>
+                  <h3 class="mb-4 font-medium">{item.title}</h3>
+                  <p class="text-sm leading-relaxed opacity-65">{item.text}</p>
+                  {index < migration.length - 1 && <span class="absolute right-[-8px] top-7 z-10 bg-level-3 px-1 opacity-45">→</span>}
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Shared responsibility</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Responsabilitățile trebuie să fie clare după migrare.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
           Managed nu înseamnă că orice componentă a aplicației devine automat responsabilitatea
           ZebraByte. Scope-ul definește ce operăm și ce rămâne la owner-ul produsului.
         </p>
+      </div>
 
-        <div class="border-y">
-          <div class="text-muted-foreground hidden grid-cols-[0.6fr_1.2fr_1.2fr] gap-8 border-b py-4 text-sm sm:grid">
+      <div class="overflow-x-auto">
+        <div class="min-w-[760px] border-y">
+          <div class="text-muted-foreground grid grid-cols-[0.65fr_1.15fr_1.2fr] gap-8 border-b py-4 text-sm">
             <span>Arie</span><span>ZebraByte</span><span>Echipa ta</span>
           </div>
           {responsibilities.map((item) => (
-            <div class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.6fr_1.2fr_1.2fr] sm:gap-8">
+            <div class="grid grid-cols-[0.65fr_1.15fr_1.2fr] gap-8 border-b py-6 last:border-b-0">
               <h3 class="font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.zebra}</p>
               <p class="text-muted-foreground leading-relaxed">{item.client}</p>
@@ -281,45 +287,53 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
+    <section class="border-y py-12 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
         <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Hosting-ul începe după deploy</h2>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Day 2 operations</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Hosting-ul începe după deploy.</h2>
           <p class="text-muted-foreground text-lg leading-relaxed">
             Valoarea unui model managed apare în schimbările, patching-ul, monitoring-ul și
             recovery-ul care se întâmplă după ce aplicația este deja live.
           </p>
         </div>
-        <div class="border-y">
-          {operations.map(([title, text]) => (
-            <div class="border-b py-5 last:border-b-0">
-              <h3 class="font-medium">{title}</h3>
-              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
-            </div>
+
+        <div class="grid sm:grid-cols-2">
+          {operations.map(([title, text], index) => (
+            <article class:list={["min-h-48 border-t py-6 sm:px-6", index % 2 === 1 && "sm:border-l"]}>
+              <div class="mb-5 flex items-center justify-between gap-5">
+                <h3 class="font-medium">{title}</h3>
+                <span class="text-muted-foreground font-mono text-xs">OP-{String(index + 1).padStart(2, "0")}</span>
+              </div>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Nu orice problemă cere o migrare</h2>
-        <div class="border-y">
-          {choices.map((item) => (
-            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-              <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </a>
-          ))}
-        </div>
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Decision</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Nu orice problemă cere o migrare.</h2>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-3 lg:gap-12">
+        {choices.map((item, index) => (
+          <a href={item.href} class="group border-t pt-7">
+            <div class="text-muted-foreground mb-8 font-mono text-sm">PATH-{index + 1}</div>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </a>
+        ))}
       </div>
     </section>
 
     <ZebraByteTestimonials />
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -334,15 +348,15 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Mută infrastructura doar dacă managed ownership rezolvă problema reală.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Trimite-ne stack-ul actual și cerințele de disponibilitate. Stabilim dacă este nevoie
-        de migrare sau dacă aplicația poate fi securizată acolo unde este deja.
-      </p>
-      <Button href="/contact" size="lg">Discută despre Secure Managed Hosting</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Mută infrastructura doar dacă managed ownership rezolvă problema reală.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Trimite-ne stack-ul actual și cerințele de disponibilitate. Stabilim dacă este nevoie
+          de migrare sau dacă aplicația poate fi securizată acolo unde este deja.
+        </p>
+        <Button href="/contact" size="lg">Discută despre Secure Managed Hosting</Button>
+      </div>
     </section>
   </main>
 </Layout>
