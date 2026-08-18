@@ -164,7 +164,18 @@ forbidText(
 );
 forbidText(industryPage, 'class="rounded-xl border p-5 sm:p-6"', "industry outcome card repetition");
 
-requireText(industryService, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry service framed peer grids");
+// Service-per-industry pages keep the complete sector/service relationship but
+// must not regress to the old framed peer-card walls or migration copy.
+requireText(industryService, "meta.core.map", "industry service core capability rendering");
+requireText(industryService, "industry.risks.map", "industry service risk rendering");
+requireText(industryService, "industry.outcomes.map", "industry service outcome rendering");
+requireText(industryService, "siblingServices.map", "industry service sibling handoff rendering");
+forbidText(
+  industryService,
+  "grid gap-px overflow-hidden rounded-2xl border bg-border",
+  "industry service framed peer grids",
+);
+forbidText(industryService, "păstrează intenția landing page-ului", "industry service migration copy");
 forbidText(industryService, 'class="bg-level-0 rounded-xl border p-6"', "industry service risk card repetition");
 forbidText(industryService, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "industry service sibling card repetition");
 
