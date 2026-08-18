@@ -47,13 +47,13 @@ export const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "Platforma de conformitate",
-        description: "Framework-uri, controale, riscuri, dovezi și audit într-un singur SaaS",
+        description: "Gestionezi intern framework-uri, controale, riscuri, dovezi și audit",
         href: "/compliance-platform",
         icon: "shield-check",
       },
       {
-        label: "Compliance Portal / Trust Center",
-        description: "Documente, NDA, acces securizat și răspunsuri pentru security reviews",
+        label: "Trust Center",
+        description: "Portal extern pentru clienți: documente, NDA și acces securizat",
         href: "/compliance-portal",
         icon: "monitor",
       },
