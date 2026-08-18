@@ -1,4 +1,4 @@
-import { existsSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 
 const protectedFiles = new Map([
   ["src/pages/hub.astro", 3_000],
@@ -28,6 +28,33 @@ const protectedFiles = new Map([
   ["src/pages/compliance-portal.astro", 8_000],
 ]);
 
+const protectedPublicPaths = new Set([
+  "/hub/ai-coding-tools-soc2-compliance",
+  "/hub/cloud-security-best-practices",
+  "/hub/compliance-recommender",
+  "/hub/evaluate-soc2-report-quality",
+  "/hub/iso-27001-after-soc-2-the-30-percent-shortcut",
+  "/hub/iso27001-certification-cost",
+  "/hub/iso27001",
+  "/hub/nis2-compliance-checklist-tech-companies-2026",
+  "/hub/nis2-compliance",
+  "/hub/nis2-tech-teams",
+  "/hub/soc2-type1-vs-type2",
+  "/hub/soc2",
+  "/hub/third-party-risk-management",
+  "/hub/top-compliance-automation-tools-2026",
+  "/hub/top-compliance-officer-services-2026",
+  "/hub/top-grc-tools-2026",
+  "/hub/vanta-alternatives-2026",
+  "/hub/what-is-compliance-software",
+  "/hub/which-compliance-framework",
+  "/whats-next/ISO27001",
+  "/whats-next/iso27001",
+  "/whats-next/soc2",
+  "/docs",
+  "/docs/*",
+]);
+
 const failures = [];
 
 for (const [file, minBytes] of protectedFiles) {
@@ -42,11 +69,30 @@ for (const [file, minBytes] of protectedFiles) {
   }
 }
 
+const redirectsFile = "public/_redirects";
+if (!existsSync(redirectsFile)) {
+  failures.push(`${redirectsFile}: missing; cannot verify that protected product content remains publicly reachable`);
+} else {
+  const redirects = readFileSync(redirectsFile, "utf8")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
+
+  for (const line of redirects) {
+    const [source, destination, status] = line.split(/\s+/);
+    if (!protectedPublicPaths.has(source)) continue;
+
+    failures.push(
+      `${redirectsFile}: protected public path ${source} is redirected to ${destination || "<missing destination>"}${status ? ` (${status})` : ""}`,
+    );
+  }
+}
+
 if (failures.length) {
-  console.error("[content-preservation] FAIL: protected inherited product content was removed or materially reduced.");
-  console.error("[content-preservation] Rebrand/paraphrase or extend the content; do not delete it to satisfy brand, SEO, performance, or release audits.");
+  console.error("[content-preservation] FAIL: protected inherited product content was removed, materially reduced, or hidden behind a redirect.");
+  console.error("[content-preservation] Preserve the page and rebrand/paraphrase it in place. Do not delete or redirect useful content to satisfy brand, SEO, performance, or release audits.");
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
 
-console.log(`[content-preservation] PASS: ${protectedFiles.size} protected product surfaces are present above their minimum content baselines.`);
+console.log(`[content-preservation] PASS: ${protectedFiles.size} protected product surfaces remain present and publicly reachable.`);
