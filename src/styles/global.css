@@ -89,6 +89,21 @@
   --tw-prose-invert-td-borders: var(--color-border-low);
 }
 
+/* Keep wide editorial content inside the article viewport on phones. */
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Article images (e.g. blog MDX screenshots): frame so they read as figures, not live UI */
 .prose img {
   box-sizing: border-box;
