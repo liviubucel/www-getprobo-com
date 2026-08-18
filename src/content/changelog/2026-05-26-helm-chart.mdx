@@ -1,14 +1,16 @@
 ---
-title: "Official Helm Chart for Kubernetes"
-description: "Self-hosting Probo on Kubernetes now has a proper path with an official Helm chart that deploys the full stack in one command."
+title: "Kubernetes Helm architecture milestone"
+description: "Historical platform-lineage note: the earlier self-managed architecture gained an official Helm deployment path. ZebraByte Cloud preserves the product capabilities without exposing this as a customer installation method."
 date: 2026-05-26
-tags: ["Open-source"]
+tags: ["Architecture"]
 ---
 
-Self-hosting Probo just got a proper Kubernetes path.
+> **Platform lineage note.** ZebraByte is delivered as Cloud SaaS and is not distributed as a self-hosted or open-source product. This entry is preserved because it documents an important architectural milestone in the product lineage.
 
-The official Helm chart is out. One command deploys the full Probo stack — server, object storage, ingress, SAML, SMTP, and all your access-review OAuth connectors — fully configurable via values.
+The earlier self-managed platform architecture gained a standardized Kubernetes deployment path through a Helm chart. That release packaged the application stack, object storage, ingress, SAML, SMTP and access-review connector configuration into one deployable model.
 
-Images ship from the artifact.probo.inc OCI registry. Firecrawl is now the only supported web search backend (SearXNG is gone). Access-review connectors require a clientSecret.
+The architecture used an OCI registry for application images and standardized the way integration credentials and web-search dependencies were supplied to the deployment.
 
-If you've been running Probo on raw Kubernetes with hand-rolled manifests, this replaces that. If you've been waiting for a clean self-hosted path before committing — this is it.
+For teams reviewing a migration into ZebraByte Cloud, this historical milestone remains useful because it describes the operational surface that used to sit with the customer or platform operator: cluster lifecycle, ingress, secrets, persistent data services, upgrades and connector configuration.
+
+Those responsibilities now belong on the ZebraByte side of the SaaS operating boundary. See the current [ZebraByte Cloud documentation](/docs/deployment/cloud) and the preserved [architecture and migration reference](/docs/deployment/self-hosting) for the distinction.
