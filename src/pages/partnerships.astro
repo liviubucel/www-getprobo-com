@@ -196,7 +196,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-3xl">
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Delivery topology</p>
@@ -206,16 +206,16 @@ const faqs = [
           </p>
         </div>
 
-        <div class="grid border-y border-level-0-foreground/15 lg:grid-cols-4">
+        <div class="grid border-y border-invert/15 lg:grid-cols-4">
           {deliveryModels.map((item, index) => (
-            <article class:list={["min-h-80 p-6 sm:p-7", index < deliveryModels.length - 1 && "border-b border-level-0-foreground/15 lg:border-b-0 lg:border-r"]}>
+            <article class:list={["min-h-80 p-6 sm:p-7", index < deliveryModels.length - 1 && "border-b border-invert/15 lg:border-b-0 lg:border-r"]}>
               <div class="mb-10 flex items-center justify-between gap-4">
                 <span class="font-mono text-xs opacity-40">MODEL-{index + 1}</span>
                 <span class="size-2 rounded-full bg-level-0"></span>
               </div>
               <h3 class="text-h4 mb-4 font-medium">{item.title}</h3>
               <p class="mb-8 text-sm leading-relaxed opacity-65">{item.text}</p>
-              <div class="mt-auto border-t border-level-0-foreground/15 pt-4 text-xs">
+              <div class="mt-auto border-t border-invert/15 pt-4 text-xs">
                 <div class="grid grid-cols-[76px_1fr] gap-3 py-2"><span class="opacity-40">Partener</span><span class="opacity-80">{item.partnerRole}</span></div>
                 <div class="grid grid-cols-[76px_1fr] gap-3 py-2"><span class="opacity-40">ZebraByte</span><span class="opacity-80">{item.zebraRole}</span></div>
               </div>
