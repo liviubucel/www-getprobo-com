@@ -4,34 +4,71 @@ import Button from "../components/ui/Button.svelte";
 
 const principles = [
   {
+    number: "01",
     title: "Security-first infrastructure",
     description:
       "Hostingul, aplicațiile, emailul și identitatea sunt tratate ca părți ale aceleiași suprafețe de atac. Hardening-ul și recovery-ul nu sunt opțiuni ascunse adăugate după incident.",
   },
   {
+    number: "02",
     title: "Privacy by design",
     description:
       "Reducem colectarea inutilă, separăm clar scopurile și conectăm privacy governance la sistemele și furnizorii care procesează efectiv datele.",
   },
   {
+    number: "03",
     title: "Compliance connected to reality",
     description:
       "GDPR, NIS2 și ISO 27001 readiness au valoare doar dacă politicile și dovezile reflectă controalele care există realmente în infrastructură.",
   },
   {
+    number: "04",
     title: "Direct technical ownership",
     description:
       "Pentru proiectele administrate, responsabilitatea tehnică trebuie să fie clară: cine schimbă configurația, cine investighează incidentul și cine validează recovery-ul.",
   },
   {
+    number: "05",
     title: "Platform lineage transparency",
     description:
-      "Păstrăm documentația, modelele și lecțiile tehnice valoroase din linia platformei, dar ZebraByte este livrat astăzi ca Cloud SaaS și nu ca produs open-source/self-hosted.",
+      "Păstrăm documentația, modelele și lecțiile tehnice valoroase din linia platformei, iar ZebraByte este livrat astăzi ca Cloud SaaS și servicii managed, nu ca produs self-hosted pentru clienți.",
   },
   {
+    number: "06",
     title: "Evidence, not slogans",
     description:
       "Preferăm rapoarte, controale, configurații, loguri și procese verificabile în locul afirmațiilor generale că un produs este pur și simplu «secure» sau «compliant».",
+  },
+];
+
+const operatingFlow = [
+  ["01", "Assess", "Înțelegem activele, datele, furnizorii și riscurile reale."],
+  ["02", "Prioritize", "Separăm problemele critice de backlog-ul care poate fi planificat."],
+  ["03", "Implement", "Aplicăm măsurile tehnice și organizaționale necesare."],
+  ["04", "Evidence", "Centralizăm controalele și dovezile care demonstrează starea reală."],
+  ["05", "Operate", "Monitorizăm schimbările, vulnerabilitățile și procesele recurente."],
+];
+
+const capabilities = [
+  {
+    label: "Cyber Security",
+    detail: "Assessment, hardening, email/website security și incident response.",
+    href: "/cyber-security",
+  },
+  {
+    label: "Privacy & GDPR",
+    detail: "Governance conectat la datele și sistemele reale.",
+    href: "/gdpr",
+  },
+  {
+    label: "Compliance Platform",
+    detail: "Controls, evidence, risks, documents, approvals și workflows într-un workspace intern.",
+    href: "/compliance-platform",
+  },
+  {
+    label: "Secure Infrastructure",
+    detail: "Hosting, migration, hardening, backup și recovery pentru workload-uri managed.",
+    href: "/secure-hosting",
   },
 ];
 ---
@@ -48,7 +85,8 @@ const principles = [
           Securitatea și conformitatea nu trebuie să fie două proiecte separate.
         </h1>
         <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-190 text-lg text-balance">
-          ZebraByte leagă infrastructura, aplicațiile, identitatea, privacy și compliance într-un singur program. Păstrăm capabilitățile și lecțiile valoroase din linia platformei de compliance și adăugăm execuția tehnică necesară în afara acesteia: cyber security, infrastructură administrată și servicii managed.
+          ZebraByte leagă infrastructura, aplicațiile, identitatea, privacy și compliance într-un
+          singur program, cu ownership clar și evidence care poate fi urmărit până la măsura reală.
         </p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="/contact" size="lg">Discută cu noi</Button>
@@ -57,54 +95,106 @@ const principles = [
       </div>
     </animated-hero>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Principii</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Cum luăm deciziile tehnice.</h2>
-        <p class="text-muted-foreground text-lg">Pagina ZebraByte anterioară punea accent pe privacy, security-first infrastructure și compliance readiness. Păstrăm aceste idei și le exprimăm prin rezultate, responsabilități și limite operaționale concrete.</p>
-      </div>
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.48fr_1.52fr] lg:gap-20">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Operating principles</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Cum luăm deciziile tehnice.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu pornim de la ideea că același stack, aceeași certificare sau același furnizor
+            rezolvă orice problemă. Pornim de la risc, ownership și ce trebuie să poată fi demonstrat.
+          </p>
+        </div>
 
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {principles.map((principle) => (
-          <article class="bg-level-0 min-h-64 p-6 sm:p-8">
-            <h3 class="mb-3 text-xl font-medium">{principle.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{principle.description}</p>
-          </article>
-        ))}
+        <div class="border-y">
+          {principles.map((principle, index) => (
+            <article class="grid gap-4 border-b py-7 last:border-b-0 sm:grid-cols-[68px_0.78fr_1.22fr] sm:gap-8 sm:py-9">
+              <span class="text-muted-foreground font-mono text-sm">{principle.number}</span>
+              <h3 class="text-h4 font-medium">{principle.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{principle.description}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
-      <div class="container grid gap-10 lg:grid-cols-2 lg:items-start">
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.64fr_1.36fr] lg:items-start lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">One program</p>
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">One program</p>
           <h2 class="text-h3 sm:text-h2 mb-5 font-medium">De la assessment la operare continuă.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">Putem începe punctual și putem crește scope-ul doar unde există valoare: assessment, remediation, managed security, compliance evidence și infrastructură administrată.</p>
+          <p class="text-lg leading-relaxed opacity-65">
+            Putem începe punctual și putem crește scope-ul doar unde există valoare. Fiecare pas
+            trebuie să lase programul mai ușor de operat, nu doar mai bogat în documente.
+          </p>
         </div>
-        <div class="overflow-hidden rounded-2xl border bg-level-0">
-          {[
-            ["01", "Assess", "Înțelegem activele, datele, furnizorii și riscurile reale."],
-            ["02", "Prioritize", "Separăm problemele critice de backlog-ul care poate fi planificat."],
-            ["03", "Implement", "Aplicăm măsurile tehnice și organizaționale necesare."],
-            ["04", "Evidence", "Centralizăm controalele și dovezile care demonstrează starea reală."],
-            ["05", "Operate", "Monitorizăm schimbările, vulnerabilitățile și procesele recurente."],
-          ].map(([number, title, text]) => (
-            <div class="grid grid-cols-[48px_110px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
-              <span class="text-muted-foreground text-sm">{number}</span>
-              <strong class="font-medium">{title}</strong>
-              <span class="text-muted-foreground text-sm leading-relaxed">{text}</span>
+
+        <div class="border-y border-level-0-foreground/15 font-mono">
+          {operatingFlow.map(([number, title, text], index) => (
+            <div class="grid gap-4 border-b border-level-0-foreground/15 py-6 last:border-b-0 sm:grid-cols-[60px_0.55fr_1.45fr_auto] sm:gap-7">
+              <span class="text-sm opacity-40">{number}</span>
+              <strong class="font-sans font-medium">{title}</strong>
+              <span class="font-sans text-sm leading-relaxed opacity-65">{text}</span>
+              <span class="hidden text-xs opacity-35 sm:block">{index < operatingFlow.length - 1 ? "→" : "↻"}</span>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <a href="/cyber-security" class="rounded-xl border p-6 hover:bg-subtle"><strong>Cyber Security</strong><p class="text-muted-foreground mt-2 text-sm">Assessment, hardening, email/website security și incident response.</p></a>
-        <a href="/gdpr" class="rounded-xl border p-6 hover:bg-subtle"><strong>Privacy & GDPR</strong><p class="text-muted-foreground mt-2 text-sm">Governance conectat la datele și sistemele reale.</p></a>
-        <a href="/compliance-portal" class="rounded-xl border p-6 hover:bg-subtle"><strong>Compliance Platform</strong><p class="text-muted-foreground mt-2 text-sm">Evidence, controls, documents, approvals și workflows.</p></a>
-        <a href="/secure-hosting" class="rounded-xl border p-6 hover:bg-subtle"><strong>Secure Infrastructure</strong><p class="text-muted-foreground mt-2 text-sm">Hosting, migration, hardening, backup și recovery.</p></a>
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 grid gap-6 lg:grid-cols-[0.65fr_1.35fr] lg:items-end lg:gap-16">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Connected capabilities</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">Un singur punct de intrare, mai multe discipline.</h2>
+        </div>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Poți folosi o singură capabilitate sau le poți conecta atunci când riscul trece din
+          infrastructură în compliance, privacy sau incident response.
+        </p>
+      </div>
+
+      <div class="border-y">
+        {capabilities.map((item, index) => (
+          <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[58px_0.7fr_1.3fr_auto] sm:items-center sm:gap-8">
+            <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">{item.label}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.detail}</p>
+            <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-12 sm:py-20">
+      <div class="container grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">The boundary matters</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Nu promitem mai mult decât putem demonstra.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Scope-ul, responsabilitățile și limitele serviciului trebuie să fie explicite.
+            Certificările furnizorilor nu devin automat certificări ZebraByte, un WAF nu face
+            o aplicație invulnerabilă, iar o platformă GRC nu înlocuiește controalele tehnice.
+          </p>
+        </div>
+        <div class="border-y py-7 sm:py-9">
+          <blockquote class="text-h4 sm:text-h3 font-medium leading-snug text-balance">
+            Evidence înainte de sloganuri. Ownership înainte de presupuneri.
+          </blockquote>
+          <p class="text-muted-foreground mt-5 max-w-xl leading-relaxed">
+            Acesta este standardul după care evaluăm ce intră într-un serviciu și cum explicăm rezultatul clientului.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începe cu problema reală, nu cu un pachet generic.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Spune-ne ce trebuie protejat, demonstrat sau operat. Stabilim de acolo scope-ul potrivit.
+        </p>
+        <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
       </div>
     </section>
   </main>
