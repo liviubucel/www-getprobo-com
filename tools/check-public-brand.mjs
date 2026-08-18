@@ -4,6 +4,18 @@ import { join, relative } from "node:path";
 const distDir = "dist";
 const legacyPattern = /(?:\bprobo\b|\bgetprobo\b|probo[-_.\/]|(?:[a-z0-9-]+\.)?probo\.com|probostatus\.com)/i;
 
+/*
+ * PUBLIC IDENTITY AUDIT ONLY.
+ *
+ * This checker detects legacy Probo branding in generated public text/links.
+ * A failure must be remediated by rebranding/paraphrasing the affected public
+ * copy or URL while preserving the underlying page, subject coverage, feature,
+ * documentation, Hub/blog article, changelog/history or workflow.
+ *
+ * NEVER delete useful inherited content merely to make this checker pass.
+ * See AGENTS.md: Core product rule — preserve, rebrand, extend.
+ */
+
 function findFiles(dir) {
   if (!existsSync(dir)) return [];
   const result = [];
@@ -49,7 +61,7 @@ for (const file of findFiles(distDir)) {
 }
 
 if (leaks.length) {
-  console.error(`[public-brand] FAIL: legacy upstream branding remains in ${leaks.length} public file(s):`);
+  console.error(`[public-brand] FAIL: legacy upstream branding remains in ${leaks.length} public file(s). Rebrand/paraphrase; do not delete the content:`);
   for (const leak of leaks.slice(0, 40)) console.error(`  - ${leak}`);
   if (leaks.length > 40) console.error(`  - ...and ${leaks.length - 40} more`);
   process.exit(1);
