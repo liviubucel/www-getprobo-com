@@ -1,20 +1,21 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 import { frameworks } from "./content/frameworks.ts";
+import { docsLoader } from "@astrojs/starlight/loaders";
 import { docsSchema } from "@astrojs/starlight/schema";
 
 export const pageSize = 10;
 
 /**
- * Production publishing policy
- * ----------------------------
- * The repository still contains upstream Probo editorial/reference material so
- * it can be deliberately migrated later. It must never be published under the
- * ZebraByte brand by accident. Public collections therefore opt in only to
- * ZebraByte-owned/generated content.
+ * ZebraByte publishing policy
+ * --------------------------
+ * Preserve the complete inherited Probo product/editorial surface and publish it
+ * as part of the ZebraByte platform after brand/cloud adaptation. Do not hide
+ * inherited content through restrictive globs. Social-proof material is kept as
+ * neutral/reference material until ZebraByte-owned case studies replace it.
  */
 const blog = defineCollection({
-  loader: glob({ pattern: "zebrabyte-generated/**/*.mdx", base: "./src/content/blog" }),
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }),
   schema: z.object({
     title: z.string(),
     /** Optional public slug. Imported archives use this so storage paths never leak into URLs. */
@@ -30,7 +31,7 @@ const blog = defineCollection({
       name: z.string(),
     }),
     ogImage: z.string().optional(),
-    /** Legacy layout support for deliberately migrated articles. */
+    /** Legacy Probo articles can use a compact illustration beside the title. */
     titleImage: z.string().optional(),
     /** Source attribution for migrated editorial archives. */
     source: z.enum(["zebrabyte", "probo"]).optional(),
@@ -51,7 +52,7 @@ const blog = defineCollection({
 });
 
 const stories = defineCollection({
-  loader: glob({ pattern: "zebrabyte-*.mdx", base: "./src/content/stories" }),
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/stories" }),
   schema: z.object({
     title: z.string(),
     /** Meta description; keep 120+ chars for SEO when set. */
@@ -113,7 +114,7 @@ const hub = defineCollection({
 });
 
 const changelog = defineCollection({
-  loader: glob({ pattern: "github-*.mdx", base: "./src/content/changelog" }),
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/changelog" }),
   schema: z.object({
     title: z.string(),
     /** Meta description; keep 120+ chars for SEO. */
@@ -137,7 +138,7 @@ const jobs = defineCollection({
 });
 
 const wall = defineCollection({
-  loader: glob({ pattern: "zebrabyte-*.mdx", base: "./src/content/wall" }),
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/wall" }),
   schema: z.object({
     /** Display name shown on the card (company or person). */
     company: z.string(),
@@ -173,12 +174,8 @@ const wall = defineCollection({
   }),
 });
 
-// Keep the Starlight `docs` collection contract, but opt in only to content
-// intentionally migrated under src/content/docs/zebrabyte/. The inherited
-// src/content/docs/docs tree remains a private migration reference and is not
-// part of the production site.
 const docs = defineCollection({
-  loader: glob({ pattern: "zebrabyte/**/*.mdx", base: "./src/content/docs" }),
+  loader: docsLoader(),
   schema: docsSchema({
     extend: z.object({
       /** Meta description; keep 120+ chars for SEO. */
