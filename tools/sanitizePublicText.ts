@@ -64,16 +64,12 @@ function protectMarkdownTechnicalReferences(content: string): ProtectedText {
 
   return {
     content: result,
-    restore: (value: string) => {
-      let restored = value;
-      protectedValues.forEach((entry, index) => {
-        const marker = `___ZBT_PROTECTED_MD_${index}___`;
-        const replacement =
-          entry.kind === "url" ? publicBrandUrl(entry.value) : entry.value;
-        restored = restored.replace(marker, replacement);
-      });
-      return restored;
-    },
+    restore: (value: string) =>
+      value.replace(/___ZBT_PROTECTED_MD_(\d+)___/g, (_match, rawIndex: string) => {
+        const entry = protectedValues[Number(rawIndex)];
+        if (!entry) return _match;
+        return entry.kind === "url" ? publicBrandUrl(entry.value) : entry.value;
+      }),
   };
 }
 
@@ -112,11 +108,30 @@ function sanitizeTag(tag: string): string {
       `${name}=${quote}${publicBrandUrl(value)}${quote}`,
   );
 
-  return result.replace(
+  result = result.replace(
     /\b(alt|title|aria-label|placeholder)=(['"])([\s\S]*?)\2/gi,
     (_match, name: string, quote: string, value: string) =>
       `${name}=${quote}${sanitizePublicOutput(value)}${quote}`,
   );
+
+  // Metadata is part of the public brand surface even though it is not rendered
+  // as body text. Sanitize descriptions/social metadata and Pagefind metadata
+  // without touching arbitrary runtime data attributes.
+  if (/^<meta\b/i.test(result)) {
+    result = result.replace(
+      /\bcontent=(['"])([\s\S]*?)\1/gi,
+      (_match, quote: string, value: string) =>
+        `content=${quote}${sanitizePublicOutput(value)}${quote}`,
+    );
+  }
+
+  result = result.replace(
+    /\bdata-pagefind-(?:meta|filter)=(['"])([\s\S]*?)\1/gi,
+    (_match, quote: string, value: string) =>
+      _match.replace(value, sanitizePublicOutput(value)),
+  );
+
+  return result;
 }
 
 function sanitizeHtmlOutput(content: string): string {
@@ -145,12 +160,17 @@ function sanitizeHtmlOutput(content: string): string {
 
   html = sanitizePublicOutput(html);
 
-  protectedTags.forEach((tag, index) => {
-    html = html.replace(`___ZBT_PROTECTED_TAG_${index}___`, tag);
-  });
-  protectedBlocks.forEach((block, index) => {
-    html = html.replace(`___ZBT_PROTECTED_BLOCK_${index}___`, block);
-  });
+  // Restore markers in a single pass. The previous per-marker String.replace
+  // loop was quadratic on large documentation pages and made the build-done
+  // sanitizer take several minutes once the full Probo documentation returned.
+  html = html.replace(
+    /___ZBT_PROTECTED_TAG_(\d+)___/g,
+    (_match, rawIndex: string) => protectedTags[Number(rawIndex)] ?? _match,
+  );
+  html = html.replace(
+    /___ZBT_PROTECTED_BLOCK_(\d+)___/g,
+    (_match, rawIndex: string) => protectedBlocks[Number(rawIndex)] ?? _match,
+  );
 
   return html;
 }
@@ -173,9 +193,21 @@ function publicAuditView(content: string): string {
   return `${visibleText}\n${externalPublicUrls}`;
 }
 
-function hasLegacyPublicBrand(file: string, content: string): boolean {
+type LegacyMatch = {
+  kind: "visible-brand" | "external-domain";
+  token: string;
+  context: string;
+};
+
+function findLegacyMatch(file: string, content: string): LegacyMatch | null {
   if (file.endsWith(".xml")) {
-    return legacyExternalDomainPattern.test(content);
+    const domainMatch = legacyExternalDomainPattern.exec(content);
+    if (!domainMatch) return null;
+    return {
+      kind: "external-domain",
+      token: domainMatch[0],
+      context: matchContext(content, domainMatch.index, domainMatch[0].length),
+    };
   }
 
   const auditable = file.endsWith(".html")
@@ -184,10 +216,38 @@ function hasLegacyPublicBrand(file: string, content: string): boolean {
       ? markdownAuditView(content)
       : content;
 
-  return (
-    legacyVisibleBrandPattern.test(auditable) ||
-    legacyExternalDomainPattern.test(auditable)
-  );
+  const visibleMatch = legacyVisibleBrandPattern.exec(auditable);
+  const domainMatch = legacyExternalDomainPattern.exec(auditable);
+  const chosen =
+    visibleMatch && domainMatch
+      ? visibleMatch.index <= domainMatch.index
+        ? { kind: "visible-brand" as const, match: visibleMatch }
+        : { kind: "external-domain" as const, match: domainMatch }
+      : visibleMatch
+        ? { kind: "visible-brand" as const, match: visibleMatch }
+        : domainMatch
+          ? { kind: "external-domain" as const, match: domainMatch }
+          : null;
+
+  if (!chosen) return null;
+  return {
+    kind: chosen.kind,
+    token: chosen.match[0],
+    context: matchContext(
+      auditable,
+      chosen.match.index,
+      chosen.match[0].length,
+    ),
+  };
+}
+
+function matchContext(content: string, index: number, length: number): string {
+  const start = Math.max(0, index - 90);
+  const end = Math.min(content.length, index + length + 90);
+  return content
+    .slice(start, end)
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function findPublicFiles(dir: string): string[] {
@@ -319,7 +379,7 @@ export function sanitizePublicText(): AstroIntegration {
         pruneGeneratedMarkdownAndRebuildLlms(distDir);
 
         const files = findPublicFiles(distDir);
-        const leaks: string[] = [];
+        const leaks: Array<{ file: string; match: LegacyMatch }> = [];
 
         for (const file of files) {
           const content = readFileSync(file, "utf-8");
@@ -334,15 +394,22 @@ export function sanitizePublicText(): AstroIntegration {
           if (sanitized !== content) writeFileSync(file, sanitized);
           writeDeviceAgentAlias(distDir, file);
 
-          if (hasLegacyPublicBrand(file, sanitized)) {
-            leaks.push(relative(distDir, file));
+          const match = findLegacyMatch(file, sanitized);
+          if (match) {
+            leaks.push({ file: relative(distDir, file), match });
           }
         }
 
         if (leaks.length) {
-          const preview = leaks.slice(0, 12).join(", ");
+          const preview = leaks
+            .slice(0, 12)
+            .map(
+              ({ file, match }) =>
+                `${file} :: ${match.kind} ${JSON.stringify(match.token)} :: ${match.context}`,
+            )
+            .join("\n  - ");
           throw new Error(
-            `[sanitize-public-zebrabyte-text] Production brand gate failed. Legacy Probo branding remains in: ${preview}${leaks.length > 12 ? ` (+${leaks.length - 12} more)` : ""}`,
+            `[sanitize-public-zebrabyte-text] Production brand gate failed. Legacy Probo branding remains in ${leaks.length} public file(s):\n  - ${preview}${leaks.length > 12 ? `\n  - ...and ${leaks.length - 12} more` : ""}`,
           );
         }
 
