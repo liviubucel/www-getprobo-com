@@ -104,13 +104,13 @@ const serviceSchema = {
           <Button href="/managed-compliance" variant="secondary" size="lg">Managed Compliance</Button>
           <Button href="/contact" size="lg">Discută despre SOC 2</Button>
         </div>
-        <div class="mx-auto flex w-max items-end gap-6 rounded-[28px] border bg-level-0 px-8 py-7 shadow-sm sm:gap-10 sm:px-12">
-          <div class="text-center">
+        <div class="mx-auto flex w-full max-w-[360px] items-end justify-center gap-5 rounded-[28px] border bg-level-0 px-5 py-6 shadow-sm sm:gap-10 sm:px-10 sm:py-7">
+          <div class="min-w-0 flex-1 text-center">
             <FrameworkBadge name="SOC2_TYPE1" class="mx-auto size-20 sm:size-28" client:visible />
             <p class="mt-3 text-sm font-medium">Type I</p>
           </div>
-          <div class="h-20 w-px bg-border sm:h-28"></div>
-          <div class="text-center">
+          <div class="h-20 w-px shrink-0 bg-border-solid sm:h-28"></div>
+          <div class="min-w-0 flex-1 text-center">
             <FrameworkBadge name="SOC2_TYPE2" class="mx-auto size-20 sm:size-28" client:visible />
             <p class="mt-3 text-sm font-medium">Type II</p>
           </div>
@@ -126,17 +126,23 @@ const serviceSchema = {
       </div>
 
       <div class="grid gap-5 lg:grid-cols-2">
-        <article class="relative min-h-[410px] overflow-hidden rounded-[28px] border bg-[#f8faf4] p-7 sm:p-10">
+        <article class="flex min-h-0 flex-col overflow-hidden rounded-[28px] border bg-[#f8faf4] p-6 sm:p-10 lg:min-h-[410px]">
           <p class="text-muted-foreground mb-4 text-sm font-medium">SOC 2 Type I</p>
           <h3 class="text-h3 mb-4 max-w-110 font-medium">Designul controalelor, la un moment dat.</h3>
           <p class="text-muted-foreground max-w-120 leading-relaxed">Util când organizația are nevoie de un prim nivel de assurance sau vrea să demonstreze că mediul și controalele au fost proiectate pentru scope-ul declarat.</p>
-          <FrameworkBadge name="SOC2_TYPE1" class="absolute right-7 bottom-7 size-28 sm:right-10 sm:bottom-10 sm:size-36" client:visible />
+          <div class="mt-8 flex flex-1 items-end justify-end sm:mt-10">
+            <FrameworkBadge name="SOC2_TYPE1" class="size-28 sm:size-36" client:visible />
+          </div>
         </article>
-        <article class="relative min-h-[410px] overflow-hidden rounded-[28px] bg-[#001a00] p-7 text-white sm:p-10">
+        <article class="flex min-h-0 flex-col overflow-hidden rounded-[28px] bg-[#001a00] p-6 text-white sm:p-10 lg:min-h-[410px]">
           <p class="mb-4 text-sm font-medium text-[#e6ff03]">SOC 2 Type II</p>
-          <h3 class="text-h3 mb-4 max-w-110 font-medium">Design plus operare pe o perioadă definită.</h3>
+          <h3 class="text-h3 mb-4 max-w-110 font-medium text-white">Design plus operare pe o perioadă definită.</h3>
           <p class="max-w-120 leading-relaxed text-white/70">Evidence-ul, sample-urile și activitatea ownerilor trebuie să poată demonstra nu doar intenția controlului, ci și funcționarea lui în timp.</p>
-          <FrameworkBadge name="SOC2_TYPE2" class="absolute right-7 bottom-7 size-28 sm:right-10 sm:bottom-10 sm:size-36" client:visible />
+          <div class="mt-8 flex flex-1 items-end justify-end sm:mt-10">
+            <div class="rounded-[24px] bg-white p-3 sm:p-4">
+              <FrameworkBadge name="SOC2_TYPE2" class="size-24 sm:size-32" client:visible />
+            </div>
+          </div>
         </article>
       </div>
     </section>
@@ -149,20 +155,22 @@ const serviceSchema = {
         </div>
 
         <div class="mx-auto max-w-6xl space-y-5">
-          <article class="grid min-h-[250px] overflow-hidden rounded-[28px] border bg-level-0 lg:grid-cols-[0.8fr_1.2fr]">
+          <article class="grid overflow-hidden rounded-[28px] border bg-level-0 lg:grid-cols-[0.8fr_1.2fr]">
             <div class="p-7 sm:p-10">
               <p class="text-muted-foreground mb-3 text-sm">Common Criteria</p>
               <h3 class="text-h2 mb-4 font-medium">Security</h3>
               <p class="text-muted-foreground max-w-120 text-lg leading-relaxed">Access control, change management, monitoring, incident response și celelalte controls care protejează sistemele împotriva accesului neautorizat.</p>
             </div>
-            <div class="relative min-h-64 overflow-hidden bg-[#001a00] p-8">
-              <img src="/trust-center/security-monitoring.svg" alt="Security monitoring și controls" width="720" height="420" loading="lazy" class="absolute inset-0 h-full w-full object-contain p-8" />
+            <div class="bg-[#001a00] p-4 sm:p-6 lg:p-8">
+              <div class="overflow-hidden rounded-2xl bg-white p-3 sm:p-5">
+                <img src="/trust-center/security-monitoring.svg" alt="Security monitoring și controls" width="720" height="420" loading="lazy" decoding="async" class="mx-auto block aspect-[12/7] h-auto w-full object-contain" />
+              </div>
             </div>
           </article>
 
           <div class="grid gap-5 sm:grid-cols-2">
             {trustCriteria.map((criterion) => (
-              <article class="min-h-[220px] rounded-[24px] border bg-level-0 p-6 sm:p-8">
+              <article class="rounded-[24px] border bg-level-0 p-6 sm:min-h-[220px] sm:p-8">
                 <h3 class="text-h4 mb-4 font-medium">{criterion.name}</h3>
                 <p class="text-muted-foreground leading-relaxed">{criterion.text}</p>
               </article>
@@ -180,8 +188,8 @@ const serviceSchema = {
           <p class="text-muted-foreground mb-7 text-lg leading-relaxed">Reviews, approvals, access records, change evidence și rezultatele tehnice sunt păstrate lângă controls și owners. Asta reduce reconstrucția manuală a lunilor anterioare.</p>
           <Button href="/compliance-platform" variant="secondary">Vezi platforma GRC</Button>
         </div>
-        <div class="overflow-hidden rounded-[28px] bg-[#f8faf4] p-5 sm:p-9">
-          <img src="/trust-center/documents.svg" alt="Evidence și documente controlate" width="1024" height="420" loading="lazy" class="h-auto w-full" />
+        <div class="overflow-hidden rounded-[28px] bg-[#f8faf4] p-4 sm:p-7 lg:p-9">
+          <img src="/trust-center/documents.svg" alt="Evidence și documente controlate" width="1024" height="420" loading="lazy" decoding="async" class="mx-auto block aspect-[256/105] h-auto w-full object-contain" />
         </div>
       </div>
     </section>
@@ -190,14 +198,14 @@ const serviceSchema = {
       <div class="container">
         <div class="mx-auto mb-12 max-w-180 text-center">
           <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#e6ff03]">Readiness path</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la scope la operare continuă.</h2>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-white">De la scope la operare continuă.</h2>
           <p class="text-lg text-white/65">Nu construim șase mini-proiecte separate. Readiness-ul se mișcă prin trei faze mari care se alimentează una pe alta.</p>
         </div>
         <div class="mx-auto grid max-w-6xl gap-4 lg:grid-cols-3">
           {readinessPhases.map((phase) => (
             <article class="rounded-[24px] border border-white/15 bg-white/5 p-7 sm:p-9">
               <p class="mb-12 font-mono text-sm text-[#e6ff03]">{phase.number}</p>
-              <h3 class="text-h4 mb-4 font-medium">{phase.title}</h3>
+              <h3 class="text-h4 mb-4 font-medium text-white">{phase.title}</h3>
               <p class="leading-relaxed text-white/65">{phase.text}</p>
             </article>
           ))}
@@ -229,8 +237,8 @@ const serviceSchema = {
           <p class="text-muted-foreground mb-7 text-lg leading-relaxed">Raportul SOC 2 și alte documente aprobate pot fi distribuite prin Trust Center fără să expui workspace-ul intern, risk register-ul sau evidence-ul operațional.</p>
           <Button href="/compliance-portal">Vezi Trust Center</Button>
         </div>
-        <div class="overflow-hidden rounded-[28px] bg-[#E6FF03]/18 p-5 sm:p-8">
-          <img src="/trust-center/browser.svg" alt="Trust Center pentru distribuirea raportului SOC 2" width="1146" height="786" loading="lazy" class="h-auto w-full" />
+        <div class="overflow-hidden rounded-[28px] bg-[#E6FF03]/18 p-4 sm:p-7 lg:p-8">
+          <img src="/trust-center/browser.svg" alt="Trust Center pentru distribuirea raportului SOC 2" width="1146" height="786" loading="lazy" decoding="async" class="mx-auto block aspect-[573/393] h-auto w-full object-contain" />
         </div>
       </div>
     </section>
@@ -238,24 +246,19 @@ const serviceSchema = {
     <Stories />
 
     <section class="container py-14 sm:py-24">
-      <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
-        <div class="border-y">
+      <div class="mx-auto max-w-[768px]">
+        <h2 class="text-h3 sm:text-h2 mb-7 text-center font-medium">Întrebări frecvente</h2>
+        <div class="divide-y border-y">
           {faqs.map((faq) => (
-            <details class="group border-b py-5 last:border-b-0">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium"><span>{faq.question}</span><span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span></summary>
-              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            <details class="group py-1">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl leading-none transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-180 pb-5 pr-8 leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>
-      </div>
-    </section>
-
-    <section class="border-t py-16 text-center sm:py-24">
-      <div class="container">
-        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium text-balance">SOC 2 ca program continuu, nu ca sprint înainte de audit.</h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Putem începe cu readiness și continua cu controls, evidence și remediation după emiterea raportului.</p>
-        <Button href="/contact" size="lg">Discută despre SOC 2</Button>
       </div>
     </section>
   </main>
