@@ -134,6 +134,40 @@ function sanitizeTag(tag: string): string {
   return result;
 }
 
+function sanitizeRenderedHtmlTextNodes(content: string): string {
+  // This second pass works on the final rendered HTML rather than on an HTML
+  // string containing tag markers. It closes a real edge case where visible
+  // article/changelog prose could survive the marker pass even though the same
+  // publicBrandText() rule correctly sanitizes plain strings.
+  //
+  // Keep runtime, code examples and textarea contents byte-for-byte. Those can
+  // contain historical command/package identifiers that are architecture
+  // reference, not current ZebraByte branding.
+  const protectedBlocks: string[] = [];
+  let html = content.replace(
+    /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    (block) => {
+      const marker = `___ZBT_FINAL_PROTECTED_BLOCK_${protectedBlocks.length}___`;
+      protectedBlocks.push(block);
+      return marker;
+    },
+  );
+
+  html = html
+    .split(/(<[^>]+>)/g)
+    .map((chunk) => {
+      if (!chunk) return chunk;
+      if (chunk.startsWith("<")) return sanitizeTag(chunk);
+      return sanitizePublicOutput(chunk);
+    })
+    .join("");
+
+  return html.replace(
+    /___ZBT_FINAL_PROTECTED_BLOCK_(\d+)___/g,
+    (_match, rawIndex: string) => protectedBlocks[Number(rawIndex)] ?? _match,
+  );
+}
+
 function sanitizeHtmlOutput(content: string): string {
   let html = content.replace(
     /<script([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi,
@@ -172,7 +206,7 @@ function sanitizeHtmlOutput(content: string): string {
     (_match, rawIndex: string) => protectedBlocks[Number(rawIndex)] ?? _match,
   );
 
-  return html;
+  return sanitizeRenderedHtmlTextNodes(html);
 }
 
 function publicAuditView(content: string): string {
