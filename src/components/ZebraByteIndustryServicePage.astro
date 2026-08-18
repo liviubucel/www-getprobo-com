@@ -28,7 +28,7 @@ const serviceLead: Record<IndustryServiceKey, string> = {
 
 <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
   <div class="container text-center">
-    <a href={`/industrii/${industry.slug}`} class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-3 py-1.5 text-sm font-medium hover:underline">
+    <a href={`/industrii/${industry.slug}`} class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-2 py-0.5 text-sm font-medium hover:underline">
       {industry.shortTitle} · {meta.eyebrow}
     </a>
     <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{meta.label} pentru {industry.shortTitle}</h1>
@@ -40,109 +40,72 @@ const serviceLead: Record<IndustryServiceKey, string> = {
   </div>
 </animated-hero>
 
-<section class="container pb-12 sm:pb-24">
-  <div class="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+<section class="container py-16 sm:py-24">
+  <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
     <div>
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Sector context</p>
-      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Același serviciu are alte priorități în altă industrie.</h2>
-      <p class="text-muted-foreground mb-8 text-lg leading-relaxed">{industry.context}</p>
-      <div class="divide-y border-y">
-        {industry.priorities.map((priority, index) => (
-          <div class="grid grid-cols-[44px_1fr] gap-4 py-4">
-            <span class="text-muted-foreground font-mono text-xs">{String(index + 1).padStart(2, "0")}</span>
-            <span class="font-medium">{priority}</span>
-          </div>
-        ))}
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">De ce contează</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Contextul industriei schimbă prioritățile.</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">{industry.context}</p>
+      <div class="mt-8 flex flex-wrap gap-2">
+        {industry.priorities.map((priority) => <span class="bg-active rounded-full px-3 py-1.5 text-sm">{priority}</span>)}
       </div>
     </div>
 
-    <div class="bg-active p-8 sm:p-12">
-      <p class="text-muted-foreground mb-9 text-sm font-medium uppercase tracking-wide">Core delivery</p>
-      <div class="grid gap-x-10 sm:grid-cols-2">
-        {meta.core.map((item, index) => (
-          <article class="border-t py-7">
-            <span class="text-muted-foreground mb-7 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
-            <h3 class="text-h4 font-medium leading-snug">{item}</h3>
-          </article>
-        ))}
-      </div>
-      <p class="text-muted-foreground mt-6 text-sm leading-relaxed">
-        Configurația și ordinea de implementare se adaptează activelor, fluxurilor și riscurilor organizației; nu folosim aceeași rețetă pentru fiecare client.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
-  <div class="container">
-    <div class="mb-12 max-w-3xl sm:mb-16">
-      <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">Risk connection</p>
-      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Serviciul trebuie să trateze riscul sectorului, nu să existe în paralel cu el.</h2>
-      <p class="text-level-0-foreground/65 text-lg leading-relaxed">
-        Pentru {industry.shortTitle}, acestea sunt riscurile pe care le folosim ca puncte de legătură între serviciu, controls și prioritățile operaționale.
-      </p>
-    </div>
-
-    <div class="grid gap-x-14 sm:grid-cols-2 lg:gap-x-24">
-      {industry.risks.map((risk, index) => (
-        <article class="border-t border-level-0-foreground/15 py-8">
-          <span class="text-level-0-foreground/40 mb-7 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
-          <p class="text-h4 max-w-xl font-medium leading-snug">{risk}</p>
-        </article>
-      ))}
-    </div>
-  </div>
-</section>
-
-<section class="container py-12 sm:py-24">
-  <div class="grid gap-14 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
-    <div>
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Expected outcomes</p>
-      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce ar trebui să se schimbe în mediul real.</h2>
-      <p class="text-muted-foreground text-lg leading-relaxed">
-        Nu măsurăm proiectul doar prin activități executate. Rezultatul trebuie să fie vizibil în postura tehnică, controlul accesului, continuitate sau capacitatea de a demonstra măsurile operate.
-      </p>
-    </div>
-
-    <div class="grid gap-x-10 sm:grid-cols-2">
-      {industry.outcomes.map((outcome, index) => (
-        <article class="border-t py-7">
-          <span class="text-muted-foreground mb-6 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
-          <p class="text-h5 font-medium leading-relaxed">{outcome}</p>
-        </article>
-      ))}
-    </div>
-  </div>
-</section>
-
-<section class="bg-active py-12 sm:py-24">
-  <div class="container">
-    <div class="mx-auto mb-12 max-w-180 text-center sm:mb-16">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Connected program</p>
-      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Serviciul poate rămâne punctual sau se poate conecta la restul programului.</h2>
-      <p class="text-muted-foreground text-lg leading-relaxed">
-        Poți păstra scope-ul strict pe această problemă. Dacă riscul trece în website, email, infrastructure sau compliance, există un handoff clar către celelalte capabilități pentru {industry.shortTitle}.
-      </p>
-    </div>
-
-    <div class="mx-auto max-w-5xl border-y">
-      {siblingServices.map(({ slug, meta: sibling }) => (
-        <a href={`/${slug}`} class="group grid gap-4 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-12">
+    <div class="overflow-hidden rounded-2xl border">
+      {meta.core.map((item, index) => (
+        <div class="grid grid-cols-[44px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
+          <span class="text-muted-foreground text-sm">0{index + 1}</span>
           <div>
-            <p class="text-muted-foreground mb-2 text-sm">{sibling.eyebrow}</p>
-            <h3 class="text-h4 font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
+            <h3 class="mb-2 font-medium">{item}</h3>
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              Măsura este configurată în funcție de activele, fluxurile și riscurile reale ale organizației; nu aplicăm aceeași configurație tuturor clienților.
+            </p>
           </div>
-          <p class="text-muted-foreground text-lg leading-relaxed">{sibling.description}</p>
-        </a>
+        </div>
       ))}
     </div>
+  </div>
+</section>
+
+<section class="bg-active py-16 sm:py-24">
+  <div class="container">
+    <div class="mb-10 max-w-190">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Risk-driven</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Riscurile pe care le legăm de serviciu.</h2>
+      <p class="text-muted-foreground text-lg">Această pagină păstrează intenția landing page-ului sectorial ZebraByte anterior, dar o conectează la programul complet de security și compliance.</p>
+    </div>
+    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
+      {industry.risks.map((risk, index) => (
+        <article class="bg-level-0 min-h-44 p-6 sm:p-8">
+          <div class="text-muted-foreground mb-6 text-sm">Risc 0{index + 1}</div>
+          <p class="font-medium leading-relaxed">{risk}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="container py-16 sm:py-24">
+  <div class="mx-auto mb-10 max-w-180 text-center">
+    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Program complet</p>
+    <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Nu izolăm acest serviciu de restul infrastructurii.</h2>
+    <p class="text-muted-foreground text-lg">Poți continua către celelalte servicii ZebraByte dedicate aceleiași industrii.</p>
+  </div>
+  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
+    {siblingServices.map(({ slug, meta: sibling }) => (
+      <a href={`/${slug}`} class="bg-level-0 group min-h-56 p-6 transition-colors hover:bg-subtle sm:p-8">
+        <p class="text-muted-foreground mb-8 text-sm">{sibling.eyebrow}</p>
+        <h3 class="mb-2 font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
+        <p class="text-muted-foreground text-sm leading-relaxed">{sibling.description}</p>
+      </a>
+    ))}
   </div>
 </section>
 
 <section class="border-t py-16 text-center sm:py-24">
   <div class="container">
-    <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Începe cu mediul real, nu cu un pachet generic.</h2>
-    <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Evaluăm ce există, ce risc produce și ce merită implementat sau operat în continuare.</p>
+    <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Vrei să vedem situația reală, nu doar checklist-ul?</h2>
+    <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Începem cu infrastructura și riscul existent, apoi stabilim ce merită implementat și în ce ordine.</p>
     <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
   </div>
 </section>
