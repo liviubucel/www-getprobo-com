@@ -105,9 +105,7 @@ export default defineConfig({
       filter(page) {
         const pathname = new URL(page).pathname.replace(/\/+$/, "") || "/";
 
-        if (pathname === "/yc") return false;
         if (pathname.includes("/404")) return false;
-        if (pathname.startsWith("/whats-next")) return false;
         if (pathname.startsWith("/feedback")) return false;
         if (pathname.startsWith("/welcome")) return false;
         if (pathname.startsWith("/static")) return false;
@@ -115,21 +113,13 @@ export default defineConfig({
         if (pathname.startsWith("/newsletter/rezultat")) return false;
         if (pathname === "/blog/page/1") return false;
 
-        // Accessibility management lives inside ZebraByte Compliance. Only the
-        // canonical public presentation/install page is advertised.
-        if (pathname === "/accesibilitate") return false;
-        if (pathname.startsWith("/accesibilitate/")) return false;
-
-        // Compatibility routes remain available, but only the ZebraByte-branded
-        // canonical routes are advertised to search engines.
+        // Compatibility URLs remain available for inbound links, but only their
+        // ZebraByte-branded equivalents are advertised as canonical discovery
+        // surfaces. This prevents duplicate SEO without hiding inherited content.
         if (pathname === "/probo-newsletter") return false;
         if (pathname.startsWith("/docs/product/probo-agent")) return false;
         if (pathname === "/hub/probo-vs-vanta") return false;
         if (pathname === "/hub/probo-vs-fractional-ciso") return false;
-
-        // Archive/reference pages are intentionally available but noindex.
-        if (pathname === "/platform-heritage") return false;
-        if (pathname === "/platform-customer-archive") return false;
 
         return true;
       },
@@ -151,7 +141,7 @@ export default defineConfig({
           item.url.includes("/docs/deployment/self-hosting")
         ) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
-          item.priority = 0.8;
+          item.priority = 0.6;
         } else if (item.url.includes("/docs")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.7;
@@ -161,6 +151,15 @@ export default defineConfig({
         } else if (item.url.includes("/stories")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.7;
+        } else if (item.url.includes("/yc")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.7;
+        } else if (item.url.includes("/whats-next")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.6;
+        } else if (item.url.includes("/accesibilitate")) {
+          item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
+          item.priority = 0.6;
         } else if (item.url.includes("/about")) {
           item.changefreq = /** @type {import('sitemap').EnumChangefreq} */ ("monthly");
           item.priority = 0.6;
