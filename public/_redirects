@@ -7,18 +7,15 @@
 /blog/page/1 /blog 301
 /probo-newsletter /newsletter 301
 
-# Legacy upstream campaign/identity surfaces that cannot truthfully become ZebraByte.
-/yc /managed-compliance 302
-/fr/yc /managed-compliance 302
-
-# Preserve the former product URL while serving the current ZebraByte implementation.
-/products/compliance-portal /compliance-portal 301
+# The YC offer and full product/compliance surfaces are intentionally public.
+# Never redirect them away merely because they originated in the inherited site.
+/fr/yc /yc 301
 
 # ZebraByte branded aliases for preserved comparison pages.
 /hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
 /hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
 
-# Preserved Hub, documentation and compliance-journey content is public.
+# Preserved Hub, documentation, case-study, compliance-journey and product content is public.
 # Do not redirect these collections away merely because their inherited source
 # material requires ZebraByte rebranding/paraphrasing. Public output is handled
 # by the ZebraByte brand/i18n pipeline and content-preservation checks.
@@ -38,17 +35,11 @@
 /fr/terms /terms 301
 /fr/* /:splat 301
 
-# Accessibility: only the standard public widget install remains public.
-/accesibilitate/personalizeaza https://app.zebrabyte.ro 302
-/accesibilitate/audit https://app.zebrabyte.ro 302
-/accesibilitate/obtine-widget /accessibility 301
-/accesibilitate/faq /accessibility 301
-/accesibilitate/disclaimer /accessibility 301
-/accesibilitate/vs-sienna /accessibility 301
-/accesibilitate/* /accessibility 301
-
-# Legacy ZebraByte URLs - preserve SEO continuity while mapping old services to current areas.
+# Accessibility pages are first-class ZebraByte content and remain directly reachable.
+# Only the old section root aliases to the canonical presentation page.
 /accesibilitate /accessibility 301
+
+# Legacy ZebraByte aliases are retained only when there is no dedicated current page.
 /am-fost-atacat-cibernetic /incident-response 301
 /cyber-audit /security-assessment 301
 /securitate-website /website-security 301
@@ -58,13 +49,3 @@
 /appointment /programare 301
 /industrii /industries 301
 /parteneriate /partnerships 301
-/serviciigdprromania /gdpr 301
-/cookie-banner-conformitate-gdpr /gdpr 301
-/securitate-servere /secure-hosting 301
-/certificat-ssl /website-security 301
-/migrare-site /secure-hosting 301
-/wordpress-maintenance /secure-hosting 301
-/servicii-premium-it-migratie-securitate /cyber-security 301
-/email-marketing / 301
-/hosting-securitate-* /secure-hosting 301
-/mentenanta-wordpress-* /secure-hosting 301
