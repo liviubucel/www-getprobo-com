@@ -11,3 +11,20 @@
     grid-column: 2;
   }
 }
+
+/*
+ * Inherited editorial content includes comparison tables and long code blocks.
+ * Keep those scrollable inside the article rather than widening the entire
+ * mobile viewport. This lives outside the protected Probo global stylesheet.
+ */
+.prose table,
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose table {
+  display: block;
+  overscroll-behavior-inline: contain;
+}
