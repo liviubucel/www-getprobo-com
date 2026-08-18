@@ -52,6 +52,12 @@ export const menuGroups: MenuGroup[] = [
         icon: "shield-check",
       },
       {
+        label: "Compliance Portal / Trust Center",
+        description: "Documente, acces securizat și răspunsuri pentru security reviews",
+        href: "/products/compliance-portal",
+        icon: "monitor",
+      },
+      {
         label: "SOC 2",
         description: "Controale și pregătire continuă pentru audit",
         href: "/soc2",
@@ -223,6 +229,12 @@ export const menuGroups: MenuGroup[] = [
         icon: "handshake",
       },
       {
+        label: "Program pentru startup-uri YC",
+        description: "Oferta de conformitate pentru startup-uri Y Combinator eligibile",
+        href: "/yc",
+        icon: "sparkle",
+      },
+      {
         label: "Securitate ZebraByte",
         description: "Practicile și postura operațională de securitate",
         href: "/security",
@@ -268,8 +280,8 @@ export const menuGroups: MenuGroup[] = [
         icon: "code",
       },
       {
-        label: "Implementare",
-        description: "Cloud, self-hosting, configurare și operațiuni",
+        label: "Cloud & arhitectură",
+        description: "SaaS Cloud, securitatea infrastructurii și referințe de arhitectură/migrare",
         href: "/docs/deployment",
         icon: "compass",
       },
