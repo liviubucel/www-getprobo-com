@@ -1,0 +1,160 @@
+---
+title: "Cine mai are acces după ce cineva părăsește compania?"
+slug: "2026-08-17-offboarding-access-review-automation"
+date: 2026-08-17
+excerpt: "Offboarding-ul este unul dintre locurile în care controlul accesului eșuează în tăcere. Vedem de ce conturile rămase active contează pentru SOC 2 și ISO 27001 și cum transformi plecarea unui coleg într-un access review verificabil."
+author:
+  name: "Arthur Mayoux"
+source: probo
+tags:
+  - "access review"
+  - "offboarding"
+  - "identity"
+  - "SOC 2"
+  - "ISO 27001"
+  - "security"
+faqs:
+  - question: "Este suficient să dezactivez contul principal al angajatului?"
+    answer: "Nu. Contul din identity provider este doar începutul. Trebuie revizuite și aplicațiile care nu sunt federate prin SSO, cheile API, conturile locale, accesul la cloud, repository-uri, suport, billing și orice sistem în care identitatea poate exista separat."
+  - question: "Cât de repede ar trebui revocat accesul după plecare?"
+    answer: "Pentru o plecare planificată, accesul ar trebui revocat la momentul stabilit de organizație, de regulă în ziua plecării. Pentru o plecare cu risc ridicat, procesul poate necesita revocare coordonată înainte sau simultan cu notificarea persoanei."
+  - question: "De ce este access review-ul relevant pentru SOC 2 și ISO 27001?"
+    answer: "Ambele programe cer organizației să demonstreze că accesul este acordat, revizuit și revocat controlat. Un access review bine documentat oferă dovada că drepturile rămase au fost verificate și că deciziile de păstrare sau revocare au un owner."
+---
+
+Când cineva pleacă din companie, partea vizibilă a procesului este simplă: predă laptopul, se închide contractul, se face handover-ul și echipa merge mai departe.
+
+Partea invizibilă este mai periculoasă: **ce acces a rămas activ după plecare?**
+
+Un cont vechi de GitHub, un rol într-un cloud project, o invitație într-un workspace, o cheie API personală sau un cont local într-o aplicație pot rămâne active mult după ce persoana nu mai face parte din organizație. Nu este nevoie de intenție malițioasă ca acest lucru să devină o problemă. Este suficient ca acel cont să fie compromis mai târziu.
+
+De aceea offboarding-ul nu ar trebui tratat ca o simplă listă HR. Este un **eveniment de securitate și control al identității**.
+
+## Problema nu este contul pe care îl știi. Este contul pe care l-ai uitat
+
+Majoritatea organizațiilor dezactivează contul principal: Microsoft 365, Google Workspace sau identity provider-ul central.
+
+Asta este necesar, dar nu dovedește că accesul a dispărut peste tot.
+
+Într-un stack SaaS real, o persoană poate avea acces separat la:
+
+- repository-uri și organizații GitHub;
+- platforme cloud și console administrative;
+- CRM, help desk și sisteme de ticketing;
+- billing și procesatori de plăți;
+- platforme de observability și analytics;
+- instrumente de design, product management sau colaborare;
+- panouri de hosting, DNS și domain management;
+- conturi locale create înainte de introducerea SSO;
+- API keys, personal access tokens și credențiale salvate în automatizări.
+
+Unele dintre aceste accesuri dispar prin SCIM sau SSO. Altele nu.
+
+Aici apare diferența dintre **offboarding administrativ** și **offboarding verificat**.
+
+## Ce ar trebui să se întâmple în ziua plecării
+
+Un proces matur pornește de la un eveniment clar: persoana nu mai trebuie să aibă acces după un anumit moment.
+
+Fluxul poate fi gândit în cinci pași:
+
+1. **Identifică persoana și identitățile asociate.** Email principal, aliasuri, conturi administrative, conturi secundare și identități folosite în aplicații externe.
+2. **Revocă accesul central.** Dezactivează contul principal, sesiunile active, factorii MFA și tokenurile controlate de identity provider.
+3. **Inventariază accesul din aplicațiile conectate.** Verifică cine apare încă în sursele de acces relevante.
+4. **Ia o decizie pentru fiecare intrare.** Revocă, păstrează temporar cu justificare sau escaladează către owner-ul sistemului.
+5. **Păstrează dovada.** Cine a verificat, ce a găsit, ce a decis și când a fost închisă acțiunea.
+
+Ultimul punct este cel care transformă procesul din „credem că am scos accesul” în **evidence**.
+
+## Access review-ul este verificarea de după offboarding
+
+Un access review nu trebuie să însemne un spreadsheet gigantic trimis trimestrial tuturor managerilor.
+
+Pentru offboarding, poate fi mult mai precis: generezi o campanie sau o verificare focalizată pe persoana care pleacă și pe sistemele în care apare.
+
+Pentru fiecare acces, reviewer-ul trebuie să poată răspunde la o întrebare simplă:
+
+> Mai există un motiv legitim pentru ca această identitate să aibă acces aici?
+
+În cele mai multe cazuri, răspunsul este „nu” și accesul trebuie eliminat. În cazurile speciale — de exemplu o cutie poștală care trebuie păstrată pentru continuitate sau un cont tehnic care nu aparține de fapt persoanei — decizia trebuie documentată și transferată către un owner activ.
+
+## Automatizarea începe cu trigger-ul corect
+
+Cea mai comună problemă nu este că echipa nu știe cum să facă un access review. Este că nimeni nu își amintește să îl pornească la momentul potrivit.
+
+Un proces bun poate fi declanșat de:
+
+- schimbarea statusului într-un HRIS;
+- dezactivarea utilizatorului în identity provider;
+- un webhook dintr-un workflow de offboarding;
+- o acțiune manuală inițiată de HR, IT sau security.
+
+De acolo, automatizarea poate pregăti lista de accesuri și poate crea taskurile necesare. **Decizia de acces rămâne însă o decizie umană**, mai ales pentru roluri privilegiate sau excepții.
+
+Automatizarea trebuie să reducă munca mecanică, nu să ascundă responsabilitatea.
+
+## Nu confunda user accounts cu service accounts
+
+Offboarding-ul scoate la suprafață o altă problemă frecventă: resurse tehnice create de o persoană, dar folosite de sistem.
+
+Dacă un token, un integration user sau un service account depinde de identitatea unui angajat, plecarea lui poate întrerupe producția dacă pur și simplu ștergi tot.
+
+De aceea, înainte de revocare:
+
+- identifică accesul uman versus accesul tehnic;
+- mută ownership-ul resurselor tehnice către o identitate controlată de organizație;
+- rotește secretele care au fost cunoscute de persoana care pleacă;
+- verifică dacă automatizările folosesc credențiale personale;
+- documentează excepțiile și termenul lor de eliminare.
+
+Un service account nu este o scuză pentru a păstra un cont personal activ.
+
+## Ce vor să vadă auditorii
+
+Pentru SOC 2 sau ISO/IEC 27001, valoarea nu stă într-un screenshot care arată că un user este „disabled”. Auditorul vrea să înțeleagă procesul și să poată urmări o mostră de la eveniment la rezultat.
+
+O dovadă bună poate arăta:
+
+- data plecării;
+- sistemele verificate;
+- reviewer-ul și owner-ul;
+- accesurile găsite;
+- decizia pentru fiecare acces;
+- momentul revocării;
+- excepțiile și justificarea lor;
+- confirmarea că taskurile au fost închise.
+
+Asta este mult mai puternic decât o politică generică în care scrie doar „access is revoked upon termination”.
+
+## Ce merită automatizat și ce nu
+
+**Automatizează:**
+
+- colectarea userilor din aplicații;
+- compararea identităților;
+- crearea review-ului;
+- notificările și reminderele;
+- evidence-ul de timp și actor;
+- escaladarea taskurilor restante.
+
+**Păstrează control uman pentru:**
+
+- acces privilegiat;
+- excepții;
+- conturi tehnice neclare;
+- transferul ownership-ului;
+- aprobarea finală că offboarding-ul este complet.
+
+Această separare produce un proces rapid fără să transforme o decizie de securitate într-un checkbox automat.
+
+## Un test simplu
+
+Alege ultima persoană care a părăsit compania și caut-o în cinci sisteme pe care le considerați critice.
+
+Dacă apare încă activă într-unul dintre ele și nu există o justificare documentată, ai găsit exact motivul pentru care offboarding-ul trebuie legat de access review.
+
+Dacă nu apare nicăieri, întreabă a doua întrebare: **poți demonstra cum ai verificat?**
+
+Securitatea operațională are nevoie de ambele răspunsuri: accesul să fie eliminat și procesul să fie verificabil.
+
+Pentru a vedea cum se leagă identity, controls, evidence și review-uri într-un singur program, vezi [Platforma de conformitate ZebraByte](/compliance-platform).
