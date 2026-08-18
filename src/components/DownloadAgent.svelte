@@ -133,17 +133,17 @@
       {#if platformsOpen}
         <ul
           id="other-platforms-list"
-          class="mx-auto mt-4 w-max space-y-2 text-left"
+          class="mx-auto mt-4 w-fit max-w-full space-y-2 text-left"
           transition:slide={{ duration: 200 }}
         >
           {#each binaryAssets as asset (asset.id)}
-            <li>
+            <li class="max-w-full">
               <a
-                class="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-sm underline underline-offset-2"
+                class="text-muted-foreground hover:text-foreground flex max-w-full items-start gap-1.5 break-all text-sm underline underline-offset-2"
                 href={asset.url}
                 rel="nofollow"
               >
-                {@render downloadIcon("size-3.5 shrink-0")}
+                {@render downloadIcon("mt-0.5 size-3.5 shrink-0")}
                 {describeAsset(asset)}
               </a>
             </li>
