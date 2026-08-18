@@ -28,7 +28,7 @@ const serviceLead: Record<IndustryServiceKey, string> = {
 
 <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
   <div class="container text-center">
-    <a href={`/industrii/${industry.slug}`} class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-block rounded-lg border px-2 py-0.5 text-sm font-medium hover:underline">
+    <a href={`/industrii/${industry.slug}`} class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 inline-flex w-fit max-w-full items-center justify-center rounded-lg border px-3 py-1 text-center text-sm leading-snug font-medium hover:underline">
       {industry.shortTitle} · {meta.eyebrow}
     </a>
     <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{meta.label} pentru {industry.shortTitle}</h1>
@@ -41,7 +41,7 @@ const serviceLead: Record<IndustryServiceKey, string> = {
 </animated-hero>
 
 <section class="container py-16 sm:py-24">
-  <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+  <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
     <div>
       <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">De ce contează</p>
       <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Contextul industriei schimbă prioritățile.</h2>
@@ -51,10 +51,10 @@ const serviceLead: Record<IndustryServiceKey, string> = {
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-2xl border">
+    <div class="border-y">
       {meta.core.map((item, index) => (
-        <div class="grid grid-cols-[44px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
-          <span class="text-muted-foreground text-sm">0{index + 1}</span>
+        <div class="grid grid-cols-[44px_1fr] gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[56px_1fr] sm:gap-5 sm:py-6">
+          <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
           <div>
             <h3 class="mb-2 font-medium">{item}</h3>
             <p class="text-muted-foreground text-sm leading-relaxed">
@@ -72,12 +72,12 @@ const serviceLead: Record<IndustryServiceKey, string> = {
     <div class="mb-10 max-w-190">
       <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Risk-driven</p>
       <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Riscurile pe care le legăm de serviciu.</h2>
-      <p class="text-muted-foreground text-lg">Această pagină păstrează intenția landing page-ului sectorial ZebraByte anterior, dar o conectează la programul complet de security și compliance.</p>
+      <p class="text-muted-foreground text-lg">Corelăm riscurile sectorului cu controalele și acțiunile care pot fi implementate în scope-ul serviciului, fără să transformăm fiecare risc într-un produs separat.</p>
     </div>
-    <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
+    <div class="grid border-y sm:grid-cols-2">
       {industry.risks.map((risk, index) => (
-        <article class="bg-level-0 min-h-44 p-6 sm:p-8">
-          <div class="text-muted-foreground mb-6 text-sm">Risc 0{index + 1}</div>
+        <article class="border-b p-6 sm:min-h-44 sm:p-8 sm:[&:nth-child(odd)]:border-r sm:[&:nth-last-child(-n+2)]:border-b-0">
+          <div class="text-muted-foreground mb-6 font-mono text-sm">Risc 0{index + 1}</div>
           <p class="font-medium leading-relaxed">{risk}</p>
         </article>
       ))}
@@ -91,12 +91,16 @@ const serviceLead: Record<IndustryServiceKey, string> = {
     <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Nu izolăm acest serviciu de restul infrastructurii.</h2>
     <p class="text-muted-foreground text-lg">Poți continua către celelalte servicii ZebraByte dedicate aceleiași industrii.</p>
   </div>
-  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
-    {siblingServices.map(({ slug, meta: sibling }) => (
-      <a href={`/${slug}`} class="bg-level-0 group min-h-56 p-6 transition-colors hover:bg-subtle sm:p-8">
-        <p class="text-muted-foreground mb-8 text-sm">{sibling.eyebrow}</p>
-        <h3 class="mb-2 font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
+  <div class="border-y">
+    {siblingServices.map(({ slug, meta: sibling }, index) => (
+      <a href={`/${slug}`} class="group grid gap-2 border-b py-6 last:border-b-0 sm:grid-cols-[56px_0.7fr_1.3fr_auto] sm:items-start sm:gap-8">
+        <span class="text-muted-foreground hidden font-mono text-xs sm:block">0{index + 1}</span>
+        <div>
+          <p class="text-muted-foreground mb-2 text-sm">{sibling.eyebrow}</p>
+          <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{sibling.label}</h3>
+        </div>
         <p class="text-muted-foreground text-sm leading-relaxed">{sibling.description}</p>
+        <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
       </a>
     ))}
   </div>
