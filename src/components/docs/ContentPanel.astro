@@ -1,1 +1,43 @@
+---
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isLegacyDeploymentReference = pathname.startsWith(
+  "/docs/deployment/self-hosting",
+);
+---
+
+{
+  isLegacyDeploymentReference && (
+    <aside class="legacy-deployment-reference" role="note" aria-label="Platform architecture reference">
+      <strong>Platform architecture reference</strong>
+      <p>
+        ZebraByte is delivered as a managed Cloud SaaS platform and is not distributed as open-source or self-hosted software. This section is intentionally preserved as technical lineage, architecture and migration reference. Docker, Helm and repository commands shown here are not a supported ZebraByte installation path.
+      </p>
+    </aside>
+  )
+}
+
 <slot />
+
+<style>
+  .legacy-deployment-reference {
+    margin: 0 0 1.5rem;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    background: var(--sl-color-gray-7);
+  }
+
+  .legacy-deployment-reference strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--sl-color-white);
+    font-size: 0.9rem;
+  }
+
+  .legacy-deployment-reference p {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+</style>
