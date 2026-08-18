@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run sync:zebrabyte-blog && npm run check:performance-assets && npm run sync:changelog && npm run check:zebrabyte-content && npm run check:experience && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n && npm run check:public-brand",
+    "build": "npm run sync:security-assets && npm run sync:zebrabyte-blog && npm run check:performance-assets && npm run sync:changelog && npm run check:zebrabyte-content && npm run check:experience && astro build && npm run llms:normalize && npm run sitemap:i18n && npm run check:i18n && npm run check:public-brand",
     "sync:security-assets": "node tools/sync-security-brand-assets.mjs",
     "sync:zebrabyte-blog": "node tools/sync-zebrabyte-blog-optimized.mjs",
     "sync:changelog": "node tools/sync-github-changelog.mjs",
@@ -41,7 +41,7 @@
     "@probo/cookie-banner": "^0.13.0",
     "@splidejs/splide": "^4.1.4",
     "@splidejs/splide-extension-auto-scroll": "^0.5.3",
-    "@splidejs/splide-extension-intersection": "^0.2.0",
+    "@splidejs/splide-extension-intersection": "^0.2.9",
     "@splidejs/svelte-splide": "^0.2.9",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.0",
