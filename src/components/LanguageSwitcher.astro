@@ -15,7 +15,7 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
   data-language-switch
   class:list={[
     "text-muted-foreground hover:text-primary hover:bg-highlight inline-flex items-center justify-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2",
-    compact ? "size-10 rounded-lg px-1.5" : "h-8 rounded-md px-[9px]",
+    compact ? "h-10 min-w-[3.75rem] rounded-lg px-2" : "h-8 rounded-md px-[9px]",
     className,
   ]}
   aria-label="Switch language to English"
@@ -25,6 +25,7 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
     viewBox="0 0 24 24"
     width="20"
     height="20"
+    class="shrink-0"
     fill="none"
     stroke="currentColor"
     stroke-width="2"
@@ -37,7 +38,7 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
     <path d="M12 2a15.3 15.3 0 0 1 0 20" />
     <path d="M12 2a15.3 15.3 0 0 0 0 20" />
   </svg>
-  <span data-language-code class="text-xs font-semibold tracking-wide">EN</span>
+  <span data-language-code class="shrink-0 text-xs font-semibold tracking-wide">EN</span>
 </a>
 
 <script>
