@@ -237,7 +237,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
         <div>
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Live posture</p>
@@ -250,11 +250,11 @@ const faqs = [
         </div>
 
         <div class="font-mono text-sm">
-          <div class="mb-3 flex items-center justify-between border-b border-level-0-foreground/15 pb-3 opacity-55">
+          <div class="mb-3 flex items-center justify-between border-b border-invert/15 pb-3 opacity-55">
             <span>signal stream</span><span>mail posture</span>
           </div>
           {monitoring.map((item, index) => (
-            <div class="grid grid-cols-[54px_1fr_auto] gap-4 border-b border-level-0-foreground/15 py-4 last:border-b-0">
+            <div class="grid grid-cols-[54px_1fr_auto] gap-4 border-b border-invert/15 py-4 last:border-b-0">
               <span class="opacity-40">0{index + 1}</span>
               <span class="opacity-80">{item}</span>
               <span class="opacity-40">watch</span>
