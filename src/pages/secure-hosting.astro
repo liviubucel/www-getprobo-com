@@ -227,7 +227,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-3xl">
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Migration / cutover</p>
@@ -239,13 +239,13 @@ const faqs = [
         </div>
 
         <div class="overflow-x-auto pb-3">
-          <div class="min-w-[900px] border-y border-level-0-foreground/15">
-            <div class="grid grid-cols-5 border-b border-level-0-foreground/15 font-mono text-xs opacity-45">
+          <div class="min-w-[900px] border-y border-invert/15">
+            <div class="grid grid-cols-5 border-b border-invert/15 font-mono text-xs opacity-45">
               {migration.map((item) => <div class="px-5 py-3">{item.step}</div>)}
             </div>
             <div class="grid grid-cols-5">
               {migration.map((item, index) => (
-                <article class:list={["relative min-h-72 px-5 py-7", index < migration.length - 1 && "border-r border-level-0-foreground/15"]}>
+                <article class:list={["relative min-h-72 px-5 py-7", index < migration.length - 1 && "border-r border-invert/15"]}>
                   <div class="mb-9 flex items-center gap-3">
                     <span class="size-2 rounded-full bg-level-0"></span>
                     <span class="font-mono text-xs opacity-45">phase {item.step}</span>
