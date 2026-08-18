@@ -1,0 +1,36 @@
+name: Release dependency inspect
+
+on:
+  push:
+    branches:
+      - release/production-readiness
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Explain vulnerable dependency paths
+        run: |
+          npm explain nanoid || true
+          echo '--- undici ---'
+          npm explain undici || true
+          echo '--- wrangler ---'
+          npm explain wrangler || true
+      - name: Current registry versions
+        run: |
+          echo "wrangler=$(npm view wrangler version)"
+          echo "nanoid=$(npm view nanoid version)"
+          echo "undici=$(npm view undici version)"
+      - name: Audit fix dry run
+        run: npm audit fix --package-lock-only --dry-run || true
+      - name: Outdated direct dependencies
+        run: npm outdated || true
