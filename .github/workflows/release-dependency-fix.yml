@@ -1,15 +1,14 @@
 name: Release dependency fix
 
 on:
-  push:
-    branches:
-      - release/production-readiness
+  pull_request:
 
 permissions:
   contents: write
 
 jobs:
   fix:
+    if: github.head_ref == 'release/production-readiness'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
