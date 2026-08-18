@@ -217,7 +217,7 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-3xl">
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Risk-management measures</p>
@@ -228,9 +228,9 @@ const serviceSchema = {
           </p>
         </div>
 
-        <div class="grid border-y border-level-0-foreground/15 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="grid border-y border-invert/15 sm:grid-cols-2 lg:grid-cols-5">
           {riskMeasures.map(([area, text], index) => (
-            <article class="min-h-64 border-b border-level-0-foreground/15 p-5 sm:border-r lg:p-6 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(5n)]:border-r-0 lg:[&:nth-last-child(-n+5)]:border-b-0">
+            <article class="min-h-64 border-b border-invert/15 p-5 sm:border-r lg:p-6 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(5n)]:border-r-0 lg:[&:nth-last-child(-n+5)]:border-b-0">
               <span class="mb-9 block font-mono text-sm opacity-40">{String(index + 1).padStart(2, "0")}</span>
               <h3 class="mb-3 font-medium">{area}</h3>
               <p class="text-sm leading-relaxed opacity-65">{text}</p>
