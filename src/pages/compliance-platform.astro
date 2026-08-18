@@ -214,7 +214,10 @@ const softwareApplicationSchema = {
           {
             capabilities.map((capability) => (
               <article class="border-t py-7 first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
-                <i class={`ph ${capability.icon} mb-4 block text-2xl`} aria-hidden="true"></i>
+                <i
+                  class={`ph ${capability.icon} mb-5 block text-[2rem] leading-none sm:text-[2.15rem]`}
+                  aria-hidden="true"
+                ></i>
                 <h3 class="text-h5 mb-2 font-medium">{capability.title}</h3>
                 <p class="text-muted-foreground leading-relaxed">{capability.description}</p>
               </article>
