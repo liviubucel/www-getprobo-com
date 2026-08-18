@@ -118,7 +118,7 @@ const capabilities = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container grid gap-12 lg:grid-cols-[0.64fr_1.36fr] lg:items-start lg:gap-20">
         <div>
           <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">One program</p>
@@ -129,9 +129,9 @@ const capabilities = [
           </p>
         </div>
 
-        <div class="border-y border-level-0-foreground/15 font-mono">
+        <div class="border-y border-invert/15 font-mono">
           {operatingFlow.map(([number, title, text], index) => (
-            <div class="grid gap-4 border-b border-level-0-foreground/15 py-6 last:border-b-0 sm:grid-cols-[60px_0.55fr_1.45fr_auto] sm:gap-7">
+            <div class="grid gap-4 border-b border-invert/15 py-6 last:border-b-0 sm:grid-cols-[60px_0.55fr_1.45fr_auto] sm:gap-7">
               <span class="text-sm opacity-40">{number}</span>
               <strong class="font-sans font-medium">{title}</strong>
               <span class="font-sans text-sm leading-relaxed opacity-65">{text}</span>
