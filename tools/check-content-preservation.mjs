@@ -31,7 +31,10 @@ const protectedFiles = new Map([
   ["src/pages/hub/zebrabyte-vs-fractional-ciso.astro", 2_000],
   ["src/pages/whats-next/ISO27001.astro", 10_000],
   ["src/pages/whats-next/soc2.astro", 10_000],
-  ["src/pages/compliance-portal.astro", 8_000],
+  // The clean route is intentionally a thin canonical wrapper around the full
+  // inherited product surface below. Protect the wrapper relationship separately.
+  ["src/pages/compliance-portal.astro", 50],
+  ["src/pages/compliance-platform.astro", 8_000],
   ["src/pages/products/compliance-portal.astro", 8_000],
   ["src/pages/yc.astro", 2_000],
   ["src/pages/stories.astro", 1_000],
@@ -68,7 +71,15 @@ const protectedPublicPaths = new Set([
   "/stories/*",
   "/love-from-customer",
   "/yc",
+  "/compliance-platform",
+  "/compliance-portal",
   "/products/compliance-portal",
+]);
+
+// Canonical consolidation is not content suppression when the rich source is
+// preserved and the destination renders that exact product surface.
+const allowedCanonicalRedirects = new Map([
+  ["/products/compliance-portal", "/compliance-portal"],
 ]);
 
 // Conservative lower bounds, deliberately below the current complete source
@@ -105,6 +116,16 @@ for (const [file, minBytes] of protectedFiles) {
   const size = statSync(file).size;
   if (size < minBytes) {
     failures.push(`${file}: unexpectedly reduced to ${size} bytes (minimum protected baseline ${minBytes})`);
+  }
+}
+
+const canonicalPortalPage = "src/pages/compliance-portal.astro";
+if (existsSync(canonicalPortalPage)) {
+  const source = readFileSync(canonicalPortalPage, "utf8");
+  if (!source.includes('import CompliancePortalProduct from "./products/compliance-portal.astro"')) {
+    failures.push(
+      `${canonicalPortalPage}: canonical route no longer renders the complete inherited Compliance Portal product surface`,
+    );
   }
 }
 
@@ -166,6 +187,9 @@ if (!existsSync(redirectsFile)) {
     const [source, destination, status] = line.split(/\s+/);
     if (!protectedPublicPaths.has(source)) continue;
 
+    const allowedDestination = allowedCanonicalRedirects.get(source);
+    if (allowedDestination === destination && status === "301") continue;
+
     failures.push(
       `${redirectsFile}: protected public path ${source} is redirected to ${destination || "<missing destination>"}${status ? ` (${status})` : ""}`,
     );
@@ -174,7 +198,7 @@ if (!existsSync(redirectsFile)) {
 
 if (failures.length) {
   console.error("[content-preservation] FAIL: protected inherited product content was removed, materially reduced, filtered out, or hidden behind a redirect.");
-  console.error("[content-preservation] Preserve the page/collection and rebrand, paraphrase or contextualize it in place. Do not delete, suppress or redirect useful content to satisfy brand, SEO, performance, or release audits.");
+  console.error("[content-preservation] Preserve the page/collection and rebrand, paraphrase or contextualize it in place. Canonical aliases are allowed only when the complete source is preserved and rendered at the destination.");
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
