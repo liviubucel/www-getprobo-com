@@ -104,15 +104,32 @@ function publicAuditView(content: string): string {
     "",
   );
 
-  // Visible text is the primary brand surface. Also audit navigation/action
-  // URLs and external media URLs, while ignoring local hashed asset names.
+  // Visible text is the primary brand surface. Audit navigation/action URLs and
+  // external media URLs, but deliberately ignore local implementation assets.
+  // Astro keeps source-derived names in hashed /_astro/ files; those names are
+  // not customer-facing branding and rewriting them would break the build.
   const publicUrls = Array.from(
     withoutRuntime.matchAll(
       /\b(href|action|formaction|src|poster)=(['"])([\s\S]*?)\2/gi,
     ),
   )
     .map((match) => ({ name: match[1].toLowerCase(), value: match[3] }))
-    .filter(({ name, value }) => name !== "src" && name !== "poster" || /^https?:\/\//i.test(value))
+    .filter(({ name, value }) => {
+      const external = /^https?:\/\//i.test(value);
+
+      if (name === "src" || name === "poster") return external;
+
+      if (
+        name === "href" &&
+        !external &&
+        (/(?:^|\/)\_astro\//i.test(value) ||
+          /\.(?:css|m?js|map|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|otf)(?:[?#]|$)/i.test(value))
+      ) {
+        return false;
+      }
+
+      return true;
+    })
     .map(({ value }) => value)
     .join("\n");
 
