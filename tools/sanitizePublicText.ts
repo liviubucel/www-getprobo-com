@@ -175,6 +175,10 @@ function publicRouteForMarkdown(distDir: string, file: string): string {
   return route ? `/${route}` : "/";
 }
 
+function canonicalPublicUrl(route: string): string {
+  return route === "/" ? "https://www.zebrabyte.ro/" : `https://www.zebrabyte.ro${route}`;
+}
+
 function pruneGeneratedMarkdownAndRebuildLlms(distDir: string): void {
   const mdDir = join(distDir, "md");
   if (!existsSync(mdDir)) return;
@@ -196,7 +200,7 @@ function pruneGeneratedMarkdownAndRebuildLlms(distDir: string): void {
     ...retained.map((file) => {
       const route = publicRouteForMarkdown(distDir, file);
       const rel = relative(mdDir, file).replace(/\\/g, "/");
-      return `- [${route}](https://www.zebrabyte.ro${route}) — [Markdown](https://www.zebrabyte.ro/md/${rel})`;
+      return `- [${route}](${canonicalPublicUrl(route)}) — [Markdown](https://www.zebrabyte.ro/md/${rel})`;
     }),
     "",
   ];
@@ -205,9 +209,18 @@ function pruneGeneratedMarkdownAndRebuildLlms(distDir: string): void {
   const fullParts = [
     "# ZebraByte public content",
     "",
+    "> Canonical site: https://www.zebrabyte.ro/",
+    "",
     ...retained.flatMap((file) => {
       const route = publicRouteForMarkdown(distDir, file);
-      return [`## ${route}`, "", readFileSync(file, "utf-8").trim(), ""];
+      return [
+        `## ${route}`,
+        "",
+        `Canonical URL: ${canonicalPublicUrl(route)}`,
+        "",
+        readFileSync(file, "utf-8").trim(),
+        "",
+      ];
     }),
   ];
   writeFileSync(join(distDir, "llms-full.txt"), fullParts.join("\n"));
