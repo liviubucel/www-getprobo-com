@@ -1,139 +1,279 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import SaleArg from "../components/ui/SaleArg.astro";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
-const controls = [
+const protectionLayers = [
   {
-    title: "Web Application Firewall",
-    description: "Filtrăm trafic malițios și cereri asociate atacurilor comune înainte să ajungă la aplicație, cu reguli adaptate platformei și riscului real.",
+    step: "01",
+    title: "Before the application",
+    text: "TLS, edge filtering, rate limiting și WAF reduc traficul malițios și cererile abuzive înainte să consume resursele origin-ului.",
   },
   {
-    title: "Malware & integrity monitoring",
-    description: "Urmărim modificări suspecte și semnale de malware, astfel încât un compromis să fie observat înainte să devină o problemă persistentă.",
+    step: "02",
+    title: "Inside the application",
+    text: "Hardening, access control, patching, configuration review și integrity monitoring reduc șansele ca o vulnerabilitate să devină persistență.",
   },
   {
-    title: "DDoS & edge protection",
-    description: "Traficul anormal este absorbit și filtrat la edge, reducând presiunea pe origin și păstrând aplicația disponibilă în timpul atacurilor volumetrice.",
-  },
-  {
-    title: "TLS, headers & hardening",
-    description: "Configurăm HTTPS, headere relevante, acces administrativ și setări defensive care reduc suprafața de atac fără să rupă funcționalitatea site-ului.",
-  },
-  {
-    title: "Recovery readiness",
-    description: "Backup-urile, restaurarea și procedurile de recovery sunt tratate ca parte din securitate, nu ca o funcție separată activată abia după incident.",
-  },
-  {
-    title: "Reputation & exposure checks",
-    description: "Urmărim semnale precum blacklist-uri, expuneri publice și schimbări importante care pot afecta reputația domeniului și încrederea utilizatorilor.",
+    step: "03",
+    title: "After a change or incident",
+    text: "Monitoring, backup, recovery și verification permit revenirea controlată și reduc riscul ca aceeași cauză să rămână activă.",
   },
 ];
 
-const risks = [
-  "injectare de cod și acces neautorizat",
-  "malware, backdoor-uri și reinfectare",
-  "brute force și credential abuse",
-  "SQL injection, XSS și atacuri asupra aplicației",
-  "DDoS și epuizarea resurselor origin",
-  "site compromis folosit pentru phishing sau redirect-uri malițioase",
-  "blacklisting și degradarea reputației domeniului",
-  "pierdere de date fără un recovery testat",
+const controls = [
+  ["Web Application Firewall", "Reguli defensive și filtrare adaptate aplicației, expunerii și traficului legitim."],
+  ["DDoS & edge protection", "Absorbție și filtrare la edge pentru a reduce presiunea pe origin în timpul traficului volumetric sau abuziv."],
+  ["TLS & security headers", "HTTPS și headere relevante configurate fără să rupă funcționalitatea aplicației sau integrările legitime."],
+  ["Malware & integrity", "Semnale de modificare suspectă, fișiere malițioase și comportamente care pot indica persistență sau reinfectare."],
+  ["Admin & identity hardening", "MFA, limitarea accesului, protecția panourilor administrative și reducerea credential abuse."],
+  ["Vulnerability remediation", "Patching, configuration changes și reducerea suprafeței de atac în funcție de finding și impact."],
+  ["Monitoring", "Disponibilitate, schimbări și semnale relevante urmărite astfel încât degradarea posturii să fie observabilă."],
+  ["Backup & recovery", "Restaurarea și recovery-ul sunt parte din control, nu doar existența unei copii de rezervă."],
+];
+
+const threats = [
+  ["Credential abuse", "Brute force, credential stuffing și acces administrativ obținut prin conturi compromise."],
+  ["Application attacks", "Injection, XSS, path abuse, exploatarea componentelor vulnerabile și alte atacuri asupra aplicației."],
+  ["Malware & persistence", "Backdoors, fișiere injectate, redirect-uri malițioase și reinfectare după o curățare incompletă."],
+  ["Availability attacks", "DDoS, abuse și consum de resurse care pot degrada sau opri serviciul."],
+  ["Configuration exposure", "Servicii, fișiere, panouri sau headere configurate într-un mod care expune inutil informații sau acces."],
+  ["Recovery failure", "Backup existent dar imposibil de restaurat, incomplet sau contaminat cu aceeași problemă."],
+];
+
+const workloads = [
+  "WordPress și alte CMS-uri",
+  "WooCommerce și magazine online",
+  "aplicații web custom",
+  "API-uri și backends expuse public",
+  "site-uri statice și front-end-uri moderne",
+  "aplicații găzduite la furnizorul actual",
+];
+
+const operatingModes = [
+  {
+    title: "Protect existing hosting",
+    text: "Păstrăm infrastructura actuală și lucrăm pe controalele care pot fi aplicate în jurul ei: edge, WAF, DNS, hardening și monitoring.",
+  },
+  {
+    title: "Remediate after assessment",
+    text: "Pornim de la findings existente și implementăm modificările prioritare, apoi verificăm efectul remedierii.",
+  },
+  {
+    title: "Move to managed hosting",
+    text: "Când origin-ul și operațiunile sunt parte din risc, migrarea într-un mediu administrat poate aduce patching, backup și recovery sub același ownership.",
+  },
+  {
+    title: "Recover after compromise",
+    text: "Dacă site-ul este deja compromis, engagement-ul pornește ca incident response, nu ca simplă activare a unui WAF peste un origin infectat.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Trebuie să găzduiesc website-ul la ZebraByte?",
+    answer:
+      "Nu. Putem aplica anumite controale de edge, DNS, WAF, hardening și monitoring în jurul infrastructurii existente. Managed Hosting este separat și devine relevant când vrei și ownership asupra origin-ului, patching-ului, backup-ului și recovery-ului.",
+  },
+  {
+    question: "Un WAF este suficient pentru a securiza un website?",
+    answer:
+      "Nu. WAF-ul este un strat util, dar nu repară un plugin vulnerabil, un cont administrativ compromis, un origin expus sau un backup inutilizabil. De aceea combinăm prevenția cu hardening, monitoring și recovery.",
+  },
+  {
+    question: "Puteți curăța un site deja infectat?",
+    answer:
+      "Da, dar un site compromis trebuie tratat ca incident. Curățarea fără a identifica accesul inițial, persistența și cauza tehnică poate duce la reinfectare. Scope-ul poate include containment, cleanup, hardening și recovery.",
+  },
+  {
+    question: "Funcționează și pentru WordPress?",
+    answer:
+      "Da. WordPress este unul dintre workload-urile pe care le putem proteja, dar modelul nu depinde de WordPress. Se poate adapta și la e-commerce, aplicații custom, API-uri și front-end-uri moderne.",
+  },
+  {
+    question: "Cum verificăm că remedierea a funcționat?",
+    answer:
+      "Revalidăm finding-ul sau configurația relevantă, verificăm că aplicația legitimă funcționează și, unde este cazul, urmărim semnalele post-change pentru a evita regresii sau reinfectare.",
+  },
 ];
 ---
 
 <Layout
   title="Website Security"
-  description="Website Security ZebraByte: WAF, malware protection, DDoS mitigation, TLS hardening, monitoring și recovery pentru WordPress, e-commerce și aplicații web."
+  description="Website Security ZebraByte: WAF, DDoS protection, malware monitoring, TLS hardening, identity protection, vulnerability remediation și recovery pentru WordPress, e-commerce și aplicații web."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
-      <div class="container text-center">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Website Security</div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Protecția website-ului trebuie să funcționeze înainte, în timpul și după un atac.</h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-          ZebraByte combină WAF, protecție DDoS, monitorizare, hardening și recovery într-un singur serviciu. Poate proteja WordPress, magazine online și aplicații custom chiar dacă infrastructura nu este găzduită la noi.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Protejează website-ul</Button>
-          <Button href="/security-assessment" variant="secondary" size="lg">Începe cu un assessment</Button>
-        </div>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
+        Website Security
+      </div>
+
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Protecție înainte, în timpul</span>
+        <span class="animate-perspective-in block delay-50"> și după un atac. </span>
+      </h1>
+
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        WAF, DDoS protection, hardening, malware monitoring și recovery operate ca straturi
+        complementare. Poți păstra furnizorul actual sau poți muta origin-ul într-un mediu
+        managed atunci când asta reduce riscul real.
+      </p>
+
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/security-assessment"
+        >
+          Începe cu un assessment
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Protejează website-ul
+        </Button>
       </div>
     </animated-hero>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Controls</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Un strat complet de protecție, nu un singur plugin.</h2>
-        <p class="text-muted-foreground text-lg">Controalele sunt gestionate împreună, astfel încât filtrarea, detecția și recuperarea să nu depindă de produse izolate care nu comunică între ele.</p>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Defense in depth pentru aplicația publică</h2>
+        <p class="text-muted-foreground text-lg">
+          Nu presupunem că un singur control va opri fiecare atac. Construim straturi astfel
+          încât eșecul unui control să nu însemne automat compromiterea completă.
+        </p>
       </div>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {controls.map((control) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <h3 class="text-h5 mb-3 font-medium">{control.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{control.description}</p>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {protectionLayers.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.8fr_1.2fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
-      <div class="container grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Threat model</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Ce încercăm să oprim sau să detectăm.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">Nu promitem că orice atac poate fi blocat. Construim straturi de prevenție, detecție și recovery astfel încât un singur control care eșuează să nu însemne automat compromiterea completă.</p>
-        </div>
-        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
-          <ul class="grid gap-4 sm:grid-cols-2">
-            {risks.map((risk) => (
-              <li class="flex gap-3 text-muted-foreground leading-relaxed">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
-                <span>{risk}</span>
-              </li>
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Controls care lucrează împreună</h2>
+          <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+            Configurația exactă depinde de stack și de cine controlează infrastructura. Nu
+            prezentăm fiecare control ca fiind universal disponibil pentru orice aplicație.
+          </p>
+
+          <div class="border-y">
+            {controls.map(([control, text], index) => (
+              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+                <span class="text-muted-foreground font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
+                <h3 class="font-medium">{control}</h3>
+                <p class="text-muted-foreground leading-relaxed">{text}</p>
+              </article>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Continuous protection</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Păstrăm experiența Probo și pentru securitatea operațională.</h2>
-        <p class="text-muted-foreground text-lg">Aceleași principii de ownership, evidence și lucru continuu din platforma Probo sunt aplicate și controalelor tehnice ZebraByte.</p>
-      </div>
-      <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
-        <SaleArg title="Protecție înainte să ajungă traficul la aplicație" video="/videos/keyshot1.mp4">
-          <p>Folosim edge controls și WAF pentru a reduce traficul malițios înainte să consume resursele aplicației și origin-ului.</p>
-        </SaleArg>
-        <SaleArg title="Evidence și schimbări urmărite în timp" video="/videos/keyshot2.mp4">
-          <p>Schimbările relevante, alertele și acțiunile de remediere pot fi urmărite în același model continuu folosit pentru compliance.</p>
-        </SaleArg>
-      </div>
-    </section>
-
-    <section class="border-y py-16 sm:py-24">
-      <div class="container grid gap-4 sm:grid-cols-3">
-        <a href="/incident-response" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Site deja compromis?</h3>
-          <p class="text-muted-foreground text-sm">Triage, containment, malware cleanup și recovery.</p>
-        </a>
-        <a href="/secure-hosting" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Vrei și infrastructura administrată?</h3>
-          <p class="text-muted-foreground text-sm">Mută origin-ul într-un mediu gestionat security-first.</p>
-        </a>
-        <a href="https://scan.zebrabyte.ro" class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors" target="_blank" rel="noopener noreferrer">
-          <h3 class="mb-2 font-medium">Scanare rapidă</h3>
-          <p class="text-muted-foreground text-sm">Rulează scannerul web ZebraByte pentru o verificare inițială.</p>
-        </a>
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Threat model, nu marketing cu „100% secure”</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Obiectivul este să reducem probabilitatea și impactul, să detectăm schimbările
+            relevante și să avem o cale de recovery. Nicio arhitectură serioasă nu pornește
+            de la promisiunea că orice atac poate fi blocat.
+          </p>
+        </div>
+        <div class="border-y">
+          {threats.map(([threat, text]) => (
+            <div class="border-b py-5 last:border-b-0">
+              <h3 class="font-medium">{threat}</h3>
+              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="container py-16 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Securizează aplicația fără să o transformi într-un proiect paralel.</h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Spune-ne platforma, infrastructura și ce probleme ai observat. Configurăm controalele în jurul aplicației reale.</p>
-      <Button href="/contact" size="lg">Discută despre website security</Button>
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Lucrăm în jurul stack-ului real</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+            Website Security nu este limitat la un singur CMS și nici nu cere automat o
+            migrare. Începem de la arhitectura actuală și de la controls pe care îi putem
+            opera în siguranță în acel context.
+          </p>
+          <Button href="https://scan.zebrabyte.ro" variant="secondary" target="_blank" rel="noopener noreferrer">Rulează scanarea web</Button>
+        </div>
+        <ul class="border-y">
+          {workloads.map((item) => (
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Patru moduri de a începe</h2>
+          <div class="border-y">
+            {operatingModes.map((item) => (
+              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+                <h3 class="text-h5 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ZebraByteTestimonials />
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Securizează aplicația fără să o transformi într-un proiect paralel.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+        Spune-ne platforma, infrastructura și problemele observate. Stabilim ce controls
+        merită implementați și cine trebuie să îi opereze.
+      </p>
+      <Button href="/contact" size="lg">Discută despre Website Security</Button>
     </section>
   </main>
 </Layout>
