@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import Logos from "../components/block/Logos.astro";
 import WallCard from "../components/WallCard.astro";
 
 const posts = (await getCollection("wall"))
@@ -31,7 +32,7 @@ const posts = (await getCollection("wall"))
 
       <section class="relative z-10 container py-16 text-center sm:py-24">
         <div
-          class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium"
+          class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-fit max-w-full rounded-lg border px-3 py-1 text-center text-sm leading-snug font-medium"
           style="animation-delay: 100ms"
         >
           Feedback & Reference Insights
@@ -60,6 +61,13 @@ const posts = (await getCollection("wall"))
           compliance. Cardurile sunt etichetate clar ca să distingă cele două
           categorii.
         </p>
+      </section>
+
+      <section class="relative z-10 pb-4">
+        <p class="text-tertiary-foreground mb-3 text-center text-xs font-medium uppercase tracking-[0.12em]">
+          Organizații din biblioteca de referință
+        </p>
+        <Logos class="animate-slide-in animation-delay-300" />
       </section>
     </div>
 
