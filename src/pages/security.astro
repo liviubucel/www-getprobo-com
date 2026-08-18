@@ -136,38 +136,41 @@ const disclosureRules = [
     </animated-hero>
 
     <section class="container py-16 sm:py-24">
-      <div class="mb-10 max-w-180">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security principles</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Principii care ghidează modul în care operăm.</h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">Controalele concrete diferă între servicii și furnizori. Principiile de mai jos definesc direcția comună fără a transforma o practică tehnică într-o promisiune universală pentru fiecare produs.</p>
-      </div>
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {principles.map((item) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <h3 class="mb-3 text-xl font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
+      <div class="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security principles</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Principii care ghidează modul în care operăm.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">Controalele concrete diferă între servicii și furnizori. Principiile definesc direcția comună fără a transforma o practică tehnică într-o promisiune universală pentru fiecare produs.</p>
+        </div>
+
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          {principles.map((item, index) => (
+            <article class="border-t py-7 sm:py-8">
+              <span class="text-muted-foreground mb-7 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
+    <section class="bg-level-3 py-16 text-level-0-foreground sm:py-24">
       <div class="container">
-        <div class="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
-          <div>
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational controls</p>
-            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Securitate pe mai multe straturi.</h2>
-            <p class="text-muted-foreground text-lg leading-relaxed">Nu ne bazăm pe un singur control. Identitatea, edge-ul, aplicația, infrastructura, datele și procesele de operare sunt tratate ca straturi complementare.</p>
-          </div>
-          <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
-            {controls.map((item, index) => (
-              <article class="bg-level-0 p-6">
-                <div class="text-muted-foreground mb-6 text-sm">0{index + 1}</div>
-                <h3 class="mb-2 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-              </article>
-            ))}
-          </div>
+        <div class="mb-12 max-w-3xl sm:mb-16">
+          <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational controls</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Securitate pe mai multe straturi.</h2>
+          <p class="text-level-0-foreground/65 text-lg leading-relaxed">Nu ne bazăm pe un singur control. Identitatea, edge-ul, aplicația, infrastructura, datele și procesele de operare sunt tratate ca straturi complementare.</p>
+        </div>
+
+        <div class="grid gap-x-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-16">
+          {controls.map((item, index) => (
+            <article class="border-t border-level-0-foreground/15 py-8">
+              <span class="text-level-0-foreground/40 mb-7 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+              <p class="text-level-0-foreground/65 leading-relaxed">{item.text}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
