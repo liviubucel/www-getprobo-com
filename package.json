@@ -1,5 +1,5 @@
 {
-  "name": "www-getprobo-com",
+  "name": "zebrabyte-website",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -67,7 +67,7 @@
     "@astrojs/starlight-tailwind": "^5.0.0",
     "@tailwindcss/typography": "^0.5.20",
     "tailwind-variants": "^3.3.1",
-    "wrangler": "^4.119.0"
+    "wrangler": "^4.123.0"
   },
   "overrides": {
     "zod": "^4.3.6"
