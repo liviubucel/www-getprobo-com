@@ -135,12 +135,15 @@ forbidText(home, "Trusted by", "homepage unsupported customer-proof label");
 forbidText(home, "Clienți ZebraByte", "homepage unsupported customer-proof label");
 
 // Inherited wall entries are deliberately preserved as neutral reference insights.
-// The page must never regress to a ZebraByte-only source filter just to simplify
-// provenance or brand checks.
+// A reference-logo marquee is allowed only when it is explicitly framed as a
+// reference library, never as ZebraByte customer proof.
 requireText(love, 'getCollection("wall")', "customer wall complete collection source");
 requireText(love, "Feedback & Reference Insights", "customer wall mixed provenance framing");
 forbidText(love, 'post.id.startsWith("zebrabyte-")', "customer wall inherited reference suppression");
-forbidText(love, 'import Logos from "../components/block/Logos.astro"', "customer wall inherited company marquee");
+requireText(love, 'import Logos from "../components/block/Logos.astro"', "customer wall neutral reference marquee");
+requireText(love, "Organizații din biblioteca de referință", "customer wall neutral marquee label");
+forbidText(love, "Trusted by", "customer wall unsupported customer-proof label");
+forbidText(love, "Clienți ZebraByte", "customer wall unsupported customer-proof label");
 forbidText(love, "wider platform reference library", "customer wall inherited social-proof workaround");
 
 requireText(contact, 'class="divide-y border-y"', "contact editorial rail");
@@ -164,12 +167,23 @@ forbidText(
 );
 forbidText(industryPage, 'class="rounded-xl border p-5 sm:p-6"', "industry outcome card repetition");
 
-requireText(industryService, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry service framed peer grids");
+requireText(industryService, 'class="grid border-y sm:grid-cols-2"', "industry service editorial risk grid");
+requireText(industryService, "siblingServices.map", "industry service sibling navigation");
+forbidText(
+  industryService,
+  "grid gap-px overflow-hidden rounded-2xl border bg-border",
+  "industry service repeated framed peer grids",
+);
 forbidText(industryService, 'class="bg-level-0 rounded-xl border p-6"', "industry service risk card repetition");
 forbidText(industryService, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "industry service sibling card repetition");
 
-requireText(legacyPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "legacy page framed peer grid");
+requireText(legacyPage, 'class="grid border-y sm:grid-cols-2 lg:grid-cols-3"', "legacy page editorial feature grid");
 requireText(legacyPage, 'class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5"', "legacy note editorial treatment");
+forbidText(
+  legacyPage,
+  "grid gap-px overflow-hidden rounded-2xl border bg-border",
+  "legacy repeated framed peer grid",
+);
 forbidText(legacyPage, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "legacy related card repetition");
 forbidText(legacyPage, "mt-5 rounded-xl border bg-active p-5", "legacy note floating-card treatment");
 
