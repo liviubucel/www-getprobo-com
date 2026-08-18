@@ -149,154 +149,170 @@ const faqs = [
   description="Cyber Security ZebraByte: security assessment, website security, email security, hardening, monitoring, incident response și secure managed hosting conectate la risk și compliance."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         ZebraByte Cyber Security
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Securitate cibernetică,</span>
         <span class="animate-perspective-in block delay-50"> de la finding la control operat. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         Identificăm riscurile, implementăm măsurile tehnice și conectăm monitoring-ul,
-        remediation-ul și incident response-ul într-un program care poate continua după
-        prima evaluare.
+        remediation-ul și incident response-ul într-un program care poate continua după prima evaluare.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/security-assessment"
-        >
-          Security Assessment
-        </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
-          Discută cu un expert
-        </Button>
+      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/security-assessment">Security Assessment</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută cu un expert</Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Un program, nu o colecție de produse</h2>
-        <p class="text-muted-foreground text-lg">
-          Alegem serviciul după problemă și risc. Nu forțăm fiecare client într-un stack
-          identic și nu transformăm fiecare finding într-un produs nou.
-        </p>
-      </div>
+    <section class="container pb-12 sm:pb-24">
+      <div class="mx-auto max-w-6xl border-y py-10 sm:py-14">
+        <div class="mb-12 grid gap-6 lg:grid-cols-[0.7fr_1.3fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Security control plane</p>
+            <h2 class="text-h3 sm:text-h2 font-medium">Un program, nu o colecție de produse.</h2>
+          </div>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Alegem punctul de intrare după problemă și risc. Nu forțăm fiecare organizație într-un
+            stack identic și nu transformăm fiecare finding într-un produs nou.
+          </p>
+        </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {services.map((service) => (
-          <a
-            href={service.href}
-            class="group grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10"
-          >
-            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">
-              {service.title}
-            </h3>
-            <p class="text-muted-foreground leading-relaxed">{service.text}</p>
+        <div class="grid gap-px border bg-border lg:grid-cols-[1fr_1.25fr_1fr]">
+          <a href={services[0].href} class="group bg-level-0 min-h-64 p-6 lg:row-span-2 sm:p-8">
+            <span class="text-muted-foreground mb-10 block font-mono text-xs">ENTRY / 01</span>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{services[0].title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{services[0].text}</p>
           </a>
-        ))}
+
+          <div class="bg-level-3 flex min-h-64 flex-col justify-between p-6 text-level-0-foreground sm:p-8">
+            <div class="font-mono text-xs opacity-45">ZEBRABYTE / SECURITY</div>
+            <div>
+              <div class="mb-3 text-4xl font-medium tracking-tight">Risk → Control</div>
+              <p class="max-w-lg leading-relaxed opacity-65">Assessment, remediation, monitoring și response conectate prin același context tehnic.</p>
+            </div>
+          </div>
+
+          <a href={services[1].href} class="group bg-level-0 min-h-64 p-6 sm:p-8">
+            <span class="text-muted-foreground mb-10 block font-mono text-xs">SERVICE / 02</span>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{services[1].title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{services[1].text}</p>
+          </a>
+
+          <a href={services[2].href} class="group bg-level-0 min-h-64 p-6 sm:p-8">
+            <span class="text-muted-foreground mb-10 block font-mono text-xs">SERVICE / 03</span>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{services[2].title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{services[2].text}</p>
+          </a>
+
+          <a href={services[3].href} class="group bg-level-0 min-h-64 p-6 sm:p-8">
+            <span class="text-muted-foreground mb-10 block font-mono text-xs">SERVICE / 04</span>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{services[3].title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{services[3].text}</p>
+          </a>
+
+          <a href={services[4].href} class="group bg-level-0 min-h-64 p-6 sm:p-8">
+            <span class="text-muted-foreground mb-10 block font-mono text-xs">SERVICE / 05</span>
+            <h3 class="text-h4 mb-4 font-medium group-hover:underline group-hover:underline-offset-4">{services[4].title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{services[4].text}</p>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Defense in depth, fără o singură „cutie magică”</h2>
-          <p class="text-muted-foreground text-lg">
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.58fr_1.42fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Defense map</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Defense in depth, fără o singură „cutie magică”.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
             Un atac nu respectă granițele dintre furnizori. Identity, edge, aplicația,
             infrastructura și operațiunile trebuie privite împreună atunci când riscul o cere.
           </p>
         </div>
 
-        <div class="mx-auto max-w-5xl border-y">
+        <div class="space-y-2">
           {layers.map(([layer, text], index) => (
-            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.7fr_1.3fr] sm:gap-8">
-              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+            <article class:list={["grid gap-3 border px-5 py-5 sm:grid-cols-[54px_0.55fr_1.45fr] sm:gap-7", index === 0 && "sm:mx-0", index === 1 && "sm:mx-3", index === 2 && "sm:mx-6", index === 3 && "sm:mx-9", index === 4 && "sm:mx-12", index === 5 && "sm:mx-15"]}>
+              <span class="text-muted-foreground font-mono text-xs">L{index + 1}</span>
               <h3 class="font-medium">{layer}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
+              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security lifecycle</h2>
-        <p class="text-muted-foreground text-lg">
-          Primul assessment este doar începutul. Riscul se schimbă odată cu aplicația,
-          utilizatorii, furnizorii și infrastructura.
-        </p>
-      </div>
-
-      <div class="mx-auto max-w-5xl border-y">
-        {lifecycle.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="container py-10 sm:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Alege modelul după problema reală</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Uneori ai nevoie doar de un assessment. Alteori finding-ul trebuie implementat,
-            controlul trebuie operat continuu sau există deja un incident. Scope-ul se schimbă
-            în funcție de aceste nevoi.
-          </p>
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container">
+        <div class="mb-12 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Security lifecycle</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Prima evaluare este doar începutul.</h2>
+          <p class="text-lg leading-relaxed opacity-65">Riscul se schimbă odată cu aplicația, utilizatorii, furnizorii și infrastructura.</p>
         </div>
-        <div class="border-y">
-          {engagementModels.map((item) => (
-            <div class="border-b py-5 last:border-b-0">
-              <h3 class="font-medium">{item.title}</h3>
-              <p class="text-muted-foreground mt-2 leading-relaxed">{item.text}</p>
-            </div>
+
+        <div class="grid border border-level-0-foreground/15 sm:grid-cols-2 lg:grid-cols-3">
+          {lifecycle.map((item, index) => (
+            <article class="min-h-64 border-b border-level-0-foreground/15 p-6 sm:border-r [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-last-child(-n+3)]:border-b-0">
+              <div class="mb-10 flex items-center justify-between gap-4">
+                <span class="font-mono text-xs opacity-40">{item.step}</span>
+                <span class="font-mono text-xs opacity-35">{index === lifecycle.length - 1 ? "↻" : "→"}</span>
+              </div>
+              <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+              <p class="text-sm leading-relaxed opacity-65">{item.text}</p>
+            </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security și compliance se întâlnesc în evidence</h2>
-          <p class="text-muted-foreground text-lg">
-            Un framework nu securizează singur infrastructura. Dar măsurile operate și
-            evidence-ul tehnic pot susține programul de compliance atunci când cerințele se
-            suprapun.
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Engagement model</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Alege modelul după problema reală.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Uneori ai nevoie doar de o imagine clară. Alteori finding-ul trebuie implementat,
+            controlul trebuie operat continuu sau există deja un incident.
           </p>
         </div>
 
-        <div class="mx-auto max-w-5xl border-y">
-          {complianceConnections.map((item) => (
-            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          {engagementModels.map((item, index) => (
+            <article class="border-t py-7">
+              <span class="text-muted-foreground mb-7 block font-mono text-xs">MODE-{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y py-12 sm:py-24">
+      <div class="container">
+        <div class="mb-10 grid gap-6 lg:grid-cols-[0.7fr_1.3fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Security → evidence</p>
+            <h2 class="text-h3 sm:text-h2 font-medium">Security și compliance se întâlnesc în evidence.</h2>
+          </div>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Un framework nu securizează singur infrastructura. Dar măsurile operate și evidence-ul
+            tehnic pot susține programul de compliance atunci când cerințele se suprapun.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4">
+          {complianceConnections.map((item, index) => (
+            <a href={item.href} class:list={["group min-h-56 border-t py-6 sm:px-6", index > 0 && "lg:border-l"]}>
+              <span class="text-muted-foreground mb-8 block font-mono text-xs">MAP-{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="mb-3 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
             </a>
           ))}
         </div>
@@ -305,9 +321,9 @@ const faqs = [
 
     <ZebraByteTestimonials />
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -322,15 +338,15 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Începe cu riscul pe care îl poți vedea și construiește de acolo.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Putem începe cu o evaluare a suprafeței expuse și continua doar cu măsurile care
-        schimbă efectiv postura de securitate.
-      </p>
-      <Button href="/security-assessment" size="lg">Începe cu un Security Assessment</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începe cu riscul pe care îl poți vedea și construiește de acolo.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Putem începe cu o evaluare a suprafeței expuse și continua doar cu măsurile care
+          schimbă efectiv postura de securitate.
+        </p>
+        <Button href="/security-assessment" size="lg">Începe cu un Security Assessment</Button>
+      </div>
     </section>
   </main>
 </Layout>
