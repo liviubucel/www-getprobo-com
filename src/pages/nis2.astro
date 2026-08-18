@@ -150,34 +150,36 @@ const serviceSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
-        <img src="/frameworks/NIS2.svg" alt="" class="size-6" aria-hidden="true" />
-        <span>NIS2 · România · Cyber Risk</span>
-      </div>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 rounded-lg border px-3 py-1 text-sm font-medium">
+          <img src="/frameworks/NIS2.svg" alt="" class="size-6" aria-hidden="true" />
+          <span>NIS2 · România · Cyber Risk</span>
+        </div>
 
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
-        <span class="animate-perspective-in block">NIS2 în operațiuni,</span>
-        <span class="animate-perspective-in block delay-50"> nu doar în documentație. </span>
-      </h1>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">NIS2 în operațiuni,</span>
+          <span class="animate-perspective-in animation-delay-100 block">nu doar în documentație.</span>
+        </h1>
 
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Risk management, incidente, continuitate, supply chain, identity, vulnerability
-        management și governance — organizate într-un program care poate fi operat și demonstrat continuu.
-      </p>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">
+          Risk management, incidente, continuitate, supply chain, identity, vulnerability
+          management și governance — organizate într-un program care poate fi operat și demonstrat continuu.
+        </p>
 
-      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/cyber-security">Vezi Cyber Security</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre NIS2</Button>
-      </div>
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/cyber-security">Vezi Cyber Security</Button>
+          <Button size="lg" href="/contact">Discută despre NIS2</Button>
+        </div>
+      </section>
     </animated-hero>
 
-    <section class="container pb-12 sm:pb-20">
-      <div class="mx-auto grid max-w-6xl gap-10 border-y py-10 lg:grid-cols-[0.66fr_1.34fr] lg:gap-20 sm:py-14">
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto grid max-w-6xl gap-12 border-y py-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20 sm:py-14">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Operational resilience</p>
-          <h2 class="text-h3 sm:text-h2 font-medium">Cybersecurity ca program condus, nu ca verificare tehnică izolată.</h2>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational resilience</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Cybersecurity ca program condus, nu ca verificare tehnică izolată.</h2>
         </div>
         <div class="text-muted-foreground space-y-5 text-lg leading-relaxed">
           <p>
@@ -193,9 +195,9 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mb-12 max-w-3xl">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Readiness program</p>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Readiness program</p>
         <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la scope la evidence continuu.</h2>
         <p class="text-muted-foreground text-lg leading-relaxed">
           Readiness-ul nu începe cu o listă de produse. Începe cu serviciile, riscurile și
@@ -203,24 +205,22 @@ const serviceSchema = {
         </p>
       </div>
 
-      <div class="grid border sm:grid-cols-5">
+      <div class="mx-auto max-w-5xl border-y">
         {readinessFlow.map((item, index) => (
-          <article class:list={["relative min-h-72 p-6", index < readinessFlow.length - 1 && "border-b sm:border-b-0 sm:border-r"]}>
-            <div class="mb-10 flex items-center justify-between gap-4">
-              <span class="text-muted-foreground font-mono text-xs">{item.step}</span>
-              <span class="bg-active size-2 rounded-full"></span>
-            </div>
-            <h3 class="mb-4 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
+          <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8 sm:py-7">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            <span class="text-muted-foreground hidden font-mono text-xs sm:block">{index < readinessFlow.length - 1 ? "→" : "↻"}</span>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-invert sm:py-24">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
       <div class="container">
-        <div class="mb-12 max-w-3xl">
-          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Risk-management measures</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Risk-management measures</p>
           <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Întregul ciclu operațional intră în program.</h2>
           <p class="text-lg leading-relaxed opacity-65">
             Ariile nu sunt controls tehnice izolate. Ele acoperă guvernanță, oameni, furnizori,
@@ -230,8 +230,8 @@ const serviceSchema = {
 
         <div class="grid border-y border-invert/15 sm:grid-cols-2 lg:grid-cols-5">
           {riskMeasures.map(([area, text], index) => (
-            <article class="min-h-64 border-b border-invert/15 p-5 sm:border-r lg:p-6 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(5n)]:border-r-0 lg:[&:nth-last-child(-n+5)]:border-b-0">
-              <span class="mb-9 block font-mono text-sm opacity-40">{String(index + 1).padStart(2, "0")}</span>
+            <article class="border-b border-invert/15 p-6 sm:border-r lg:min-h-60 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(5n)]:border-r-0 lg:[&:nth-last-child(-n+5)]:border-b-0">
+              <span class="mb-8 block font-mono text-sm opacity-40">{String(index + 1).padStart(2, "0")}</span>
               <h3 class="mb-3 font-medium">{area}</h3>
               <p class="text-sm leading-relaxed opacity-65">{text}</p>
             </article>
@@ -240,71 +240,20 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.58fr_1.42fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Governance</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Managementul trebuie să vadă și să conducă programul.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Governance</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Managementul trebuie să vadă și să conducă programul.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">
             Ownership, oversight și contextul de risc nu pot rămâne exclusiv în echipa tehnică.
           </p>
         </div>
 
-        <div class="grid gap-x-10 sm:grid-cols-2">
+        <div class="divide-y border-y">
           {governanceRows.map((item, index) => (
-            <article class="border-t py-7">
-              <span class="text-muted-foreground mb-7 block font-mono text-xs">GOV-{String(index + 1).padStart(2, "0")}</span>
-              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-active py-12 sm:py-24">
-      <div class="container">
-        <div class="mb-10 max-w-3xl">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Incident readiness</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Incident reporting începe înainte de incident.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Dacă trierea, escaladarea și comunicarea nu sunt pregătite, procesul devine mult mai
-            greu de executat atunci când serviciul este deja sub presiune.
-          </p>
-        </div>
-
-        <div class="relative border-l pl-8 sm:ml-5 sm:pl-14">
-          {incidentFlow.map((item, index) => (
-            <article class="relative grid gap-4 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-12">
-              <div class="bg-active absolute -left-[38px] top-7 flex size-5 items-center justify-center rounded-full border sm:-left-[66px]">
-                <span class="bg-level-3 size-2 rounded-full"></span>
-              </div>
-              <div>
-                <span class="text-muted-foreground mb-3 block font-mono text-xs">EVENT-{String(index + 1).padStart(2, "0")}</span>
-                <h3 class="text-h5 font-medium">{item.title}</h3>
-              </div>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Supply chain</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Furnizorii fac parte din suprafața de risc.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Un serviciu critic poate depinde de cloud, software, telecom, identity, hosting,
-            support sau alți furnizori. Programul trebuie să poată explica aceste dependențe.
-          </p>
-        </div>
-
-        <div class="border-y">
-          {supplyChainRows.map((item, index) => (
-            <article class="grid gap-4 border-b py-5 last:border-b-0 sm:grid-cols-[54px_0.7fr_1.3fr] sm:gap-7">
-              <span class="text-muted-foreground font-mono text-xs">DEP-{index + 1}</span>
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
               <h3 class="font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
@@ -313,12 +262,58 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="border-y py-12 sm:py-24">
-      <div class="container grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
+    <section class="bg-active py-16 sm:py-28">
+      <div class="container">
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Incident readiness</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Incident reporting începe înainte de incident.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Dacă trierea, escaladarea și comunicarea nu sunt pregătite, procesul devine mult mai
+            greu de executat atunci când serviciul este deja sub presiune.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {incidentFlow.map((item, index) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr] sm:items-start sm:gap-8 sm:py-7">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Technical remediation</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Controls trebuie să existe și în infrastructură.</h2>
-          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Supply chain</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Furnizorii fac parte din suprafața de risc.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">
+            Un serviciu critic poate depinde de cloud, software, telecom, identity, hosting,
+            support sau alți furnizori. Programul trebuie să poată explica aceste dependențe.
+          </p>
+        </div>
+
+        <div class="divide-y border-y">
+          {supplyChainRows.map((item, index) => (
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-28">
+      <div class="container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Technical remediation</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Controls trebuie să existe și în infrastructură.</h2>
+          <p class="text-muted-foreground mb-8 max-w-150 text-lg leading-relaxed">
             Readiness-ul GRC nu înlocuiește hardening-ul, monitoring-ul, identity security,
             vulnerability management sau incident response.
           </p>
@@ -350,24 +345,24 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="container py-12 sm:py-20">
-      <div class="mx-auto max-w-5xl border-y py-8 sm:py-10">
-        <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          <div>
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Legal reference</p>
-            <h2 class="text-h3 mb-4 font-medium">Cadrul din România</h2>
-            <p class="text-muted-foreground mb-5 leading-relaxed">
-              Directiva (UE) 2022/2555 a fost transpusă în România prin OUG nr. 155/2024,
-              aprobată cu modificări și completări prin Legea nr. 124/2025. DNSC a publicat
-              norme privind supravegherea, verificarea și controlul, iar cadrul național a
-              fost completat legislativ și în 2026.
-            </p>
-            <p class="text-muted-foreground leading-relaxed">
-              Pagina este orientată spre readiness și operațiuni. Pentru încadrarea juridică
-              definitivă sau interpretarea unei obligații specifice trebuie verificată forma
-              legală în vigoare și, după caz, specialistul juridic competent.
-            </p>
-          </div>
+    <section class="container py-16 sm:py-28">
+      <div class="grid overflow-hidden rounded-2xl border lg:grid-cols-2">
+        <div class="p-7 sm:p-10 lg:p-12">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Legal reference</p>
+          <h2 class="text-h3 mb-4 font-medium">Cadrul din România</h2>
+          <p class="text-muted-foreground mb-5 leading-relaxed">
+            Directiva (UE) 2022/2555 a fost transpusă în România prin OUG nr. 155/2024,
+            aprobată cu modificări și completări prin Legea nr. 124/2025. DNSC a publicat
+            norme privind supravegherea, verificarea și controlul, iar cadrul național a
+            fost completat legislativ și în 2026.
+          </p>
+          <p class="text-muted-foreground leading-relaxed">
+            Pagina este orientată spre readiness și operațiuni. Pentru încadrarea juridică
+            definitivă sau interpretarea unei obligații specifice trebuie verificată forma
+            legală în vigoare și, după caz, specialistul juridic competent.
+          </p>
+        </div>
+        <div class="border-t bg-active p-7 sm:p-10 lg:border-t-0 lg:border-l lg:p-12">
           <div class="border-y">
             <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">Directiva (UE) 2022/2555 — EUR-Lex</a>
             <a href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/293121" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">OUG nr. 155/2024 — Portal Legislativ</a>
@@ -381,7 +376,7 @@ const serviceSchema = {
 
     <Stories />
 
-    <section class="container py-12 sm:py-24">
+    <section class="container py-16 sm:py-28">
       <div class="mx-auto max-w-3xl">
         <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
@@ -398,7 +393,7 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="border-t py-16 text-center sm:py-24">
+    <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
         <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începe cu gap-urile care schimbă riscul real al organizației.</h2>
         <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
