@@ -1,251 +1,93 @@
 ---
-import "@phosphor-icons/web/regular";
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 import Badges from "../components/Badges.svelte";
-
-const coreOutcomes = [
-  {
-    number: "01",
-    icon: "ph-user-focus",
-    title: "Owner clar pentru program",
-    description:
-      "Un specialist coordonează controalele, reviews, evidence-ul, gap-urile și pregătirea pentru audit împreună cu echipa ta.",
-  },
-  {
-    number: "02",
-    icon: "ph-files",
-    title: "Evidence menținut continuu",
-    description:
-      "Dovezile, aprobările și review-urile sunt ținute lângă controalele pe care le susțin, nu reconstruite înainte de audit.",
-  },
-  {
-    number: "03",
-    icon: "ph-path",
-    title: "Remediation urmărit până la închidere",
-    description:
-      "Gap-urile devin task-uri cu owner, prioritate și context, iar progresul rămâne vizibil pe măsură ce programul evoluează.",
-  },
-  {
-    number: "04",
-    icon: "ph-shield-check",
-    title: "Security legat de compliance",
-    description:
-      "Când un control cere o măsură tehnică, assessment-ul, hardening-ul, identity, email, website security și hosting-ul pot intra în același program.",
-  },
-];
-
-const operatingSteps = [
-  {
-    step: "01",
-    title: "Înțelegem scope-ul",
-    text: "Framework-uri, sisteme, date, furnizori, echipe, obligații și contextul real al organizației.",
-  },
-  {
-    step: "02",
-    title: "Construim programul",
-    text: "Controale, măsuri, politici, risk register, owners, task-uri și un plan de remediation prioritizat.",
-  },
-  {
-    step: "03",
-    title: "Operăm ritmul continuu",
-    text: "Evidence, approvals, access reviews, vendor reviews, policy reviews și follow-up pe acțiunile deschise.",
-  },
-  {
-    step: "04",
-    title: "Pregătim review-urile și auditul",
-    text: "Materialele sunt organizate din timp, findings sunt urmărite, iar echipa știe ce trebuie demonstrat și de ce.",
-  },
-  {
-    step: "05",
-    title: "Îmbunătățim programul",
-    text: "Schimbările din infrastructură, business și reglementări se întorc în risk, controls și evidence, nu rămân în afara programului.",
-  },
-];
+import SaleArg from "../components/ui/SaleArg.astro";
+import ComplianceTrack from "../components/block/ComplianceTrack.astro";
+import Testimonials from "../components/block/Testimonials.astro";
+import Stories from "../components/block/Stories.astro";
 
 const responsibilityRows = [
   {
     area: "Program & governance",
-    zebra: "Coordonare, structură, calendar de reviews și urmărirea acțiunilor",
-    client: "Decizii de business, risk acceptance și owners interni",
+    zebra: "Structură, calendar de review, follow-up și coordonarea programului.",
+    client: "Deciziile de business, risk acceptance și ownerii interni.",
   },
   {
     area: "Controls & evidence",
-    zebra: "Mapping, evidence plan, review de calitate și follow-up",
-    client: "Execută sau confirmă activitățile care aparțin proceselor interne",
+    zebra: "Mapping, evidence plan, review de calitate și urmărirea gap-urilor.",
+    client: "Execută sau confirmă activitățile care aparțin proceselor interne.",
   },
   {
     area: "Policies & documents",
-    zebra: "Structură, draft, versioning, approvals și calendar de revizuire",
-    client: "Aprobă conținutul și confirmă că reflectă modul real de lucru",
+    zebra: "Structură, draft, versioning, approvals și calendar de revizuire.",
+    client: "Aprobă conținutul și confirmă că reflectă modul real de lucru.",
   },
   {
-    area: "Risk & suppliers",
-    zebra: "Metodologie, register, review-uri și legătura cu măsurile de tratare",
-    client: "Context operațional, priorități și decizii privind acceptarea riscului",
+    area: "Risk & third parties",
+    zebra: "Metodologie, register, reviews și legătura cu măsurile de tratare.",
+    client: "Context operațional, priorități și decizii privind acceptarea riscului.",
   },
   {
     area: "Audit readiness",
-    zebra: "Gap tracking, evidence pack, pregătirea întrebărilor și follow-up",
-    client: "Participă acolo unde auditorul sau reviewerul are nevoie de owner-ul procesului",
-  },
-];
-
-const weeklyRhythm = [
-  { label: "Controls review", meta: "Ownership · status · gaps", state: "Active" },
-  { label: "Evidence queue", meta: "Requests · validation · approvals", state: "Continuous" },
-  { label: "Risk follow-up", meta: "Treatment · due dates · acceptance", state: "Tracked" },
-  { label: "Vendor review", meta: "Critical suppliers · evidence · actions", state: "Scheduled" },
-  { label: "Policy cycle", meta: "Draft · approval · next review", state: "Versioned" },
-];
-
-const scopeGroups = [
-  {
-    icon: "ph-list-checks",
-    eyebrow: "Governance",
-    title: "Controls, policies și ownership",
-    bullets: [
-      "framework mapping și control ownership",
-      "policies, approvals și review cadence",
-      "tasks, findings și corrective actions",
-      "management reviews și decision evidence",
-    ],
-  },
-  {
-    icon: "ph-warning-circle",
-    eyebrow: "Risk",
-    title: "Riscuri, active și third parties",
-    bullets: [
-      "risk register și treatment plans",
-      "asset/system context și dependencies",
-      "supplier și subprocessor reviews",
-      "DPIA/TIA sau alte evaluări unde sunt relevante",
-    ],
-  },
-  {
-    icon: "ph-file-search",
-    eyebrow: "Assurance",
-    title: "Evidence, audit și customer reviews",
-    bullets: [
-      "evidence requests și validation",
-      "audit scope și readiness tracking",
-      "documente controlate și history",
-      "Trust Center pentru distribuire externă controlată",
-    ],
-  },
-  {
-    icon: "ph-lock-key",
-    eyebrow: "Security",
-    title: "Măsuri tehnice și remediation",
-    bullets: [
-      "identity și access reviews",
-      "vulnerability/hardening follow-up",
-      "email, website și infrastructure controls",
-      "incident readiness și recovery evidence",
-    ],
+    zebra: "Gap tracking, evidence pack, pregătirea ownerilor și follow-up.",
+    client: "Participă acolo unde auditorul are nevoie de owner-ul real al procesului.",
   },
 ];
 
 const frameworks = [
   {
     name: "ISO/IEC 27001",
-    focus: "ISMS · risk · controls · evidence",
+    detail: "ISMS, risk treatment, controls, Statement of Applicability și audit readiness.",
     href: "/iso-27001",
   },
   {
     name: "SOC 2",
-    focus: "Trust Services Criteria · audit readiness",
+    detail: "Trust Services Criteria, controls, evidence și pregătire pentru engagement-ul auditorului.",
     href: "/soc2",
   },
   {
-    name: "GDPR",
-    focus: "privacy governance · RoPA · DPIA · TOMs",
+    name: "GDPR & Privacy",
+    detail: "Data mapping, RoPA, DPIA, third parties, privacy governance și măsuri tehnice.",
     href: "/gdpr",
   },
   {
     name: "NIS2",
-    focus: "cyber risk · resilience · incident readiness",
+    detail: "Cyber risk, resilience, supplier security, incident readiness și evidence continuu.",
     href: "/nis2",
   },
   {
     name: "Accessibility",
-    focus: "WCAG assessment · remediation · evidence",
+    detail: "Assessment, remediation și managementul continuu al accesibilității web.",
     href: "/accessibility",
-  },
-];
-
-const deliverables = [
-  {
-    title: "Program map",
-    text: "Scope, framework-uri, controale, owners, măsuri și relația dintre ele.",
-  },
-  {
-    title: "Prioritized backlog",
-    text: "Gap-uri și acțiuni ordonate după risc, dependențe și impact operațional.",
-  },
-  {
-    title: "Evidence structure",
-    text: "Dovezi legate de controale, cu review, approvals și context suficient pentru audit.",
-  },
-  {
-    title: "Risk & supplier records",
-    text: "Riscuri, treatments și third-party reviews menținute în același sistem.",
-  },
-  {
-    title: "Controlled documents",
-    text: "Politici și documente versionate, aprobate și revizuite într-un ciclu controlat.",
-  },
-  {
-    title: "Audit-readiness view",
-    text: "Ce este gata, ce lipsește, ce este blocat și cine deține următorul pas.",
-  },
-];
-
-const referenceJourneys = [
-  {
-    company: "Lucis",
-    framework: "ISO 27001 reference case",
-    title: "Cum poate o echipă health-tech să structureze controls și evidence fără să blocheze engineering-ul.",
-    href: "/stories/lucis-iso",
-  },
-  {
-    company: "Ahrefs",
-    framework: "ISO 27001 reference case",
-    title: "Un exemplu despre cum compliance poate fi adaptat la procese tehnice deja mature.",
-    href: "/stories/ahrefs-iso",
-  },
-  {
-    company: "Blaxel",
-    framework: "SOC 2 reference case",
-    title: "Cum poate un workflow bine structurat să reducă fricțiunea dintre produs, security și audit readiness.",
-    href: "/stories/blaxel-soc2",
   },
 ];
 
 const faqs = [
   {
-    q: "Care este diferența dintre platforma self-service și Managed Compliance?",
-    a: "Platforma este aceeași. În modul self-service, echipa sau consultantul tău operează programul. În Managed Compliance, ZebraByte preia o parte mai mare din coordonare, evidence, follow-up, documente și audit readiness împreună cu ownerii interni.",
+    question: "Care este diferența dintre platforma self-service și Managed Compliance?",
+    answer:
+      "Platforma este aceeași. În self-service, echipa sau adviser-ul tău operează programul. În Managed Compliance, ZebraByte preia mai mult din coordonare, evidence, documente, follow-up și audit readiness împreună cu ownerii interni.",
   },
   {
-    q: "ZebraByte poate lua toate deciziile de compliance în locul organizației?",
-    a: "Nu. Deciziile de business, risk acceptance, responsabilitățile legale și anumite activități operaționale rămân la organizație. Rolul managed este să structureze, coordoneze, urmărească și reducă munca operațională, nu să inventeze dovezi sau să înlocuiască ownership-ul real.",
+    question: "ZebraByte poate lua toate deciziile de compliance în locul organizației?",
+    answer:
+      "Nu. Deciziile de business, risk acceptance, responsabilitățile legale și activitățile care aparțin proceselor interne rămân la organizație. Rolul nostru este să reducem munca operațională și să ținem programul coerent și în mișcare.",
   },
   {
-    q: "Putem începe cu un singur framework și extinde ulterior?",
-    a: "Da. Programul poate porni de la un obiectiv precum ISO 27001, SOC 2, GDPR sau NIS2 și poate reutiliza aceleași controale, riscuri și dovezi atunci când apar framework-uri suplimentare.",
+    question: "Putem începe cu un singur framework și extinde ulterior?",
+    answer:
+      "Da. Programul poate porni de la ISO 27001, SOC 2, GDPR sau NIS2 și poate reutiliza controale, riscuri și dovezi atunci când cerințele se suprapun.",
   },
   {
-    q: "Managed Compliance include și remediation tehnică?",
-    a: "Programul leagă gap-urile de măsurile tehnice necesare. În funcție de scope, ZebraByte poate ajuta prin security assessment, hardening, website/email security, incident readiness sau infrastructură administrată, fără să amestece artificial serviciile care nu sunt necesare.",
+    question: "Managed Compliance include și remediation tehnică?",
+    answer:
+      "Atunci când un gap cere o măsură tehnică, programul poate fi legat de security assessment, hardening, website security, email security, incident readiness sau infrastructură administrată. Scope-ul se stabilește în funcție de nevoia reală, nu prin adăugarea automată de servicii.",
   },
   {
-    q: "ZebraByte emite certificări ISO sau rapoarte SOC 2?",
-    a: "Nu. ZebraByte ajută la readiness, implementare, evidence și operarea programului. Certificarea sau opinia de audit este emisă de organismul/auditorul independent competent pentru cadrul respectiv.",
-  },
-  {
-    q: "Putem folosi Managed Compliance dacă avem deja un avocat, DPO, auditor sau consultant?",
-    a: "Da. Platforma și programul pot funcționa împreună cu specialiștii existenți. Rolurile se delimitează clar astfel încât munca juridică, auditul independent și operarea GRC să nu fie confundate.",
+    question: "ZebraByte emite certificări ISO sau rapoarte SOC 2?",
+    answer:
+      "Nu. ZebraByte ajută la readiness, implementare, evidence și operarea programului. Certificarea sau raportul de atestare este emis de organismul sau auditorul independent competent pentru framework-ul respectiv.",
   },
 ];
 
@@ -265,366 +107,222 @@ const serviceSchema = {
 
 <Layout
   title="Managed Compliance"
-  description="Managed Compliance ZebraByte: platformă cloud + expert dedicat pentru controale, evidence, risk, politici, third parties, remediation și audit readiness continuă."
+  description="Managed Compliance ZebraByte: platformă cloud și expert dedicat pentru controls, evidence, risk, policies, third parties, remediation și audit readiness continuă."
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
-  <main class="overflow-hidden">
-    <section class="relative isolate -mt-16 overflow-hidden pt-16">
+  <main>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
       <div
-        aria-hidden="true"
-        class="pointer-events-none absolute top-[-1320px] left-1/2 z-0 size-[2265px] -translate-x-1/2 rounded-full border-[350px] border-[#E6FF03] blur-[96px]"
-      ></div>
-
-      <div class="relative z-10 container py-16 text-center sm:py-24">
-        <p class="text-muted-foreground animate-perspective-in mb-4 text-sm font-medium uppercase tracking-[0.14em]">
-          Managed Compliance
-        </p>
-        <h1 class="text-h2 sm:text-h1 animate-perspective-in animation-delay-100 mx-auto mb-6 max-w-220 font-medium text-balance">
-          Compliance, operat împreună cu echipa ta.
-        </h1>
-        <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-8 max-w-190 text-lg text-balance">
-          ZebraByte combină platforma cloud cu un model hands-on de lucru pentru controale, politici, evidence, risk, third parties, remediation și audit readiness. Tu păstrezi deciziile și ownership-ul real; noi reducem munca operațională și ținem programul în mișcare.
-        </p>
-        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button size="lg" href="/contact">Discută cu un expert</Button>
-          <Button size="lg" variant="secondary" href="/compliance-platform">Vezi platforma de conformitate</Button>
-        </div>
-
-        <Badges
-          count={10}
-          countMobile={6}
-          client:load
-          border
-          class="mx-auto mt-14 grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
-        />
+        class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8"
+      >
+        Managed Compliance
       </div>
 
-      <div class="relative z-10 container pb-16 sm:pb-24">
-        <div class="mx-auto max-w-6xl overflow-hidden rounded-2xl border bg-level-0 shadow-sm">
-          <div class="flex items-center justify-between gap-4 border-b px-5 py-4 sm:px-7">
-            <div>
-              <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Program overview</p>
-              <p class="mt-1 font-medium">Managed workspace</p>
-            </div>
-            <span class="rounded-full border px-3 py-1 text-xs">Continuous</span>
-          </div>
-          <div class="grid lg:grid-cols-[0.78fr_1.22fr]">
-            <div class="border-b p-6 sm:p-8 lg:border-r lg:border-b-0">
-              <p class="text-muted-foreground mb-5 text-sm">Ce urmărește owner-ul programului</p>
-              <div class="divide-y border-y">
-                {weeklyRhythm.map((item) => (
-                  <div class="py-4">
-                    <div class="flex items-start justify-between gap-4">
-                      <div>
-                        <p class="font-medium">{item.label}</p>
-                        <p class="text-muted-foreground mt-1 text-sm">{item.meta}</p>
-                      </div>
-                      <span class="text-muted-foreground shrink-0 text-xs">{item.state}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div class="bg-active p-6 sm:p-8">
-              <div class="mb-8 flex items-center justify-between gap-4">
-                <div>
-                  <p class="text-muted-foreground text-xs uppercase tracking-[0.12em]">Current cycle</p>
-                  <h2 class="mt-1 text-xl font-medium">De la gap la evidence validat</h2>
-                </div>
-                <div class="grid size-12 place-items-center rounded-full border bg-level-0">
-                  <i class="ph ph-path text-xl" aria-hidden="true"></i>
-                </div>
-              </div>
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Compliance,</span>
+        <span class="animate-perspective-in block delay-50"> gestionat împreună cu tine. </span>
+      </h1>
 
-              <div class="relative space-y-4 before:absolute before:top-5 before:bottom-5 before:left-[15px] before:w-px before:bg-border">
-                <div class="relative flex gap-4">
-                  <span class="z-10 mt-1 size-8 shrink-0 rounded-full border bg-level-0"></span>
-                  <div class="rounded-xl border bg-level-0 p-4 grow">
-                    <p class="text-xs text-muted-foreground">Finding</p>
-                    <p class="mt-1 font-medium">Access review nu are evidence pentru trimestrul curent</p>
-                  </div>
-                </div>
-                <div class="relative flex gap-4">
-                  <span class="z-10 mt-1 size-8 shrink-0 rounded-full border bg-level-0"></span>
-                  <div class="rounded-xl border bg-level-0 p-4 grow">
-                    <p class="text-xs text-muted-foreground">Action</p>
-                    <p class="mt-1 font-medium">Owner + due date + review scope</p>
-                  </div>
-                </div>
-                <div class="relative flex gap-4">
-                  <span class="z-10 mt-1 size-8 shrink-0 rounded-full border bg-level-0"></span>
-                  <div class="rounded-xl border bg-level-0 p-4 grow">
-                    <p class="text-xs text-muted-foreground">Evidence</p>
-                    <p class="mt-1 font-medium">Review finalizat, aprobat și legat de control</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        Un specialist ZebraByte coordonează programul de conformitate de la scope și risk
+        până la controls, evidence, remediation și audit readiness. Echipa ta păstrează
+        ownership-ul real, iar noi reducem munca operațională și ținem programul în mișcare.
+      </p>
 
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-14 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Ce înseamnă „managed”</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
-          Nu externalizezi responsabilitatea. Externalizezi o parte mare din efortul operațional.
-        </h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Programul funcționează pentru că rolurile sunt clare. ZebraByte structurează, coordonează și urmărește. Echipa ta rămâne owner pe procesele, deciziile și activitățile pe care doar organizația le poate controla.
-        </p>
+      <div
+        class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/compliance-platform"
+        >
+          Vezi platforma
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Discută cu un expert
+        </Button>
       </div>
 
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
-        {coreOutcomes.map((item) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <div class="mb-8 flex items-center justify-between gap-3">
-              <span class="text-muted-foreground text-sm">{item.number}</span>
-              <i class={`ph ${item.icon} text-2xl`} aria-hidden="true"></i>
-            </div>
-            <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
-          </article>
-        ))}
+      <Badges
+        count={10}
+        countMobile={6}
+        client:load
+        border
+        class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
+      />
+    </animated-hero>
+
+    <ComplianceTrack />
+
+    <section class="container py-10 sm:py-20">
+      <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
+        Programul rulează continuu, nu doar înainte de audit
+      </h2>
+      <p
+        class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12"
+      >
+        Folosim platforma ZebraByte pentru a păstra controls, evidence, risk și documentele
+        conectate, iar specialistul dedicat urmărește ce trebuie făcut în continuare.
+      </p>
+
+      <div
+        class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12"
+      >
+        <SaleArg
+          title="Un expert dedicat programului"
+          video="/videos/keyshot1.mp4"
+          poster="/videos/keyshot1.jpg"
+        >
+          <p>
+            Ai un owner clar pentru program, care coordonează politicile, controalele,
+            evaluările, evidence-ul și pregătirea pentru review-uri sau audit.
+          </p>
+        </SaleArg>
+
+        <SaleArg
+          title="Evidence care se menține în fundal"
+          video="/videos/keyshot2.mp4"
+          poster="/videos/keyshot2.jpg"
+        >
+          <p>
+            Dovezile, aprobările și review-urile sunt urmărite pe parcurs, astfel încât
+            audit readiness să nu înceapă cu reconstruirea ultimelor luni de activitate.
+          </p>
+        </SaleArg>
+
+        <SaleArg
+          title="Trust pentru clienți și parteneri"
+          video="/videos/keyshot3.mp4"
+          poster="/videos/keyshot3.jpg"
+        >
+          <p>
+            Când trebuie să demonstrezi postura de securitate, documentele aprobate pot fi
+            distribuite controlat prin Trust Center fără să expui workspace-ul intern.
+          </p>
+        </SaleArg>
+
+        <SaleArg
+          title="Lucru integrat cu echipa ta"
+          video="/videos/keyshot4.mp4"
+          poster="/videos/keyshot4.jpg"
+        >
+          <p>
+            Programul este construit în jurul modului în care funcționează organizația,
+            cu owners interni și intervenții clare doar atunci când este nevoie de decizie,
+            validare sau acțiune tehnică.
+          </p>
+        </SaleArg>
       </div>
     </section>
 
-    <section class="border-y bg-level-0 py-16 sm:py-28">
-      <div class="container">
-        <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-          <div class="lg:sticky lg:top-28 lg:self-start">
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operating model</p>
-            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Un program care are ritm, nu doar kickoff și deadline.</h2>
-            <p class="text-muted-foreground text-lg leading-relaxed">
-              Managed Compliance este construit ca un ciclu continuu: definim, implementăm, operăm, pregătim assurance și apoi actualizăm programul când organizația se schimbă.
-            </p>
-          </div>
-
-          <div class="border-y">
-            {operatingSteps.map((item) => (
-              <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[72px_0.8fr_1.2fr] sm:gap-8 sm:py-8">
-                <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-                <h3 class="text-h5 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-14 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">În interiorul programului</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Mai mult decât policies și evidence requests.</h2>
-        <p class="text-muted-foreground text-lg">
-          Programul leagă governance, risk, assurance și security astfel încât aceeași informație să nu fie reconstruită în cinci locuri diferite.
-        </p>
-      </div>
-
-      <div class="grid border-y lg:grid-cols-2 lg:divide-x">
-        {scopeGroups.map((group, index) => (
-          <article class:list={["p-7 sm:p-9", index < 2 && "border-b"]}>
-            <div class="mb-7 flex items-start justify-between gap-6">
-              <div>
-                <p class="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-[0.12em]">{group.eyebrow}</p>
-                <h3 class="text-h4 font-medium">{group.title}</h3>
-              </div>
-              <i class={`ph ${group.icon} text-[2rem]`} aria-hidden="true"></i>
-            </div>
-            <ul class="divide-y border-y">
-              {group.bullets.map((bullet) => (
-                <li class="flex items-center gap-3 py-3.5 text-muted-foreground">
-                  <i class="ph ph-arrow-right text-sm" aria-hidden="true"></i>
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-16 sm:py-28">
-      <div class="container">
-        <div class="mb-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          <div>
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Roluri și responsabilități</p>
-            <h2 class="text-h3 sm:text-h2 font-medium text-balance">Știi exact ce preluăm și ce rămâne la echipa ta.</h2>
-          </div>
-          <p class="text-muted-foreground self-end text-lg leading-relaxed">
-            Un model managed bun reduce ambiguitatea. Nu mutăm responsabilități pe hârtie; delimităm cine coordonează, cine aprobă și cine execută fiecare parte a programului.
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <div class="mb-10 max-w-180 sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">
+            Cine face ce
+          </h2>
+          <p class="text-muted-foreground text-lg">
+            Managed nu înseamnă să inventăm ownership în locul organizației. Separăm clar
+            munca pe care o putem coordona de deciziile și activitățile care trebuie să rămână
+            la ownerii reali ai proceselor.
           </p>
         </div>
 
-        <div class="overflow-hidden rounded-2xl border bg-level-0">
-          <div class="hidden grid-cols-[0.7fr_1.15fr_1.15fr] border-b px-6 py-4 text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground md:grid">
-            <span>Arie</span><span>ZebraByte</span><span>Organizația</span>
+        <div class="border-y">
+          <div class="text-muted-foreground hidden grid-cols-[0.7fr_1.15fr_1.15fr] gap-8 border-b py-4 text-sm sm:grid">
+            <span>Arie</span>
+            <span>ZebraByte</span>
+            <span>Echipa ta</span>
           </div>
           {responsibilityRows.map((row) => (
-            <div class="grid gap-4 border-b p-6 last:border-b-0 md:grid-cols-[0.7fr_1.15fr_1.15fr] md:gap-8">
-              <div>
-                <p class="text-muted-foreground mb-1 text-xs uppercase md:hidden">Arie</p>
-                <p class="font-medium">{row.area}</p>
-              </div>
-              <div>
-                <p class="text-muted-foreground mb-1 text-xs uppercase md:hidden">ZebraByte</p>
-                <p class="text-muted-foreground leading-relaxed">{row.zebra}</p>
-              </div>
-              <div>
-                <p class="text-muted-foreground mb-1 text-xs uppercase md:hidden">Organizația</p>
-                <p class="text-muted-foreground leading-relaxed">{row.client}</p>
-              </div>
+            <div class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.15fr_1.15fr] sm:gap-8">
+              <h3 class="font-medium">{row.area}</h3>
+              <p class="text-muted-foreground leading-relaxed">{row.zebra}</p>
+              <p class="text-muted-foreground leading-relaxed">{row.client}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-28">
-      <div class="grid items-start gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Security handoff</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Când controlul cere o schimbare tehnică, nu se oprește la „open finding”.</h2>
-          <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
-            Un gap poate porni din audit, risk assessment sau customer review și poate ajunge la identity, email, website, infrastructure sau incident readiness. Îl păstrăm legat de control, owner și evidence până la închidere.
-          </p>
-          <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
-        </div>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">
+          Un program, mai multe framework-uri
+        </h2>
+        <p class="text-muted-foreground text-lg">
+          Nu reconstruim aceeași muncă de la zero pentru fiecare standard. Acolo unde
+          cerințele se suprapun, aceleași controls, risks și evidence pot susține mai multe
+          obiective de conformitate.
+        </p>
+      </div>
 
-        <div class="rounded-2xl border bg-level-0 p-6 sm:p-8">
-          <div class="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
-            <div class="rounded-xl border bg-active p-5">
-              <p class="text-muted-foreground mb-2 text-xs uppercase tracking-[0.1em]">Control</p>
-              <p class="font-medium">Access management</p>
-              <p class="text-muted-foreground mt-2 text-sm">Review periodic + MFA + joiner/mover/leaver</p>
-            </div>
-            <i class="ph ph-arrow-right hidden text-muted-foreground sm:block" aria-hidden="true"></i>
-            <div class="rounded-xl border bg-active p-5">
-              <p class="text-muted-foreground mb-2 text-xs uppercase tracking-[0.1em]">Remediation</p>
-              <p class="font-medium">Identity hardening</p>
-              <p class="text-muted-foreground mt-2 text-sm">Owner, scope, due date și implementare</p>
-            </div>
-            <i class="ph ph-arrow-right hidden text-muted-foreground sm:block" aria-hidden="true"></i>
-            <div class="rounded-xl border bg-active p-5">
-              <p class="text-muted-foreground mb-2 text-xs uppercase tracking-[0.1em]">Evidence</p>
-              <p class="font-medium">Review demonstrabil</p>
-              <p class="text-muted-foreground mt-2 text-sm">Output aprobat și legat de control</p>
-            </div>
-          </div>
-        </div>
+      <div class="mx-auto max-w-4xl border-y">
+        {frameworks.map((framework) => (
+          <a
+            href={framework.href}
+            class="group grid gap-2 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10"
+          >
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">
+              {framework.name}
+            </h3>
+            <p class="text-muted-foreground leading-relaxed">{framework.detail}</p>
+          </a>
+        ))}
       </div>
     </section>
 
-    <section class="border-y bg-level-0 py-16 sm:py-28">
-      <div class="container">
-        <div class="mx-auto mb-12 max-w-190 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Framework coverage</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Un program comun, mai multe obligații.</h2>
-          <p class="text-muted-foreground text-lg">
-            Nu duplicăm aceeași măsură doar pentru că apare în mai multe framework-uri. Refolosim controls, risk și evidence acolo unde cerințele se suprapun.
-          </p>
-        </div>
+    <Testimonials />
+    <Stories />
 
-        <div class="mx-auto max-w-5xl divide-y border-y">
-          {frameworks.map((framework) => (
-            <a href={framework.href} class="group grid gap-2 py-5 transition-colors hover:bg-subtle sm:grid-cols-[0.75fr_1.25fr_auto] sm:items-center sm:gap-8 sm:px-4">
-              <span class="font-medium group-hover:underline group-hover:underline-offset-4">{framework.name}</span>
-              <span class="text-muted-foreground">{framework.focus}</span>
-              <i class="ph ph-arrow-up-right text-muted-foreground" aria-hidden="true"></i>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Ce rămâne în urmă</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Un program operabil, nu un folder de documente.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Fiecare engagement este adaptat scope-ului, dar rezultatul trebuie să fie utilizabil de echipă și după primul audit sau review.
-          </p>
-        </div>
-
-        <div class="grid gap-x-10 sm:grid-cols-2">
-          {deliverables.map((item) => (
-            <article class="border-t py-6 first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
-              <h3 class="mb-2 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-active py-16 sm:py-28">
-      <div class="container">
-        <div class="mb-12 max-w-190">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Reference journeys</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Cum arată modelul în practică.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Exemplele de mai jos sunt păstrate ca studii de referință din parcursuri reale de compliance. Ele ilustrează cum poate funcționa un model platformă + expert și nu sunt prezentate ca testimoniale ale clienților ZebraByte.
-          </p>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-3">
-          {referenceJourneys.map((story) => (
-            <a href={story.href} class="group flex min-h-72 flex-col justify-between rounded-2xl border bg-level-0 p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-8">
-              <div>
-                <div class="mb-8 flex items-start justify-between gap-4">
-                  <div>
-                    <p class="font-medium">{story.company}</p>
-                    <p class="text-muted-foreground mt-1 text-sm">{story.framework}</p>
-                  </div>
-                  <i class="ph ph-arrow-up-right text-muted-foreground" aria-hidden="true"></i>
-                </div>
-                <h3 class="text-h5 font-medium text-balance">{story.title}</h3>
-              </div>
-              <span class="text-muted-foreground mt-8 text-sm group-hover:underline group-hover:underline-offset-4">Citește studiul de referință</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">FAQ</p>
-          <h2 class="text-h3 sm:text-h2 font-medium">Întrebări înainte să alegi modelul managed.</h2>
-        </div>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">
+          Întrebări frecvente
+        </h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
-              <summary class="flex cursor-pointer list-none items-start justify-between gap-6 font-medium [&::-webkit-details-marker]:hidden">
-                <span>{faq.q}</span>
-                <span class="grid size-7 shrink-0 place-items-center rounded-full border transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
               </summary>
-              <p class="text-muted-foreground max-w-3xl pt-4 leading-relaxed">{faq.a}</p>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="border-t bg-level-0 py-16 text-center sm:py-24">
-      <div class="container">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Următorul pas</p>
-        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-          Începem cu programul pe care îl ai, nu cu presupunerea că trebuie refăcut totul.
-        </h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg leading-relaxed">
-          Spune-ne ce framework-uri urmărești, ce ai implementat deja și unde se blochează echipa. Stabilim scope-ul, rolurile și ce merită gestionat de ZebraByte.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Discută despre Managed Compliance</Button>
-          <Button href="/compliance-platform" variant="secondary" size="lg">Explorează platforma</Button>
-        </div>
-      </div>
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">
+        Construiește un program pe care îl poți menține după primul audit.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+        Poți folosi platforma direct sau poți lucra cu ZebraByte într-un model Managed
+        Compliance, în funcție de cât ownership operațional vrei să păstrezi intern.
+      </p>
+      <Button href="/contact" size="lg">Discută despre Managed Compliance</Button>
     </section>
   </main>
 </Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
