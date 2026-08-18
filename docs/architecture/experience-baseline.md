@@ -4,7 +4,7 @@
 
 The imported Probo snapshot at commit `7e7e7b5c18c621aae125488342a215a641c830b9` is the golden reference for inherited visual language, interaction behavior and product-content breadth.
 
-It is a **design/behavior and inherited product-content reference, not authority for ZebraByte relationship claims**.
+It remains a **design and behavior reference, not a content authority** for claims about ZebraByte relationships. It is also the inherited product-content breadth baseline: missing useful product/site surfaces must be restored rather than silently dropped.
 
 Use it to answer questions such as:
 
@@ -23,12 +23,12 @@ Every meaningful difference from the golden reference must be classified before 
 2. **Intentional ZebraByte adaptation** — ZebraByte content/IA changed while inherited product depth and interaction quality remain coherent. Keep and protect it.
 3. **Safe optimization** — runtime work was reduced without changing the visible/interactive/content contract. Keep and protect it.
 4. **Experience/content regression** — inherited page coverage, layout, motion, slider behavior, responsive behavior, product detail or interaction was removed/simplified without a product requirement. Restore or rebuild it.
-5. **Relationship-sensitive inherited material** — Probo people, customers, testimonials or company-specific claims must not be falsely relabeled as ZebraByte relationships. **Keep the page, company example, design, result, lesson and useful content**, but frame it as a neutral reference case/insight until a ZebraByte-owned case replaces it.
+5. **Relationship-sensitive inherited material** — the old audit category called this **Invalid inherited content** when it would be presented as a ZebraByte relationship. The correct remediation is not broad deletion: Probo people, customers, testimonials or company-specific claims must not be falsely relabeled as ZebraByte relationships, while the page, company example, design, result, lesson and useful content remain as a neutral reference case/insight until a ZebraByte-owned case replaces it.
 
 ## Content provenance rules
 
 - Never rename a Probo team photograph, person, customer, testimonial or company logo so it appears to belong to ZebraByte.
-- Never present Probo customer logos as ZebraByte customer proof unless a separate ZebraByte source establishes that relationship.
+- **Never present Probo customer logos as ZebraByte social proof** unless a separate ZebraByte source establishes that relationship. This does not mean hiding them: preserve them as clearly labeled reference companies/reference cases where they carry useful product or editorial value.
 - **Do preserve inherited company examples, logos, case studies and testimonial surfaces** when they are clearly labeled as reference cases, reference companies or reference perspectives rather than ZebraByte endorsements.
 - The inherited homepage logo marquee retains its original company/logo set as a neutral **reference library**. Its surrounding copy must not call those organizations ZebraByte customers, partners, users or endorsements.
 - Do not fabricate people, portraits, reviews, certifications, customers, partnerships or metrics to fill an inherited layout.
