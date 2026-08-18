@@ -148,8 +148,20 @@ requireText(contact, 'id="contact-form"', "contact first-party form");
 requireText(contact, "data-turnstile-container", "contact Turnstile verification");
 forbidText(contact, '<div class="rounded-xl border p-6">', "contact repeated floating cards");
 
-requireText(industryPage, 'class="divide-y border-y"', "industry editorial list rhythm");
-requireText(industryPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry framed peer grid");
+// Industry pages must preserve the full adapted content model while using the
+// Probo-native editorial rhythm approved for the ZebraByte industry surfaces.
+requireText(industryPage, "max-w-5xl border-y", "industry Probo-native editorial rhythm");
+requireText(industryPage, "industry.risks.map", "industry risk inventory rendering");
+requireText(industryPage, "editorial.focusAreas.map", "industry focus-area rendering");
+requireText(industryPage, "services.map", "industry service handoff rendering");
+requireText(industryPage, "editorial.partner.points.map", "industry integrated-program rendering");
+requireText(industryPage, "industry.outcomes.map", "industry outcome rendering");
+requireText(industryPage, "editorial.faqs.map", "industry FAQ rendering");
+forbidText(
+  industryPage,
+  "grid gap-px overflow-hidden rounded-2xl border bg-border",
+  "industry repeated framed-card wall",
+);
 forbidText(industryPage, 'class="rounded-xl border p-5 sm:p-6"', "industry outcome card repetition");
 
 requireText(industryService, "grid gap-px overflow-hidden rounded-2xl border bg-border", "industry service framed peer grids");
