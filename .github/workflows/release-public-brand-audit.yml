@@ -17,8 +17,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - name: Report exact public legacy-brand matches
+      - name: Build through the hard gate
+        run: npm run build || true
+      - name: Report every remaining public legacy-brand match
         run: |
           node --input-type=module <<'NODE'
           import { readdirSync, readFileSync, statSync } from 'node:fs';
@@ -31,10 +32,17 @@ jobs:
           let count = 0;
           for (const file of files) {
             let text = readFileSync(file,'utf8');
-            if (file.endsWith('.html')) text = text.replace(/<(script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,'');
+            if (file.endsWith('.html')) {
+              text = text.replace(/<(script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,'');
+              const urls = Array.from(text.matchAll(/\b(href|action|formaction|src|poster)=(['"])([\s\S]*?)\2/gi))
+                .map(m => ({name:m[1].toLowerCase(), value:m[3]}))
+                .filter(({name,value}) => (name !== 'src' && name !== 'poster') || /^https?:\/\//i.test(value))
+                .map(({value}) => value).join('\n');
+              text = `${text.replace(/<[^>]+>/g,' ')}\n${urls}`;
+            }
             pattern.lastIndex = 0;
             let m;
-            while ((m = pattern.exec(text)) && count < 200) {
+            while ((m = pattern.exec(text))) {
               const start=Math.max(0,m.index-100), end=Math.min(text.length,m.index+m[0].length+140);
               console.log(`${relative(root,file)} :: ${text.slice(start,end).replace(/\s+/g,' ')}`);
               count++;
