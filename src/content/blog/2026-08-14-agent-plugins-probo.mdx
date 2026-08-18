@@ -1,0 +1,194 @@
+---
+title: "Ce sunt Agent Plugins și de ce contează pentru agenții AI?"
+slug: "2026-08-14-agent-plugins-probo"
+date: 2026-08-14
+excerpt: "Agent Plugins combină un server MCP cu skills care îi explică agentului cum să lucreze corect. Vedem ce standardizează acest model, ce nu rezolvă și cum se leagă de datele reale dintr-o platformă de conformitate."
+author:
+  name: "Arthur Mayoux"
+source: probo
+tags:
+  - "AI"
+  - "Agent Plugins"
+  - "MCP"
+  - "automation"
+  - "compliance"
+  - "developer tools"
+faqs:
+  - question: "Este un Agent Plugin același lucru cu un server MCP?"
+    answer: "Nu. MCP oferă instrumentele și accesul la date, în timp ce plugin-ul poate include și skills: instrucțiuni care descriu metoda, pașii și criteriile de calitate pe care agentul trebuie să le urmeze."
+  - question: "Poate un agent AI să ia singur decizii de conformitate?"
+    answer: "Automatizarea poate reduce munca mecanică, dar deciziile de risc, aprobările, excepțiile și publicarea informațiilor sensibile ar trebui să rămână sub control uman și în limitele permisiunilor utilizatorului."
+  - question: "ZebraByte oferă în prezent un pachet Agent Plugins propriu?"
+    answer: "Documentația publică ZebraByte descrie suprafețe precum MCP, GraphQL, n8n și webhooks. Un pachet Agent Plugins first-party este o decizie de produs separată; articolul explică standardul fără a pretinde că un astfel de pachet este deja disponibil."
+---
+
+Un agent AI poate genera o politică de securitate rezonabilă din cunoștințe generale. Problema apare când îi ceri ceva mai util:
+
+- care controale sunt încă neacoperite în organizația mea?
+- ce vendors au risc ridicat?
+- cine mai trebuie să semneze un document?
+- ce evidence lipsește pentru un control?
+- ce acces ar trebui revizuit înainte de audit?
+
+Fără acces la starea reală a organizației, agentul ghicește.
+
+Un server MCP rezolvă o parte a problemei: îi oferă agentului **tools și date**. Dar datele singure nu îi spun neapărat agentului cum să execute un proces de conformitate corect. Aici intră ideea de **Agent Plugins**.
+
+## Două piese care trebuie să funcționeze împreună
+
+Modelul Agent Plugins separă clar două lucruri:
+
+1. **Tools** — operațiile pe care agentul le poate executa și datele la care poate ajunge, de exemplu prin MCP.
+2. **Skills** — instrucțiunile operaționale care spun agentului cum să abordeze o sarcină, ce pași să urmeze și cum arată un rezultat acceptabil.
+
+O analogie simplă:
+
+- MCP este trusa de scule;
+- skill-ul este procedura de lucru;
+- plugin-ul le împachetează într-o formă pe care un client compatibil o poate înțelege.
+
+Un agent cu tools, dar fără metodă, poate modifica lucruri fără context. Un agent cu instrucțiuni bune, dar fără tools, poate doar să ofere recomandări generale.
+
+Combinația devine utilă atunci când agentul poate **citi starea reală, aplica o metodă și propune o acțiune verificabilă**.
+
+## Ce conține de obicei un Agent Plugin
+
+Standardul emergent folosește o structură mică și ușor de inspectat. În forma de bază, întâlnești trei piese:
+
+- `plugin.json` — identitatea și metadatele plugin-ului;
+- `skills/` — instrucțiuni pentru taskurile pe care agentul știe să le execute;
+- `mcp.json` — configurația serverelor MCP și a tool-urilor disponibile.
+
+Important este că skill-urile și MCP-ul sunt distribuite împreună. Nu mai instalezi separat un set de prompts și apoi încerci să ghicești ce server sau ce tools le corespund.
+
+## De ce contează asta pentru compliance
+
+Compliance este un domeniu în care răspunsurile generice au valoare limitată.
+
+„Trebuie să ai access control” este adevărat pentru aproape orice organizație. Dar nu spune:
+
+- ce conturi administrative există acum;
+- ce aplicații nu folosesc SSO;
+- cine are acces privilegiat;
+- ce control din framework acoperă acel proces;
+- ce evidence este deja disponibil;
+- ce excepții au fost aprobate;
+- cine este owner pentru remediere.
+
+Un agent conectat la datele reale poate răspunde la aceste întrebări. Un skill bun îl poate obliga să nu sară peste context, ownership, evidence și risk treatment.
+
+Asta schimbă rolul AI-ului din „generator de text” în **asistent operațional controlat**.
+
+## Un exemplu: access review
+
+Presupune că vrei să pregătești o campanie de access review.
+
+Fără tools, agentul îți poate da un checklist.
+
+Cu MCP, agentul poate primi acces la utilizatori, surse și campanii.
+
+Cu un skill specific, fluxul poate deveni:
+
+1. identifică sursele relevante;
+2. verifică persoanele și rolurile;
+3. separă accesul normal de accesul privilegiat;
+4. marchează intrările care necesită decizie;
+5. propune `approve`, `revoke` sau `escalate`;
+6. cere confirmarea unui reviewer uman;
+7. păstrează rezultatul în sistem ca evidence.
+
+Skill-ul nu trebuie să înlocuiască reviewer-ul. Trebuie să îl ajute să ajungă mai repede la o decizie bună.
+
+## Un alt exemplu: policy drafting
+
+Un LLM poate scrie ușor o politică generică de vendor management.
+
+Un agent conectat la sistem ar putea, în schimb:
+
+- citi lista reală de third parties;
+- vedea clasificarea lor de risc;
+- identifica procesele deja existente;
+- verifica ce controls și measures sunt mapate;
+- pregăti un draft care reflectă organizația reală;
+- trimite documentul pentru review, nu direct pentru publicare.
+
+Diferența este uriașă: documentul nu mai descrie o companie imaginară.
+
+## Ce nu rezolvă standardul
+
+Agent Plugins nu este un „app store universal” și nici o garanție că orice plugin funcționează identic în orice client.
+
+Standardul nu elimină automat probleme precum:
+
+- discovery — cum găsești plugin-ul potrivit;
+- instalare — fiecare client poate avea propriul flow;
+- autentificare — accesul la date trebuie în continuare securizat;
+- permissions — agentul nu ar trebui să primească mai multe drepturi decât utilizatorul;
+- approval — acțiunile sensibile au nevoie de control uman;
+- auditability — organizația trebuie să știe cine sau ce a făcut o modificare.
+
+Standardizarea ambalajului ajută, dar nu elimină responsabilitatea de securitate.
+
+## OAuth și permisiunile sunt mai importante decât promptul
+
+Dacă un agent poate scrie într-o platformă GRC, designul de acces trebuie tratat la fel de serios ca accesul unui utilizator uman.
+
+Principiul corect este **least privilege**:
+
+- sesiunea primește doar scopes necesare;
+- permisiunile utilizatorului rămân limita superioară;
+- operațiile sensibile pot necesita approval;
+- acțiunile trebuie logate;
+- tokenurile trebuie să aibă lifecycle și revocare clară.
+
+Un skill excelent nu compensează un MCP server care oferă acces prea larg.
+
+## Unde se poziționează ZebraByte
+
+Suprafața de dezvoltare ZebraByte documentează integrarea prin **GraphQL, MCP, n8n, webhooks și API-uri**. Aceste interfețe permit automatizări și agenți care lucrează cu datele platformei în limitele permisiunilor disponibile.
+
+Un pachet Agent Plugins first-party este un strat separat peste aceste interfețe. Nu este corect să îl prezentăm ca disponibil până când nu este publicat și suportat explicit ca produs.
+
+Dar arhitectural, relația este clară:
+
+```text
+Agent / AI client
+        ↓
+Skill / metodă de lucru
+        ↓
+MCP / API tools
+        ↓
+Controls, risks, evidence, vendors, tasks
+        ↓
+Review și aprobare umană
+```
+
+## Când merită să folosești un agent
+
+Taskurile potrivite sunt cele repetitive și verificabile:
+
+- pregătirea unei liste de evidence lipsă;
+- sumarizarea unui access review;
+- identificarea documentelor care așteaptă aprobare;
+- pregătirea unui draft de policy;
+- clasificarea inițială a unui vendor pentru review;
+- generarea unui rezumat de gap assessment pe baza datelor existente.
+
+Taskurile nepotrivite pentru autonomie completă sunt cele care schimbă postura de risc sau creează angajamente externe fără review:
+
+- acceptarea unui risc major;
+- publicarea unei politici;
+- aprobarea unui vendor critic;
+- declararea conformității;
+- publicarea unui commitment în Trust Center;
+- revocarea accesului privilegiat fără context operațional.
+
+## Principiul de bază
+
+AI-ul devine mult mai valoros când nu trebuie să ghicească despre organizație.
+
+MCP îi oferă acces la realitate. Skills îi oferă metoda. Permisiunile îi stabilesc limitele. Review-ul uman păstrează responsabilitatea acolo unde trebuie.
+
+Asta este ideea utilă din spatele Agent Plugins: **nu un agent „mai inteligent”, ci un agent mai bine conectat și mai bine constrâns**.
+
+Pentru suprafețele disponibile în platformă, vezi [documentația pentru dezvoltatori](/docs/developers) și [Platforma de conformitate](/compliance-platform).
