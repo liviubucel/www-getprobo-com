@@ -1,147 +1,348 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import Badges from "../components/Badges.svelte";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
 const scope = [
   {
     number: "01",
     title: "External attack surface",
     description:
-      "Inventariem domenii, aplicații, servicii publice și configurații expuse, apoi prioritizăm ce merită investigat în profunzime.",
+      "Domenii, subdomenii, aplicații, servicii publice, DNS și configurații expuse care pot fi observate sau atacate din exterior.",
   },
   {
     number: "02",
-    title: "Web & infrastructure review",
+    title: "Web & infrastructure posture",
     description:
-      "Analizăm configurațiile relevante, headerele, TLS, accesul, componentele expuse și vulnerabilitățile cunoscute care pot afecta serviciile publice.",
+      "TLS, security headers, tehnologii expuse, access paths, configurații defensive și vulnerabilități cunoscute relevante pentru serviciile aflate în scope.",
   },
   {
     number: "03",
     title: "Identity & email posture",
     description:
-      "Verificăm controalele de acces, MFA unde este relevant și postura domeniului pentru SPF, DKIM și DMARC, astfel încât identitatea digitală să nu rămână punctul slab.",
+      "MFA și access controls unde pot fi evaluate, plus SPF, DKIM, DMARC și configurațiile de domeniu care influențează impersonation și account risk.",
   },
   {
     number: "04",
-    title: "Risk & remediation plan",
+    title: "Risk & remediation",
     description:
-      "Fiecare constatare este legată de impact, prioritate, owner și pași de remediere. Raportul trebuie să poată fi folosit de echipa tehnică, nu doar arhivat.",
+      "Findings sunt explicate prin impact și context, apoi transformate într-un plan de remediere prioritizat și verificabil.",
   },
 ];
 
-const deliverables = [
-  "inventar al suprafeței publice analizate",
-  "constatări tehnice grupate după risc și impact",
-  "evidence și context suficient pentru reproducere unde este sigur",
-  "plan de remediere prioritizat",
-  "mapping către controale de securitate/compliance unde este relevant",
-  "sesiune de review a rezultatelor și pașilor următori",
+const methodology = [
+  {
+    step: "01",
+    title: "Define scope",
+    text: "Stabilim activele, mediile, limitele autorizării și ce nu intră în evaluare înainte de orice activitate tehnică.",
+  },
+  {
+    step: "02",
+    title: "Discover",
+    text: "Construim inventarul expunerii și identificăm tehnologii, servicii și configurații care merită analizate în profunzime.",
+  },
+  {
+    step: "03",
+    title: "Validate",
+    text: "Verificăm constatările suficient cât să evităm false positives și păstrăm testarea în limitele stabilite pentru engagement.",
+  },
+  {
+    step: "04",
+    title: "Prioritize",
+    text: "Corelăm severitatea tehnică cu exploatabilitatea, expunerea și impactul asupra serviciului sau datelor.",
+  },
+  {
+    step: "05",
+    title: "Report",
+    text: "Documentăm finding-ul, evidence-ul relevant, impactul și acțiunile recomandate într-un format utilizabil de echipa tehnică.",
+  },
+  {
+    step: "06",
+    title: "Remediate & verify",
+    text: "Dacă intră în scope, ajutăm la remediere și verificăm dacă schimbarea a închis cauza, nu doar simptomul.",
+  },
 ];
 
-const related = [
-  { title: "Cyber Security", href: "/cyber-security", text: "Program continuu de securitate și hardening." },
-  { title: "Website Security", href: "/website-security", text: "WAF, malware protection, DDoS și monitorizare." },
-  { title: "Email Security", href: "/email-security", text: "SPF, DKIM, DMARC și protecția identității de email." },
-  { title: "Incident Response", href: "/incident-response", text: "Triage, containment și recovery când incidentul este deja activ." },
+const findingAnatomy = [
+  ["Finding", "Ce am identificat și unde apare problema."],
+  ["Evidence", "Informația tehnică minimă necesară pentru a înțelege sau reproduce în siguranță constatarea."],
+  ["Risk", "Ce poate permite problema și care este contextul real de exploatare sau impact."],
+  ["Priority", "Ordinea recomandată de remediere în raport cu celelalte findings și dependențe."],
+  ["Remediation", "Ce trebuie schimbat și ce compromisuri sau verificări pot fi necesare înainte de implementare."],
+  ["Verification", "Cum confirmăm că remedierea a rezolvat cauza fără să rupă funcționalitatea legitimă."],
+];
+
+const deliverables = [
+  "scope și inventar al suprafeței analizate",
+  "findings tehnice prioritizate după risc și context",
+  "evidence suficient pentru înțelegere și remediation",
+  "recomandări tehnice și pași următori",
+  "separarea problemelor urgente de hardening-ul recomandat",
+  "mapping către controls sau cerințe de compliance unde este relevant",
+  "review al rezultatelor cu ownerii tehnici",
+];
+
+const boundaries = [
+  {
+    title: "Authorization first",
+    text: "Nu extindem testarea către alte sisteme, tenants sau furnizori doar pentru că apar ca dependențe. Activele testate trebuie să fie în scope-ul autorizat.",
+  },
+  {
+    title: "Assessment ≠ pentest implicit",
+    text: "Un security assessment nu devine automat penetration test. Testarea activă, exploatarea și alte tehnici intruzive necesită un scope și reguli potrivite engagement-ului.",
+  },
+  {
+    title: "Minimizăm impactul",
+    text: "Validarea trebuie să ofere suficientă încredere fără să provoace indisponibilitate, pierdere de date sau modificări inutile în producție.",
+  },
+  {
+    title: "Secretele nu intră în formularul public",
+    text: "Parole, private keys, recovery codes și token-uri nu trebuie trimise prin formularul public. Accesul necesar se stabilește prin canalul potrivit după definirea engagement-ului.",
+  },
+];
+
+const nextSteps = [
+  {
+    title: "Website Security",
+    text: "WAF, hardening, malware monitoring, DDoS protection și recovery pentru aplicații expuse public.",
+    href: "/website-security",
+  },
+  {
+    title: "Email Security",
+    text: "SPF, DKIM, DMARC, identity hardening și remediation pentru posture-ul de email și domeniu.",
+    href: "/email-security",
+  },
+  {
+    title: "Secure Managed Hosting",
+    text: "Migrare și operare continuă atunci când infrastructura însăși trebuie adusă într-un model managed security.",
+    href: "/secure-hosting",
+  },
+  {
+    title: "Incident Response",
+    text: "Triage și containment atunci când assessment-ul pornește de la o suspiciune de compromitere sau un incident activ.",
+    href: "/incident-response",
+  },
+];
+
+const faqs = [
+  {
+    question: "Security Assessment este un penetration test?",
+    answer:
+      "Nu implicit. Assessment-ul analizează suprafața expusă, configurațiile și controalele din scope. Un penetration test are reguli de testare și autorizare distincte și trebuie agreat separat atunci când este necesar.",
+  },
+  {
+    question: "Aveți nevoie de acces administrativ?",
+    answer:
+      "Nu pentru fiecare assessment. Putem începe din perspectiva externă și putem extinde review-ul către configurații interne doar dacă scope-ul cere asta și accesul este furnizat printr-un canal adecvat.",
+  },
+  {
+    question: "Evaluați și furnizori terți?",
+    answer:
+      "Putem documenta dependențele și riscul asociat, dar nu testăm infrastructura unui terț fără autorizarea corespunzătoare. Limitele engagement-ului se stabilesc înainte de testare.",
+  },
+  {
+    question: "Ce se întâmplă după raport?",
+    answer:
+      "Poți remedia cu echipa sau furnizorul existent, ori ZebraByte poate prelua anumite acțiuni de hardening, website/email security, migration sau managed security dacă intră în scope.",
+  },
+  {
+    question: "Assessment-ul poate ajuta și la ISO 27001, NIS2 sau GDPR?",
+    answer:
+      "Da, findings și evidence tehnic pot susține risk treatment sau controls relevante. Assessment-ul nu certifică însă organizația și nu înlocuiește programul de compliance sau analiza juridică aplicabilă.",
+  },
 ];
 ---
 
 <Layout
   title="Security Assessment & Cyber Audit"
-  description="Security assessment ZebraByte pentru website, domeniu, email și servicii expuse public, cu raport tehnic și plan de remediere prioritizat."
+  description="Security Assessment ZebraByte pentru website, domeniu, email și servicii expuse public, cu findings tehnice, evidence și plan de remediere prioritizat."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
-      <div class="container text-center">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
-          Security Assessment
-        </div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">
-          Vezi riscul real înainte să devină incident.
-        </h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-          Evaluăm website-ul, domeniul, emailul și serviciile expuse public, apoi transformăm constatările într-un plan tehnic de remediere. Fără checklist-uri generice și fără scoruri fără context.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Solicită o evaluare</Button>
-          <Button href="/cyber-security" variant="secondary" size="lg">Vezi programul Cyber Security</Button>
-        </div>
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
+        Security Assessment
+      </div>
 
-        <Badges
-          count={10}
-          countMobile={6}
-          client:visible
-          border
-          class="mx-auto mt-12 grid max-w-[860px] grid-cols-3 sm:grid-cols-5"
-        />
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
+        <span class="animate-perspective-in block">Înțelege suprafața de atac</span>
+        <span class="animate-perspective-in block delay-50"> înainte să alegi remedierea. </span>
+      </h1>
+
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        Evaluăm website-ul, domeniul, emailul și serviciile expuse public, validăm
+        constatările și le transformăm într-un plan tehnic prioritizat după risc și impact.
+      </p>
+
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/cyber-security"
+        >
+          Vezi Cyber Security
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Solicită o evaluare
+        </Button>
       </div>
     </animated-hero>
 
-    <section class="bg-active py-16 sm:py-24">
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Ce intră în evaluare</h2>
+        <p class="text-muted-foreground text-lg">
+          Scope-ul se adaptează mediului și obiectivului engagement-ului. Nu adăugăm active
+          sau tehnici de testare în afara autorizării doar pentru a produce un raport mai lung.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {scope.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.number}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
       <div class="container">
-        <div class="mx-auto mb-12 max-w-180 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Scope</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">O evaluare care leagă tehnicul de risc.</h2>
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Metodologie de la scope la verification</h2>
           <p class="text-muted-foreground text-lg">
-            Scope-ul se adaptează organizației. Nu testăm sisteme în afara autorizării și nu extindem automat evaluarea către active care nu au fost incluse explicit.
+            Tool-urile sunt doar o parte din proces. Valoarea vine din validare, context și
+            prioritizarea constatărilor în jurul serviciului real.
           </p>
         </div>
 
-        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
-          {scope.map((item) => (
-            <article class="bg-level-0 p-6 sm:p-9">
-              <div class="text-muted-foreground mb-8 text-sm font-medium">{item.number}</div>
-              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground text-lg leading-relaxed">{item.description}</p>
+        <div class="mx-auto max-w-5xl border-y">
+          {methodology.map((item) => (
+            <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Raport</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Vulnerabilitățile sunt explicate, nu doar listate.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Scopul raportului este să permită decizii. Separăm problemele critice de hardening-ul recomandat și arătăm ce trebuie rezolvat întâi, cine trebuie implicat și ce evidence poate demonstra remedierea.
-          </p>
-        </div>
-        <div class="rounded-2xl border p-6 sm:p-8">
-          <ul class="space-y-4">
-            {deliverables.map((item) => (
-              <li class="flex gap-3 text-muted-foreground leading-relaxed">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un finding trebuie să poată fi folosit</h2>
+        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+          Nu livrăm doar un nume de vulnerabilitate și un scor. Finding-ul trebuie să ofere
+          suficient context pentru ca owner-ul tehnic să înțeleagă problema, să decidă ordinea
+          și să poată verifica remedierea.
+        </p>
 
-    <section class="border-y py-16 sm:py-24">
-      <div class="container">
-        <div class="mb-10 max-w-180">
-          <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-[0.12em]">După assessment</p>
-          <h2 class="text-h3 font-medium">Raportul poate continua direct în execuție.</h2>
-        </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {related.map((item) => (
-            <a href={item.href} class="bg-level-0 hover:bg-subtle rounded-xl border p-6 transition-colors">
-              <h3 class="mb-3 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{item.text}</p>
-            </a>
+        <div class="border-y">
+          {findingAnatomy.map(([label, text]) => (
+            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.6fr_1.4fr] sm:gap-10">
+              <h3 class="font-medium">{label}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Începem cu scope-ul corect, nu cu o listă de tool-uri.</h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Spune-ne ce vrei să evaluăm și care este contextul de business. Stabilim limitele evaluării înainte de orice testare.</p>
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce primești la final</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Raportul trebuie să reducă incertitudinea și să permită execuția. Separăm riscul
+            imediat de hardening-ul recomandat și indicăm ce trebuie verificat după schimbare.
+          </p>
+        </div>
+        <ul class="border-y">
+          {deliverables.map((item) => (
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Limitele assessment-ului sunt parte din securitate</h2>
+          <div class="border-y">
+            {boundaries.map((item) => (
+              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+                <h3 class="text-h5 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">După assessment</h2>
+        <p class="text-muted-foreground text-lg">
+          Raportul nu te blochează într-un singur model de execuție. Poți remedia intern,
+          împreună cu furnizorii existenți sau cu ZebraByte acolo unde are sens.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {nextSteps.map((item) => (
+          <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <ZebraByteTestimonials />
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+        Începem cu scope-ul corect, nu cu o listă de tool-uri.
+      </h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+        Spune-ne ce vrei să evaluăm și care este contextul de business. Stabilim limitele
+        engagement-ului înainte de orice testare.
+      </p>
       <Button href="/contact" size="lg">Discută despre assessment</Button>
     </section>
   </main>
