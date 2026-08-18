@@ -154,7 +154,7 @@ const faqs = [
       </p>
     </animated-hero>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-12 text-invert sm:py-24">
       <div class="container">
         <div class="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <div class="max-w-3xl">
@@ -168,9 +168,9 @@ const faqs = [
           <span class="font-mono text-sm opacity-40">IR / ACTIVE WORKFLOW</span>
         </div>
 
-        <div class="border-y border-level-0-foreground/15 font-mono">
+        <div class="border-y border-invert/15 font-mono">
           {phases.map((item, index) => (
-            <article class="grid gap-4 border-b border-level-0-foreground/15 py-6 last:border-b-0 sm:grid-cols-[88px_0.7fr_1.3fr] sm:gap-8">
+            <article class="grid gap-4 border-b border-invert/15 py-6 last:border-b-0 sm:grid-cols-[88px_0.7fr_1.3fr] sm:gap-8">
               <div class="flex items-start gap-3 text-sm opacity-45">
                 <span>{item.step}</span><span>+</span><span>{String(index * 17 + 4).padStart(2, "0")}m</span>
               </div>
@@ -311,7 +311,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-level-3 py-16 text-center text-level-0-foreground sm:py-24">
+    <section class="bg-level-3 py-16 text-center text-invert sm:py-24">
       <div class="container">
         <p class="mb-4 font-mono text-sm opacity-45">INCIDENT / ESCALATION</p>
         <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Dacă există un incident activ, prioritatea este controlul impactului.</h2>
