@@ -1,11 +1,17 @@
 ---
 import { menuGroups } from "../content/menu.ts";
+import type { MenuItem } from "../content/menu.ts";
 import Icon from "./Icon.astro";
 import MenuIcon from "./MenuIcon.astro";
 
 interface Props {
   id?: string;
 }
+
+type MenuSection = {
+  label: string;
+  items: MenuItem[];
+};
 
 const { id } = Astro.props;
 const currentPath = Astro.url.pathname;
@@ -16,6 +22,21 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
   ) ||
   (group.feature.href.startsWith("/") &&
     currentPath.startsWith(group.feature.href));
+
+const sectionsFor = (group: (typeof menuGroups)[number]): MenuSection[] => {
+  const labels = Array.from(
+    new Set(
+      group.items
+        .map((item) => item.section)
+        .filter((section): section is string => Boolean(section)),
+    ),
+  );
+
+  return labels.map((label) => ({
+    label,
+    items: group.items.filter((item) => item.section === label),
+  }));
+};
 ---
 
 <div
@@ -28,111 +49,158 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
   <div class="mx-auto w-full max-w-2xl px-4 pt-4 pb-28 sm:px-5">
     <div class="overflow-hidden rounded-2xl border bg-secondary">
       {
-        menuGroups.map((group) => (
-          <details
-            data-mobile-section
-            class="group/mobile border-b last:border-b-0"
-            open={isGroupActive(group)}
-          >
-            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-inset group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
-              <span>{group.label}</span>
-              <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
-                <Icon name="caret-down" size={17} />
-              </span>
-            </summary>
+        menuGroups.map((group) => {
+          const sections = sectionsFor(group);
+          const hasSections = sections.length > 0;
 
-            <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
-              <div class="flex flex-col">
-                {group.items.map((item) => {
-                  const external = item.href.startsWith("http");
-                  return (
-                    <a
-                      href={item.href}
-                      target={external ? "_blank" : undefined}
-                      rel={external ? "noopener noreferrer" : undefined}
-                      class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
-                    >
-                      <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
-                        <MenuIcon name={item.icon} />
-                      </span>
-                      <span class="min-w-0 flex-1 pt-0.5">
-                        <span class="block text-[14px] leading-5 font-semibold">
-                          {item.label}
-                        </span>
-                        <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
-                          {item.description}
-                        </span>
-                      </span>
-                      <Icon
-                        name="caret-right"
-                        size={16}
-                        class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
-                      />
-                    </a>
-                  );
-                })}
-              </div>
+          return (
+            <details
+              data-mobile-section
+              class="group/mobile border-b last:border-b-0"
+              open={isGroupActive(group)}
+            >
+              <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 text-[16px] font-semibold outline-none transition-colors hover:bg-subtle/60 focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-inset group-open/mobile:bg-subtle/70 [&::-webkit-details-marker]:hidden">
+                <span>{group.label}</span>
+                <span class="text-muted-foreground grid size-7 shrink-0 place-items-center transition-transform duration-200 group-open/mobile:rotate-180">
+                  <Icon name="caret-down" size={17} />
+                </span>
+              </summary>
 
-              <a
-                href={group.feature.href}
-                target={group.feature.href.startsWith("http") ? "_blank" : undefined}
-                rel={group.feature.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                class="bg-secondary group/feature mx-1 mt-2 block overflow-hidden rounded-xl border outline-none transition-shadow hover:shadow-mid focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
-                aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
-              >
-                <div class="relative aspect-[16/9] overflow-hidden">
-                  <img
-                    src={group.feature.asset}
-                    alt={group.feature.alt}
-                    width="640"
-                    height="360"
-                    loading={group.label === "Companie" ? "eager" : "lazy"}
-                    decoding="async"
-                    fetchpriority={group.label === "Companie" ? "auto" : "low"}
-                    data-mobile-feature-image
-                    class:list={[
-                      "absolute inset-0 size-full",
-                      group.feature.variant === "story" && "object-cover",
-                      group.feature.variant === "product" &&
-                        "object-cover object-top",
-                      group.feature.variant === "guide" &&
-                        "object-contain object-bottom px-4 pt-14 pb-3",
-                    ]}
-                  />
+              <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
+                {hasSections ? (
+                  <div class="space-y-3 pt-2">
+                    {sections.map((section) => (
+                      <section>
+                        <p class="text-muted-foreground px-2 pb-1 text-[10.5px] leading-4 font-semibold tracking-[0.08em] uppercase">
+                          {section.label}
+                        </p>
+                        <div class="flex flex-col">
+                          {section.items.map((item) => {
+                            const external = item.href.startsWith("http");
+                            return (
+                              <a
+                                href={item.href}
+                                target={external ? "_blank" : undefined}
+                                rel={external ? "noopener noreferrer" : undefined}
+                                class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
+                              >
+                                <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
+                                  <MenuIcon name={item.icon} />
+                                </span>
+                                <span class="min-w-0 flex-1 pt-0.5">
+                                  <span class="block text-[14px] leading-5 font-semibold">
+                                    {item.label}
+                                  </span>
+                                  <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
+                                    {item.description}
+                                  </span>
+                                </span>
+                                <Icon
+                                  name="caret-right"
+                                  size={16}
+                                  class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
+                                />
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+                ) : (
+                  <div class="flex flex-col">
+                    {group.items.map((item) => {
+                      const external = item.href.startsWith("http");
+                      return (
+                        <a
+                          href={item.href}
+                          target={external ? "_blank" : undefined}
+                          rel={external ? "noopener noreferrer" : undefined}
+                          class="group/item flex items-start gap-3 rounded-xl px-2 py-3 outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
+                        >
+                          <span class="bg-secondary grid size-9 shrink-0 place-items-center rounded-lg border">
+                            <MenuIcon name={item.icon} />
+                          </span>
+                          <span class="min-w-0 flex-1 pt-0.5">
+                            <span class="block text-[14px] leading-5 font-semibold">
+                              {item.label}
+                            </span>
+                            <span class="text-muted-foreground mt-0.5 block text-[12.5px] leading-[18px]">
+                              {item.description}
+                            </span>
+                          </span>
+                          <Icon
+                            name="caret-right"
+                            size={16}
+                            class="text-muted-foreground mt-2 shrink-0 transition-transform group-hover/item:translate-x-0.5"
+                          />
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
 
-                  {group.feature.variant === "story" && (
-                    <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]" />
-                  )}
+                <a
+                  href={group.feature.href}
+                  target={group.feature.href.startsWith("http") ? "_blank" : undefined}
+                  rel={group.feature.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  class="bg-secondary group/feature mx-1 mt-2 block overflow-hidden rounded-xl border outline-none transition-shadow hover:shadow-mid focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
+                  aria-label={`${group.feature.eyebrow}: ${group.feature.title}`}
+                >
+                  <div class="relative aspect-[16/9] overflow-hidden">
+                    <img
+                      src={group.feature.asset}
+                      alt={group.feature.alt}
+                      width="640"
+                      height="360"
+                      loading={group.label === "Companie" ? "eager" : "lazy"}
+                      decoding="async"
+                      fetchpriority={group.label === "Companie" ? "auto" : "low"}
+                      data-mobile-feature-image
+                      class:list={[
+                        "absolute inset-0 size-full",
+                        group.feature.variant === "story" && "object-cover",
+                        group.feature.variant === "product" &&
+                          "object-cover object-top",
+                        group.feature.variant === "guide" &&
+                          "object-contain object-bottom px-4 pt-14 pb-3",
+                      ]}
+                    />
 
-                  {group.feature.variant !== "story" && (
-                    <span class="mobile-navigation-feature-halo" aria-hidden="true" />
-                  )}
+                    {group.feature.variant === "story" && (
+                      <span class="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.72)] via-[rgba(0,0,0,0.05)] to-[rgba(0,0,0,0.35)]" />
+                    )}
 
-                  <span
-                    class:list={[
-                      "absolute top-3.5 right-4 left-4 z-10 flex flex-col gap-1",
-                      group.feature.variant === "story" && "text-white",
-                    ]}
-                  >
+                    {group.feature.variant !== "story" && (
+                      <span class="mobile-navigation-feature-halo" aria-hidden="true" />
+                    )}
+
                     <span
                       class:list={[
-                        "text-[11px] leading-4 font-semibold",
-                        group.feature.variant === "story"
-                          ? "text-[#e6ff03]"
-                          : "text-muted-foreground",
+                        "absolute top-3.5 right-4 left-4 z-10 flex flex-col gap-1",
+                        group.feature.variant === "story" && "text-white",
                       ]}
                     >
-                      {group.feature.eyebrow}
+                      <span
+                        class:list={[
+                          "text-[11px] leading-4 font-semibold",
+                          group.feature.variant === "story"
+                            ? "text-[#e6ff03]"
+                            : "text-muted-foreground",
+                        ]}
+                      >
+                        {group.feature.eyebrow}
+                      </span>
+                      <span class="max-w-[28rem] text-[16px] leading-5 font-semibold tracking-[-0.15px]">
+                        {group.feature.title}
+                      </span>
                     </span>
-                    <span class="max-w-[28rem] text-[16px] leading-5 font-semibold tracking-[-0.15px]">
-                      {group.feature.title}
-                    </span>
-                  </span>
-                </div>
-              </a>
-            </div>
-          </details>
-        ))
+                  </div>
+                </a>
+              </div>
+            </details>
+          );
+        })
       }
     </div>
 
@@ -144,10 +212,10 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
         Discută cu un expert
       </a>
       <a
-        href="/compliance-portal"
+        href="/compliance-platform"
         class="flex min-h-11 items-center justify-center rounded-full border bg-secondary px-4 text-center text-[14px] font-semibold transition-colors hover:bg-subtle"
       >
-        Vezi platforma ZebraByte
+        Vezi Platforma GRC
       </a>
     </div>
   </div>
