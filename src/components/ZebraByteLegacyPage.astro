@@ -11,7 +11,7 @@ const { page } = Astro.props;
 
 <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
   <div class="container text-center">
-    <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
+    <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-3 py-1.5 text-sm font-medium">
       {page.eyebrow}
     </div>
     <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">{page.title}</h1>
@@ -23,56 +23,92 @@ const { page } = Astro.props;
   </div>
 </animated-hero>
 
-<section class="container py-14 sm:py-20">
-  <div class="mx-auto max-w-190">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Din ZebraByte</p>
-    <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Conținut păstrat și integrat în experiența Probo.</h2>
-    <p class="text-muted-foreground text-lg leading-relaxed">{page.intro}</p>
-    {page.note && <p class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5">{page.note}</p>}
-  </div>
-</section>
-
-<section class="container pb-16 sm:pb-24">
-  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-    {page.features.map((feature) => (
-      <article class="bg-level-0 min-h-60 p-6 sm:p-8">
-        <h3 class="mb-3 text-xl font-medium">{feature.title}</h3>
-        <p class="text-muted-foreground leading-relaxed">{feature.description}</p>
-      </article>
-    ))}
-  </div>
-</section>
-
-<section class="bg-active py-16 sm:py-24">
-  <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+<section class="container pb-12 sm:pb-24">
+  <div class="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-24">
     <div>
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Proces</p>
-      <h2 class="text-h3 sm:text-h2 font-medium">{page.processTitle}</h2>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Context</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">De ce contează în operațiunile reale.</h2>
     </div>
-    <div class="overflow-hidden rounded-2xl border bg-level-0">
-      {page.process.map((step, index) => (
-        <div class="grid grid-cols-[52px_1fr] gap-3 border-b p-5 last:border-b-0 sm:p-6">
-          <span class="text-muted-foreground text-sm">0{index + 1}</span>
-          <p class="font-medium leading-relaxed">{step}</p>
-        </div>
+    <div>
+      <p class="text-muted-foreground text-lg leading-relaxed">{page.intro}</p>
+      {page.note && <p class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5">{page.note}</p>}
+    </div>
+  </div>
+</section>
+
+<section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+  <div class="container">
+    <div class="mb-12 max-w-3xl sm:mb-16">
+      <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">What it covers</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Capabilitățile care definesc serviciul.</h2>
+      <p class="text-level-0-foreground/65 text-lg leading-relaxed">
+        Scope-ul concret depinde de proiect, dar aceste elemente descriu ce trebuie să poată face serviciul și ce rezultat urmărește.
+      </p>
+    </div>
+
+    <div class="grid gap-x-14 sm:grid-cols-2 lg:gap-x-24">
+      {page.features.map((feature, index) => (
+        <article class="border-t border-level-0-foreground/15 py-8">
+          <span class="text-level-0-foreground/40 mb-7 block font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
+          <h3 class="text-h3 mb-3 font-medium">{feature.title}</h3>
+          <p class="text-level-0-foreground/65 text-lg leading-relaxed">{feature.description}</p>
+        </article>
       ))}
     </div>
   </div>
 </section>
 
-<section class="container py-16 sm:py-24">
-  <div class="mb-8 max-w-170">
-    <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Continuă</p>
-    <h2 class="text-h3 font-medium">Servicii conectate</h2>
+<section class="bg-active py-12 sm:py-24">
+  <div class="container">
+    <div class="mx-auto mb-12 max-w-190 text-center sm:mb-16">
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Proces</p>
+      <h2 class="text-h3 sm:text-h2 mb-4 font-medium">{page.processTitle}</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">
+        Procesul păstrează ownership-ul și ordinea schimbărilor clare, astfel încât implementarea să nu devină o colecție de intervenții fără context.
+      </p>
+    </div>
+
+    <div class="relative mx-auto max-w-6xl">
+      <div class="absolute top-5 right-[8%] left-[8%] hidden h-px bg-border lg:block"></div>
+      <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        {page.process.map((step, index) => (
+          <article class="relative">
+            <div class="mb-5 flex size-10 items-center justify-center rounded-full border bg-background font-mono text-xs">
+              {String(index + 1).padStart(2, "0")}
+            </div>
+            <p class="text-h5 font-medium leading-relaxed">{step}</p>
+          </article>
+        ))}
+      </div>
+    </div>
   </div>
-  <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-    {page.related.map((item) => (
-      <a href={item.href} class="bg-level-0 group min-h-44 p-6 transition-colors hover:bg-subtle sm:p-8">
-        <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.label}</h3>
-        <p class="text-muted-foreground mt-2 text-sm">Deschide serviciul și vezi cum se leagă de programul ZebraByte.</p>
-      </a>
-    ))}
+</section>
+
+<section class="container py-12 sm:py-24">
+  <div class="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
+    <div>
+      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Continuă</p>
+      <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Servicii conectate.</h2>
+      <p class="text-muted-foreground text-lg leading-relaxed">
+        Poți păstra proiectul punctual sau îl poți conecta la alte capabilități atunci când riscul și ownership-ul o justifică.
+      </p>
+    </div>
+
+    <div class="grid gap-x-10 sm:grid-cols-2">
+      {page.related.map((item) => (
+        <a href={item.href} class="group border-t py-7">
+          <h3 class="text-h4 font-medium group-hover:underline group-hover:underline-offset-4">{item.label}</h3>
+          <p class="text-muted-foreground mt-3 leading-relaxed">Vezi cum se leagă de programul ZebraByte și ce scope poate rămâne separat.</p>
+        </a>
+      ))}
+    </div>
   </div>
+</section>
+
+<section class="container py-12 text-center sm:py-24">
+  <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începe cu problema reală, nu cu un pachet generic.</h2>
+  <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Stabilim scope-ul, ce merită păstrat și ce trebuie schimbat înainte să recomandăm o implementare mai mare.</p>
+  <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
 </section>
 
 <script>
