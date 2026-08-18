@@ -22,7 +22,6 @@ export type MenuItem = {
   description: string;
   href: string;
   icon: MenuIconName;
-  section?: string;
 };
 
 export type MenuFeature = {
@@ -47,61 +46,54 @@ export const menuGroups: MenuGroup[] = [
     label: "Conformitate",
     items: [
       {
-        label: "Platforma GRC",
-        description: "Workspace intern pentru controale, riscuri, dovezi și audit",
+        label: "Platforma de conformitate",
+        description: "Gestionezi intern framework-uri, controale, riscuri, dovezi și audit",
         href: "/compliance-platform",
         icon: "shield-check",
-        section: "Platformă",
       },
       {
         label: "Trust Center",
         description: "Portal extern pentru clienți: documente, NDA și acces securizat",
         href: "/compliance-portal",
         icon: "monitor",
-        section: "Platformă",
       },
       {
         label: "SOC 2",
         description: "Controale și pregătire continuă pentru audit",
         href: "/soc2",
         icon: "article",
-        section: "Framework-uri & reglementări",
       },
       {
         label: "ISO/IEC 27001",
         description: "ISMS, riscuri și pregătire pentru certificare",
         href: "/iso-27001",
         icon: "book-open-text",
-        section: "Framework-uri & reglementări",
       },
       {
         label: "GDPR și confidențialitate",
         description: "Guvernanță, evidențe și măsuri tehnice",
         href: "/gdpr",
         icon: "users-three",
-        section: "Framework-uri & reglementări",
       },
       {
         label: "Pregătire NIS2",
         description: "Guvernanță, risc și răspuns la incidente",
         href: "/nis2",
         icon: "compass",
-        section: "Framework-uri & reglementări",
       },
       {
         label: "Accesibilitate",
-        description: "Evaluare și suport pentru accesibilitatea serviciilor digitale",
+        description: "Inclusă în programul de conformitate",
         href: "/accessibility",
         icon: "sparkle",
-        section: "Capabilități",
       },
     ],
     feature: {
-      eyebrow: "Managed Compliance",
-      title: "Vrei să operăm programul împreună cu echipa ta?",
+      eyebrow: "Conformitate gestionată",
+      title: "Controale, dovezi și accesibilitate într-un singur program",
       href: "/managed-compliance",
       asset: "/navigation/browser.svg",
-      alt: "Managed Compliance ZebraByte",
+      alt: "Platforma ZebraByte pentru conformitate gestionată",
       variant: "product",
     },
   },
