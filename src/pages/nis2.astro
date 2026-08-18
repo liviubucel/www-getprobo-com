@@ -102,25 +102,29 @@ const serviceSchema = {
     <section class="bg-[#001a00] py-16 text-white sm:py-24">
       <div class="container grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
-          <div class="mb-6 flex w-max items-center gap-2 rounded-lg border border-white/15 px-3 py-1 text-sm font-medium text-white/70">
-            <img src="/frameworks/NIS2.svg" alt="" class="size-6 rounded-full bg-white p-1" aria-hidden="true" />
+          <div class="mb-6 flex w-max max-w-full items-center gap-2 rounded-lg border border-white/15 px-3 py-1 text-sm font-medium text-white/70">
+            <img src="/frameworks/NIS2.svg" alt="" class="size-6 shrink-0 rounded-full bg-white p-1" aria-hidden="true" />
             <span>NIS2 · Cyber Risk · România</span>
           </div>
-          <h1 class="text-h2 sm:text-h1 mb-6 max-w-195 font-medium text-balance">Cybersecurity care poate funcționa și sub presiune.</h1>
-          <p class="mb-8 max-w-165 text-lg leading-relaxed text-white/68">
+          <h1 class="text-h2 sm:text-h1 mb-6 max-w-195 font-medium text-balance text-white">Cybersecurity care poate funcționa și sub presiune.</h1>
+          <p class="mb-8 max-w-165 text-lg leading-relaxed text-white/70">
             Governance, risk management, incident readiness, continuity și supply-chain security într-un program construit în jurul serviciilor reale ale organizației.
           </p>
           <div class="flex flex-col gap-3 sm:flex-row">
-            <Button href="/contact" size="lg">Discută despre NIS2</Button>
+            <Button href="/contact" size="lg" class="bg-[#e6ff03] text-[#001a00] hover:bg-[#e6ff03]/90">Discută despre NIS2</Button>
             <Button href="/cyber-security" variant="secondary" size="lg">Cyber Security</Button>
           </div>
         </div>
 
-        <div class="relative min-h-[500px] overflow-hidden rounded-[32px] border border-white/15 bg-white/5 p-6 sm:min-h-[610px] sm:p-9">
-          <img src="/trust-center/security-monitoring.svg" alt="Security monitoring" width="620" height="380" loading="eager" class="absolute top-8 right-7 w-[72%] rounded-2xl bg-white sm:top-11 sm:right-10" />
-          <img src="/trust-center/security-vulnerability.svg" alt="Vulnerability management" width="620" height="380" loading="eager" class="absolute bottom-9 left-7 w-[72%] rounded-2xl bg-white shadow-[0_20px_45px_rgba(0,0,0,0.25)] sm:bottom-12 sm:left-10" />
-          <div class="absolute top-[43%] left-[42%] grid size-24 place-items-center rounded-full bg-[#e6ff03] shadow-xl sm:size-28">
-            <img src="/frameworks/NIS2.svg" alt="NIS2" class="size-14 sm:size-16" />
+        <div class="grid gap-3 overflow-hidden rounded-[32px] border border-white/15 bg-white/5 p-4 sm:p-6 lg:relative lg:min-h-[610px] lg:block lg:p-9">
+          <div class="overflow-hidden rounded-2xl bg-white p-2 sm:p-3 lg:absolute lg:top-11 lg:right-10 lg:w-[72%]">
+            <img src="/trust-center/security-monitoring.svg" alt="Security monitoring" width="620" height="380" loading="eager" decoding="async" class="block aspect-[31/19] h-auto w-full object-contain" />
+          </div>
+          <div class="mx-auto grid size-20 place-items-center rounded-full bg-[#e6ff03] shadow-xl sm:size-24 lg:absolute lg:top-[43%] lg:left-[42%] lg:size-28">
+            <img src="/frameworks/NIS2.svg" alt="NIS2" width="64" height="64" class="size-12 sm:size-14 lg:size-16" />
+          </div>
+          <div class="overflow-hidden rounded-2xl bg-white p-2 shadow-[0_20px_45px_rgba(0,0,0,0.25)] sm:p-3 lg:absolute lg:bottom-12 lg:left-10 lg:w-[72%]">
+            <img src="/trust-center/security-vulnerability.svg" alt="Vulnerability management" width="620" height="380" loading="eager" decoding="async" class="block aspect-[31/19] h-auto w-full object-contain" />
           </div>
         </div>
       </div>
@@ -136,15 +140,15 @@ const serviceSchema = {
       <div class="mx-auto grid max-w-6xl gap-5 lg:grid-cols-2">
         {measureDomains.map((domain, index) => (
           <article class:list={[
-            "relative min-h-[390px] overflow-hidden rounded-[28px] p-7 sm:p-9",
+            "overflow-hidden rounded-[28px] p-7 sm:min-h-[330px] sm:p-9 lg:min-h-[390px]",
             index === 0 ? "bg-[#e6ff03] text-[#001a00]" : index === 2 ? "bg-[#001a00] text-white" : "border bg-level-0",
           ]}>
-            <p class:list={["mb-12 font-mono text-sm", index === 2 ? "text-[#e6ff03]" : "opacity-60"]}>{domain.number}</p>
-            <h3 class="text-h3 mb-4 font-medium">{domain.title}</h3>
-            <p class:list={["mb-8 max-w-125 leading-relaxed", index === 2 ? "text-white/65" : "text-muted-foreground"]}>{domain.text}</p>
+            <p class:list={["mb-10 font-mono text-sm sm:mb-12", index === 2 ? "text-[#e6ff03]" : index === 0 ? "text-[#001a00]/60" : "text-muted-foreground"]}>{domain.number}</p>
+            <h3 class:list={["text-h3 mb-4 font-medium", index === 2 ? "text-white" : index === 0 ? "text-[#001a00]" : "text-foreground"]}>{domain.title}</h3>
+            <p class:list={["mb-8 max-w-125 leading-relaxed", index === 2 ? "text-white/65" : index === 0 ? "text-[#001a00]/70" : "text-muted-foreground"]}>{domain.text}</p>
             <div class="flex flex-wrap gap-2">
               {domain.items.map((item) => (
-                <span class:list={["rounded-full border px-3 py-1.5 text-sm", index === 2 ? "border-white/15 text-white/75" : "border-current/15"]}>{item}</span>
+                <span class:list={["rounded-full border px-3 py-1.5 text-sm", index === 2 ? "border-white/15 text-white/75" : index === 0 ? "border-[#001a00]/15 text-[#001a00]/80" : "border-current/15"]}>{item}</span>
               ))}
             </div>
           </article>
@@ -161,9 +165,9 @@ const serviceSchema = {
         </div>
         <div class="grid gap-3 sm:grid-cols-2">
           {governance.map(([title, text], index) => (
-            <article class:list={["min-h-[230px] rounded-[24px] p-6 sm:p-7", index === 3 ? "bg-[#001a00] text-white" : "border bg-level-0"]}>
+            <article class:list={["rounded-[24px] p-6 sm:min-h-[230px] sm:p-7", index === 3 ? "bg-[#001a00] text-white" : "border bg-level-0"]}>
               <p class:list={["mb-8 font-mono text-sm", index === 3 ? "text-[#e6ff03]" : "text-muted-foreground"]}>0{index + 1}</p>
-              <h3 class="text-h5 mb-3 font-medium">{title}</h3>
+              <h3 class:list={["text-h5 mb-3 font-medium", index === 3 && "text-white"]}>{title}</h3>
               <p class:list={["text-sm leading-relaxed", index === 3 ? "text-white/65" : "text-muted-foreground"]}>{text}</p>
             </article>
           ))}
@@ -176,11 +180,13 @@ const serviceSchema = {
         <div class="grid items-end gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
           <div>
             <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#e6ff03]">Incident readiness</p>
-            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Raportarea incidentelor începe înainte de incident.</h2>
+            <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance text-white">Raportarea incidentelor începe înainte de incident.</h2>
             <p class="text-lg leading-relaxed text-white/65">Triage, escalation, containment și communication trebuie să aibă un traseu cunoscut înainte ca serviciul să fie deja sub presiune.</p>
           </div>
-          <div class="overflow-hidden rounded-[26px] border border-white/15 bg-white/5 p-5 sm:p-8">
-            <img src="/trust-center/security-monitoring.svg" alt="Monitoring pentru incident readiness" width="720" height="420" loading="lazy" class="h-auto w-full rounded-xl bg-white" />
+          <div class="overflow-hidden rounded-[26px] border border-white/15 bg-white/5 p-4 sm:p-7 lg:p-8">
+            <div class="rounded-2xl bg-white p-2 sm:p-4">
+              <img src="/trust-center/security-monitoring.svg" alt="Monitoring pentru incident readiness" width="720" height="420" loading="lazy" decoding="async" class="mx-auto block aspect-[12/7] h-auto w-full object-contain" />
+            </div>
           </div>
         </div>
 
@@ -191,7 +197,7 @@ const serviceSchema = {
               <article class="grid grid-cols-[48px_1fr] gap-4 sm:block">
                 <div class="grid size-12 place-items-center rounded-full border border-white/20 bg-[#001a00] font-mono text-sm text-[#e6ff03] sm:mb-8">{number}</div>
                 <div>
-                  <h3 class="text-h5 mb-3 font-medium">{title}</h3>
+                  <h3 class="text-h5 mb-3 font-medium text-white">{title}</h3>
                   <p class="text-sm leading-relaxed text-white/60">{text}</p>
                 </div>
               </article>
@@ -209,8 +215,8 @@ const serviceSchema = {
           <p class="text-muted-foreground mb-8 text-lg leading-relaxed">Cloud, identity, telecom, SaaS, hosting și alte servicii pot deveni dependențe operaționale. Programul trebuie să înțeleagă unde o problemă externă devine un incident intern.</p>
           <div class="grid grid-cols-2 gap-3">
             {[["Cloud", "Infrastructure"], ["Identity", "Access"], ["SaaS", "Operations"], ["Connectivity", "Availability"]].map(([name, role]) => (
-              <div class="rounded-[20px] border bg-[#f8faf4] p-5">
-                <p class="text-muted-foreground mb-7 text-sm">{role}</p>
+              <div class="rounded-[20px] border bg-[#f8faf4] p-4 sm:p-5">
+                <p class="text-muted-foreground mb-6 text-sm sm:mb-7">{role}</p>
                 <p class="font-medium">{name}</p>
               </div>
             ))}
@@ -238,10 +244,10 @@ const serviceSchema = {
 
         <div class="grid gap-4 lg:grid-cols-4">
           {services.map(([title, text, href], index) => (
-            <a href={href} class:list={["group min-h-[280px] rounded-[24px] p-6 sm:p-7", index === 0 ? "bg-[#e6ff03]" : "border bg-level-0"]}>
-              <p class="text-muted-foreground mb-12 font-mono text-sm">0{index + 1}</p>
-              <h3 class="text-h5 mb-3 font-medium group-hover:underline group-hover:underline-offset-4">{title}</h3>
-              <p class="text-muted-foreground text-sm leading-relaxed">{text}</p>
+            <a href={href} class:list={["group rounded-[24px] p-6 sm:min-h-[280px] sm:p-7", index === 0 ? "bg-[#e6ff03] text-[#001a00]" : "border bg-level-0"]}>
+              <p class:list={["mb-10 font-mono text-sm sm:mb-12", index === 0 ? "text-[#001a00]/60" : "text-muted-foreground"]}>0{index + 1}</p>
+              <h3 class:list={["text-h5 mb-3 font-medium group-hover:underline group-hover:underline-offset-4", index === 0 && "text-[#001a00]"]}>{title}</h3>
+              <p class:list={["text-sm leading-relaxed", index === 0 ? "text-[#001a00]/70" : "text-muted-foreground"]}>{text}</p>
             </a>
           ))}
         </div>
@@ -273,13 +279,13 @@ const serviceSchema = {
     <Stories />
 
     <section class="container py-14 sm:py-24">
-      <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
-        <div class="border-y">
+      <div class="mx-auto max-w-[768px]">
+        <h2 class="text-h3 sm:text-h2 mb-7 text-center font-medium">Întrebări frecvente</h2>
+        <div class="divide-y border-y">
           {faqs.map((faq) => (
-            <details class="group border-b py-5 last:border-b-0">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium"><span>{faq.question}</span><span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span></summary>
-              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            <details class="group py-1">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-medium"><span>{faq.question}</span><span class="text-muted-foreground text-xl leading-none transition-transform group-open:rotate-45">+</span></summary>
+              <p class="text-muted-foreground max-w-2xl pb-5 pr-8 leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>
