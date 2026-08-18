@@ -134,7 +134,12 @@ requireText(
 forbidText(home, "Trusted by", "homepage unsupported customer-proof label");
 forbidText(home, "Clienți ZebraByte", "homepage unsupported customer-proof label");
 
-requireText(love, 'post.id.startsWith("zebrabyte-")', "customer wall ZebraByte-only source filter");
+// Inherited wall entries are deliberately preserved as neutral reference insights.
+// The page must never regress to a ZebraByte-only source filter just to simplify
+// provenance or brand checks.
+requireText(love, 'getCollection("wall")', "customer wall complete collection source");
+requireText(love, "Feedback & Reference Insights", "customer wall mixed provenance framing");
+forbidText(love, 'post.id.startsWith("zebrabyte-")', "customer wall inherited reference suppression");
 forbidText(love, 'import Logos from "../components/block/Logos.astro"', "customer wall inherited company marquee");
 forbidText(love, "wider platform reference library", "customer wall inherited social-proof workaround");
 
@@ -161,6 +166,7 @@ requireText(contentConfig, "Link to the original source post or review", "wall s
 requireText(wallCard, 'd.source === "google"', "wall Google source label");
 requireText(wallCard, 'd.source === "trustpilot"', "wall Trustpilot source label");
 requireText(wallCard, 'd.source === "linkedin"', "wall LinkedIn source label");
+requireText(wallCard, '"Reference insight"', "wall inherited reference label");
 forbidText(wallCard, 'aria-label="External social post"', "wall generic source pretending to be LinkedIn");
 
 let wallProvenance;
