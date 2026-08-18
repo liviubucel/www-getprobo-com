@@ -140,55 +140,32 @@ const serviceSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Managed Compliance · SOC 2
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">SOC 2 readiness,</span>
         <span class="animate-perspective-in block delay-50"> construit pentru operare continuă. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         Definim scope-ul, organizăm controls și evidence, urmărim remediation și pregătim
-        organizația pentru engagement-ul auditorului independent. După raport, același program
-        continuă să funcționeze.
+        organizația pentru engagement-ul auditorului independent. După raport, același program continuă să funcționeze.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/managed-compliance"
-        >
-          Managed Compliance
-        </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
-          Discută despre SOC 2
-        </Button>
+      <div class="mb-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/managed-compliance">Managed Compliance</Button>
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Discută despre SOC 2</Button>
       </div>
 
-      <div class="animate-perspective-in animation-delay-300 flex items-center justify-center gap-5 sm:gap-7">
+      <div class="animate-perspective-in animation-delay-300 flex items-center justify-center gap-7">
         <div class="text-center">
           <FrameworkBadge name="SOC2_TYPE1" class="mx-auto size-12 sm:size-14" client:visible />
           <p class="text-muted-foreground mt-2 text-sm">Type I</p>
         </div>
+        <div class="h-12 w-px bg-border"></div>
         <div class="text-center">
           <FrameworkBadge name="SOC2_TYPE2" class="mx-auto size-12 sm:size-14" client:visible />
           <p class="text-muted-foreground mt-2 text-sm">Type II</p>
@@ -196,127 +173,148 @@ const serviceSchema = {
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-4xl">
-        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce este SOC 2</h2>
+    <section class="container pb-12 sm:pb-20">
+      <div class="mx-auto grid max-w-6xl gap-10 border-y py-10 lg:grid-cols-[0.66fr_1.34fr] lg:gap-20 sm:py-14">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Assurance program</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">SOC 2 trebuie să poată fi demonstrat și după audit.</h2>
+        </div>
         <div class="text-muted-foreground space-y-5 text-lg leading-relaxed">
           <p>
-            SOC 2 este un framework de assurance dezvoltat de AICPA pentru organizații de
-            servicii. Raportul rezultat oferă clienților și reviewerilor o evaluare
-            independentă a controalelor aflate în scope.
+            SOC 2 este un framework de assurance pentru organizații de servicii. Raportul oferă
+            clienților și reviewerilor o evaluare independentă a controalelor aflate în scope.
           </p>
           <p>
-            Pentru ZebraByte, readiness înseamnă să construim un program care poate fi
-            demonstrat în audit și operat după audit — nu să producem documente care există
-            doar pentru perioada engagement-ului.
+            Readiness-ul util construiește un program care poate fi demonstrat în audit și operat
+            după audit — nu documente care există doar pentru perioada engagement-ului.
           </p>
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Trust Services Criteria</h2>
-        <p class="text-muted-foreground text-lg">
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Trust Services Criteria</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Cinci suprafețe de assurance.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
           Security este criteriul de bază. Celelalte se adaugă atunci când produsul,
           commitments sau cerințele clienților justifică includerea lor în scope.
         </p>
       </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {trustCriteria.map((criterion, index) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.65fr_1.35fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
-            <div>
-              <h3 class="text-h5 font-medium">{criterion.name}</h3>
-              <p class="text-muted-foreground mt-2 text-sm">{criterion.note}</p>
-            </div>
-            <p class="text-muted-foreground leading-relaxed">{criterion.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto max-w-5xl">
-          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Type I vs Type II</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full min-w-[680px] border-collapse text-left">
-              <thead>
-                <tr class="border-b">
-                  <th class="py-4 pr-6 font-medium">Raport</th>
-                  <th class="py-4 pr-6 font-medium">Ce evaluează</th>
-                  <th class="py-4 pr-6 font-medium">Moment / perioadă</th>
-                  <th class="py-4 font-medium">Când este util</th>
-                </tr>
-              </thead>
-              <tbody class="text-muted-foreground">
-                <tr class="border-b">
-                  <td class="py-5 pr-6 text-foreground font-medium">SOC 2 Type I</td>
-                  <td class="py-5 pr-6">Designul controalelor</td>
-                  <td class="py-5 pr-6">La un moment definit</td>
-                  <td class="py-5">Primul pas de assurance sau o nevoie comercială mai rapidă</td>
-                </tr>
-                <tr>
-                  <td class="py-5 pr-6 text-foreground font-medium">SOC 2 Type II</td>
-                  <td class="py-5 pr-6">Designul și operarea controalelor</td>
-                  <td class="py-5 pr-6">Pe o perioadă definită</td>
-                  <td class="py-5">Assurance mai matură pentru clienți și procurement enterprise</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <div class="overflow-x-auto pb-3">
+        <div class="grid min-w-[980px] grid-cols-5 border-y">
+          {trustCriteria.map((criterion, index) => (
+            <article class:list={["min-h-80 px-5 py-6", index < trustCriteria.length - 1 && "border-r"]}>
+              <div class="mb-10 flex items-center justify-between gap-4">
+                <span class="text-h3 font-medium">0{index + 1}</span>
+                <span class="text-muted-foreground font-mono text-xs">TSC</span>
+              </div>
+              <h3 class="text-h5 mb-3 font-medium">{criterion.name}</h3>
+              <p class="text-muted-foreground mb-5 text-xs leading-relaxed">{criterion.note}</p>
+              <p class="text-muted-foreground text-sm leading-relaxed">{criterion.text}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">De la scope la audit readiness</h2>
-        <p class="text-muted-foreground text-lg">
-          Programul este construit în jurul mediului real, al riscurilor și al controalelor
-          pe care organizația le poate opera și demonstra.
-        </p>
-      </div>
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container">
+        <div class="mb-10 max-w-3xl">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Report type</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Type I vs Type II.</h2>
+        </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {readinessFlow.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.8fr_1.2fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+        <div class="grid border lg:grid-cols-2">
+          <article class="p-7 lg:border-r sm:p-9">
+            <div class="mb-10 flex items-center justify-between gap-5">
+              <FrameworkBadge name="SOC2_TYPE1" class="size-14" client:visible />
+              <span class="text-muted-foreground font-mono text-xs">POINT IN TIME</span>
+            </div>
+            <h3 class="text-h3 mb-5 font-medium">SOC 2 Type I</h3>
+            <dl class="border-y text-sm">
+              <div class="grid grid-cols-[130px_1fr] gap-5 border-b py-4"><dt class="text-muted-foreground">Evaluează</dt><dd>Designul controalelor</dd></div>
+              <div class="grid grid-cols-[130px_1fr] gap-5 border-b py-4"><dt class="text-muted-foreground">Perioadă</dt><dd>La un moment definit</dd></div>
+              <div class="grid grid-cols-[130px_1fr] gap-5 py-4"><dt class="text-muted-foreground">Util</dt><dd>Primul pas de assurance sau o nevoie comercială mai rapidă</dd></div>
+            </dl>
           </article>
-        ))}
+
+          <article class="p-7 sm:p-9">
+            <div class="mb-10 flex items-center justify-between gap-5">
+              <FrameworkBadge name="SOC2_TYPE2" class="size-14" client:visible />
+              <span class="text-muted-foreground font-mono text-xs">OPERATING PERIOD</span>
+            </div>
+            <h3 class="text-h3 mb-5 font-medium">SOC 2 Type II</h3>
+            <dl class="border-y text-sm">
+              <div class="grid grid-cols-[130px_1fr] gap-5 border-b py-4"><dt class="text-muted-foreground">Evaluează</dt><dd>Designul și operarea controalelor</dd></div>
+              <div class="grid grid-cols-[130px_1fr] gap-5 border-b py-4"><dt class="text-muted-foreground">Perioadă</dt><dd>Pe o perioadă definită</dd></div>
+              <div class="grid grid-cols-[130px_1fr] gap-5 py-4"><dt class="text-muted-foreground">Util</dt><dd>Assurance mai matură pentru clienți și procurement enterprise</dd></div>
+            </dl>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
+      <div class="container">
+        <div class="mb-12 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Evidence lifecycle</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la scope la audit readiness.</h2>
+          <p class="text-lg leading-relaxed opacity-65">
+            Programul este construit în jurul mediului real, al riscurilor și al controalelor
+            pe care organizația le poate opera și demonstra.
+          </p>
+        </div>
+
+        <div class="border-y border-level-0-foreground/15 font-mono">
+          {readinessFlow.map((item, index) => (
+            <article class="grid gap-4 border-b border-level-0-foreground/15 py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:gap-8">
+              <span class="text-sm opacity-40">{item.step}</span>
+              <h3 class="font-sans text-h5 font-medium">{item.title}</h3>
+              <p class="font-sans leading-relaxed opacity-65">{item.text}</p>
+              <span class="hidden text-xs opacity-35 sm:block">{index < readinessFlow.length - 1 ? "next →" : "↻ continuous"}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.64fr_1.36fr] lg:gap-20">
         <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Compliance-ul trebuie susținut de security</h2>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Control evidence</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Compliance-ul trebuie susținut de security.</h2>
           <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
             Un control SOC 2 nu devine real doar pentru că există într-o policy. Când scope-ul
-            cere măsuri tehnice, le legăm de activitățile și evidence-ul care există în
-            infrastructură și în procesele echipei.
+            cere măsuri tehnice, le legăm de activitățile și evidence-ul care există în infrastructură.
           </p>
           <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
         </div>
-        <ul class="border-y">
-          {technicalControls.map((item) => (
-            <li class="border-b py-4 last:border-b-0">{item}</li>
+
+        <div class="grid sm:grid-cols-2">
+          {technicalControls.map((item, index) => (
+            <div class="grid min-h-28 grid-cols-[44px_1fr] gap-4 border-t py-5 sm:px-5">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <span class="leading-relaxed">{item}</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Roluri clare în engagement</h2>
-        <div class="border-y">
-          {roles.map((role) => (
-            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-              <h3 class="text-h5 font-medium">{role.title}</h3>
+    <section class="border-y py-12 sm:py-20">
+      <div class="container">
+        <div class="mb-10 max-w-2xl">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Engagement roles</p>
+          <h2 class="text-h3 sm:text-h2 font-medium">Trei roluri, fără confuzie.</h2>
+        </div>
+
+        <div class="grid sm:grid-cols-3">
+          {roles.map((role, index) => (
+            <article class:list={["min-h-64 py-7 sm:px-8", index > 0 && "sm:border-l"]}>
+              <span class="text-muted-foreground mb-10 block font-mono text-xs">ROLE-{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="text-h5 mb-3 font-medium">{role.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{role.text}</p>
             </article>
           ))}
@@ -324,34 +322,36 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+    <section class="container py-12 sm:py-24">
+      <div class="grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">După raport, folosește assurance-ul fără să expui prea mult</h2>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Trust distribution</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">După raport, distribui assurance-ul fără să expui workspace-ul intern.</h2>
           <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
-            Raportul SOC 2 și alte documente de trust pot fi distribuite controlat prin
-            Trust Center, cu acces aprobat și documente protejate, fără expunerea workspace-ului
-            intern de compliance.
+            Raportul SOC 2 și alte documente de trust pot fi distribuite controlat prin Trust
+            Center, cu acces aprobat și documente protejate.
           </p>
           <Button href="/compliance-portal">Vezi Trust Center</Button>
         </div>
-        <img
-          src="/trust-center/browser.svg"
-          alt="Trust Center ZebraByte pentru distribuirea controlată a documentelor de assurance"
-          width="1146"
-          height="786"
-          loading="lazy"
-          decoding="async"
-          class="h-auto w-full"
-        />
+        <div class="bg-active p-5 sm:p-8">
+          <img
+            src="/trust-center/browser.svg"
+            alt="Trust Center ZebraByte pentru distribuirea controlată a documentelor de assurance"
+            width="1146"
+            height="786"
+            loading="lazy"
+            decoding="async"
+            class="h-auto w-full"
+          />
+        </div>
       </div>
     </section>
 
     <Stories />
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -366,15 +366,15 @@ const serviceSchema = {
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">
-        SOC 2 ca program continuu, nu ca sprint înainte de audit.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Putem începe cu readiness și continua cu controls, evidence, remediation și operarea
-        programului după emiterea raportului.
-      </p>
-      <Button href="/contact" size="lg">Discută despre SOC 2</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">SOC 2 ca program continuu, nu ca sprint înainte de audit.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Putem începe cu readiness și continua cu controls, evidence, remediation și operarea
+          programului după emiterea raportului.
+        </p>
+        <Button href="/contact" size="lg">Discută despre SOC 2</Button>
+      </div>
     </section>
   </main>
 </Layout>
