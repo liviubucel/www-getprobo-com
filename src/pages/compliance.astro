@@ -1,0 +1,147 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.svelte";
+import Badges from "../components/Badges.svelte";
+import FrameworkBadge from "../components/FrameworkBadge.svelte";
+
+const regulatory = [
+  {
+    title: "GDPR & Privacy",
+    description:
+      "Data mapping, RoPA, DPIA, TIA, rights requests, third parties și măsuri tehnice conectate la programul de privacy.",
+    href: "/gdpr",
+    visual: "/trust-center/security-privacy.svg",
+  },
+  {
+    title: "NIS2",
+    description:
+      "Governance, cyber risk, incident readiness, supply-chain security și resilience pentru organizațiile aflate în scope.",
+    href: "/nis2",
+    visual: "/frameworks/NIS2.svg",
+  },
+  {
+    title: "Accesibilitate",
+    description:
+      "Assessment, remediation și management continuu al accesibilității digitale ca parte din programul de conformitate.",
+    href: "/accessibility",
+    visual: "/navigation/docs.svg",
+  },
+];
+---
+
+<Layout
+  title="Framework-uri & reglementări"
+  description="SOC 2, ISO/IEC 27001, GDPR, NIS2 și accesibilitate în platforma și serviciile ZebraByte de compliance."
+>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <section class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-16 sm:py-24">
+      <div class="container text-center">
+        <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">
+          Framework-uri & reglementări
+        </div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 font-medium text-balance">
+          Cerințe diferite. Un singur program de controls și evidence.
+        </h1>
+        <p class="text-muted-foreground mx-auto mb-12 max-w-180 text-lg text-balance">
+          Nu tratăm fiecare standard ca pe un univers separat. Acolo unde cerințele se suprapun, reutilizăm controls, risks și evidence fără să confundăm obligațiile juridice sau de audit între ele.
+        </p>
+        <Badges
+          count={10}
+          countMobile={9}
+          client:visible
+          class="mx-auto mb-12 grid max-w-[660px] grid-cols-3 justify-center justify-items-center gap-2 gap-y-10 sm:grid-cols-5 sm:gap-x-10"
+        />
+        <div class="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button href="/compliance-platform" size="lg">Vezi platforma GRC</Button>
+          <Button href="/managed-compliance" variant="secondary" size="lg">Managed Compliance</Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-14 sm:py-24">
+      <div class="mb-10 max-w-165 sm:mb-14">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Assurance & certification</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Două trasee de assurance, două tipuri diferite de rezultat.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          SOC 2 și ISO/IEC 27001 pot reutiliza o parte importantă din controls și evidence, dar engagement-ul auditorului și rezultatul final nu sunt același lucru.
+        </p>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <a href="/soc2" class="group relative min-h-[430px] overflow-hidden rounded-[28px] border bg-level-0 p-7 sm:p-10">
+          <div class="relative z-10 max-w-110">
+            <p class="text-muted-foreground mb-3 text-sm font-medium">SOC 2</p>
+            <h3 class="text-h3 mb-4 font-medium">Controls și evidence pentru un raport de assurance.</h3>
+            <p class="text-muted-foreground leading-relaxed">Scope, Trust Services Criteria, Type I/II, evidence lifecycle și audit readiness.</p>
+          </div>
+          <div class="absolute right-7 bottom-7 flex items-end gap-4 sm:right-10 sm:bottom-10">
+            <FrameworkBadge name="SOC2_TYPE1" class="size-20 sm:size-24" client:visible />
+            <FrameworkBadge name="SOC2_TYPE2" class="size-20 sm:size-24" client:visible />
+          </div>
+        </a>
+
+        <a href="/iso-27001" class="group relative min-h-[430px] overflow-hidden rounded-[28px] bg-[#001a00] p-7 text-white sm:p-10">
+          <div class="relative z-10 max-w-110">
+            <p class="mb-3 text-sm font-medium text-[#e6ff03]">ISO/IEC 27001</p>
+            <h3 class="text-h3 mb-4 font-medium">ISMS, risk management și continual improvement.</h3>
+            <p class="leading-relaxed text-white/70">Scope, clauses 4–10, Annex A, Statement of Applicability, internal audit și certification readiness.</p>
+          </div>
+          <FrameworkBadge name="ISO27001_dark" class="absolute right-7 bottom-7 size-28 sm:right-10 sm:bottom-10 sm:size-36" client:visible />
+        </a>
+      </div>
+    </section>
+
+    <section class="bg-active py-14 sm:py-24">
+      <div class="container grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Regulatory & privacy</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Framework-ul nu schimbă realitatea tehnică a organizației.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            GDPR, NIS2 și accesibilitatea cer contexte diferite, dar toate au nevoie de procese care pot fi operate și demonstrate — nu doar de documente create pentru review.
+          </p>
+        </div>
+
+        <div class="space-y-5">
+          {regulatory.map((item, index) => (
+            <a href={item.href} class="group grid min-h-44 overflow-hidden rounded-[24px] border bg-level-0 sm:grid-cols-[1fr_210px]">
+              <div class="p-6 sm:p-8">
+                <p class="text-muted-foreground mb-2 text-sm">0{index + 1}</p>
+                <h3 class="text-h4 mb-3 font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+              </div>
+              <div class="relative hidden overflow-hidden border-l bg-[#f8faf4] sm:block">
+                <img src={item.visual} alt="" width="320" height="220" loading="lazy" class="absolute inset-0 h-full w-full object-contain p-6" />
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-14 sm:py-24">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+        <div class="overflow-hidden rounded-[28px] border bg-[#f8faf4] p-5 sm:p-9">
+          <img src="/navigation/frameworks.svg" alt="Mapping între framework-uri și controls" width="900" height="600" loading="lazy" class="h-auto w-full" />
+        </div>
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Cross-framework</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Reutilizezi munca fără să pretinzi că standardele sunt echivalente.</h2>
+          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
+            Același access review, risk treatment sau evidence poate susține mai multe cerințe atunci când mapping-ul este justificat. Fiecare framework își păstrează însă propriul scope și propriul rezultat.
+          </p>
+          <Button href="/compliance-platform" variant="secondary">Cum funcționează platforma</Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium text-balance">Nu vezi framework-ul de care ai nevoie?</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Putem evalua cerința și mapping-ul înainte să adăugăm un nou program în scope.
+        </p>
+        <Button href="/contact" size="lg">Discută cu ZebraByte</Button>
+      </div>
+    </section>
+  </main>
+</Layout>
