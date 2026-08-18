@@ -11,6 +11,10 @@
 # Never redirect them away merely because they originated in the inherited site.
 /fr/yc /yc 301
 
+# The richer inherited Compliance Portal is canonical at the clean ZebraByte URL.
+# The old product URL remains only as a compatibility/SEO alias.
+/products/compliance-portal /compliance-portal 301
+
 # ZebraByte branded aliases for preserved comparison pages.
 /hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
 /hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
