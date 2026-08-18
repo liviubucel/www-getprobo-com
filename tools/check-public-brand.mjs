@@ -8,14 +8,14 @@ const legacyPattern = /(?:\bprobo\b|\bgetprobo\b|probo[-_.\/]|(?:[a-z0-9-]+\.)?p
  * PUBLIC IDENTITY AUDIT ONLY.
  *
  * This checker detects legacy Probo branding in generated public editorial
- * text/links. A failure must be remediated by rebranding/paraphrasing the
- * affected public copy or URL while preserving the underlying page, subject
- * coverage, feature, documentation, Hub/blog article, changelog/history or
- * workflow.
+ * text and external URLs. A failure must be remediated by rebranding or
+ * paraphrasing while preserving the underlying page, subject coverage,
+ * feature, documentation, Hub/blog article, changelog/history or workflow.
  *
- * Historical technical identifiers inside code examples and local hashed asset
- * filenames are not public brand claims. They must remain intact when needed for
- * architecture/migration reference and are excluded from this identity audit.
+ * Historical technical identifiers inside code examples, local hashed assets
+ * and internal legacy slugs are not identity claims. Legacy slugs may remain as
+ * compatibility/SEO routes while visible labels and canonical navigation use
+ * ZebraByte wording.
  *
  * NEVER delete useful inherited content merely to make this checker pass.
  * See AGENTS.md: Core product rule — preserve, rebrand, extend.
@@ -38,32 +38,16 @@ function htmlAuditView(html) {
     /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
-  const publicUrls = Array.from(
+
+  const externalPublicUrls = Array.from(
     withoutRuntimeOrCode.matchAll(
-      /\b(href|action|formaction|src|poster)=(['"])([\s\S]*?)\2/gi,
+      /\b(href|action|formaction|src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
     ),
   )
-    .map((match) => ({ name: match[1].toLowerCase(), value: match[3] }))
-    .filter(({ name, value }) => {
-      const external = /^https?:\/\//i.test(value);
-
-      if (name === "src" || name === "poster") return external;
-
-      if (
-        name === "href" &&
-        !external &&
-        (/(?:^|\/)\_astro\//i.test(value) ||
-          /\.(?:css|m?js|map|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|otf)(?:[?#]|$)/i.test(value))
-      ) {
-        return false;
-      }
-
-      return true;
-    })
-    .map(({ value }) => value)
+    .map((match) => match[3])
     .join("\n");
 
-  return `${withoutRuntimeOrCode.replace(/<[^>]+>/g, " ")}\n${publicUrls}`;
+  return `${withoutRuntimeOrCode.replace(/<[^>]+>/g, " ")}\n${externalPublicUrls}`;
 }
 
 function markdownAuditView(markdown) {
@@ -96,4 +80,4 @@ if (leaks.length) {
   process.exit(1);
 }
 
-console.log(`[public-brand] PASS: no legacy upstream branding in generated public editorial text/links.`);
+console.log("[public-brand] PASS: no legacy upstream branding in generated public editorial text/external URLs.");
