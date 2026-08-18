@@ -103,154 +103,159 @@ const faqs = [
   description="Website Security ZebraByte: WAF, DDoS protection, malware monitoring, TLS hardening, identity protection, vulnerability remediation și recovery pentru WordPress, e-commerce și aplicații web."
 >
   <main>
-    <animated-hero
-      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
-    >
-      <div
-        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
-      >
+    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
         Website Security
       </div>
 
-      <h1
-        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
-      >
+      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
         <span class="animate-perspective-in block">Protecție înainte, în timpul</span>
         <span class="animate-perspective-in block delay-50"> și după un atac. </span>
       </h1>
 
-      <p
-        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
-      >
+      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
         WAF, DDoS protection, hardening, malware monitoring și recovery operate ca straturi
         complementare. Poți păstra furnizorul actual sau poți muta origin-ul într-un mediu
         managed atunci când asta reduce riscul real.
       </p>
 
-      <div
-        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-      >
-        <Button
-          class="animate-perspective-in animation-delay-200"
-          variant="secondary"
-          size="lg"
-          href="/security-assessment"
-        >
+      <div class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/security-assessment">
           Începe cu un assessment
         </Button>
-        <Button
-          class="animate-perspective-in animation-delay-300"
-          size="lg"
-          href="/contact"
-        >
+        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">
           Protejează website-ul
         </Button>
       </div>
     </animated-hero>
 
-    <section class="container py-10 sm:py-20">
-      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Defense in depth pentru aplicația publică</h2>
-        <p class="text-muted-foreground text-lg">
-          Nu presupunem că un singur control va opri fiecare atac. Construim straturi astfel
-          încât eșecul unui control să nu însemne automat compromiterea completă.
-        </p>
-      </div>
+    <section class="container pb-12 sm:pb-24">
+      <div class="mx-auto max-w-6xl border-y py-8 sm:py-12">
+        <div class="mb-10 grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Request path</p>
+            <h2 class="text-h3 sm:text-h2 font-medium">Atacul trebuie să treacă prin mai multe straturi.</h2>
+          </div>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu tratăm website-ul ca pe un singur server. Cererea traversează edge-ul, aplicația,
+            identitatea și origin-ul, iar fiecare strat poate reduce impactul următorului.
+          </p>
+        </div>
 
-      <div class="mx-auto max-w-5xl border-y">
-        {protectionLayers.map((item) => (
-          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.8fr_1.2fr] sm:gap-8">
-            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
-            <h3 class="text-h5 font-medium">{item.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-          </article>
-        ))}
+        <div class="grid border sm:grid-cols-3">
+          {protectionLayers.map((item, index) => (
+            <article class:list={["relative min-h-64 p-6 sm:p-8", index < protectionLayers.length - 1 && "border-b sm:border-b-0 sm:border-r"]}>
+              <div class="mb-12 flex items-center justify-between gap-4">
+                <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+                <span class="bg-active size-2 rounded-full"></span>
+              </div>
+              <h3 class="text-h4 mb-4 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-10 sm:py-20">
+    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
       <div class="container">
-        <div class="mx-auto max-w-5xl">
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Controls care lucrează împreună</h2>
-          <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+        <div class="mb-12 max-w-3xl">
+          <p class="mb-3 text-sm font-medium uppercase tracking-wide opacity-55">Control plane</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Opt controale, un singur scop: reducerea riscului.</h2>
+          <p class="text-lg leading-relaxed opacity-65">
             Configurația exactă depinde de stack și de cine controlează infrastructura. Nu
             prezentăm fiecare control ca fiind universal disponibil pentru orice aplicație.
           </p>
+        </div>
 
-          <div class="border-y">
-            {controls.map(([control, text], index) => (
-              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
-                <span class="text-muted-foreground font-mono text-sm">{String(index + 1).padStart(2, "0")}</span>
-                <h3 class="font-medium">{control}</h3>
-                <p class="text-muted-foreground leading-relaxed">{text}</p>
-              </article>
-            ))}
-          </div>
+        <div class="grid border-y border-level-0-foreground/15 sm:grid-cols-2 lg:grid-cols-4">
+          {controls.map(([control, text], index) => (
+            <article class="min-h-64 border-b border-level-0-foreground/15 p-6 sm:border-r sm:p-7 [&:nth-last-child(-n+2)]:sm:border-b-0 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(4n)]:border-r-0 lg:[&:nth-last-child(-n+4)]:border-b-0">
+              <span class="mb-10 block font-mono text-sm opacity-40">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="mb-3 font-medium">{control}</h3>
+              <p class="text-sm leading-relaxed opacity-65">{text}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Threat model, nu marketing cu „100% secure”</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
+    <section class="container py-12 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Threat model</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Fără promisiuni de „100% secure”.</h2>
+          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
             Obiectivul este să reducem probabilitatea și impactul, să detectăm schimbările
             relevante și să avem o cale de recovery. Nicio arhitectură serioasă nu pornește
-            de la promisiunea că orice atac poate fi blocat.
+            de la ideea că orice atac poate fi blocat.
+          </p>
+          <Button href="https://scan.zebrabyte.ro" variant="secondary" target="_blank" rel="noopener noreferrer">Rulează scanarea web</Button>
+        </div>
+
+        <div class="divide-y border-y">
+          {threats.map(([threat, text], index) => (
+            <article class="grid gap-4 py-6 sm:grid-cols-[48px_0.8fr_1.2fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="text-h5 font-medium">{threat}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-12 sm:py-24">
+      <div class="container grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Real workloads</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Protecția trebuie să se adapteze aplicației.</h2>
+          <p class="text-muted-foreground max-w-2xl text-lg leading-relaxed">
+            Website Security nu este limitat la un singur CMS și nici nu cere automat o
+            migrare. Începem de la arhitectura actuală și de la controalele care pot fi operate
+            în siguranță în acel context.
           </p>
         </div>
-        <div class="border-y">
-          {threats.map(([threat, text]) => (
-            <div class="border-b py-5 last:border-b-0">
-              <h3 class="font-medium">{threat}</h3>
-              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
+
+        <div class="grid grid-cols-2 gap-x-8 border-y py-3">
+          {workloads.map((item, index) => (
+            <div class="flex min-h-20 items-center gap-4 border-b py-4 last:border-b-0 [&:nth-last-child(-n+2)]:border-b-0">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <span class="font-medium leading-snug">{item}</span>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-10 sm:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <div>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Lucrăm în jurul stack-ului real</h2>
-          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
-            Website Security nu este limitat la un singur CMS și nici nu cere automat o
-            migrare. Începem de la arhitectura actuală și de la controls pe care îi putem
-            opera în siguranță în acel context.
-          </p>
-          <Button href="https://scan.zebrabyte.ro" variant="secondary" target="_blank" rel="noopener noreferrer">Rulează scanarea web</Button>
-        </div>
-        <ul class="border-y">
-          {workloads.map((item) => (
-            <li class="border-b py-4 last:border-b-0">{item}</li>
-          ))}
-        </ul>
+    <section class="container py-12 sm:py-24">
+      <div class="mb-10 max-w-3xl">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Engagement</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Patru puncte de intrare, fără migrare forțată.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Alegem traseul după starea actuală a website-ului și după cine deține infrastructura.
+        </p>
       </div>
-    </section>
 
-    <section class="bg-active py-10 sm:py-20">
-      <div class="container">
-        <div class="mx-auto max-w-5xl">
-          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Patru moduri de a începe</h2>
-          <div class="border-y">
-            {operatingModes.map((item) => (
-              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
-                <h3 class="text-h5 font-medium">{item.title}</h3>
-                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
+      <div class="grid gap-x-10 sm:grid-cols-2">
+        {operatingModes.map((item, index) => (
+          <article class="border-t py-7 sm:py-8">
+            <div class="mb-7 flex items-center justify-between gap-5">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <span class="text-muted-foreground text-xs uppercase tracking-wide">Website Security</span>
+            </div>
+            <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground max-w-xl leading-relaxed">{item.text}</p>
+          </article>
+        ))}
       </div>
     </section>
 
     <ZebraByteTestimonials />
 
-    <section class="container py-10 sm:py-20">
+    <section class="container py-12 sm:py-24">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
         <div class="border-y">
           {faqs.map((faq) => (
             <details class="group border-b py-5 last:border-b-0">
@@ -265,15 +270,17 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 text-center sm:py-24">
-      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Securizează aplicația fără să o transformi într-un proiect paralel.
-      </h2>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Spune-ne platforma, infrastructura și problemele observate. Stabilim ce controls
-        merită implementați și cine trebuie să îi opereze.
-      </p>
-      <Button href="/contact" size="lg">Discută despre Website Security</Button>
+    <section class="border-t py-16 text-center sm:py-24">
+      <div class="container">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
+          Securizează aplicația fără să o transformi într-un proiect paralel.
+        </h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Spune-ne platforma, infrastructura și problemele observate. Stabilim ce controls
+          merită implementați și cine trebuie să îi opereze.
+        </p>
+        <Button href="/contact" size="lg">Discută despre Website Security</Button>
+      </div>
     </section>
   </main>
 </Layout>
