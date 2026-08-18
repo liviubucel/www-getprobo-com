@@ -179,8 +179,14 @@ forbidText(industryService, "păstrează intenția landing page-ului", "industry
 forbidText(industryService, 'class="bg-level-0 rounded-xl border p-6"', "industry service risk card repetition");
 forbidText(industryService, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "industry service sibling card repetition");
 
-requireText(legacyPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "legacy page framed peer grid");
+// Legacy ZebraByte landings preserve their adapted copy, features, process and
+// related-service navigation while using the same Probo-native editorial language.
+requireText(legacyPage, "page.features.map", "legacy preserved feature rendering");
+requireText(legacyPage, "page.process.map", "legacy preserved process rendering");
+requireText(legacyPage, "page.related.map", "legacy related-service rendering");
 requireText(legacyPage, 'class="mt-6 border-y py-4 text-sm leading-relaxed sm:py-5"', "legacy note editorial treatment");
+forbidText(legacyPage, "grid gap-px overflow-hidden rounded-2xl border bg-border", "legacy framed peer grid");
+forbidText(legacyPage, "Conținut păstrat și integrat în experiența Probo", "legacy public migration copy");
 forbidText(legacyPage, 'class="group rounded-xl border p-6 transition-colors hover:bg-subtle"', "legacy related card repetition");
 forbidText(legacyPage, "mt-5 rounded-xl border bg-active p-5", "legacy note floating-card treatment");
 
