@@ -1,8 +1,8 @@
 /sitemap.xml /sitemap-index.xml 301
 /subprocessors https://trust.zebrabyte.ro/subprocessors 301
 /compliance-guides /hub 301
-/compliance-guides/soc2 /hub/soc2 301
-/compliance-guides/iso27001 /hub/iso27001 301
+/compliance-guides/soc2 /soc2 301
+/compliance-guides/iso27001 /iso-27001 301
 /wall-of-trust /love-from-customer 301
 /blog/page/1 /blog 301
 /probo-newsletter /newsletter 301
@@ -13,14 +13,35 @@
 /whats-next/soc2 /soc2 301
 /whats-next/ISO27001 /iso-27001 301
 /whats-next/iso27001 /iso-27001 301
+/products/compliance-portal /compliance-portal 301
+
+# Upstream Hub material is withheld until deliberately rewritten and validated.
+/hub/soc2 /soc2 301
+/hub/soc2-type1-vs-type2 /soc2 302
+/hub/evaluate-soc2-report-quality /soc2 302
+/hub/ai-coding-tools-soc2-compliance /soc2 302
+/hub/iso27001 /iso-27001 301
+/hub/iso27001-certification-cost /iso-27001 302
+/hub/iso-27001-after-soc-2-the-30-percent-shortcut /iso-27001 302
+/hub/nis2-compliance /nis2 301
+/hub/nis2-compliance-checklist-tech-companies-2026 /nis2 302
+/hub/nis2-tech-teams /nis2 302
+/hub/compliance-recommender /hub 302
+/hub/which-compliance-framework /hub 302
+/hub/cloud-security-best-practices /cyber-security 302
+/hub/third-party-risk-management /managed-compliance 302
+/hub/top-compliance-automation-tools-2026 /managed-compliance 302
+/hub/top-compliance-officer-services-2026 /managed-compliance 302
+/hub/top-grc-tools-2026 /managed-compliance 302
+/hub/vanta-alternatives-2026 /hub/zebrabyte-vs-vanta 302
+/hub/what-is-compliance-software /managed-compliance 302
 
 # ZebraByte branded aliases for preserved comparison pages.
 /hub/probo-vs-vanta /hub/zebrabyte-vs-vanta 301
 /hub/probo-vs-fractional-ciso /hub/zebrabyte-vs-fractional-ciso 301
 
-# Public Probo documentation is intentionally withheld until it is deliberately
-# migrated and validated for ZebraByte. Avoid deep 404s without making a
-# permanent SEO claim about the future documentation location.
+# Public upstream documentation is intentionally withheld until deliberately
+# migrated and validated for ZebraByte.
 /docs /hub 302
 /docs/* /hub 302
 /md/docs /hub 302
