@@ -11,6 +11,7 @@ interface Props {
 
 const { post } = Astro.props;
 const d = post.data;
+const isZebraBytePost = post.id.startsWith("zebrabyte-");
 
 const images = dynamicImages(
   import.meta.glob<{ default: ImageMetadata }>(
@@ -101,7 +102,10 @@ const escapeAttr = (s: string) =>
         }
       </div>
 
-      <div class="relative z-[2] flex flex-shrink-0 items-center gap-2">
+      <div class="relative z-[2] flex flex-shrink-0 flex-wrap items-center justify-end gap-2">
+        <span class="border-border-solid text-muted-foreground rounded border px-1.5 py-0.5 text-[10px] font-medium">
+          {isZebraBytePost ? "ZebraByte customer" : "Reference insight"}
+        </span>
         {
           d.originalLang && d.translatedPost && (
             <button
