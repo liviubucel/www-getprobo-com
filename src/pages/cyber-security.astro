@@ -2,70 +2,116 @@
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
-import Stories from "../components/block/Stories.astro";
 
-const incidentSteps = [
+const services = [
+  {
+    title: "Security Assessment",
+    text: "Evaluăm suprafața expusă, configurațiile, aplicațiile, domeniile și controalele existente pentru a prioritiza riscurile care merită acțiune.",
+    href: "/security-assessment",
+  },
+  {
+    title: "Website Security",
+    text: "WAF, DDoS protection, malware monitoring, TLS hardening, application protection și recovery pentru servicii expuse public.",
+    href: "/website-security",
+  },
+  {
+    title: "Email Security",
+    text: "SPF, DKIM, DMARC, anti-spoofing, identity hardening și protecție împotriva phishing-ului și account compromise.",
+    href: "/email-security",
+  },
+  {
+    title: "Incident Response",
+    text: "Triage, containment, investigation support, recovery și lessons learned atunci când există un incident sau o suspiciune de compromitere.",
+    href: "/incident-response",
+  },
+  {
+    title: "Secure Managed Hosting",
+    text: "Infrastructură administrată pentru proiecte unde hardening-ul, monitoring-ul, backup-ul și recovery-ul trebuie operate continuu.",
+    href: "/secure-hosting",
+  },
+];
+
+const lifecycle = [
   {
     step: "01",
-    title: "Triage",
-    text: "Confirmăm ce s-a întâmplat, ce servicii sunt afectate și ce trebuie protejat imediat.",
+    title: "Discover",
+    text: "Active, domenii, servicii expuse, identity, furnizori și dependențe care formează suprafața reală de atac.",
   },
   {
     step: "02",
-    title: "Contain",
-    text: "Limităm impactul fără să distrugem informația necesară investigației și recovery-ului.",
+    title: "Prioritize",
+    text: "Separăm zgomotul de riscurile care pot schimba efectiv confidențialitatea, integritatea sau disponibilitatea serviciului.",
   },
   {
     step: "03",
-    title: "Recover",
-    text: "Restabilim serviciile controlat, verificăm integritatea și închidem căile folosite de atacator.",
+    title: "Remediate",
+    text: "Hardening, patching, access control, configuration changes și măsuri defensive implementate în ordinea potrivită.",
   },
   {
     step: "04",
+    title: "Monitor",
+    text: "Urmărim schimbările, vulnerabilitățile și semnalele relevante astfel încât postura să nu revină la starea inițială după primul proiect.",
+  },
+  {
+    step: "05",
+    title: "Respond",
+    text: "Când apare un incident, procesele de triage, containment și recovery sunt conectate la contextul tehnic deja cunoscut.",
+  },
+  {
+    step: "06",
     title: "Improve",
-    text: "Findings, root cause și lecțiile incidentului se întorc în controls, monitoring și risk management.",
+    text: "Lessons learned, findings și schimbările de risc se întorc în controls și în programul de security/compliance.",
   },
 ];
 
-const managedResponsibilities = [
+const layers = [
+  ["Identity", "MFA, SSO, privilege management, account hardening și access reviews."],
+  ["Edge & network", "TLS, WAF, rate limiting, DDoS protection și reducerea expunerii inutile."],
+  ["Application", "Configuration hardening, vulnerability remediation, secure change și protecția componentelor expuse."],
+  ["Infrastructure", "Patching, isolation, backup, recovery, monitoring și controale asupra origin-ului."],
+  ["Email & domain", "SPF, DKIM, DMARC, DNS posture și reducerea riscului de impersonation."],
+  ["Operations", "Logging, alerting, incident response, supplier risk și procese de review continuu."],
+];
+
+const engagementModels = [
   {
-    title: "Hardening",
-    text: "Configurare sigură, reducerea suprafeței expuse și control asupra schimbărilor care afectează securitatea.",
+    title: "Assessment",
+    text: "Ai nevoie de o imagine clară a riscului și de un plan prioritizat înainte să schimbi infrastructura sau să cumperi alte produse.",
   },
   {
-    title: "Monitoring",
-    text: "Semnale operaționale, vulnerabilități și evenimente relevante urmărite după implementarea inițială.",
+    title: "Remediation project",
+    text: "Există findings cunoscute și ai nevoie de implementare: hardening, configurare, cleanup, migration sau reducerea suprafeței de atac.",
   },
   {
-    title: "Recovery",
-    text: "Backup, restaurare și proceduri de recovery care pot fi folosite când disponibilitatea sau integritatea sunt afectate.",
+    title: "Managed security",
+    text: "Controalele trebuie operate continuu, cu monitoring, reviews și ownership după finalizarea proiectului inițial.",
+  },
+  {
+    title: "Incident response",
+    text: "Există un compromis sau o suspiciune activă și prioritatea este containment-ul, recovery-ul și păstrarea informațiilor necesare investigației.",
   },
 ];
 
-const complianceLinks = [
+const complianceConnections = [
   {
-    label: "ISO/IEC 27001",
+    title: "ISO/IEC 27001",
+    text: "Măsurile tehnice și evidence-ul pot susține controls și risk treatment din ISMS.",
     href: "/iso-27001",
-    text: "Risk treatment și controale tehnice operate în ISMS.",
-    asset: "/frameworks/ISO27001.svg",
   },
   {
-    label: "NIS2",
+    title: "NIS2",
+    text: "Cyber risk, incident handling, resilience și supply-chain security trebuie să existe în operațiuni.",
     href: "/nis2",
-    text: "Cyber risk, resilience, incidents și supply-chain security.",
-    asset: "/frameworks/NIS2.svg",
   },
   {
-    label: "GDPR",
+    title: "GDPR",
+    text: "Technical and organisational measures trebuie legate de riscul pentru datele și processing activities relevante.",
     href: "/gdpr",
-    text: "Măsuri tehnice și organizaționale pentru datele și procesele relevante.",
-    asset: "/trust-center/security-privacy.svg",
   },
   {
-    label: "SOC 2",
+    title: "SOC 2",
+    text: "Controls și evidence trebuie să reflecte procese de security operate, nu doar policies.",
     href: "/soc2",
-    text: "Security controls și evidence care reflectă operațiuni reale.",
-    asset: "/frameworks/SOC2_TYPE2.svg",
   },
 ];
 
@@ -73,27 +119,27 @@ const faqs = [
   {
     question: "Trebuie să mut infrastructura la ZebraByte pentru a folosi serviciile de cybersecurity?",
     answer:
-      "Nu. Security Assessment, Website Security, Email Security și anumite activități de remediation pot fi realizate în jurul infrastructurii existente. Secure Managed Hosting este o opțiune separată atunci când operarea infrastructurii intră în scope.",
+      "Nu. Security assessment, website security, email security și anumite activități de remediation pot fi realizate în jurul infrastructurii existente. Managed Hosting este o opțiune separată atunci când ownership-ul infrastructurii face parte din scope.",
   },
   {
     question: "Security Assessment este același lucru cu un penetration test?",
     answer:
-      "Nu automat. Assessment-ul ZebraByte evaluează suprafața expusă, configurațiile și controalele aflate în scope. Un penetration test este un engagement distinct, cu autorizare și reguli de testare specifice.",
+      "Nu automat. Assessment-ul ZebraByte evaluează suprafața expusă, configurațiile și controalele în scope. Un penetration test este un engagement distinct, cu reguli de testare și autorizare specifice. Scope-ul trebuie stabilit înainte de orice testare activă.",
   },
   {
     question: "Puteți lucra cu echipa noastră IT sau cu furnizorul existent?",
     answer:
-      "Da. Findings și remediation pot fi lucrate împreună cu ownerii și furnizorii existenți. Nu este necesar să înlocuim un furnizor care funcționează bine doar pentru a îmbunătăți postura de securitate.",
+      "Da. Putem livra findings și remediation împreună cu ownerii existenți. Nu este necesar ca ZebraByte să înlocuiască furnizorii care funcționează bine doar pentru a putea îmbunătăți postura de securitate.",
   },
   {
     question: "Cybersecurity și compliance sunt același lucru?",
     answer:
-      "Nu. Compliance structurează cerințe, governance și evidence. Cybersecurity implementează și operează măsuri tehnice și operaționale care reduc riscul. Le conectăm atunci când aceeași măsură susține și o obligație de compliance.",
+      "Nu. Compliance oferă cerințe, governance și evidence; cybersecurity include măsurile tehnice și operaționale care reduc riscul. Le conectăm acolo unde un control sau o obligație trebuie susținută de o măsură reală.",
   },
   {
-    question: "Putem începe doar cu website-ul sau emailul?",
+    question: "Putem începe doar cu o singură problemă, cum ar fi website-ul sau emailul?",
     answer:
-      "Da. Putem porni cu un scope foarte clar și îl extindem doar dacă findings, riscul sau schimbările din business justifică un program mai larg.",
+      "Da. Engagement-ul poate fi limitat la un serviciu clar și extins ulterior dacă assessment-ul sau schimbările din business justifică un scope mai larg.",
   },
 ];
 ---
@@ -122,12 +168,13 @@ const faqs = [
       <p
         class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
       >
-        Identificăm riscul, implementăm măsurile tehnice și păstrăm monitoring-ul,
-        remediation-ul și incident response-ul conectate după primul proiect.
+        Identificăm riscurile, implementăm măsurile tehnice și conectăm monitoring-ul,
+        remediation-ul și incident response-ul într-un program care poate continua după
+        prima evaluare.
       </p>
 
       <div
-        class="mb-12 flex flex-col items-stretch justify-center gap-3 sm:mb-20 sm:flex-row sm:items-center"
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
       >
         <Button
           class="animate-perspective-in animation-delay-200"
@@ -145,255 +192,120 @@ const faqs = [
           Discută cu un expert
         </Button>
       </div>
-
-      <div class="animate-perspective-in animation-delay-300 mx-auto grid max-w-5xl gap-7 border-y py-7 sm:grid-cols-4 sm:gap-8 sm:py-9">
-        <div>
-          <span class="text-muted-foreground mb-2 block font-mono text-xs">01</span>
-          <strong class="block font-medium">Assess</strong>
-          <span class="text-muted-foreground mt-1 block text-sm">Vezi expunerea și riscul real.</span>
-        </div>
-        <div>
-          <span class="text-muted-foreground mb-2 block font-mono text-xs">02</span>
-          <strong class="block font-medium">Protect</strong>
-          <span class="text-muted-foreground mt-1 block text-sm">Închide suprafețele care contează.</span>
-        </div>
-        <div>
-          <span class="text-muted-foreground mb-2 block font-mono text-xs">03</span>
-          <strong class="block font-medium">Operate</strong>
-          <span class="text-muted-foreground mt-1 block text-sm">Monitorizează după primul fix.</span>
-        </div>
-        <div>
-          <span class="text-muted-foreground mb-2 block font-mono text-xs">04</span>
-          <strong class="block font-medium">Respond</strong>
-          <span class="text-muted-foreground mt-1 block text-sm">Recuperează controlat când apare incidentul.</span>
-        </div>
-      </div>
     </animated-hero>
 
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium">SECURITY ASSESSMENT</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            Începem cu suprafața reală de atac.
-          </h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Domenii, aplicații, servicii expuse, identity, configurații și dependențe sunt
-            evaluate înainte să recomandăm produse sau schimbări de infrastructură.
-          </p>
-          <Button href="/security-assessment" variant="secondary">Vezi Security Assessment</Button>
-        </div>
-
-        <div class="relative overflow-hidden rounded-2xl bg-active px-6 pt-8 sm:px-10 sm:pt-12">
-          <img
-            src="/trust-center/security-vulnerability.svg"
-            alt="Vulnerability management și security findings"
-            width="331"
-            height="272"
-            loading="lazy"
-            decoding="async"
-            class="mx-auto w-full max-w-[620px] translate-y-5 rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.1)]"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section class="border-y bg-level-0 py-16 sm:py-28">
-      <div class="container grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
-        <div class="order-2 lg:order-1">
-          <div class="relative min-h-[360px] overflow-hidden rounded-2xl bg-[#f3f4ed] sm:min-h-[470px]">
-            <img
-              src="/trust-center/security-encryption.svg"
-              alt="Encryption și protection controls"
-              width="331"
-              height="272"
-              loading="lazy"
-              decoding="async"
-              class="absolute top-[12%] left-[13%] w-[74%] rounded-xl shadow-[0_18px_44px_rgba(20,30,18,0.11)]"
-            />
-            <div
-              aria-hidden="true"
-              class="pointer-events-none absolute -right-28 -bottom-28 size-80 rounded-full bg-[#e6ff03]/35 blur-3xl"
-            ></div>
-          </div>
-        </div>
-
-        <div class="order-1 lg:order-2">
-          <p class="text-muted-foreground mb-3 text-sm font-medium">PROTECT</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            Protejăm serviciile prin care organizația este expusă.
-          </h2>
-          <p class="text-muted-foreground mb-8 text-lg leading-relaxed">
-            Website-ul, domeniul și emailul sunt adesea primele suprafețe pe care le vede un
-            atacator. Hardening-ul este construit în jurul arhitecturii existente și al
-            riscului, nu în jurul unui stack obligatoriu.
-          </p>
-          <div class="space-y-6">
-            <a href="/website-security" class="group block border-t pt-5">
-              <div class="mb-1 flex items-center justify-between gap-5">
-                <h3 class="text-h5 font-medium">Website Security</h3>
-                <span class="text-muted-foreground transition-transform group-hover:translate-x-1">→</span>
-              </div>
-              <p class="text-muted-foreground">
-                WAF, DDoS protection, TLS hardening, application protection și recovery.
-              </p>
-            </a>
-            <a href="/email-security" class="group block border-t pt-5">
-              <div class="mb-1 flex items-center justify-between gap-5">
-                <h3 class="text-h5 font-medium">Email Security</h3>
-                <span class="text-muted-foreground transition-transform group-hover:translate-x-1">→</span>
-              </div>
-              <p class="text-muted-foreground">
-                SPF, DKIM, DMARC, anti-spoofing și protecția identity/domain.
-              </p>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-[#141e12] py-16 text-white sm:py-28">
-      <div class="container grid items-center gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:gap-24">
-        <div>
-          <p class="mb-3 text-sm font-medium text-white/55">OPERATE & MONITOR</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            O măsură implementată o singură dată nu este un program de securitate.
-          </h2>
-          <p class="mb-8 max-w-150 text-lg leading-relaxed text-white/70">
-            Configurațiile se schimbă, apar vulnerabilități noi, utilizatorii și furnizorii se
-            modifică. Monitoring-ul și review-ul continuu păstrează contextul după remedierea
-            inițială.
-          </p>
-          <div class="grid gap-5 sm:grid-cols-2">
-            <div class="border-t border-white/20 pt-4">
-              <h3 class="mb-2 font-medium">Detectează schimbarea</h3>
-              <p class="text-sm leading-relaxed text-white/60">
-                Semnale, findings și modificări de posture urmărite în raport cu serviciul real.
-              </p>
-            </div>
-            <div class="border-t border-white/20 pt-4">
-              <h3 class="mb-2 font-medium">Închide bucla</h3>
-              <p class="text-sm leading-relaxed text-white/60">
-                Remediation-ul, ownership-ul și evidence-ul rămân conectate după primul fix.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="relative overflow-hidden rounded-2xl bg-white/95 px-6 pt-8 sm:px-10 sm:pt-12">
-          <img
-            src="/trust-center/security-monitoring.svg"
-            alt="Security monitoring în stilul vizual Probo"
-            width="331"
-            height="272"
-            loading="lazy"
-            decoding="async"
-            class="mx-auto w-full max-w-[620px] translate-y-5 rounded-xl"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-12 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium">INCIDENT RESPONSE</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
-          Când apare incidentul, ordinea deciziilor contează.
-        </h2>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Un program, nu o colecție de produse</h2>
         <p class="text-muted-foreground text-lg">
-          Răspunsul nu începe cu un raport. Începe cu triere, containment și păstrarea
-          informației necesare pentru recovery și investigație.
+          Alegem serviciul după problemă și risc. Nu forțăm fiecare client într-un stack
+          identic și nu transformăm fiecare finding într-un produs nou.
         </p>
       </div>
 
-      <div class="relative mx-auto max-w-6xl">
-        <div class="absolute top-[17px] right-0 left-0 hidden h-px bg-border sm:block" aria-hidden="true"></div>
-        <div class="grid gap-8 sm:grid-cols-4 sm:gap-6">
-          {incidentSteps.map((item) => (
-            <article class="relative">
-              <div class="mb-5 flex size-9 items-center justify-center rounded-full border bg-background font-mono text-xs">
-                {item.step}
-              </div>
-              <h3 class="text-h5 mb-2 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div class="mt-10 text-center">
-        <Button href="/incident-response" variant="secondary">Vezi Incident Response</Button>
-      </div>
-    </section>
-
-    <section class="overflow-hidden bg-active py-16 sm:py-28">
-      <div class="container">
-        <div class="mx-auto mb-12 max-w-190 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium">SECURE MANAGED HOSTING</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
-            Pentru unele sisteme, securitatea include și operarea infrastructurii.
-          </h2>
-          <p class="text-muted-foreground text-lg">
-            Când hosting-ul intră în scope, hardening-ul, monitoring-ul și recovery-ul sunt
-            operate ca responsabilități continue, nu ca opțiuni adăugate după incident.
-          </p>
-        </div>
-
-        <div class="mx-auto grid max-w-6xl gap-8 border-y py-8 sm:grid-cols-3 sm:gap-10 sm:py-10">
-          {managedResponsibilities.map((item) => (
-            <article>
-              <h3 class="text-h5 mb-2 font-medium">{item.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-
-        <div class="mt-9 text-center">
-          <Button href="/secure-hosting" variant="secondary">Vezi Secure Managed Hosting</Button>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-16 sm:py-28">
-      <div class="mx-auto mb-12 max-w-190 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium">SECURITY × COMPLIANCE</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">
-          Același control tehnic poate susține mai multe obligații.
-        </h2>
-        <p class="text-muted-foreground text-lg">
-          Nu confundăm cybersecurity cu compliance. Le conectăm doar acolo unde o măsură
-          tehnică, un review sau un incident trebuie demonstrat în programul GRC.
-        </p>
-      </div>
-
-      <div class="mx-auto grid max-w-5xl gap-x-10 gap-y-10 sm:grid-cols-2">
-        {complianceLinks.map((item) => (
-          <a href={item.href} class="group grid grid-cols-[72px_1fr] items-start gap-5 border-t pt-6">
-            <div class="flex size-16 items-center justify-center overflow-hidden">
-              <img
-                src={item.asset}
-                alt=""
-                class="max-h-14 max-w-14 object-contain"
-                aria-hidden="true"
-                loading="lazy"
-              />
-            </div>
-            <div>
-              <div class="mb-2 flex items-center justify-between gap-4">
-                <h3 class="text-h5 font-medium">{item.label}</h3>
-                <span class="text-muted-foreground transition-transform group-hover:translate-x-1">→</span>
-              </div>
-              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </div>
+      <div class="mx-auto max-w-5xl border-y">
+        {services.map((service) => (
+          <a
+            href={service.href}
+            class="group grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10"
+          >
+            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">
+              {service.title}
+            </h3>
+            <p class="text-muted-foreground leading-relaxed">{service.text}</p>
           </a>
         ))}
       </div>
     </section>
 
-    <ZebraByteTestimonials />
-    <Stories />
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Defense in depth, fără o singură „cutie magică”</h2>
+          <p class="text-muted-foreground text-lg">
+            Un atac nu respectă granițele dintre furnizori. Identity, edge, aplicația,
+            infrastructura și operațiunile trebuie privite împreună atunci când riscul o cere.
+          </p>
+        </div>
 
-    <section class="container py-14 sm:py-24">
+        <div class="mx-auto max-w-5xl border-y">
+          {layers.map(([layer, text], index) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[64px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <h3 class="font-medium">{layer}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security lifecycle</h2>
+        <p class="text-muted-foreground text-lg">
+          Primul assessment este doar începutul. Riscul se schimbă odată cu aplicația,
+          utilizatorii, furnizorii și infrastructura.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {lifecycle.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Alege modelul după problema reală</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Uneori ai nevoie doar de un assessment. Alteori finding-ul trebuie implementat,
+            controlul trebuie operat continuu sau există deja un incident. Scope-ul se schimbă
+            în funcție de aceste nevoi.
+          </p>
+        </div>
+        <div class="border-y">
+          {engagementModels.map((item) => (
+            <div class="border-b py-5 last:border-b-0">
+              <h3 class="font-medium">{item.title}</h3>
+              <p class="text-muted-foreground mt-2 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Security și compliance se întâlnesc în evidence</h2>
+          <p class="text-muted-foreground text-lg">
+            Un framework nu securizează singur infrastructura. Dar măsurile operate și
+            evidence-ul tehnic pot susține programul de compliance atunci când cerințele se
+            suprapun.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {complianceConnections.map((item) => (
+            <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <ZebraByteTestimonials />
+
+    <section class="container py-10 sm:py-20">
       <div class="mx-auto max-w-3xl">
         <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">Întrebări frecvente</h2>
         <div class="border-y">
@@ -410,13 +322,13 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-14 text-center sm:py-28">
+    <section class="container py-12 text-center sm:py-24">
       <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
         Începe cu riscul pe care îl poți vedea și construiește de acolo.
       </h2>
       <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Putem începe cu o evaluare clară și continua numai cu măsurile care schimbă efectiv
-        postura de securitate.
+        Putem începe cu o evaluare a suprafeței expuse și continua doar cu măsurile care
+        schimbă efectiv postura de securitate.
       </p>
       <Button href="/security-assessment" size="lg">Începe cu un Security Assessment</Button>
     </section>

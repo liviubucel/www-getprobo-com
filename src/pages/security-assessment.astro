@@ -1,37 +1,75 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
 const scope = [
   {
     number: "01",
     title: "External attack surface",
-    description: "Domenii, subdomenii, aplicații, servicii publice, DNS și configurații expuse observabile din exterior.",
+    description:
+      "Domenii, subdomenii, aplicații, servicii publice, DNS și configurații expuse care pot fi observate sau atacate din exterior.",
   },
   {
     number: "02",
     title: "Web & infrastructure posture",
-    description: "TLS, security headers, tehnologii expuse, access paths, configurații defensive și vulnerabilități relevante.",
+    description:
+      "TLS, security headers, tehnologii expuse, access paths, configurații defensive și vulnerabilități cunoscute relevante pentru serviciile aflate în scope.",
   },
   {
     number: "03",
     title: "Identity & email posture",
-    description: "MFA și access controls unde pot fi evaluate, plus SPF, DKIM, DMARC și configurațiile de domeniu relevante.",
+    description:
+      "MFA și access controls unde pot fi evaluate, plus SPF, DKIM, DMARC și configurațiile de domeniu care influențează impersonation și account risk.",
   },
   {
     number: "04",
     title: "Risk & remediation",
-    description: "Findings explicate prin impact și context, apoi transformate într-un plan de remediere prioritizat și verificabil.",
+    description:
+      "Findings sunt explicate prin impact și context, apoi transformate într-un plan de remediere prioritizat și verificabil.",
   },
 ];
 
 const methodology = [
-  ["01", "Scope", "Active, limite de autorizare și medii incluse."],
-  ["02", "Discover", "Expunere, tehnologii, servicii și configurații."],
-  ["03", "Validate", "Reducem false positives fără testare inutil intruzivă."],
-  ["04", "Prioritize", "Severitate, exploatabilitate, expunere și impact."],
-  ["05", "Report", "Finding, evidence, risc și recomandare clară."],
-  ["06", "Verify", "Confirmăm remedierea și evităm regresiile."],
+  {
+    step: "01",
+    title: "Define scope",
+    text: "Stabilim activele, mediile, limitele autorizării și ce nu intră în evaluare înainte de orice activitate tehnică.",
+  },
+  {
+    step: "02",
+    title: "Discover",
+    text: "Construim inventarul expunerii și identificăm tehnologii, servicii și configurații care merită analizate în profunzime.",
+  },
+  {
+    step: "03",
+    title: "Validate",
+    text: "Verificăm constatările suficient cât să evităm false positives și păstrăm testarea în limitele stabilite pentru engagement.",
+  },
+  {
+    step: "04",
+    title: "Prioritize",
+    text: "Corelăm severitatea tehnică cu exploatabilitatea, expunerea și impactul asupra serviciului sau datelor.",
+  },
+  {
+    step: "05",
+    title: "Report",
+    text: "Documentăm finding-ul, evidence-ul relevant, impactul și acțiunile recomandate într-un format utilizabil de echipa tehnică.",
+  },
+  {
+    step: "06",
+    title: "Remediate & verify",
+    text: "Dacă intră în scope, ajutăm la remediere și verificăm dacă schimbarea a închis cauza, nu doar simptomul.",
+  },
+];
+
+const findingAnatomy = [
+  ["Finding", "Ce am identificat și unde apare problema."],
+  ["Evidence", "Informația tehnică minimă necesară pentru a înțelege sau reproduce în siguranță constatarea."],
+  ["Risk", "Ce poate permite problema și care este contextul real de exploatare sau impact."],
+  ["Priority", "Ordinea recomandată de remediere în raport cu celelalte findings și dependențe."],
+  ["Remediation", "Ce trebuie schimbat și ce compromisuri sau verificări pot fi necesare înainte de implementare."],
+  ["Verification", "Cum confirmăm că remedierea a rezolvat cauza fără să rupă funcționalitatea legitimă."],
 ];
 
 const deliverables = [
@@ -51,23 +89,39 @@ const boundaries = [
   },
   {
     title: "Assessment ≠ pentest implicit",
-    text: "Un security assessment nu devine automat penetration test. Testarea activă și exploatarea necesită reguli și autorizare potrivite engagement-ului.",
+    text: "Un security assessment nu devine automat penetration test. Testarea activă, exploatarea și alte tehnici intruzive necesită un scope și reguli potrivite engagement-ului.",
   },
   {
     title: "Minimizăm impactul",
     text: "Validarea trebuie să ofere suficientă încredere fără să provoace indisponibilitate, pierdere de date sau modificări inutile în producție.",
   },
   {
-    title: "Secrets stay out of public forms",
-    text: "Parole, private keys, recovery codes și token-uri nu trebuie trimise prin formularul public. Accesul se stabilește prin canalul potrivit.",
+    title: "Secretele nu intră în formularul public",
+    text: "Parole, private keys, recovery codes și token-uri nu trebuie trimise prin formularul public. Accesul necesar se stabilește prin canalul potrivit după definirea engagement-ului.",
   },
 ];
 
 const nextSteps = [
-  ["Website Security", "WAF, hardening, monitoring și recovery pentru aplicații expuse public.", "/website-security"],
-  ["Email Security", "SPF, DKIM, DMARC și identity hardening pentru domeniu și conturi.", "/email-security"],
-  ["Secure Managed Hosting", "Migrare și operare continuă când infrastructura trebuie adusă într-un model managed.", "/secure-hosting"],
-  ["Incident Response", "Triage și containment când assessment-ul pornește de la o suspiciune de compromitere.", "/incident-response"],
+  {
+    title: "Website Security",
+    text: "WAF, hardening, malware monitoring, DDoS protection și recovery pentru aplicații expuse public.",
+    href: "/website-security",
+  },
+  {
+    title: "Email Security",
+    text: "SPF, DKIM, DMARC, identity hardening și remediation pentru posture-ul de email și domeniu.",
+    href: "/email-security",
+  },
+  {
+    title: "Secure Managed Hosting",
+    text: "Migrare și operare continuă atunci când infrastructura însăși trebuie adusă într-un model managed security.",
+    href: "/secure-hosting",
+  },
+  {
+    title: "Incident Response",
+    text: "Triage și containment atunci când assessment-ul pornește de la o suspiciune de compromitere sau un incident activ.",
+    href: "/incident-response",
+  },
 ];
 
 const faqs = [
@@ -104,176 +158,85 @@ const faqs = [
   description="Security Assessment ZebraByte pentru website, domeniu, email și servicii expuse public, cu findings tehnice, evidence și plan de remediere prioritizat."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
         Security Assessment
       </div>
 
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
         <span class="animate-perspective-in block">Înțelege suprafața de atac</span>
         <span class="animate-perspective-in block delay-50"> înainte să alegi remedierea. </span>
       </h1>
 
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Evaluăm website-ul, domeniul, emailul și serviciile expuse public, validăm constatările și le transformăm într-un plan tehnic prioritizat după risc și impact.
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        Evaluăm website-ul, domeniul, emailul și serviciile expuse public, validăm
+        constatările și le transformăm într-un plan tehnic prioritizat după risc și impact.
       </p>
 
-      <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/cyber-security">Vezi Cyber Security</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Solicită o evaluare</Button>
+      <div
+        class="mb-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/cyber-security"
+        >
+          Vezi Cyber Security
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Solicită o evaluare
+        </Button>
       </div>
     </animated-hero>
 
-    <section class="container pb-12 sm:pb-24">
-      <div class="overflow-hidden rounded-2xl border bg-level-1">
-        <div class="grid min-h-[420px] lg:grid-cols-[0.85fr_1.15fr]">
-          <div class="border-b p-8 sm:p-12 lg:border-r lg:border-b-0">
-            <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Attack surface</p>
-            <h2 class="text-h3 mb-5 font-medium">Ce este expus și cum se leagă.</h2>
-            <p class="text-muted-foreground text-lg leading-relaxed">
-              Un assessment bun nu tratează website-ul, emailul și DNS-ul ca insule. Inventarul arată relația dintre active și unde un control slab poate schimba riscul altui serviciu.
-            </p>
-          </div>
-
-          <div class="relative overflow-hidden bg-active p-8 sm:p-12">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,255,45,0.18),transparent_58%)]"></div>
-            <div class="relative grid h-full place-items-center">
-              <div class="relative w-full max-w-xl">
-                <div class="mx-auto mb-10 w-max rounded-full border bg-background px-5 py-3 font-medium">zebrabyte-client.tld</div>
-                <div class="grid grid-cols-2 gap-5 sm:grid-cols-4">
-                  {scope.map((item) => (
-                    <div class="rounded-xl border bg-background p-5 text-center shadow-sm">
-                      <span class="text-muted-foreground mb-3 block font-mono text-xs">{item.number}</span>
-                      <span class="font-medium">{item.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-12 sm:py-24">
-      <div class="mx-auto mb-12 max-w-190 text-center sm:mb-16">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Methodology</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Tool-urile descoperă. Procesul produce încredere.</h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Valoarea vine din scope, validare și prioritizare. Nu extindem testarea doar pentru a produce un raport mai lung.
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Ce intră în evaluare</h2>
+        <p class="text-muted-foreground text-lg">
+          Scope-ul se adaptează mediului și obiectivului engagement-ului. Nu adăugăm active
+          sau tehnici de testare în afara autorizării doar pentru a produce un raport mai lung.
         </p>
       </div>
 
-      <div class="relative mx-auto max-w-6xl">
-        <div class="absolute top-5 right-[8%] left-[8%] hidden h-px bg-border lg:block"></div>
-        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-6">
-          {methodology.map(([step, title, text]) => (
-            <article class="relative">
-              <div class="mb-5 flex size-10 items-center justify-center rounded-full border bg-background font-mono text-xs">{step}</div>
-              <h3 class="text-h5 mb-2 font-medium">{title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{text}</p>
-            </article>
-          ))}
-        </div>
+      <div class="mx-auto max-w-5xl border-y">
+        {scope.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.number}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+          </article>
+        ))}
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
-      <div class="container grid items-center gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-        <div>
-          <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">Finding anatomy</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un finding trebuie să poată fi folosit.</h2>
-          <p class="text-level-0-foreground/65 text-lg leading-relaxed">
-            Nu livrăm doar un nume de vulnerabilitate și un scor. Owner-ul tehnic trebuie să înțeleagă ce am observat, de ce contează, cum se remediază și cum verificăm schimbarea.
-          </p>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl bg-level-0 text-foreground shadow-xl">
-          <div class="flex items-center justify-between border-b px-6 py-5">
-            <div>
-              <span class="text-muted-foreground text-xs uppercase tracking-wide">Finding ZB-017</span>
-              <h3 class="mt-1 font-medium">Administrative interface exposed</h3>
-            </div>
-            <span class="rounded-full border px-3 py-1 text-sm font-medium">High</span>
-          </div>
-          <div class="grid sm:grid-cols-2">
-            <div class="border-b p-6 sm:border-r sm:border-b-0">
-              <p class="text-muted-foreground mb-2 text-xs uppercase tracking-wide">Evidence</p>
-              <p class="leading-relaxed">Public route reachable without the expected access boundary.</p>
-              <p class="text-muted-foreground mt-6 mb-2 text-xs uppercase tracking-wide">Risk</p>
-              <p class="leading-relaxed">Increases credential attack surface and exposure of privileged functionality.</p>
-            </div>
-            <div class="p-6">
-              <p class="text-muted-foreground mb-2 text-xs uppercase tracking-wide">Remediation</p>
-              <p class="leading-relaxed">Restrict the administrative path, enforce stronger identity controls and retest legitimate access.</p>
-              <p class="text-muted-foreground mt-6 mb-2 text-xs uppercase tracking-wide">Verification</p>
-              <p class="leading-relaxed">Confirm unauthorized access is blocked while approved administrative workflows remain functional.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-14 lg:grid-cols-2 lg:gap-24">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Deliverables</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Raportul trebuie să reducă incertitudinea.</h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Separăm problemele urgente de hardening-ul recomandat și păstrăm suficient context încât rezultatul să poată fi executat de echipa ta, de furnizorul existent sau de ZebraByte.
-          </p>
-          <div class="space-y-4">
-            {deliverables.map((item) => (
-              <div class="flex items-start gap-3">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"></span>
-                <p class="text-muted-foreground leading-relaxed">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl border bg-active p-8 sm:p-12">
-          <p class="text-muted-foreground mb-8 text-sm uppercase tracking-wide">Report structure</p>
-          <div class="space-y-8">
-            <div>
-              <span class="text-muted-foreground text-sm">01</span>
-              <h3 class="text-h4 mt-2 font-medium">Executive risk view</h3>
-            </div>
-            <div class="h-px bg-border"></div>
-            <div>
-              <span class="text-muted-foreground text-sm">02</span>
-              <h3 class="text-h4 mt-2 font-medium">Technical findings</h3>
-            </div>
-            <div class="h-px bg-border"></div>
-            <div>
-              <span class="text-muted-foreground text-sm">03</span>
-              <h3 class="text-h4 mt-2 font-medium">Prioritized remediation</h3>
-            </div>
-            <div class="h-px bg-border"></div>
-            <div>
-              <span class="text-muted-foreground text-sm">04</span>
-              <h3 class="text-h4 mt-2 font-medium">Verification path</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-active py-12 sm:py-24">
+    <section class="bg-active py-10 sm:py-20">
       <div class="container">
-        <div class="mb-12 max-w-3xl sm:mb-16">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Rules of engagement</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Limitele assessment-ului sunt parte din securitate.</h2>
-          <p class="text-muted-foreground text-lg leading-relaxed">
-            Autorizarea, impactul acceptabil și modul de gestionare a accesului sunt stabilite înainte de testare, nu improvizate după ce un tool găsește o dependență interesantă.
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Metodologie de la scope la verification</h2>
+          <p class="text-muted-foreground text-lg">
+            Tool-urile sunt doar o parte din proces. Valoarea vine din validare, context și
+            prioritizarea constatărilor în jurul serviciului real.
           </p>
         </div>
 
-        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-          {boundaries.map((item, index) => (
-            <article>
-              <span class="text-muted-foreground mb-7 block font-mono text-sm">0{index + 1}</span>
-              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
+        <div class="mx-auto max-w-5xl border-y">
+          {methodology.map((item) => (
+            <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
@@ -281,24 +244,79 @@ const faqs = [
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center sm:mb-16">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">After assessment</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Raportul nu te blochează într-un singur model de execuție.</h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Poți remedia intern, împreună cu furnizorii existenți sau cu ZebraByte acolo unde are sens.
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un finding trebuie să poată fi folosit</h2>
+        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+          Nu livrăm doar un nume de vulnerabilitate și un scor. Finding-ul trebuie să ofere
+          suficient context pentru ca owner-ul tehnic să înțeleagă problema, să decidă ordinea
+          și să poată verifica remedierea.
+        </p>
+
+        <div class="border-y">
+          {findingAnatomy.map(([label, text]) => (
+            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.6fr_1.4fr] sm:gap-10">
+              <h3 class="font-medium">{label}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Ce primești la final</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Raportul trebuie să reducă incertitudinea și să permită execuția. Separăm riscul
+            imediat de hardening-ul recomandat și indicăm ce trebuie verificat după schimbare.
+          </p>
+        </div>
+        <ul class="border-y">
+          {deliverables.map((item) => (
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Limitele assessment-ului sunt parte din securitate</h2>
+          <div class="border-y">
+            {boundaries.map((item) => (
+              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+                <h3 class="text-h5 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">După assessment</h2>
+        <p class="text-muted-foreground text-lg">
+          Raportul nu te blochează într-un singur model de execuție. Poți remedia intern,
+          împreună cu furnizorii existenți sau cu ZebraByte acolo unde are sens.
         </p>
       </div>
 
-      <div class="mx-auto grid max-w-5xl gap-x-12 sm:grid-cols-2">
-        {nextSteps.map(([title, text, href]) => (
-          <a href={href} class="group border-t py-7">
-            <h3 class="text-h4 font-medium group-hover:underline group-hover:underline-offset-4">{title}</h3>
-            <p class="text-muted-foreground mt-3 leading-relaxed">{text}</p>
+      <div class="mx-auto max-w-5xl border-y">
+        {nextSteps.map((item) => (
+          <a href={item.href} class="group grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
           </a>
         ))}
       </div>
     </section>
+
+    <ZebraByteTestimonials />
 
     <section class="container py-10 sm:py-20">
       <div class="mx-auto max-w-3xl">
@@ -319,12 +337,13 @@ const faqs = [
 
     <section class="container py-12 text-center sm:py-24">
       <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Începe cu riscul pe care îl poți vedea și construiește de acolo.
+        Începem cu scope-ul corect, nu cu o listă de tool-uri.
       </h2>
       <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Putem începe cu suprafața expusă și continua doar cu măsurile care schimbă efectiv postura de securitate.
+        Spune-ne ce vrei să evaluăm și care este contextul de business. Stabilim limitele
+        engagement-ului înainte de orice testare.
       </p>
-      <Button href="/contact" size="lg">Solicită un Security Assessment</Button>
+      <Button href="/contact" size="lg">Discută despre assessment</Button>
     </section>
   </main>
 </Layout>

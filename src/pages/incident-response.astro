@@ -1,37 +1,57 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
+import ZebraByteTestimonials from "../components/block/ZebraByteTestimonials.astro";
 
 const phases = [
   {
     step: "01",
     title: "Triage",
-    text: "Separăm simptomele de fapte, stabilim sistemele afectate și impactul care trebuie tratat primul.",
+    text: "Stabilim simptomele, sistemele afectate, impactul operațional și ce informații avem suficientă încredere să considerăm confirmate.",
   },
   {
     step: "02",
-    title: "Contain",
-    text: "Limităm accesul și propagarea fără să distrugem inutil contextul necesar investigației.",
+    title: "Containment",
+    text: "Reducem accesul și propagarea fără să distrugem inutil datele sau artefactele care pot fi necesare pentru investigație și decizii ulterioare.",
   },
   {
     step: "03",
-    title: "Investigate",
-    text: "Căutăm vectorul inițial, persistența, conturile și schimbările tehnice relevante pentru incident.",
+    title: "Investigation & eradication",
+    text: "Căutăm vectorul inițial, persistența și cauzele tehnice identificate, apoi eliminăm accesul sau componentele compromise în mod controlat.",
   },
   {
     step: "04",
-    title: "Recover",
-    text: "Restaurăm controlat, verificăm configurația și monitorizăm serviciile înainte de revenirea completă.",
+    title: "Recovery",
+    text: "Restaurăm serviciile treptat, verificăm configurațiile și monitorizăm mediul înainte să considerăm revenirea în producție completă.",
   },
   {
     step: "05",
-    title: "Improve",
-    text: "Findings și lessons learned devin hardening, controls și acțiuni cu owner și prioritate.",
+    title: "Lessons learned",
+    text: "Timeline-ul, findings și acțiunile se transformă în hardening, controls, ownership și măsuri de reducere a riscului pentru viitor.",
+  },
+];
+
+const evidencePrinciples = [
+  {
+    title: "Nu șterge înainte să înțelegi",
+    text: "Reinstall-ul sau cleanup-ul imediat poate elimina informația necesară pentru a înțelege vectorul inițial sau persistența.",
+  },
+  {
+    title: "Separă containment de cleanup",
+    text: "Uneori prima acțiune este să limitezi accesul sau impactul, nu să modifici imediat fiecare sistem suspect.",
+  },
+  {
+    title: "Păstrează un timeline",
+    text: "Ore, simptome, schimbări, alerte și acțiuni luate ajută la corelarea evenimentelor și la review-ul post-incident.",
+  },
+  {
+    title: "Minimizează accesul la evidence",
+    text: "Logurile, exports și datele colectate în timpul incidentului pot fi sensibile și trebuie tratate în acord cu scope-ul și nevoia de acces.",
   },
 ];
 
 const scenarios = [
-  ["Website compromise", "Malware, redirect-uri, injected code, backdoors sau schimbări pe care echipa nu le poate explica."],
+  ["Website compromise", "Malware, redirect-uri, injected code, backdoors sau modificări pe care echipa nu le poate explica."],
   ["Mailbox / identity compromise", "Sign-ins neautorizate, sesiuni suspecte, forwarding rules, MFA bypass sau credential theft."],
   ["Ransomware / endpoint activity", "Fișiere modificate în masă, acces pierdut sau comportament care indică malware ori lateral movement."],
   ["Data exposure", "Date publicate, accesate sau transferate într-un mod care nu era intenționat sau autorizat."],
@@ -45,16 +65,16 @@ const roles = [
     text: "Oferă contextul sistemelor, accesul aprobat și validează schimbările tehnice necesare pentru containment și recovery.",
   },
   {
-    title: "Decision owner",
-    text: "Prioritizează impactul de business și aprobă acțiunile care pot afecta disponibilitatea sau operațiunile.",
+    title: "Incident decision owner",
+    text: "Prioritizează impactul de business, aprobă acțiunile cu efect operațional și ține deciziile critice într-un singur flux.",
   },
   {
     title: "Privacy / legal / compliance",
-    text: "Intră în workflow când natura incidentului poate declanșa obligații de evaluare, comunicare sau notificare.",
+    text: "Intră în workflow atunci când natura incidentului poate declanșa obligații de evaluare, comunicare sau notificare aplicabile organizației.",
   },
   {
     title: "Third parties",
-    text: "Hosting, email, identity și SaaS sunt implicați acolo unde dețin loguri, acces sau componente relevante.",
+    text: "Hosting, email, identity, SaaS sau alți furnizori sunt implicați doar acolo unde dețin loguri, acces sau componente relevante pentru incident.",
   },
 ];
 
@@ -68,7 +88,7 @@ const recoveryChecks = [
 ];
 
 const outputs = [
-  ["Incident timeline", "Ce s-a observat, când, ce acțiuni au fost luate și ce informații au fost confirmate."],
+  ["Incident timeline", "Ce s-a observat, când, ce acțiuni au fost luate și ce informații au fost confirmate pe parcurs."],
   ["Technical findings", "Vectori, sisteme, conturi, configurații sau vulnerabilități relevante identificate în scope."],
   ["Containment & recovery record", "Schimbările făcute pentru limitarea impactului și readucerea serviciilor în operare."],
   ["Remediation plan", "Hardening, patching, identity changes, monitoring și alte acțiuni necesare după incident."],
@@ -109,23 +129,48 @@ const faqs = [
   description="Incident Response ZebraByte pentru website-uri, conturi, infrastructură și incidente de securitate: triage, containment, investigation, recovery și remediation post-incident."
 >
   <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
-      <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8">
+    <animated-hero
+      class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12"
+    >
+      <div
+        class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-4 py-2 text-sm font-medium sm:mb-8"
+      >
         Incident Response
       </div>
 
-      <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
+      <h1
+        class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8"
+      >
         <span class="animate-perspective-in block">Limitează impactul.</span>
         <span class="animate-perspective-in block delay-50"> Păstrează controlul și informația. </span>
       </h1>
 
-      <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
-        Triage, containment, investigation support și recovery pentru website-uri, conturi, aplicații și infrastructură. Reacționăm rapid fără să transformăm cleanup-ul într-o pierdere de context.
+      <p
+        class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8"
+      >
+        Triage, containment, investigation support și recovery pentru website-uri, conturi,
+        aplicații și infrastructură. Evităm cleanup-ul orb înainte să înțelegem suficient din
+        incident.
       </p>
 
-      <div class="mb-5 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-        <Button class="animate-perspective-in animation-delay-200" variant="secondary" size="lg" href="/cyber-security">Cyber Security</Button>
-        <Button class="animate-perspective-in animation-delay-300" size="lg" href="/contact">Contactează ZebraByte</Button>
+      <div
+        class="mb-5 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+      >
+        <Button
+          class="animate-perspective-in animation-delay-200"
+          variant="secondary"
+          size="lg"
+          href="/cyber-security"
+        >
+          Cyber Security
+        </Button>
+        <Button
+          class="animate-perspective-in animation-delay-300"
+          size="lg"
+          href="/contact"
+        >
+          Contactează ZebraByte
+        </Button>
       </div>
 
       <p class="text-muted-foreground mx-auto max-w-160 text-center text-sm">
@@ -133,47 +178,73 @@ const faqs = [
       </p>
     </animated-hero>
 
-    <section class="container pb-12 pt-6 sm:pb-24 sm:pt-10">
-      <div class="overflow-hidden rounded-2xl bg-level-3 text-level-0-foreground">
-        <div class="border-b border-level-0-foreground/10 px-7 py-5 sm:px-10">
-          <span class="text-level-0-foreground/55 text-sm uppercase tracking-wide">Primele 60 de minute</span>
-        </div>
-        <div class="grid gap-0 md:grid-cols-3">
-          <article class="border-b border-level-0-foreground/10 p-7 md:border-r md:border-b-0 sm:p-10">
-            <span class="text-level-0-foreground/40 mb-8 block font-mono text-sm">01</span>
-            <h2 class="text-h4 mb-3 font-medium">Preserve</h2>
-            <p class="text-level-0-foreground/65 leading-relaxed">Nu șterge loguri, mailbox rules, fișiere sau sesiuni înainte să știi dacă sunt relevante pentru incident.</p>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Răspuns structurat, nu improvizație</h2>
+        <p class="text-muted-foreground text-lg">
+          Ordinea exactă poate varia, dar incidentul trebuie să aibă un flux clar de decizie,
+          containment și recovery.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {phases.map((item) => (
+          <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[64px_0.75fr_1.25fr] sm:gap-8">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
           </article>
-          <article class="border-b border-level-0-foreground/10 p-7 md:border-r md:border-b-0 sm:p-10">
-            <span class="text-level-0-foreground/40 mb-8 block font-mono text-sm">02</span>
-            <h2 class="text-h4 mb-3 font-medium">Contain</h2>
-            <p class="text-level-0-foreground/65 leading-relaxed">Limitează accesul sau propagarea cu schimbarea minimă necesară pentru a reduce impactul imediat.</p>
-          </article>
-          <article class="p-7 sm:p-10">
-            <span class="text-level-0-foreground/40 mb-8 block font-mono text-sm">03</span>
-            <h2 class="text-h4 mb-3 font-medium">Decide</h2>
-            <p class="text-level-0-foreground/65 leading-relaxed">Stabilește cine aprobă opriri, resetări, recovery și comunicarea către părțile relevante.</p>
-          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container">
+        <div class="mx-auto max-w-5xl">
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Evidence poate dispărea dacă reacția este prea rapidă</h2>
+          <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+            Obiectivul nu este să păstrăm orice bit de date cu orice preț, ci să evităm
+            distrugerea inutilă a contextului care poate explica incidentul sau persistența.
+          </p>
+          <div class="border-y">
+            {evidencePrinciples.map((item) => (
+              <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+                <h3 class="text-h5 font-medium">{item.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container py-12 sm:py-24">
-      <div class="mx-auto mb-12 max-w-190 text-center sm:mb-16">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Incident lifecycle</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Din alertă până la control recâștigat.</h2>
-        <p class="text-muted-foreground text-lg leading-relaxed">
-          Ordinea exactă se poate schimba în funcție de impact, dar fiecare incident trebuie să aibă un fir coerent de decizie, containment și recovery.
-        </p>
+    <section class="container py-10 sm:py-20">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Situații care merită escaladate metodic</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Nu orice alertă este un incident major. Dar accesul neautorizat, indisponibilitatea,
+            malware-ul sau riscul pentru date nu trebuie tratate doar prin „restart și vedem”.
+          </p>
+        </div>
+        <div class="border-y">
+          {scenarios.map(([title, text]) => (
+            <div class="border-b py-5 last:border-b-0">
+              <h3 class="font-medium">{title}</h3>
+              <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
       </div>
+    </section>
 
-      <div class="relative mx-auto max-w-6xl">
-        <div class="absolute top-5 right-[10%] left-[10%] hidden h-px bg-border lg:block"></div>
-        <div class="grid gap-10 lg:grid-cols-5 lg:gap-7">
-          {phases.map((item) => (
-            <article class="relative">
-              <div class="mb-5 flex size-10 items-center justify-center rounded-full border bg-background font-mono text-xs">{item.step}</div>
-              <h3 class="text-h5 mb-3 font-medium">{item.title}</h3>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Un singur incident, mai mulți owners</h2>
+        <div class="border-y">
+          {roles.map((item) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="text-h5 font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
             </article>
           ))}
@@ -181,125 +252,43 @@ const faqs = [
       </div>
     </section>
 
-    <section class="bg-active py-12 sm:py-24">
-      <div class="container grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+    <section class="bg-active py-10 sm:py-20">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Evidence before cleanup</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Un timeline bun poate valora mai mult decât un reinstall rapid.</h2>
-          <p class="text-muted-foreground mb-5 text-lg leading-relaxed">
-            Orele, simptomele, schimbările, logurile și acțiunile luate ajută la separarea vectorului inițial de efectele incidentului. Nu păstrăm date fără motiv, dar evităm să distrugem exact contextul de care avem nevoie.
-          </p>
-          <p class="text-muted-foreground leading-relaxed">
-            Evidence-ul colectat poate conține informații sensibile; accesul trebuie limitat la persoanele care au nevoie de el pentru incident.
-          </p>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl border bg-level-0 shadow-sm">
-          <div class="flex items-center justify-between border-b px-5 py-4">
-            <span class="font-medium">incident-timeline.log</span>
-            <span class="text-muted-foreground text-xs">preserve context</span>
-          </div>
-          <div class="divide-y font-mono text-sm">
-            <div class="grid grid-cols-[82px_1fr] gap-5 px-5 py-4">
-              <span class="text-muted-foreground">09:14</span>
-              <span>Unusual sign-in confirmed</span>
-            </div>
-            <div class="grid grid-cols-[82px_1fr] gap-5 px-5 py-4">
-              <span class="text-muted-foreground">09:22</span>
-              <span>Suspicious session isolated</span>
-            </div>
-            <div class="grid grid-cols-[82px_1fr] gap-5 px-5 py-4">
-              <span class="text-muted-foreground">09:37</span>
-              <span>Forwarding rule preserved and reviewed</span>
-            </div>
-            <div class="grid grid-cols-[82px_1fr] gap-5 px-5 py-4">
-              <span class="text-muted-foreground">10:05</span>
-              <span>Containment decision approved</span>
-            </div>
-            <div class="grid grid-cols-[82px_1fr] gap-5 px-5 py-4">
-              <span class="text-muted-foreground">10:41</span>
-              <span>Recovery validation started</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-        <div class="lg:sticky lg:top-28">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Escalation</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Nu orice alertă este incident major. Unele însă nu trebuie tratate cu „restart și vedem”.</h2>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Recovery nu înseamnă doar „site-ul merge”</h2>
           <p class="text-muted-foreground text-lg leading-relaxed">
-            Escalarea depinde de acces, persistență, date, disponibilitate și impactul asupra serviciului. Aceste scenarii sunt puncte de pornire, nu clasificări automate.
+            Serviciul poate reveni online înainte ca riscul să fie suficient tratat. Folosim
+            criterii tehnice și operaționale pentru a decide ce mai trebuie verificat după
+            restaurare.
           </p>
         </div>
+        <ul class="border-y">
+          {recoveryChecks.map((item) => (
+            <li class="border-b py-4 last:border-b-0">{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
 
-        <div class="grid gap-x-10 sm:grid-cols-2">
-          {scenarios.map(([title, text]) => (
-            <article class="border-t py-6">
-              <h3 class="text-h5 mb-2 font-medium">{title}</h3>
+    <section class="container py-10 sm:py-20">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Incidentul trebuie să lase în urmă un program mai bun</h2>
+        <p class="text-muted-foreground mb-8 max-w-3xl text-lg leading-relaxed">
+          Când recovery-ul se încheie, findings și deciziile trebuie transformate în acțiuni
+          urmărite — altfel următorul incident începe din același loc.
+        </p>
+        <div class="border-y">
+          {outputs.map(([title, text]) => (
+            <div class="grid gap-3 border-b py-5 last:border-b-0 sm:grid-cols-[0.65fr_1.35fr] sm:gap-10">
+              <h3 class="font-medium">{title}</h3>
               <p class="text-muted-foreground leading-relaxed">{text}</p>
-            </article>
+            </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="bg-level-3 py-12 text-level-0-foreground sm:py-24">
-      <div class="container">
-        <div class="mb-12 max-w-3xl sm:mb-16">
-          <p class="text-level-0-foreground/55 mb-3 text-sm font-medium uppercase tracking-wide">Decision owners</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Un incident tehnic devine rapid o problemă de business.</h2>
-          <p class="text-level-0-foreground/65 text-lg leading-relaxed">
-            Echipa tehnică nu ar trebui să decidă singură opriri majore, notificări sau risk acceptance. Rolurile trebuie clare înainte ca presiunea incidentului să le facă neclare.
-          </p>
-        </div>
-
-        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-          {roles.map((item, index) => (
-            <article>
-              <span class="text-level-0-foreground/40 mb-7 block font-mono text-sm">0{index + 1}</span>
-              <h3 class="text-h4 mb-3 font-medium">{item.title}</h3>
-              <p class="text-level-0-foreground/65 leading-relaxed">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-12 sm:py-24">
-      <div class="grid gap-14 lg:grid-cols-2 lg:gap-24">
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">Recovery criteria</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">„Site-ul merge” nu înseamnă automat „incident închis”.</h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Revenirea în producție trebuie să ia în calcul cauza, persistența, identity, starea backup-ului și monitoring-ul activ după restore.
-          </p>
-          <div class="space-y-4">
-            {recoveryChecks.map((item) => (
-              <div class="flex items-start gap-3">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"></span>
-                <p class="text-muted-foreground leading-relaxed">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">What remains after recovery</p>
-          <h2 class="text-h3 sm:text-h2 mb-7 font-medium">Incidentul trebuie să lase în urmă un program mai bun.</h2>
-          <div class="divide-y border-y">
-            {outputs.map(([title, text]) => (
-              <article class="py-5">
-                <h3 class="font-medium">{title}</h3>
-                <p class="text-muted-foreground mt-2 leading-relaxed">{text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+    <ZebraByteTestimonials />
 
     <section class="container py-10 sm:py-20">
       <div class="mx-auto max-w-3xl">
@@ -320,12 +309,13 @@ const faqs = [
 
     <section class="container py-12 text-center sm:py-24">
       <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-        Dacă există un incident activ, începe cu simptomele și impactul observat.
+        Dacă incidentul este activ, începe cu simptomele și impactul observat.
       </h2>
       <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-        Nu trimite secrete prin formularul public. Stabilim canalul și accesul necesar după primul contact.
+        Stabilim apoi canalul și accesul potrivit pentru investigație, fără să trimiți secrete
+        prin formularul public.
       </p>
-      <Button href="/contact" size="lg">Contactează ZebraByte</Button>
+      <Button href="/contact" size="lg">Deschide formularul de incident</Button>
     </section>
   </main>
 </Layout>

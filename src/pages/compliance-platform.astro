@@ -1,39 +1,108 @@
 ---
+import "@phosphor-icons/web/regular";
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
-import Badges from "../components/Badges.svelte";
-import Stories from "../components/block/Stories.astro";
+
+const capabilities = [
+  {
+    icon: "ph-list-checks",
+    title: "Framework-uri, controale și măsuri",
+    description:
+      "Leagă cerințele de controalele și măsurile pe care organizația le operează în realitate, cu ownership, stare și trasabilitate.",
+  },
+  {
+    icon: "ph-files",
+    title: "Task-uri și dovezi",
+    description:
+      "Coordonează munca de conformitate și păstrează dovezile lângă controalele pe care le susțin, în loc să le împrăștii prin foldere și emailuri.",
+  },
+  {
+    icon: "ph-warning-circle",
+    title: "Risk management",
+    description:
+      "Menține registrul de risc, scope-uri, sisteme, amenințări, scenarii și măsuri de tratare într-un model conectat cu programul de conformitate.",
+  },
+  {
+    icon: "ph-buildings",
+    title: "Third parties și privacy",
+    description:
+      "Inventariază furnizorii și subprocessors, documentează procesările și gestionează evaluări, DPIA, TIA și solicitări privind datele.",
+  },
+  {
+    icon: "ph-seal-check",
+    title: "Documente și audit",
+    description:
+      "Versionează și aprobă documentele controlate, definește scope-ul auditului, pregătește evidențele și urmărește findings până la remediere.",
+  },
+  {
+    icon: "ph-identification-card",
+    title: "Identity și access reviews",
+    description:
+      "Conectează SSO și SCIM, aplicațiile și campaniile de access review pentru a demonstra că accesul este revizuit și controlat continuu.",
+  },
+];
 
 const operatingModes = [
   {
     eyebrow: "Self-service",
     title: "Echipa ta operează platforma",
     description:
-      "Security, engineering și compliance lucrează direct în ZebraByte Cloud și păstrează ownership-ul programului.",
+      "Security, engineering și compliance lucrează direct în ZebraByte Cloud și păstrează controlul complet asupra programului.",
   },
   {
     eyebrow: "Professional / Adviser",
     title: "Lucrezi pentru organizațiile pe care le consiliezi",
     description:
-      "Consultanții, avocații, DPO și specialiștii GRC pot structura și administra programele clienților lor în același produs.",
+      "Consultanții, avocații, DPO și specialiștii GRC pot utiliza platforma pentru a structura și administra munca de conformitate a clienților lor.",
   },
   {
     eyebrow: "Managed Compliance",
-    title: "ZebraByte preia mai mult din operare",
+    title: "ZebraByte preia mai mult din munca operațională",
     description:
-      "Aceeași platformă este folosită împreună cu specialiști ZebraByte pentru evidence, follow-up și audit readiness continuu.",
+      "Aceeași platformă este operată împreună cu specialiști ZebraByte atunci când organizația vrea suport hands-on pentru program, evidențe și audit readiness.",
+  },
+];
+
+const programFlow = [
+  {
+    number: "01",
+    title: "Definești organizația și framework-urile",
+    description: "Scope, membri, obligații și standardele pe care vrei să le implementezi sau să le menții.",
+  },
+  {
+    number: "02",
+    title: "Mapezi controalele la ceea ce operezi",
+    description: "Transformi cerințele într-un sistem de măsuri reale, cu owners, stare și responsabilități clare.",
+  },
+  {
+    number: "03",
+    title: "Colectezi dovezi și coordonezi task-uri",
+    description: "Păstrezi demonstrația implementării lângă controlul potrivit și reduci munca repetitivă înainte de audit.",
+  },
+  {
+    number: "04",
+    title: "Conectezi riscurile, datele și furnizorii",
+    description: "Vezi relația dintre active, procesări, third parties, scenarii de risc și măsurile de protecție.",
+  },
+  {
+    number: "05",
+    title: "Pregătești auditul și documentele controlate",
+    description: "Aprobări, versiuni, Statements of Applicability, scope, findings și materialele necesare reviewerilor.",
+  },
+  {
+    number: "06",
+    title: "Menții programul viu",
+    description: "Revizuiești accesul, remediezi findings și actualizezi programul pe măsură ce sistemele și cerințele se schimbă.",
   },
 ];
 
 const automation = [
-  "GraphQL API",
-  "CLI",
-  "MCP",
-  "n8n",
-  "Webhooks",
-  "Device Agent",
-  "Consent records",
-  "Cookie management",
+  "GraphQL API pentru integrarea cu propriile sisteme",
+  "CLI pentru operațiuni și automatizare controlată",
+  "MCP pentru workflow-uri asistate de AI",
+  "n8n și webhooks pentru fluxuri între aplicații",
+  "Device Agent pentru postura endpoint-urilor",
+  "Consent records și cookie management unde sunt folosite de program",
 ];
 
 const softwareApplicationSchema = {
@@ -67,15 +136,15 @@ const softwareApplicationSchema = {
       ></div>
 
       <div class="relative z-10 container py-16 text-center sm:py-24">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">
+        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
           ZebraByte Compliance Platform
         </div>
         <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 font-medium text-balance">
-          <span class="animate-perspective-in block">Un singur sistem pentru</span>
-          <span class="animate-perspective-in animation-delay-100 block">programul tău GRC.</span>
+          <span class="animate-perspective-in block">Programul tău de conformitate,</span>
+          <span class="animate-perspective-in animation-delay-100 block">într-un singur sistem.</span>
         </h1>
-        <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-8 max-w-180 text-lg text-balance">
-          Controls, evidence, risk, privacy, vendors, documents și audit — conectate în același produs, astfel încât conformitatea să rămână operabilă și după primul audit.
+        <p class="text-muted-foreground animate-perspective-in animation-delay-200 mx-auto mb-8 max-w-170 text-lg text-balance">
+          Framework-uri, controale, măsuri, task-uri, dovezi, riscuri, privacy, furnizori și audit — conectate într-o platformă cloud SaaS construită pentru munca de zi cu zi, nu doar pentru ziua auditului.
         </p>
         <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="https://app.zebrabyte.ro" size="lg" target="_blank" rel="noopener noreferrer">
@@ -87,216 +156,169 @@ const softwareApplicationSchema = {
         </div>
       </div>
 
-      <div class="relative z-10 container pb-10 sm:pb-20">
-        <div class="mx-auto max-w-6xl overflow-hidden rounded-[24px] border bg-[#f8faf4] px-3 pt-5 sm:px-8 sm:pt-10 lg:px-10 lg:pt-12">
-          <img
-            src="/navigation/frameworks.svg"
-            alt="Framework-uri și controale în ecosistemul ZebraByte"
-            width="1080"
-            height="720"
-            loading="eager"
-            decoding="async"
-            class="mx-auto block aspect-[3/2] h-auto w-full max-w-5xl object-contain lg:translate-y-6"
-          />
+      <div class="relative z-10 container pb-10 sm:pb-16">
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-2xl border bg-level-0 shadow-sm">
+          <div class="border-b px-4 py-3 sm:px-6">
+            <div class="flex items-center gap-2">
+              <span class="size-2.5 rounded-full border"></span>
+              <span class="size-2.5 rounded-full border"></span>
+              <span class="size-2.5 rounded-full border"></span>
+              <span class="text-muted-foreground ml-3 text-xs">app.zebrabyte.ro</span>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-[0.78fr_1.22fr]">
+            <div class="border-b p-7 sm:p-10 lg:border-r lg:border-b-0">
+              <p class="text-muted-foreground mb-2 text-sm">Program overview</p>
+              <h2 class="text-h3 mb-6 font-medium">De la cerință la dovadă.</h2>
+              <div class="space-y-0 divide-y">
+                <div class="flex items-center justify-between py-4">
+                  <span>Frameworks & obligations</span><span class="text-muted-foreground text-sm">Active</span>
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <span>Controls & measures</span><span class="text-muted-foreground text-sm">Mapped</span>
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <span>Evidence & tasks</span><span class="text-muted-foreground text-sm">Continuous</span>
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <span>Risk & third parties</span><span class="text-muted-foreground text-sm">Connected</span>
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <span>Audit readiness</span><span class="text-muted-foreground text-sm">Traceable</span>
+                </div>
+              </div>
+            </div>
+            <div class="relative min-h-80 overflow-hidden bg-active p-7 sm:p-10">
+              <img
+                src="/navigation/frameworks.svg"
+                alt="Vizualizare a framework-urilor și controalelor în platforma ZebraByte"
+                width="760"
+                height="520"
+                loading="eager"
+                decoding="async"
+                class="mx-auto h-full max-h-96 w-full object-contain"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container py-14 sm:py-24">
-      <div class="grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
-        <div class="max-w-135">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Controls & evidence</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            Cerințele devin controale pe care echipa chiar le poate opera.
-          </h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Framework-urile se leagă de controls și measures, fiecare cu ownership și context. Task-urile și evidence-ul rămân lângă controlul pe care îl susțin, iar riscurile explică de ce măsura există.
+    <section class="container py-16 sm:py-28">
+      <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Platforma</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Un model comun pentru tot programul GRC.</h2>
+        </div>
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          {
+            capabilities.map((capability) => (
+              <article class="border-t py-7 first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
+                <i
+                  class={`ph ${capability.icon} mb-5 block text-[2rem] leading-none sm:text-[2.15rem]`}
+                  aria-hidden="true"
+                ></i>
+                <h3 class="text-h5 mb-2 font-medium">{capability.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{capability.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y bg-level-0 py-16 sm:py-28">
+      <div class="container">
+        <div class="mx-auto mb-12 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Un singur SaaS, trei moduri de lucru</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">Tu alegi cine operează programul.</h2>
+          <p class="text-muted-foreground text-lg">
+            ZebraByte este livrat ca platformă cloud. Diferența nu este unde instalezi software-ul, ci cine conduce activitatea de conformitate.
           </p>
-          <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-            <span>Framework mapping</span>
-            <span>Control ownership</span>
-            <span>Evidence lifecycle</span>
-            <span>Risk treatment</span>
-          </div>
         </div>
 
-        <div class="overflow-hidden rounded-[26px] bg-active px-4 py-7 sm:px-8 sm:py-10 lg:px-10 lg:py-14">
-          <img
-            src="/navigation/frameworks.svg"
-            alt="Vizualizarea framework-urilor și controalelor"
-            width="760"
-            height="520"
-            loading="lazy"
-            decoding="async"
-            class="mx-auto block aspect-[19/13] h-auto w-full object-contain"
-          />
+        <div class="grid border-y lg:grid-cols-3 lg:divide-x">
+          {
+            operatingModes.map((mode) => (
+              <article class="border-b p-7 last:border-b-0 sm:p-9 lg:border-b-0">
+                <p class="text-muted-foreground mb-4 text-sm font-medium">{mode.eyebrow}</p>
+                <h3 class="text-h4 mb-3 font-medium text-balance">{mode.title}</h3>
+                <p class="text-muted-foreground leading-relaxed">{mode.description}</p>
+              </article>
+            ))
+          }
         </div>
       </div>
     </section>
 
-    <section class="bg-[#f8faf4] py-14 sm:py-24">
-      <div class="container grid items-center gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-        <div class="grid gap-3 overflow-hidden rounded-[28px] border bg-level-0 p-4 sm:p-6 lg:relative lg:min-h-[500px] lg:block lg:p-8">
-          <img
-            src="/trust-center/data-requests.svg"
-            alt="Workflow pentru privacy și data requests"
-            width="1024"
-            height="192"
-            loading="lazy"
-            decoding="async"
-            class="block h-auto w-full rounded-xl border bg-white object-contain shadow-sm lg:absolute lg:top-8 lg:left-8 lg:w-[88%]"
-          />
-          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:absolute lg:right-8 lg:bottom-9 lg:left-8">
-            <img src="/trust-center/subprocessor-docusign.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
-            <img src="/trust-center/subprocessor-hubspot.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
-            <img src="/trust-center/subprocessor-linear.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
-            <img src="/trust-center/subprocessor-stripe.svg" alt="" width="200" height="120" loading="lazy" decoding="async" class="block aspect-[5/3] h-auto w-full rounded-xl border bg-white object-contain" />
-          </div>
-        </div>
-
-        <div class="max-w-135">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Privacy & third parties</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            Datele și furnizorii nu trăiesc într-un spreadsheet separat.
-          </h2>
-          <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
-            Processing activities, DPIA, TIA, rights requests, vendors și subprocessors se conectează la aceleași risks, controls și documents. Când un furnizor se schimbă, contextul programului rămâne vizibil.
-          </p>
-          <a href="/gdpr" class="font-medium underline underline-offset-4">Explorează Privacy & GDPR</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-14 sm:py-24">
-      <div class="grid items-center gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:gap-20">
-        <div class="max-w-135">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Documents & audit</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">
-            Audit readiness se construiește în timpul anului.
-          </h2>
-          <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Documentele controlate au versiuni și aprobări, iar scope-ul auditului, evidence-ul și findings rămân conectate la controls. Nu trebuie să reconstruiești programul într-un folder nou de fiecare dată când apare un reviewer.
-          </p>
-          <div class="flex flex-wrap gap-3">
-            <Button href="/soc2" variant="secondary">SOC 2</Button>
-            <Button href="/iso-27001" variant="secondary">ISO 27001</Button>
-          </div>
-        </div>
-
-        <div class="grid gap-3 overflow-hidden rounded-[28px] bg-[#001a00] p-4 sm:p-6 lg:relative lg:min-h-[560px] lg:block lg:p-8">
-          <img
-            src="/trust-center/documents.svg"
-            alt="Documente controlate în programul de conformitate"
-            width="1024"
-            height="420"
-            loading="lazy"
-            decoding="async"
-            class="block h-auto w-full rounded-xl bg-white object-contain lg:absolute lg:top-8 lg:right-8 lg:left-8 lg:w-[calc(100%-4rem)]"
-          />
-          <div class="space-y-2 lg:absolute lg:right-8 lg:bottom-8 lg:left-8">
-            <img src="/trust-center/audit-row-1.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
-            <img src="/trust-center/audit-row-2.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
-            <img src="/trust-center/audit-row-3.svg" alt="" width="900" height="72" loading="lazy" decoding="async" class="block h-auto w-full rounded-lg bg-white object-contain" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="frameworks" class="bg-linear-to-b from-[#F8FAF4] to-[#FFFFFB] py-14 sm:py-24">
-      <div class="container text-center">
-        <img src="/images/zebrabyte-mark.svg" alt="ZebraByte" width="48" height="48" class="mx-auto mb-6 size-12" />
-        <h2 class="text-h3 sm:text-h2 mb-3 font-medium">Un program, mai multe framework-uri.</h2>
-        <p class="text-muted-foreground mx-auto mb-12 max-w-170 text-lg">
-          Reutilizezi controls, risks și evidence acolo unde cerințele se suprapun, fără să tratezi fiecare standard ca pe un proiect complet separat.
-        </p>
-        <Badges
-          count={10}
-          countMobile={9}
-          client:visible
-          class="mx-auto mb-12 grid max-w-[660px] grid-cols-3 justify-center justify-items-center gap-2 gap-y-10 sm:grid-cols-5 sm:gap-x-10"
-        />
-        <Button href="/compliance" size="lg">Vezi framework-urile & reglementările</Button>
-      </div>
-    </section>
-
-    <section class="container py-14 sm:py-24">
-      <div class="mx-auto mb-12 max-w-185 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Același produs, alt nivel de ownership</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium text-balance">Alegi cine conduce programul.</h2>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Workflow</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Conformitatea devine un proces continuu.</h2>
         <p class="text-muted-foreground text-lg">
-          Nu schimbăm platforma între modele. Se schimbă cine face munca operațională și cât suport vrei de la ZebraByte.
+          Programul pornește de la scope și framework-uri și continuă prin evidențe, risc, audit și revizuire continuă.
         </p>
       </div>
 
-      <div class="mx-auto grid max-w-6xl overflow-hidden rounded-[28px] border bg-level-0 lg:grid-cols-3">
-        {operatingModes.map((mode, index) => (
-          <article class:list={["p-7 sm:p-9", index !== operatingModes.length - 1 && "border-b lg:border-r lg:border-b-0"]}>
-            <p class="text-muted-foreground mb-8 text-sm font-medium">0{index + 1} · {mode.eyebrow}</p>
-            <h3 class="text-h4 mb-4 font-medium text-balance">{mode.title}</h3>
-            <p class="text-muted-foreground leading-relaxed">{mode.description}</p>
-          </article>
-        ))}
+      <div class="mx-auto max-w-5xl border-y">
+        {
+          programFlow.map((step) => (
+            <article class="grid gap-3 border-b py-7 last:border-b-0 sm:grid-cols-[80px_0.8fr_1.2fr] sm:items-start sm:gap-8 sm:py-8">
+              <span class="text-muted-foreground font-mono text-sm">{step.number}</span>
+              <h3 class="text-h5 font-medium">{step.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{step.description}</p>
+            </article>
+          ))
+        }
       </div>
     </section>
 
-    <section class="bg-[#001a00] py-14 text-white sm:py-24">
-      <div class="container grid items-center gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
-        <div class="max-w-140">
-          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#e6ff03]">Automation & integrations</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">O interfață pentru oameni. API-uri pentru restul.</h2>
-          <p class="mb-8 text-lg leading-relaxed text-white/70">
-            ZebraByte poate intra în workflow-urile existente fără să transforme platforma în singurul loc în care echipa are voie să lucreze.
+    <section class="bg-active py-16 sm:py-28">
+      <div class="container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Automatizare și integrări</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Platformă pentru oameni. API-uri pentru restul.</h2>
+          <p class="text-muted-foreground mb-8 max-w-150 text-lg leading-relaxed">
+            Interfața este doar una dintre căile de lucru. ZebraByte poate fi conectat la stack-ul organizației pentru a reduce operațiunile manuale și a păstra datele de compliance sincronizate.
           </p>
-          <Button href="/docs/developers" variant="secondary">Documentație pentru dezvoltatori</Button>
+          <Button href="/docs/developers" variant="secondary">Explorează documentația pentru dezvoltatori</Button>
         </div>
-
-        <div class="overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-4 sm:p-7 lg:p-10">
-          <div class="rounded-2xl bg-white p-3 sm:p-5">
-            <img
-              src="/navigation/docs.svg"
-              alt="Documentație și integrări ZebraByte"
-              width="760"
-              height="520"
-              loading="lazy"
-              decoding="async"
-              class="mx-auto block aspect-[19/13] h-auto w-full max-w-2xl object-contain"
-            />
-          </div>
-          <div class="mt-6 flex flex-wrap gap-2.5 sm:mt-8">
-            {automation.map((item) => (
-              <span class="rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/80">{item}</span>
-            ))}
-          </div>
+        <div class="divide-y border-y">
+          {
+            automation.map((item) => (
+              <div class="flex items-center gap-4 py-4 sm:py-5">
+                <i class="ph ph-arrow-right text-muted-foreground" aria-hidden="true"></i>
+                <span>{item}</span>
+              </div>
+            ))
+          }
         </div>
       </div>
     </section>
 
-    <section class="container py-14 sm:py-24">
-      <div class="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <div class="max-w-135">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Din workspace către exterior</p>
-          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Trust Center este stratul extern, nu încă un nume pentru platformă.</h2>
+    <section class="container py-16 sm:py-28">
+      <div class="grid overflow-hidden rounded-2xl border lg:grid-cols-2">
+        <div class="p-7 sm:p-10 lg:p-12">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Din program către exterior</p>
+          <h2 class="text-h3 mb-4 font-medium text-balance">Când trebuie să dovedești, publici doar ce aprobi.</h2>
           <p class="text-muted-foreground mb-7 text-lg leading-relaxed">
-            Workspace-ul intern rămâne pentru controls, risk și evidence. În Trust Center publici sau partajezi doar documentele și informațiile aprobate pentru clienți, procurement și security reviews.
+            Compliance Portal / Trust Center este stratul extern al programului: certificări, documente, commitments și fișiere protejate pot fi distribuite clienților și reviewerilor fără să expui workspace-ul intern.
           </p>
-          <Button href="/compliance-portal">Vezi Trust Center</Button>
+          <Button href="/compliance-portal">Vezi Compliance Portal</Button>
         </div>
-
-        <div class="overflow-hidden rounded-[28px] bg-[#E6FF03]/18 p-4 sm:p-7 lg:p-8">
+        <div class="min-h-80 border-t bg-[#E6FF03]/20 p-5 sm:p-8 lg:border-t-0 lg:border-l">
           <img
             src="/trust-center/browser.svg"
-            alt="Trust Center conectat la platforma ZebraByte"
+            alt="Compliance Portal conectat la platforma ZebraByte"
             width="1146"
             height="786"
             loading="lazy"
             decoding="async"
-            class="mx-auto block aspect-[573/393] h-auto w-full object-contain"
+            class="h-full w-full object-contain"
           />
         </div>
       </div>
     </section>
-
-    <Stories />
 
     <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
@@ -304,7 +326,7 @@ const softwareApplicationSchema = {
           Folosește platforma direct sau construiește programul împreună cu ZebraByte.
         </h2>
         <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
-          Self-service, adviser sau Managed Compliance — aceeași bază de produs, cu nivelul de ownership potrivit organizației tale.
+          Același sistem poate susține o echipă internă, un adviser care lucrează pentru clienți sau un engagement Managed Compliance operat împreună cu ZebraByte.
         </p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="https://app.zebrabyte.ro" size="lg" target="_blank" rel="noopener noreferrer">Deschide ZebraByte Cloud</Button>
