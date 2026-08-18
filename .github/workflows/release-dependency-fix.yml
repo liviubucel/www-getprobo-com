@@ -32,18 +32,20 @@ jobs:
         run: npm audit --audit-level=high
       - name: Verify production build
         run: npm run build
-      - name: Restrict generated changes to package metadata
+      - name: Stage only dependency metadata
         run: |
-          git status --short
-          test -z "$(git status --short | grep -vE '^( M|M |MM) (package.json|package-lock.json)$')"
+          git add package.json package-lock.json
+          echo 'Staged files:'
+          git diff --cached --name-only
+          unexpected="$(git diff --cached --name-only | grep -vE '^(package.json|package-lock.json)$' || true)"
+          test -z "$unexpected"
       - name: Commit resolved dependency tree
         run: |
-          if git diff --quiet -- package.json package-lock.json; then
+          if git diff --cached --quiet; then
             echo 'Dependency metadata already resolved; nothing to commit.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package.json package-lock.json
           git commit -m 'fix: remediate production dependency advisories'
           git push origin HEAD:release/production-readiness
