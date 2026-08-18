@@ -1,0 +1,13 @@
+/* Shared responsive corrections found during the mobile design audit. */
+@media (max-width: 639px) {
+  /*
+   * Several ZebraByte security pages use a narrow index gutter plus a content
+   * column on mobile, then expand to three columns at sm+. Keep the third
+   * child (description) aligned with the title instead of letting CSS Grid
+   * auto-place it back into the narrow index gutter on the next row.
+   */
+  [class~="grid-cols-[52px_1fr]"] > :nth-child(3),
+  [class~="grid-cols-[56px_1fr]"] > :nth-child(3) {
+    grid-column: 2;
+  }
+}
