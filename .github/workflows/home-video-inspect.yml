@@ -24,14 +24,15 @@ jobs:
       - name: Build contact sheets
         run: |
           rm -rf video-inspect
-          mkdir -p video-inspect
+          mkdir -p video-inspect/originals
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
             name="$(basename "$file" .mp4)"
+            cp "$file" "video-inspect/originals/${name}.mp4"
             ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file" > "video-inspect/${name}-meta.txt"
             ffmpeg -y -i "$file" -vf "fps=1,scale=280:180:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x3:padding=3:margin=3" -frames:v 1 -q:v 8 "video-inspect/${name}-sheet.jpg"
           done
       - uses: actions/upload-artifact@v4
         with:
-          name: homepage-video-contact-sheets
+          name: homepage-video-source-pack
           path: video-inspect/
           retention-days: 3
