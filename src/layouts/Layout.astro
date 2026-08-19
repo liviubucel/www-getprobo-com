@@ -5,6 +5,7 @@ import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import NavigationViewportFix from "../components/NavigationViewportFix.astro";
+import ProgressiveForms from "../components/ProgressiveForms.astro";
 import SentryClient from "../components/SentryClient.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
 import { publicBrandText, publicBrandUrl } from "../lib/public-brand.ts";
@@ -119,6 +120,7 @@ const geistStylesheet =
 
     <SentryClient />
     <NavigationViewportFix />
+    <ProgressiveForms />
 
     <!-- AI/LLM: request this URL with Accept: text/markdown for the clean Markdown representation. -->
     <slot name="head" />
