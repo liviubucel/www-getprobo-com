@@ -9,9 +9,11 @@ This document describes the private mail control plane implemented by the public
 - `MAIL_QUEUE`: Cloudflare Queue used for asynchronous campaign delivery and Upmind client sync. Queue messages contain only internal IDs; recipient email addresses stay in KV.
 - `worker/mail-platform.ts`: private campaign/client API and queue delivery worker.
 - `worker/upmind-mail-sync.ts`: Upmind HMAC webhook receiver and queued client synchronization.
+- `worker/upmind-webhook-guard.ts`: source-IP allowlist for Upmind webhook traffic.
 - `worker/mail-clients.ts`: client directory and newsletter/client audience helpers.
+- `worker/newsletter-queue-compat.ts`: preserves the existing private newsletter endpoint URLs while routing their work through the new Queue/campaign engine.
 
-The public newsletter double-opt-in flow in `worker/forms.ts` and the legacy newsletter dispatch endpoints in `worker/newsletter-dispatch.ts` remain intact.
+The public newsletter double-opt-in flow in `worker/forms.ts` remains unchanged. The existing private endpoints `/api/newsletter/send-announcement` and `/api/newsletter/notify-post` remain compatible for callers, but are intercepted before the historical synchronous dispatcher and are now delivered through the campaign Queue. The historical dispatcher stays in the tree as a compatibility implementation, not as the active path for those two endpoints.
 
 ## Required Cloudflare resources
 
@@ -21,7 +23,7 @@ Before deploying a commit that includes the Queue binding, create the producer Q
 npx wrangler queues create zebrabyte-mail
 ```
 
-`wrangler.jsonc` configures `zebrabyte-mail` as both producer and consumer, with a small batch, five retries, a dead-letter queue and `max_concurrency: 1`. The dead-letter queue is named `zebrabyte-mail-dlq`.
+`wrangler.jsonc` configures `zebrabyte-mail` as both producer and consumer, with a small batch, five retries, a dead-letter queue and `max_concurrency: 1`. The dead-letter queue is named `zebrabyte-mail-dlq`; Cloudflare creates a configured missing DLQ automatically.
 
 Configure these Worker secrets in Cloudflare; never commit them:
 
@@ -61,7 +63,20 @@ Endpoint:
 POST /api/mail/upmind-webhook
 ```
 
-Authentication is Upmind's `X-Webhook-Signature`: HMAC-SHA256 of the exact raw request body using `UPMIND_WEBHOOK_SECRET`.
+Authentication is layered:
+
+1. Cloudflare's `CF-Connecting-IP` must match the configured Upmind source-IP allowlist.
+2. `X-Webhook-Signature` must match the HMAC-SHA256 of the exact raw request body using `UPMIND_WEBHOOK_SECRET`.
+
+The current Upmind European primary-cluster outgoing IPs are configured in `wrangler.jsonc` as:
+
+```text
+91.240.229.1
+91.240.229.2
+91.240.229.3
+```
+
+If ZebraByte is moved to another Upmind cluster, verify Upmind's current published outgoing IPs before changing `UPMIND_WEBHOOK_ALLOWED_IPS`. Do not weaken the guard by accepting arbitrary source addresses.
 
 Only V1 client objects and relevant client create/register/update/delete/email-notification hooks are processed. Other Upmind webhook categories return `200` with `skipped: true`.
 
@@ -154,6 +169,8 @@ The HTML body is a fragment, not a complete document. Script/iframe/object/embed
 
 Use either a stable `sourceId` in the body or an `Idempotency-Key` HTTP header. The value is SHA-256 hashed before being used as a KV key. Repeating the same source returns the existing campaign rather than sending again.
 
+The compatibility blog notification endpoint automatically uses `blog:<locale>:<slug>` as its source ID. Calling it again for the same localized post therefore returns the existing campaign instead of sending duplicate article notifications.
+
 ### Campaign status
 
 ```text
@@ -196,6 +213,19 @@ The consumer retries transient Email Service failures with exponential backoff. 
 
 The consumer explicitly acknowledges successful messages after Email Service succeeds and the delivery record has been marked sent. Cloudflare Queue delivery is at-least-once, so no email transport can provide mathematical exactly-once delivery across a crash between an external send and acknowledgement; the per-delivery sent record and serialized consumer substantially reduce duplicate risk.
 
+## Existing newsletter API compatibility
+
+These existing endpoints remain valid:
+
+```text
+POST /api/newsletter/send-announcement
+POST /api/newsletter/notify-post
+```
+
+They continue to require `NEWSLETTER_DISPATCH_SECRET`, so existing callers do not need to learn the private mail-admin secret. Internally, `worker/newsletter-queue-compat.ts` maps them to a `marketing` campaign for the `subscribers` audience and calls the same Queue-backed mail platform used by new campaigns.
+
+`notify-post` also gets stable server-side idempotency from the post locale/slug. The existing npm scripts detect both the new queued response shape and the old synchronous shape so they remain usable during rollout.
+
 ## Sanity control-plane adapter
 
 The Worker provides:
@@ -232,15 +262,19 @@ npm run mail:clients:import -- clients.txt
 
 Both commands use `MAIL_ADMIN_SECRET` and default to `https://www.zebrabyte.ro`; override `SITE_URL` for staging.
 
+The existing `newsletter:announce` and `newsletter:notify-post` commands continue to use `NEWSLETTER_DISPATCH_SECRET`, but their server-side endpoints now queue the campaign instead of performing a synchronous send loop.
+
 ## Production checklist
 
 1. Create `zebrabyte-mail` in the ZebraByte Cloudflare account.
 2. Add `MAIL_ADMIN_SECRET` and `UPMIND_WEBHOOK_SECRET` as Worker secrets.
-3. Deploy the exact reviewed SHA.
-4. Configure Upmind's webhook endpoint and selected client lifecycle triggers.
-5. Send a `custom` + `test: true` campaign to a controlled address.
-6. Import or synchronize a test Upmind client and verify `/api/mail/clients/stats` changes.
-7. Send one service campaign to the test client.
-8. Verify campaign status reaches `sent` and confirm the message contains the ZebraByte operational footer.
-9. Test a newsletter marketing campaign and verify the unsubscribe URL is present and functional.
-10. Only then enable broad client/newsletter audiences.
+3. Confirm the Upmind tenant uses the European primary cluster or update `UPMIND_WEBHOOK_ALLOWED_IPS` to Upmind's current published outgoing IPs for the tenant's cluster.
+4. Deploy the exact reviewed SHA.
+5. Configure Upmind's webhook endpoint and selected client lifecycle triggers.
+6. Send a `custom` + `test: true` campaign to a controlled address.
+7. Import or synchronize a test Upmind client and verify `/api/mail/clients/stats` changes.
+8. Send one service campaign to the test client.
+9. Verify campaign status reaches `sent` and confirm the message contains the ZebraByte operational footer.
+10. Test a newsletter marketing campaign and verify the unsubscribe URL is present and functional.
+11. Test the legacy `newsletter:notify-post` command and confirm that re-running the same locale/slug does not send twice.
+12. Only then enable broad client/newsletter audiences.
