@@ -17,12 +17,14 @@ import {
   handleSentryClientApi,
   type SentryEnv,
 } from "./sentry";
+import { handleYcDealApi, type YcDealEnv } from "./yc-deal";
 
 type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
   NewsletterDispatchEnv &
   PublicStatusEnv &
-  SentryEnv;
+  SentryEnv &
+  YcDealEnv;
 
 type ExecutionContextLike = {
   waitUntil?: (promise: Promise<unknown>) => void;
@@ -81,6 +83,21 @@ export default {
           );
         }
         return formsResponse;
+      }
+
+      const ycDealResponse = await handleYcDealApi(request, env);
+      if (ycDealResponse) {
+        if (ycDealResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte YC deal API returned a server error", {
+              request,
+              component: "yc-deal",
+              status: ycDealResponse.status,
+            }),
+          );
+        }
+        return ycDealResponse;
       }
 
       const response = await router.fetch(request, env);
