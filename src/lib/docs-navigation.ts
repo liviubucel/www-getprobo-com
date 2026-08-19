@@ -43,7 +43,7 @@ export const docsSections: readonly DocsSection[] = [
   },
   {
     id: "deployment",
-    label: "Deployment",
+    label: "Cloud & Architecture",
     href: "/docs/deployment",
     match: {
       prefixes: ["/docs/deployment"],

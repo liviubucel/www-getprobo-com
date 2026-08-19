@@ -12,17 +12,27 @@ import {
   type PublicStatusEnv,
 } from "./public-status";
 import {
+  handleSecurityReportApi,
+  type SecurityReportEnv,
+} from "./security-report";
+import {
   captureSentryException,
   captureSentryMessage,
   handleSentryClientApi,
   type SentryEnv,
 } from "./sentry";
+import {
+  handleYcDealApi,
+  type YcDealEnv,
+} from "./yc-deal";
 
 type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
   NewsletterDispatchEnv &
   PublicStatusEnv &
-  SentryEnv;
+  SecurityReportEnv &
+  SentryEnv &
+  YcDealEnv;
 
 type ExecutionContextLike = {
   waitUntil?: (promise: Promise<unknown>) => void;
@@ -67,6 +77,36 @@ export default {
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
+
+      const securityReportResponse = await handleSecurityReportApi(request, env);
+      if (securityReportResponse) {
+        if (securityReportResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte security report API returned a server error", {
+              request,
+              component: "security-report",
+              status: securityReportResponse.status,
+            }),
+          );
+        }
+        return securityReportResponse;
+      }
+
+      const ycDealResponse = await handleYcDealApi(request, env);
+      if (ycDealResponse) {
+        if (ycDealResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte YC deal API returned a server error", {
+              request,
+              component: "yc-deal",
+              status: ycDealResponse.status,
+            }),
+          );
+        }
+        return ycDealResponse;
+      }
 
       const formsResponse = await handleZebraByteFormsApi(request, env);
       if (formsResponse) {

@@ -1,60 +1,131 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
+import Stories from "../components/block/Stories.astro";
 
-const workstreams = [
-  {
-    title: "Scope & obligations mapping",
-    description:
-      "Analizăm activitatea, dimensiunea, serviciile și contextul organizației pentru a înțelege dacă și cum poate intra în sfera NIS2 și a cadrului național aplicabil. Clasificarea juridică finală se validează atunci când este necesar cu specialistul juridic competent.",
-  },
-  {
-    title: "Cyber risk management",
-    description:
-      "Construim un registru de risc și un program de măsuri care leagă amenințările de active, procese, furnizori, controale și responsabilități clare.",
-  },
-  {
-    title: "Incident handling & reporting readiness",
-    description:
-      "Definim trierea, escaladarea, comunicarea și păstrarea dovezilor pentru incidente, astfel încât organizația să poată reacționa și îndeplini obligațiile de notificare aplicabile.",
-  },
-  {
-    title: "Business continuity & resilience",
-    description:
-      "Revizuim backup, disaster recovery, continuitatea serviciilor și scenariile de recuperare, inclusiv dependențele critice care pot bloca operațiunile.",
-  },
-  {
-    title: "Supply-chain security",
-    description:
-      "Inventariem furnizorii și serviciile critice, evaluăm riscul third-party și stabilim cerințe, review-uri și dovezi pentru relațiile care pot afecta securitatea organizației.",
-  },
-  {
-    title: "Identity, vulnerability & security hygiene",
-    description:
-      "Legăm accesul, MFA, patching-ul, vulnerability management, hardening-ul, logging-ul, criptografia și training-ul într-un program urmărit continuu.",
-  },
-];
-
-const phases = [
+const readinessFlow = [
   {
     step: "01",
-    title: "Readiness assessment",
-    text: "Stabilim scope-ul tehnic, procesele critice, gap-urile și obligațiile care trebuie validate pentru organizație.",
+    title: "Scope & applicability",
+    text: "Analizăm serviciile, sectorul, dimensiunea, jurisdicția și contextul organizației pentru a identifica obligațiile care trebuie validate.",
   },
   {
     step: "02",
-    title: "Remediation plan",
-    text: "Transformăm constatările într-un backlog prioritizat de măsuri tehnice, organizaționale și de governance.",
+    title: "Risk assessment",
+    text: "Legăm activele, serviciile, amenințările, dependențele și furnizorii de scenarii de risc și impact operațional.",
   },
   {
     step: "03",
-    title: "Implementation",
-    text: "Ajutăm la implementarea controalelor, politicilor, responsabilităților, furnizorilor și workflow-urilor de incident management.",
+    title: "Measures & remediation",
+    text: "Transformăm gap-urile într-un program de măsuri tehnice, operaționale și organizaționale cu owners și priorități clare.",
   },
   {
     step: "04",
+    title: "Incident readiness",
+    text: "Definim trierea, escaladarea, comunicarea, păstrarea dovezilor și procesul necesar pentru notificările aplicabile.",
+  },
+  {
+    step: "05",
     title: "Continuous evidence",
-    text: "Menținem evaluările și dovezile actualizate pentru review-uri, audituri, supraveghere și schimbări de infrastructură.",
+    text: "Reviews, tests, supplier assessments, training și schimbările de infrastructură rămân legate de măsurile pe care trebuie să le poți demonstra.",
+  },
+];
+
+const riskMeasures = [
+  ["Risk analysis & security policies", "Metodologie de risc, politici și ownership care reflectă serviciile și sistemele reale."],
+  ["Incident handling", "Detectare, triere, containment, comunicare și proces de response care poate funcționa sub presiune."],
+  ["Business continuity", "Backup, disaster recovery, crisis management și testarea scenariilor de recuperare."],
+  ["Supply-chain security", "Riscurile introduse de furnizori și service providers sunt evaluate și urmărite pe durata relației."],
+  ["Secure acquisition & maintenance", "Security în achiziție, dezvoltare și mentenanță, inclusiv vulnerability handling și disclosure."],
+  ["Effectiveness reviews", "Proceduri pentru a verifica dacă măsurile de cybersecurity chiar funcționează și trebuie ajustate."],
+  ["Cyber hygiene & training", "Practici de bază, awareness și training pentru management și personal, proporțional cu rolurile și riscul."],
+  ["Cryptography & encryption", "Politici și proceduri pentru utilizarea criptografiei și, unde este adecvat, a criptării."],
+  ["Access & asset management", "Human resources security, access control, inventar și ownership asupra activelor relevante."],
+  ["MFA & secure communications", "Multi-factor authentication și canale de comunicare securizate acolo unde contextul le cere."],
+];
+
+const incidentFlow = [
+  {
+    title: "Detect & qualify",
+    text: "Stabilești ce s-a întâmplat, ce servicii sunt afectate și dacă incidentul poate intra în categoria celor care trebuie raportate.",
+  },
+  {
+    title: "Escalate & contain",
+    text: "Activezi ownerii tehnici și de management, limitezi impactul și păstrezi informația necesară pentru investigație și raportare.",
+  },
+  {
+    title: "Notify when required",
+    text: "Procesul intern trebuie să poată susține etapele de notificare prevăzute de cadrul aplicabil, fără să improvizezi destinatarii și informațiile în timpul incidentului.",
+  },
+  {
+    title: "Recover & learn",
+    text: "Recovery, root-cause analysis și corrective actions se întorc în risk register, controls și programul de continuitate.",
+  },
+];
+
+const supplyChainRows = [
+  {
+    title: "Critical suppliers",
+    text: "Identifici furnizorii și serviciile de care depind operațiunile sau securitatea sistemelor aflate în scope.",
+  },
+  {
+    title: "Security expectations",
+    text: "Cerințele tehnice, contractuale și operaționale sunt aliniate cu riscul pe care relația îl introduce.",
+  },
+  {
+    title: "Evidence & review",
+    text: "Evaluările, documentele și findings nu rămân o verificare one-off; sunt revizuite când relația sau serviciul se schimbă.",
+  },
+  {
+    title: "Concentration & dependency",
+    text: "Analizezi dependențele care pot transforma indisponibilitatea unui singur furnizor într-un incident de business semnificativ.",
+  },
+];
+
+const governanceRows = [
+  {
+    title: "Management approval",
+    text: "Măsurile de risk management nu rămân exclusiv la echipa tehnică; managementul trebuie să aibă vizibilitate și ownership asupra programului aplicabil.",
+  },
+  {
+    title: "Oversight",
+    text: "Statusul măsurilor, riscurilor, incidentelor și gap-urilor trebuie să poată fi revizuit la nivelul potrivit al organizației.",
+  },
+  {
+    title: "Training",
+    text: "Membrii organelor de conducere și personalul relevant trebuie să aibă suficient context pentru a înțelege riscurile și practicile de cybersecurity care le afectează serviciile.",
+  },
+  {
+    title: "Evidence of decisions",
+    text: "Aprobările, risk acceptance și acțiunile semnificative trebuie să poată fi urmărite, nu doar discutate informal.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Poate ZebraByte decide dacă organizația mea intră sigur sub NIS2?",
+    answer:
+      "Putem face un scope assessment tehnic și operațional și putem identifica indicii relevante privind sectorul, dimensiunea, serviciile și jurisdicția. Pentru o încadrare juridică definitivă sau o excepție specifică trebuie folosită forma legală în vigoare și, după caz, specialistul juridic competent.",
+  },
+  {
+    question: "NIS2 este doar despre documentație și politici?",
+    answer:
+      "Nu. Cadrul include măsuri tehnice, operaționale și organizaționale privind risk management, incident handling, business continuity, supply-chain security, vulnerability handling, access control, training și alte arii. Evidence-ul trebuie să reflecte modul în care acestea funcționează în practică.",
+  },
+  {
+    question: "Trebuie să înlocuim toate sistemele existente pentru NIS2?",
+    answer:
+      "Nu automat. Readiness-ul pornește de la mediul existent, riscuri și gap-uri. Măsurile trebuie să fie adecvate și proporționale cu riscul, iar remediation-ul se prioritizează în jurul impactului real.",
+  },
+  {
+    question: "Cum se leagă NIS2 de ISO 27001?",
+    answer:
+      "Un ISMS ISO 27001 poate furniza structură utilă pentru risk management, controls și evidence, dar cele două cadre nu sunt identice și unul nu înlocuiește automat obligațiile celuilalt. Mapping-ul trebuie făcut pe cerințele concrete aplicabile organizației.",
+  },
+  {
+    question: "ZebraByte poate ajuta și cu măsurile tehnice, nu doar cu GRC?",
+    answer:
+      "Da, în scope-ul agreat. Security assessment, identity hardening, website/email security, vulnerability remediation, incident readiness și secure managed hosting pot susține controls și măsuri atunci când acestea sunt relevante pentru program.",
   },
 ];
 
@@ -79,127 +150,264 @@ const serviceSchema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
 
-  <main>
-    <section class="container py-16 text-center sm:py-28">
-      <div class="border-border-low text-tertiary-foreground mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">
-        NIS2 · România · Cyber Risk
-      </div>
-      <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-220 font-medium text-balance">
-        NIS2 trebuie să existe în operațiuni, nu doar în documentație.
-      </h1>
-      <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-        ZebraByte ajută organizațiile să transforme cerințele NIS2 într-un program
-        tehnic și de governance: risc, incidente, continuitate, supply chain,
-        identitate, vulnerabilități și dovezi care pot fi revizuite continuu.
-      </p>
-      <div class="flex flex-col justify-center gap-3 sm:flex-row">
-        <Button href="/contact" size="lg">Solicită un NIS2 readiness assessment</Button>
-        <Button href="/cyber-security" variant="secondary" size="lg">Vezi Cyber Security</Button>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 rounded-lg border px-3 py-1 text-sm font-medium">
+          <img src="/frameworks/NIS2.svg" alt="" class="size-6" aria-hidden="true" />
+          <span>NIS2 · România · Cyber Risk</span>
+        </div>
+
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">NIS2 în operațiuni,</span>
+          <span class="animate-perspective-in animation-delay-100 block">nu doar în documentație.</span>
+        </h1>
+
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">
+          Risk management, incidente, continuitate, supply chain, identity, vulnerability
+          management și governance — organizate într-un program care poate fi operat și demonstrat continuu.
+        </p>
+
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/cyber-security">Vezi Cyber Security</Button>
+          <Button size="lg" href="/contact">Discută despre NIS2</Button>
+        </div>
+      </section>
+    </animated-hero>
+
+    <section class="container py-16 sm:py-24">
+      <div class="mx-auto grid max-w-6xl gap-12 border-y py-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20 sm:py-14">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational resilience</p>
+          <h2 class="text-h3 sm:text-h2 font-medium text-balance">Cybersecurity ca program condus, nu ca verificare tehnică izolată.</h2>
+        </div>
+        <div class="text-muted-foreground space-y-5 text-lg leading-relaxed">
+          <p>
+            NIS2 combină risk management, governance, incident readiness, resilience și relația
+            cu furnizorii. Măsurile trebuie să fie tehnice, operaționale și organizaționale și
+            adaptate riscului organizației.
+          </p>
+          <p>
+            Readiness înseamnă să pornești de la serviciile și sistemele reale, să identifici
+            gap-urile și să poți demonstra în timp cum sunt operate măsurile relevante.
+          </p>
+        </div>
       </div>
     </section>
 
-    <section class="container pb-16 sm:pb-28">
-      <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {workstreams.map((item) => (
-          <article class="bg-level-0 p-6 sm:p-8">
-            <h2 class="text-h5 mb-3 font-medium">{item.title}</h2>
-            <p class="text-muted-foreground leading-relaxed">{item.description}</p>
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto mb-14 max-w-190 text-center">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Readiness program</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la scope la evidence continuu.</h2>
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Readiness-ul nu începe cu o listă de produse. Începe cu serviciile, riscurile și
+          responsabilitățile organizației.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-5xl border-y">
+        {readinessFlow.map((item, index) => (
+          <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8 sm:py-7">
+            <span class="text-muted-foreground font-mono text-sm">{item.step}</span>
+            <h3 class="text-h5 font-medium">{item.title}</h3>
+            <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            <span class="text-muted-foreground hidden font-mono text-xs sm:block">{index < readinessFlow.length - 1 ? "→" : "↻"}</span>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
       <div class="container">
-        <div class="mx-auto mb-12 max-w-180 text-center">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Program, nu checklist</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">De la evaluare la evidence continuu</h2>
-          <p class="text-muted-foreground text-lg">
-            Fluxul păstrează logica Probo: evaluarea și controalele ajung în același
-            sistem în care sunt urmărite task-urile, riscurile, furnizorii și dovezile.
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Risk-management measures</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Întregul ciclu operațional intră în program.</h2>
+          <p class="text-lg leading-relaxed opacity-65">
+            Ariile nu sunt controls tehnice izolate. Ele acoperă guvernanță, oameni, furnizori,
+            continuitate, dezvoltare, identitate și verificarea eficacității.
           </p>
         </div>
 
-        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {phases.map((phase) => (
-            <article class="bg-level-0 p-6 sm:p-8">
-              <div class="text-muted-foreground mb-6 text-sm font-medium">{phase.step}</div>
-              <h3 class="text-h5 mb-3 font-medium">{phase.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{phase.text}</p>
+        <div class="grid border-y border-invert/15 sm:grid-cols-2 lg:grid-cols-5">
+          {riskMeasures.map(([area, text], index) => (
+            <article class="border-b border-invert/15 p-6 sm:border-r lg:min-h-60 [&:nth-child(2n)]:sm:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(5n)]:border-r-0 lg:[&:nth-last-child(-n+5)]:border-b-0">
+              <span class="mb-8 block font-mono text-sm opacity-40">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="mb-3 font-medium">{area}</h3>
+              <p class="text-sm leading-relaxed opacity-65">{text}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-20">
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
-          <h2 class="text-h3 mb-4 font-medium">Cadrul din România</h2>
-          <p class="text-muted-foreground mb-5 leading-relaxed">
-            Directiva (UE) 2022/2555 — NIS2 — a fost transpusă în România prin OUG
-            nr. 155/2024 privind cadrul de securitate cibernetică al rețelelor și
-            sistemelor informatice din spațiul cibernetic național civil. Ordonanța
-            a fost aprobată cu modificări și completări prin Legea nr. 124/2025, iar
-            DNSC a adoptat ulterior norme privind supravegherea, verificarea și
-            controlul. Cadrul a continuat să fie modificat legislativ și în 2026.
-          </p>
-          <p class="text-muted-foreground leading-relaxed">
-            Din acest motiv, pagina este orientativă și operațională. Pentru o
-            interpretare juridică definitivă a încadrării sau a unei obligații
-            specifice, folosim forma legislativă în vigoare și, după caz, specialist juridic.
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Governance</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Managementul trebuie să vadă și să conducă programul.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">
+            Ownership, oversight și contextul de risc nu pot rămâne exclusiv în echipa tehnică.
           </p>
         </div>
 
-        <div class="space-y-3 rounded-2xl border p-6 sm:p-8">
-          <h3 class="text-h5 mb-4 font-medium">Surse oficiale</h3>
-          <a
-            href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block font-medium underline underline-offset-4"
-          >
-            Directiva (UE) 2022/2555 — EUR-Lex
+        <div class="divide-y border-y">
+          {governanceRows.map((item, index) => (
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-active py-16 sm:py-28">
+      <div class="container">
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Incident readiness</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Incident reporting începe înainte de incident.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Dacă trierea, escaladarea și comunicarea nu sunt pregătite, procesul devine mult mai
+            greu de executat atunci când serviciul este deja sub presiune.
+          </p>
+        </div>
+
+        <div class="mx-auto max-w-5xl border-y">
+          {incidentFlow.map((item, index) => (
+            <article class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr] sm:items-start sm:gap-8 sm:py-7">
+              <span class="text-muted-foreground font-mono text-sm">0{index + 1}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Supply chain</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Furnizorii fac parte din suprafața de risc.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">
+            Un serviciu critic poate depinde de cloud, software, telecom, identity, hosting,
+            support sau alți furnizori. Programul trebuie să poată explica aceste dependențe.
+          </p>
+        </div>
+
+        <div class="divide-y border-y">
+          {supplyChainRows.map((item, index) => (
+            <article class="grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y py-16 sm:py-28">
+      <div class="container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Technical remediation</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Controls trebuie să existe și în infrastructură.</h2>
+          <p class="text-muted-foreground mb-8 max-w-150 text-lg leading-relaxed">
+            Readiness-ul GRC nu înlocuiește hardening-ul, monitoring-ul, identity security,
+            vulnerability management sau incident response.
+          </p>
+          <Button href="/cyber-security" variant="secondary">Vezi Cyber Security</Button>
+        </div>
+
+        <div class="grid gap-x-10 sm:grid-cols-2">
+          <a href="/security-assessment" class="group border-t py-6">
+            <span class="text-muted-foreground mb-5 block font-mono text-xs">01</span>
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">Security Assessment</h3>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">Attack surface, configurații și gap-uri tehnice prioritizate după risc.</p>
           </a>
-          <a
-            href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/293121"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block font-medium underline underline-offset-4"
-          >
-            OUG nr. 155/2024 — Portal Legislativ
+          <a href="/website-security" class="group border-t py-6">
+            <span class="text-muted-foreground mb-5 block font-mono text-xs">02</span>
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">Website Security</h3>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">WAF, hardening, monitoring și recovery pentru aplicații expuse public.</p>
           </a>
-          <a
-            href="https://legislatie.just.ro/Public/DetaliiDocument/305129"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block font-medium underline underline-offset-4"
-          >
-            Normele DNSC publicate în 2025 — Portal Legislativ
+          <a href="/email-security" class="group border-t py-6">
+            <span class="text-muted-foreground mb-5 block font-mono text-xs">03</span>
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">Email Security</h3>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">Domain authentication, identity hardening și protecție împotriva impersonation.</p>
           </a>
-          <a
-            href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/312027"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block font-medium underline underline-offset-4"
-          >
-            Legea nr. 123/2026 — Portal Legislativ
+          <a href="/incident-response" class="group border-t py-6">
+            <span class="text-muted-foreground mb-5 block font-mono text-xs">04</span>
+            <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">Incident Response</h3>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">Triage, containment, recovery și lessons learned conectate la programul de risc.</p>
           </a>
         </div>
       </div>
     </section>
 
-    <section class="border-t bg-level-0 py-16 text-center sm:py-24">
+    <section class="container py-16 sm:py-28">
+      <div class="grid overflow-hidden rounded-2xl border lg:grid-cols-2">
+        <div class="p-7 sm:p-10 lg:p-12">
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Legal reference</p>
+          <h2 class="text-h3 mb-4 font-medium">Cadrul din România</h2>
+          <p class="text-muted-foreground mb-5 leading-relaxed">
+            Directiva (UE) 2022/2555 a fost transpusă în România prin OUG nr. 155/2024,
+            aprobată cu modificări și completări prin Legea nr. 124/2025. DNSC a publicat
+            norme privind supravegherea, verificarea și controlul, iar cadrul național a
+            fost completat legislativ și în 2026.
+          </p>
+          <p class="text-muted-foreground leading-relaxed">
+            Pagina este orientată spre readiness și operațiuni. Pentru încadrarea juridică
+            definitivă sau interpretarea unei obligații specifice trebuie verificată forma
+            legală în vigoare și, după caz, specialistul juridic competent.
+          </p>
+        </div>
+        <div class="border-t bg-active p-7 sm:p-10 lg:border-t-0 lg:border-l lg:p-12">
+          <div class="border-y">
+            <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">Directiva (UE) 2022/2555 — EUR-Lex</a>
+            <a href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/293121" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">OUG nr. 155/2024 — Portal Legislativ</a>
+            <a href="https://legislatie.just.ro/Public/DetaliiDocument/299675" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">Legea nr. 124/2025 — Portal Legislativ</a>
+            <a href="https://legislatie.just.ro/Public/DetaliiDocument/305129" target="_blank" rel="noopener noreferrer" class="block border-b py-4 font-medium underline underline-offset-4">Normele DNSC — Portal Legislativ</a>
+            <a href="https://legislatie.just.ro/Public/DetaliiDocumentAfis/312027" target="_blank" rel="noopener noreferrer" class="block py-4 font-medium underline underline-offset-4">Legea nr. 123/2026 — Portal Legislativ</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <Stories />
+
+    <section class="container py-16 sm:py-28">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-h3 sm:text-h2 mb-8 font-medium">Întrebări frecvente</h2>
+        <div class="border-y">
+          {faqs.map((faq) => (
+            <details class="group border-b py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                <span>{faq.question}</span>
+                <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p class="text-muted-foreground max-w-2xl pt-4 leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
-        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">
-          Începe cu gap-urile care schimbă riscul real al organizației.
-        </h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-150 text-lg">
-          Evaluăm situația actuală, prioritizăm măsurile și construim un program pe
-          care îl poți menține după prima evaluare.
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Începe cu gap-urile care schimbă riscul real al organizației.</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">
+          Evaluăm situația actuală, prioritizăm măsurile și construim un program pe care îl poți
+          menține după prima evaluare.
         </p>
         <Button href="/contact" size="lg">Discută despre NIS2</Button>
       </div>
     </section>
   </main>
 </Layout>
+
+<script>
+  import { AnimatedHero } from "../lib/elements/hero";
+  import { customElementDefine } from "../lib/dom";
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>

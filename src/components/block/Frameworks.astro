@@ -15,11 +15,18 @@ import Button from "../../components/ui/Button.svelte";
       class="mx-auto mb-6"
     />
     <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">
-      Managed frameworks
+      <span class="frameworks-ro" lang="ro">Framework-uri gestionate</span>
+      <span class="frameworks-en" lang="en">Managed frameworks</span>
     </h2>
     <p class="text-muted-foreground mb-12 text-center text-lg">
-      Not seeing the one you are looking for?<br />
-      Reach out, we likely support it as well.
+      <span class="frameworks-ro" lang="ro">
+        Nu găsești framework-ul pe care îl cauți?<br />
+        Discută cu noi — este posibil să îl putem include în program.
+      </span>
+      <span class="frameworks-en" lang="en">
+        Not seeing the framework you are looking for?<br />
+        Reach out — we may already support it in the programme.
+      </span>
     </p>
 
     <Badges
@@ -33,9 +40,10 @@ import Button from "../../components/ui/Button.svelte";
       rel="nofollow noreferrer"
       href="/contact"
       size="lg"
-      class="mx-auto flex w-max"
+      class="mx-auto flex w-fit max-w-full"
     >
-      Get compliant
+      <span class="frameworks-ro" lang="ro">Discută cu un expert</span>
+      <span class="frameworks-en" lang="en">Talk to an expert</span>
     </Button>
   </div>
 </div>
@@ -44,5 +52,17 @@ import Button from "../../components/ui/Button.svelte";
   .frameworks-section {
     content-visibility: auto;
     contain-intrinsic-size: 680px;
+  }
+
+  .frameworks-en {
+    display: none;
+  }
+
+  :global(html[lang="en"]) .frameworks-ro {
+    display: none;
+  }
+
+  :global(html[lang="en"]) .frameworks-en {
+    display: inline;
   }
 </style>

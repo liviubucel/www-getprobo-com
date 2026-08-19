@@ -4,8 +4,8 @@ import DownloadAgent from "../components/DownloadAgent.svelte";
 ---
 
 <Layout
-  title="Download ZebraByte Device Agent"
-  description="Download the latest ZebraByte Device Agent for macOS, Linux, Windows, or FreeBSD to enroll devices and continuously verify device posture."
+  title="Descarcă ZebraByte Device Agent"
+  description="Descarcă ZebraByte Device Agent pentru macOS, Linux, Windows sau FreeBSD și înscrie endpoint-urile în workflow-ul de verificare continuă a posturii."
   noFrameworks
 >
   <main>
@@ -19,16 +19,19 @@ import DownloadAgent from "../components/DownloadAgent.svelte";
             height="80"
             class="animate-slide-in mb-8 size-20"
           />
+          <p class="text-muted-foreground animate-slide-in mb-3 font-mono text-xs uppercase tracking-wide">Device posture</p>
           <h1 class="text-h2 animate-slide-in animation-delay-100 mb-4 font-medium">
-            Download ZebraByte Device Agent
+            Descarcă ZebraByte Device Agent
           </h1>
-          <p class="text-muted-foreground animate-slide-in animation-delay-200 mb-10 max-w-xl">
-            Available for macOS, Linux, Windows, and FreeBSD.
-            <br />
-            Use it for device enrollment and continuous posture verification inside the compliance workflow.
-            See the <a href="/docs/product" class="underline underline-offset-4">product documentation</a> for the wider platform model.
+          <p class="text-muted-foreground animate-slide-in animation-delay-200 mb-5 max-w-xl text-lg leading-relaxed">
+            Disponibil pentru macOS, Linux, Windows și FreeBSD. Agentul poate înscrie dispozitive
+            și furniza semnale de posture în programul de compliance, acolo unde endpoint-urile fac parte din scope.
           </p>
-          <div class="animate-slide-in animation-delay-300 w-full">
+          <p class="text-muted-foreground animate-slide-in animation-delay-250 mb-10 max-w-lg text-sm leading-relaxed">
+            Pentru modelul complet al platformei și modul în care Device Agent se conectează la controls și evidence,
+            consultă <a href="/docs/product" class="font-medium underline underline-offset-4">documentația produsului</a>.
+          </p>
+          <div class="animate-slide-in animation-delay-300 w-full border-y py-6">
             <DownloadAgent client:load />
           </div>
         </div>

@@ -6,6 +6,14 @@ import { docsSchema } from "@astrojs/starlight/schema";
 
 export const pageSize = 10;
 
+/**
+ * ZebraByte publishing policy
+ * --------------------------
+ * Preserve the complete inherited Probo product/editorial surface and publish it
+ * as part of the ZebraByte platform after brand/cloud adaptation. Do not hide
+ * inherited content through restrictive globs. Social-proof material is kept as
+ * neutral/reference material until ZebraByte-owned case studies replace it.
+ */
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }),
   schema: z.object({
@@ -58,11 +66,6 @@ const stories = defineCollection({
         }),
       )
       .min(1),
-    /**
-     * Upstream Probo stories normally provide photographic media and a framework badge.
-     * ZebraByte-authored stories may intentionally use the native visual fallback instead,
-     * so these fields must remain optional in the collection schema as well as StorySchema.
-     */
     image: z.string().optional(),
     previewImage: z.string().optional(),
     /** Public URL for a muted looping card trailer (e.g. /stories/trailers/foo.mp4) */

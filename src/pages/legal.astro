@@ -5,80 +5,101 @@ import Button from "../components/ui/Button.svelte";
 const documents = [
   {
     title: "Privacy Policy",
-    description: "Politica de confidențialitate ZebraByte este menținută prin documentul canonic Iubenda și ruta locală redirecționează către sursa actualizată.",
+    description: "Politica de confidențialitate ZebraByte este menținută în documentul canonic Iubenda și acoperă prelucrările ZebraByte în calitate de operator.",
     href: "/privacy",
-    status: "Canonical policy",
+    status: "Privacy",
   },
   {
     title: "Cookie Policy",
-    description: "Informațiile despre cookie-uri și alte tehnologii de tracking sunt menținute în politica canonică ZebraByte.",
+    description: "Politica privind cookie-urile și tehnologiile de stocare/acces este menținută în documentul canonic ZebraByte.",
     href: "/cookie-policy",
-    status: "Canonical policy",
+    status: "Cookies",
   },
   {
-    title: "Terms of Service",
-    description: "Termenii contractuali sunt în curs de migrare controlată din setul juridic existent ZebraByte. Nu publicăm termenii Probo și nu rebotezăm documente vechi fără review.",
+    title: "Termeni și condiții",
+    description: "Termenii generali ZebraByte pentru website, portaluri și servicii, revizuiți pentru ZEBRABYTE LIMITED și portofoliul actual.",
     href: "/terms",
-    status: "Controlled migration",
+    status: "Contract",
   },
   {
-    title: "Security & Compliance",
-    description: "Postura ZebraByte, controalele relevante, documentele disponibile și informațiile de trust sunt centralizate în Trust Center.",
-    href: "https://trust.zebrabyte.ro",
-    status: "Trust Center",
+    title: "Data Processing Agreement",
+    description: "DPA pentru situațiile în care ZebraByte prelucrează date cu caracter personal în numele Clientului, cu rolurile Controller/Processor definite corect.",
+    href: "/dpa",
+    status: "Data processing",
   },
   {
-    title: "Subprocessors",
-    description: "Lista de subprocessors este menținută separat pentru a putea fi actualizată fără a rescrie întregul set de politici.",
-    href: "https://trust.zebrabyte.ro/subprocessors",
-    status: "Trust Center",
+    title: "SLA găzduire și infrastructură",
+    description: "Disponibilitate, măsurare, service credits, mentenanță și excluderi pentru serviciile care includ explicit SLA-ul ZebraByte.",
+    href: "/legal/hosting-sla",
+    status: "Service level",
   },
   {
-    title: "Personal Data Requests",
-    description: "Canal separat pentru solicitări privind datele personale și exercitarea drepturilor relevante.",
-    href: "https://zebrabyte-limited.privacy.saymine.io/zbt",
-    status: "Privacy requests",
+    title: "Politica privind domeniile",
+    description: "Înregistrare, reînnoire, transfer, domenii premium, expirare și regulile registry/registrar aplicabile domeniilor administrate prin ZebraByte.",
+    href: "/legal/domain-policy",
+    status: "Domains",
+  },
+  {
+    title: "Termeni de mentenanță",
+    description: "Responsabilități, acces tehnic, schimbări, backup și domeniul serviciilor de mentenanță administrată ZebraByte.",
+    href: "/legal/maintenance-terms",
+    status: "Managed services",
+  },
+  {
+    title: "Termeni de suport",
+    description: "Domeniul suportului, priorități P1–P4, acces, incident handling și responsabilitate partajată.",
+    href: "/legal/support-terms",
+    status: "Support",
   },
 ];
 
-const operational = [
+const references = [
   {
-    title: "DPA",
-    text: "Acordul de prelucrare a datelor existent este păstrat în setul juridic ZebraByte și trebuie migrat fără schimbarea sensului juridic înainte de publicarea noii versiuni.",
+    title: "Securitate ZebraByte",
+    text: "Principiile și practicile operaționale de securitate, inclusiv acces, hardening, monitorizare, incident response și vulnerability disclosure.",
+    href: "/security",
   },
   {
-    title: "Hosting SLA",
-    text: "SLA-ul pentru serviciile de hosting trebuie să rămână separat de serviciile Cyber Security și GRC, astfel încât garanțiile operaționale să nu fie confundate cu promisiuni de securitate absolută.",
-  },
-  {
-    title: "Support Terms",
-    text: "Termenii de suport și escaladare vor fi păstrați ca document operațional distinct și aliniați cu modelul actual de servicii ZebraByte.",
+    title: "Solicitări privind datele personale",
+    text: "Canal dedicat pentru exercitarea drepturilor de protecție a datelor și gestionarea solicitărilor de privacy.",
+    href: "https://zebrabyte-limited.privacy.saymine.io/zbt",
   },
   {
     title: "Security disclosure",
-    text: "Raportarea responsabilă a vulnerabilităților folosește security.txt generat de site și canalul de contact ZebraByte.",
+    text: "Raportarea responsabilă a vulnerabilităților folosește security.txt și canalul ZebraByte publicat acolo.",
+    href: "/.well-known/security.txt",
+  },
+  {
+    title: "GDPR & Privacy Services",
+    text: "Serviciile de consultanță și compliance ZebraByte sunt distincte de obligațiile juridice ale ZebraByte ca operator sau processor.",
+    href: "/gdpr",
   },
 ];
 ---
 
 <Layout
-  title="Legal & Trust Center"
-  description="Centralizator ZebraByte pentru Privacy Policy, Cookie Policy, Terms, Trust Center, subprocessors, privacy requests și documentele operaționale aflate în migrare controlată."
+  title="Centru juridic"
+  description="Centralizator ZebraByte pentru Privacy Policy, Cookie Policy, Termeni, DPA, SLA, domenii, mentenanță, suport și referințe operaționale de securitate."
 >
   <main>
     <animated-hero class="relative -mt-16 block overflow-hidden px-5 pb-16 pt-32 sm:pb-24 sm:pt-40">
       <div class="container text-center">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Legal & Trust</div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Documentele juridice nu se rebranduiesc prin search & replace.</h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">Păstrăm politicile canonice și migrăm documentele contractuale controlat. Aici găsești sursa potrivită pentru privacy, cookies, terms, trust și solicitări privind datele.</p>
+        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Legal</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Documentele juridice ZebraByte, într-un singur loc.</h1>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">Politicile canonice de privacy și cookies sunt administrate separat, iar documentele contractuale ZebraByte sunt organizate aici pentru entitatea și serviciile actuale.</p>
         <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="https://trust.zebrabyte.ro" size="lg">Deschide Trust Center</Button>
-          <Button href="/contact" variant="secondary" size="lg">Întrebare juridică sau contractuală</Button>
+          <Button href="/terms" size="lg">Vezi termenii</Button>
+          <Button href="/security" variant="secondary" size="lg">Vezi securitatea ZebraByte</Button>
         </div>
       </div>
     </animated-hero>
 
     <section class="container py-16 sm:py-24">
+      <div class="mb-10 max-w-180">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Documente juridice</p>
+        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Politici și documente contractuale</h2>
+        <p class="text-muted-foreground text-lg">Alege documentul relevant serviciului sau tipului de prelucrare.</p>
+      </div>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {documents.map((doc) => (
           <a
@@ -98,36 +119,30 @@ const operational = [
     <section class="bg-active py-16 sm:py-24">
       <div class="container">
         <div class="mb-12 max-w-180">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Operational documents</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Setul vechi ZebraByte este păstrat ca sursă de migrare, nu înlocuit cu Probo.</h2>
-          <p class="text-muted-foreground text-lg">DPA, hosting SLA, support terms și celelalte documente contractuale trebuie mutate cu sensul juridic intact și revizuite pentru noul portofoliu înainte de go-live.</p>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Privacy & security</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Referințe operaționale</h2>
+          <p class="text-muted-foreground text-lg">Informațiile operaționale și canalele care se pot schimba mai frecvent sunt păstrate separat de termenii contractuali.</p>
         </div>
         <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2">
-          {operational.map((item) => (
-            <article class="bg-level-0 p-6 sm:p-8">
+          {references.map((item) => (
+            <a
+              href={item.href}
+              target={item.href.startsWith("http") ? "_blank" : undefined}
+              rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              class="bg-level-0 hover:bg-subtle p-6 transition-colors sm:p-8"
+            >
               <h3 class="mb-3 text-xl font-medium">{item.title}</h3>
               <p class="text-muted-foreground leading-relaxed">{item.text}</p>
-            </article>
+            </a>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="grid gap-4 sm:grid-cols-3">
-        <a href="/.well-known/security.txt" class="hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">security.txt</h3>
-          <p class="text-muted-foreground text-sm">Canalul standardizat pentru security disclosure.</p>
-        </a>
-        <a href="/gdpr" class="hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">GDPR & Privacy Services</h3>
-          <p class="text-muted-foreground text-sm">Serviciile ZebraByte sunt separate de politica de confidențialitate a companiei.</p>
-        </a>
-        <a href="/compliance-portal" class="hover:bg-subtle rounded-xl border p-6 transition-colors">
-          <h3 class="mb-2 font-medium">Compliance Portal</h3>
-          <p class="text-muted-foreground text-sm">Distribuirea controlată a documentelor și evidence-ului de trust.</p>
-        </a>
-      </div>
+    <section class="container py-16 text-center sm:py-24">
+      <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Ai nevoie de clarificări contractuale?</h2>
+      <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Pentru o comandă sau un contract specific, documentul semnat și condițiile serviciului respectiv pot include termeni suplimentari.</p>
+      <Button href="/contact" size="lg">Contactează ZebraByte</Button>
     </section>
   </main>
 </Layout>

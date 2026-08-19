@@ -1,5 +1,95 @@
 ---
-import ComparisonPage from "./probo-vs-fractional-ciso.astro";
+import Layout from "../../layouts/Layout.astro";
+import ArticleSchema from "../../components/schema/ArticleSchema.astro";
+
+const updated = "2026-08-18";
 ---
 
-<ComparisonPage />
+<Layout
+  title="ZebraByte vs Fractional CISO: roluri diferite"
+  description="Când ai nevoie de un program administrat de conformitate și când ai nevoie de un Fractional CISO. Comparație clară a responsabilităților și a modului de lucru."
+>
+  <ArticleSchema
+    title="ZebraByte vs Fractional CISO: roluri diferite"
+    description="Când ai nevoie de un program administrat de conformitate și când ai nevoie de un Fractional CISO."
+    url="https://www.zebrabyte.ro/hub/zebrabyte-vs-fractional-ciso"
+    datePublished={updated}
+    dateModified={updated}
+  />
+
+  <main class="container my-10 sm:mt-20 sm:mb-28">
+    <article class="mx-auto max-w-[820px]">
+      <a href="/hub" class="text-muted-foreground hover:text-foreground mb-8 inline-flex text-sm transition-colors">← Hub</a>
+
+      <header class="mb-12">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Ghid de decizie · august 2026</p>
+        <h1 class="text-h1 mb-5 font-medium">ZebraByte vs Fractional CISO</h1>
+        <p class="text-muted-foreground max-w-3xl text-lg leading-relaxed">
+          Nu sunt produse echivalente. Un Fractional CISO este o funcție de leadership și guvernanță de securitate. ZebraByte poate administra execuția unui program de conformitate și securitate. În multe organizații, cele două modele pot lucra împreună.
+        </p>
+      </header>
+
+      <section class="mb-12">
+        <h2 class="text-h3 mb-4 font-medium">Responsabilități tipice</h2>
+        <div class="overflow-x-auto rounded-lg border">
+          <table class="w-full min-w-[640px] text-left text-sm">
+            <thead class="bg-active">
+              <tr>
+                <th class="px-4 py-3 font-medium">Domeniu</th>
+                <th class="px-4 py-3 font-medium">ZebraByte Managed Compliance</th>
+                <th class="px-4 py-3 font-medium">Fractional CISO</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr>
+                <td class="px-4 py-3 font-medium">Focus</td>
+                <td class="px-4 py-3 text-muted-foreground">Implementare și operare a programului</td>
+                <td class="px-4 py-3 text-muted-foreground">Leadership, strategie și guvernanță de securitate</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Controale și dovezi</td>
+                <td class="px-4 py-3 text-muted-foreground">Activitate operațională continuă, urmărire și remediere</td>
+                <td class="px-4 py-3 text-muted-foreground">Supraveghere, prioritizare și validarea direcției</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Risc și roadmap</td>
+                <td class="px-4 py-3 text-muted-foreground">Contribuie cu evaluări și plan de lucru în scope-ul contractat</td>
+                <td class="px-4 py-3 text-muted-foreground">De regulă deține sau coordonează strategia generală de securitate</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Independența auditului</td>
+                <td class="px-4 py-3 text-muted-foreground">Pregătește programul și dovezile; certificarea/atestarea aparține auditorului competent</td>
+                <td class="px-4 py-3 text-muted-foreground">Poate coordona pregătirea, dar nu înlocuiește auditorul independent</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="prose prose-neutral max-w-none mb-12">
+        <h2>Când are sens ZebraByte</h2>
+        <p>
+          Dacă problema principală este că programul nu avansează — dovezi lipsă, politici neactualizate, controale neimplementate, remedieri fără owner sau activități recurente care nu sunt urmărite — ai nevoie de capacitate operațională, nu doar de strategie.
+        </p>
+
+        <h2>Când are sens un Fractional CISO</h2>
+        <p>
+          Dacă organizația are nevoie de un lider senior care să definească strategia de securitate, să stabilească prioritățile, să comunice cu board-ul și să coordoneze riscul la nivel de companie, un Fractional CISO poate fi rolul potrivit.
+        </p>
+
+        <h2>Când le folosești împreună</h2>
+        <p>
+          Modelul complementar este simplu: CISO-ul stabilește direcția și acceptarea riscului, iar echipa operațională execută controalele, dovezile și remedierea. Responsabilitățile trebuie definite explicit, astfel încât aceeași activitate să nu fie plătită de două ori și nici să rămână fără owner.
+        </p>
+      </section>
+
+      <aside class="bg-active rounded-lg border p-6">
+        <h2 class="mb-2 text-lg font-medium">Nu știi ce model îți trebuie?</h2>
+        <p class="text-muted-foreground mb-5 text-sm leading-relaxed">
+          Putem porni de la responsabilitățile pe care le ai deja intern și de la obiectivul de conformitate sau securitate. Rezultatul ar trebui să fie un scope clar, nu o suprapunere de roluri.
+        </p>
+        <a href="/contact" class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex rounded-lg px-5 py-3 text-sm font-medium transition-colors">Definește scope-ul</a>
+      </aside>
+    </article>
+  </main>
+</Layout>

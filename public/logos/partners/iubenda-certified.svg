@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="40" viewBox="0 0 150 40" role="img" aria-labelledby="title">
+  <title id="title">iubenda bronze certified partner</title>
+  <path fill="#10b981" d="M14 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-.5 6h-5v17h5V14z"/>
+  <text x="21" y="18" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">iubenda</text>
+  <text x="21" y="30" font-family="Arial, Helvetica, sans-serif" font-size="5.5" xml:space="preserve"><tspan fill="#b7791f" font-weight="700">BRONZE </tspan><tspan fill="#64748b" font-weight="600">CERTIFIED PARTNER</tspan></text>
+  <circle cx="116" cy="10" r="3" fill="#b7791f"/>
+  <path fill="#b7791f" d="M111 32Q111 14 116 14Q121 14 121 32Z"/>
+  <circle cx="127" cy="10" r="3" fill="#b7791f"/>
+  <path fill="#b7791f" d="M122 32Q122 14 127 14Q132 14 132 32Z"/>
+  <circle cx="138" cy="10" r="3" fill="#b7791f"/>
+  <path fill="#b7791f" d="M133 32Q133 14 138 14Q143 14 143 32Z"/>
+</svg>

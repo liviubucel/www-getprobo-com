@@ -31,5 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Build and release gates
         run: npm run build
+
+      - name: Validate Cloudflare Worker bundle
+        run: npx wrangler deploy --dry-run

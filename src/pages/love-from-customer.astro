@@ -1,15 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import Logos from "../components/block/Logos.astro";
 import WallCard from "../components/WallCard.astro";
 
 const posts = (await getCollection("wall"))
-  .filter(
-    (post) =>
-      post.id.startsWith("zebrabyte-") &&
-      (import.meta.env.DEV || !post.data.draft),
-  )
+  .filter((post) => import.meta.env.DEV || !post.data.draft)
   .sort((a, b) => {
+    const aOwned = a.id.startsWith("zebrabyte-");
+    const bOwned = b.id.startsWith("zebrabyte-");
+    if (aOwned !== bOwned) return aOwned ? -1 : 1;
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
     const ao = a.data.order ?? Number.POSITIVE_INFINITY;
     const bo = b.data.order ?? Number.POSITIVE_INFINITY;
@@ -19,8 +19,8 @@ const posts = (await getCollection("wall"))
 ---
 
 <Layout
-  title="Love from Customers"
-  description="Real ZebraByte customer feedback about security recovery, managed hosting, support and delivered digital projects."
+  title="Customer feedback & compliance insights"
+  description="Feedback din proiecte ZebraByte și insight-uri de referință din experiențe reale de securitate și conformitate, păstrate pentru valoarea lor practică."
 >
   <main class="-mt-16 overflow-hidden pt-16">
     <div class="relative isolate">
@@ -32,32 +32,42 @@ const posts = (await getCollection("wall"))
 
       <section class="relative z-10 container py-16 text-center sm:py-24">
         <div
-          class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium"
+          class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-fit max-w-full rounded-lg border px-3 py-1 text-center text-sm leading-snug font-medium"
           style="animation-delay: 100ms"
         >
-          Love from Customers
+          Feedback & Reference Insights
         </div>
         <h1
-          class="mx-auto mb-6 max-w-[680px] text-[2.75rem] leading-none font-semibold tracking-[-1.4px] text-balance sm:text-5xl sm:tracking-[-1.6px]"
-          aria-label="Hear it from people who worked with ZebraByte."
+          class="mx-auto mb-6 max-w-[760px] text-[2.75rem] leading-none font-semibold tracking-[-1.4px] text-balance sm:text-5xl sm:tracking-[-1.6px]"
+          aria-label="Experiențe reale și lecții practice de securitate și conformitate."
         >
           <span aria-hidden="true" class="block overflow-hidden">
             <span class="animate-perspective-in block" style="animation-delay: 150ms">
-              Hear it from people
+              Experiențe reale.
             </span>
           </span>
           <span aria-hidden="true" class="block overflow-hidden">
             <span class="animate-perspective-in block" style="animation-delay: 200ms">
-              who worked with ZebraByte.
+              Lecții care se pot aplica.
             </span>
           </span>
         </h1>
         <p
-          class="text-muted-foreground animate-perspective-in mx-auto max-w-[520px] text-base"
+          class="text-muted-foreground animate-perspective-in mx-auto max-w-[650px] text-base"
           style="animation-delay: 350ms"
         >
-          Real feedback about security recovery, hosting, support and projects delivered by ZebraByte.
+          Aici păstrăm feedback-ul verificabil din proiecte ZebraByte și o
+          bibliotecă de referință cu perspective publice din programe reale de
+          compliance. Cardurile sunt etichetate clar ca să distingă cele două
+          categorii.
         </p>
+      </section>
+
+      <section class="relative z-10 pb-4">
+        <p class="text-tertiary-foreground mb-3 text-center text-xs font-medium uppercase tracking-[0.12em]">
+          Organizații din biblioteca de referință
+        </p>
+        <Logos class="animate-slide-in animation-delay-300" />
       </section>
     </div>
 
@@ -69,7 +79,7 @@ const posts = (await getCollection("wall"))
           </div>
         ) : (
           <p class="text-muted-foreground py-16 text-center text-base">
-            Customer reviews are being prepared for this wall.
+            Materialele de feedback sunt în curs de pregătire.
           </p>
         )
       }

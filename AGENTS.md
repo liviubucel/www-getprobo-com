@@ -4,9 +4,9 @@ This file is the authoritative engineering contract for AI coding assistants and
 
 ## What this repository is
 
-This is the ZebraByte public website, documentation surface and Cloudflare runtime. The site was adapted from the Probo website codebase and intentionally preserves much of its interaction language, spacing, motion and component behavior while replacing the public brand, information architecture and content with ZebraByte.
+This is the ZebraByte public website, documentation surface and Cloudflare runtime. The site was adapted from the Probo website codebase and intentionally preserves its valuable product content, information architecture, interaction language, spacing, motion and component behavior while replacing the public brand with ZebraByte and extending the product with ZebraByte-specific capabilities.
 
-**This is not a generic Probo fork and Probo is not the public brand.** Probo remains useful as upstream design/behavior lineage and, where applicable, as a technical reference for inherited compliance-product documentation.
+**Probo is not the public brand. ZebraByte is.** Public-facing Probo naming, logos, domains and first-person product references must be rebranded to ZebraByte where appropriate. This rebranding requirement must never be interpreted as permission to delete useful Probo-originated product content or functionality.
 
 Production identity: `https://www.zebrabyte.ro`.
 
@@ -16,31 +16,66 @@ Primary language architecture:
 - English is served under `/en`, for example `/en`, `/en/blog`, `/en/docs`.
 - The Cloudflare localization layer is part of the product architecture. Do not build a second competing localization system without an explicit architectural decision.
 
+## Core product rule: preserve, rebrand, extend
+
+ZebraByte is a branded adaptation and extension of the Probo product experience. The default rule is:
+
+1. **Preserve** useful Probo-originated pages, features, workflows, documentation, blog/Hub content, changelog/history, components, UX patterns and product explanations.
+2. **Rebrand** public Probo identity to ZebraByte: product/company naming, first-person brand references, logos, domains, CTAs and equivalent public-facing identity markers.
+3. **Adapt/paraphrase** public copy so it is original ZebraByte copy rather than a mechanically identical reproduction. Preserve factual meaning, product depth and useful detail while rewriting titles, headings, metadata and body copy naturally for ZebraByte and the RO/EN audience.
+4. **Extend** the inherited product with ZebraByte-specific capabilities such as cyber security, managed security, accessibility, compliance extensions, status/runtime integrations, legal, localization and other approved additions.
+
+Do **not** reduce the inherited product merely to make a branding, performance, SEO or production-readiness audit easier to pass.
+
+### Destructive cleanup is prohibited
+
+Brand/public-identity audits may flag or require replacement of legacy public branding. They must not delete product pages, blog/Hub articles, documentation, changelog/history, product workflows, components or features merely because they originated from Probo or still contain rebrandable copy.
+
+When a page contains legacy Probo branding, the default remediation is **rewrite/rebrand the page**, not delete it.
+
+When uncertain whether inherited product content should remain, **preserve it** and flag the specific factual/legal concern instead of removing it.
+
 ## Golden design baseline and content provenance
 
-The imported Probo snapshot at commit `7e7e7b5c18c621aae125488342a215a641c830b9` is the **golden design/behavior baseline** for inherited surfaces. The detailed classification and deliberate deviations are documented in `docs/architecture/experience-baseline.md`.
+The imported Probo snapshot at commit `7e7e7b5c18c621aae125488342a215a641c830b9` is the **golden design/behavior and inherited product-content baseline** for upstream surfaces. The detailed classification and deliberate deviations are documented in `docs/architecture/experience-baseline.md`.
 
-The golden commit is a **design and behavior reference, not a content authority**. Compare against it when an inherited component may have lost layout, spacing, responsive behavior, animation, carousel behavior, hover/focus states or other interaction semantics.
+Compare against it when an inherited component or product surface may have lost content depth, layout, spacing, responsive behavior, animation, carousel behavior, hover/focus states or other interaction semantics.
 
-Do not restore upstream content merely because it exists in the golden snapshot. In particular:
+The golden snapshot is not authority for claims that would falsely attribute third-party relationships or people to ZebraByte. Distinguish **valuable product content** from **identity/social-proof claims**:
 
+- preserve and rebrand/paraphrase useful product explanations, educational content, documentation, workflows, blog/Hub articles, history/changelog and feature descriptions;
 - never present Probo team photographs or people as ZebraByte staff;
 - never present Probo customer/company logos or testimonials as ZebraByte social proof without an independent ZebraByte source;
 - the inherited homepage logo marquee may retain the original logo set only under a neutral reference-library label; do not call those organizations ZebraByte customers, partners or endorsements without a separate source;
 - never rename an upstream photograph, review, customer or relationship so it appears to belong to ZebraByte;
 - never fabricate people, customers, reviews, certifications, partnerships or metrics to fill an inherited layout;
-- preserve explicit Probo author attribution only on imported content that actually carries that attribution;
+- author attribution may be retained when factually required for imported editorial content, but the surrounding public product branding should follow ZebraByte rules;
 - framework badges identify frameworks and do not imply ZebraByte certification;
 - current ZebraByte runtime, security and release architecture takes precedence over upstream Probo links or deployment assumptions.
 
 Classify a meaningful difference before changing it:
 
-1. **Intentional ZebraByte adaptation** — keep and protect it.
-2. **Safe optimization** that preserves the visible/interactive contract — keep and protect it.
-3. **Experience regression** — restore/rebuild the inherited experience using current ZebraByte content.
-4. **Invalid inherited content** — preserve the useful design pattern but remove or replace the upstream identity/content with sourced ZebraByte content.
+1. **Inherited valuable product content** — preserve, rebrand and paraphrase where public copy is too close to upstream.
+2. **Intentional ZebraByte adaptation/extension** — keep and protect it.
+3. **Safe optimization** that preserves the visible/interactive/content contract — keep and protect it.
+4. **Experience/content regression** — restore/rebuild the inherited experience and product depth using ZebraByte branding.
+5. **Invalid identity/social-proof claim** — preserve the useful design pattern but remove or replace only the unsupported identity/claim.
 
-When design and content conflict, preserve the strongest valid inherited design behavior while keeping the public ZebraByte content truthful.
+When design and content conflict, preserve the strongest valid inherited design and product value while keeping public ZebraByte claims truthful.
+
+## SEO/content adaptation rule
+
+Do not publish large bodies of upstream Probo copy verbatim when they can reasonably be rewritten without losing meaning. For inherited public pages:
+
+- keep the same useful subject matter, completeness and intent;
+- rewrite titles, meta descriptions, H1/H2 headings and body copy into natural ZebraByte wording;
+- localize for Romanian and English rather than performing word-for-word translation;
+- preserve technical terminology where precision matters;
+- do not use superficial synonym substitution that makes copy awkward or less accurate;
+- do not shorten or remove sections merely to make the text different;
+- keep stable useful URLs where appropriate, but replace legacy Probo-branded slugs with ZebraByte equivalents when the public identity requires it and maintain redirects where needed.
+
+SEO differentiation is achieved by **original, useful ZebraByte copy and local relevance**, not by deleting inherited subject coverage.
 
 ## Non-negotiable product rule: preserve the experience
 
@@ -97,6 +132,7 @@ Protected behaviors currently include:
 13. **Typography** — Geist is part of the visual contract. Loading strategy must not intentionally prefer a permanent fallback font.
 14. **About provenance** — do not restore the upstream Probo team photograph, people or photo gallery as ZebraByte identity; preserve the inherited page rhythm with truthful ZebraByte content. The ZebraByte wordmark must preserve its intrinsic `3242 × 1166` aspect ratio when rendered.
 15. **Customer-proof provenance** — review/customer surfaces must use ZebraByte-sourced entries and must not be padded with inherited Probo company identities.
+16. **Inherited content breadth** — do not silently remove full Hub/blog/docs/product collections because individual pages need rebranding or rewriting.
 
 ## Accessibility and motion
 
@@ -132,6 +168,12 @@ Treat these as sensitive architectural surfaces:
 
 Do not bypass them with a static-only shortcut.
 
+### Footer live-status contract
+
+The footer live-status badge is a cross-repository runtime surface, not a static footer label. Before changing `ZebraByteStatus.svelte`, `/api/status`, `STATUS_ENGINE`, `worker/public-status.ts`, the status Service Binding, or related status copy, read `docs/architecture/footer-status.md`.
+
+The private `STATUS_ENGINE -> status-page / FooterStatusEntrypoint` binding is primary. Public HTTP is a bounded resilience/backwards-compatibility fallback, not a replacement architecture. The compact footer must not expose provider/source implementation details or hidden service IDs. Keep the badge mobile-safe and keep the documented browser/Worker timeouts.
+
 ## i18n rules
 
 - Root is Romanian; `/en` is English.
@@ -143,19 +185,21 @@ Do not bypass them with a static-only shortcut.
 
 ## Content and URL stability
 
-Do not silently delete imported content to reduce build size.
+Do not silently delete imported content to reduce build size, remove upstream identity or make audits pass.
 
 Blog article canonicals remain `/blog/<slug>` and `/en/blog/<slug>`. Category archives are navigation surfaces, not canonical article path segments. Existing legacy redirect coverage and source-document parity are intentional.
 
 Industry pages and other migrated content must retain source parity checks. If a source duplicate is collapsed, its source identity must remain represented by migration metadata.
+
+Legacy Probo-branded public slugs should be migrated to ZebraByte-branded equivalents when appropriate, with redirects preserving inbound links and historical SEO value.
 
 ## Performance rules
 
 Performance optimization is welcome, but order of operations matters:
 
 1. measure or identify the actual cost;
-2. preserve the current behavior contract;
-3. reduce work without removing the behavior;
+2. preserve the current behavior and content contract;
+3. reduce work without removing the behavior or subject coverage;
 4. keep a deterministic regression check for any bug that was previously introduced;
 5. verify desktop and mobile states.
 
@@ -174,6 +218,7 @@ Bad examples:
 - remove animation only on mobile;
 - use `display=optional` if it makes the branded font commonly disappear;
 - cap a content collection without a product requirement;
+- delete Hub/blog/docs pages because they contain upstream branding that should instead be rewritten;
 - remove client behavior and call the visual resting state equivalent;
 - remove `ClientRouter` while leaving view-transition declarations throughout the UI.
 
@@ -181,13 +226,13 @@ Bad examples:
 
 Because multiple agents/processes may work on this repository concurrently:
 
-1. Fetch the current `main` SHA immediately before making changes.
+1. Fetch the current target-branch SHA immediately before making changes.
 2. Fetch the exact current file before replacing it.
-3. If an inherited design surface is involved, compare it with golden commit `7e7e7b5c18c621aae125488342a215a641c830b9` before simplifying or restoring it.
+3. If an inherited design/product surface is involved, compare it with golden commit `7e7e7b5c18c621aae125488342a215a641c830b9` before simplifying, restoring or deleting it.
 4. Do not overwrite unrelated changes from another agent.
 5. Prefer focused changes over wholesale reverts of mixed commits.
-6. If restoring a regression, inspect history so the original behavioral intent is understood.
-7. Validate public identity/content provenance separately from visual parity.
+6. If restoring a regression, inspect history so the original behavioral and content intent is understood.
+7. Validate public identity/content provenance separately from visual parity and content preservation.
 
 ## Required validation
 
@@ -200,7 +245,7 @@ npm run build
 
 The production build also runs content, performance-asset, localization and sitemap audits.
 
-A successful local compile is not proof of a successful deployment. The authoritative deployment signal is the **Cloudflare Workers Build** for the current `main` SHA. The separate GitHub Actions build can fail for account/billing reasons and must not be mistaken for the Cloudflare deployment result.
+A successful local compile is not proof of a successful deployment. The authoritative deployment signal is the **Cloudflare Workers Build** for the current production SHA. The separate GitHub Actions build can fail for account/billing reasons and must not be mistaken for the Cloudflare deployment result.
 
 Do not report a deployment as successful until the current-head Cloudflare Workers Build is completed successfully.
 
@@ -208,20 +253,20 @@ Do not report a deployment as successful until the current-head Cloudflare Worke
 
 When a Cloudflare build fails:
 
-1. identify the current `main` SHA;
+1. identify the current production SHA;
 2. inspect the Cloudflare check for that exact SHA;
 3. read the final build error, not just warnings;
 4. fix only the actual failure;
-5. preserve all protected behaviors and runtime architecture;
-6. wait for a new current-head Cloudflare build before declaring success.
+5. preserve all protected behaviors, inherited content breadth and runtime architecture;
+6. verify a new current-head Cloudflare build before declaring success.
 
 ## Design/system changes
 
-Do not treat the inherited Probo design system as disposable scaffolding. ZebraByte content and IA can evolve substantially, but interaction quality, alignment and component polish should remain coherent with the existing system unless a deliberate redesign is requested.
+Do not treat the inherited Probo design system or product content as disposable scaffolding. ZebraByte identity, localization and capabilities can evolve substantially, but the useful upstream product depth, interaction quality, alignment and component polish should remain unless a deliberate product decision removes a specific item.
 
-Do not blindly restore every historical Probo layout either. The golden snapshot establishes lineage; `docs/architecture/experience-baseline.md` records where upstream content is intentionally invalid for ZebraByte. Audit the design pattern and content provenance independently.
+Do not blindly restore invalid Probo identity/social proof. The golden snapshot establishes lineage and product breadth; `docs/architecture/experience-baseline.md` records where upstream identity/content claims are intentionally invalid for ZebraByte. Audit the design pattern, product value and content provenance independently.
 
-If a design change is intentional and conflicts with a protected invariant, update the implementation, this contract, the experience baseline and the relevant checker together. The checker follows the product decision; it must not be weakened merely to accommodate an accidental regression.
+If a design/product change is intentional and conflicts with a protected invariant, update the implementation, this contract, the experience baseline and the relevant checker together. The checker follows the product decision; it must not be weakened merely to accommodate an accidental regression.
 
 ## Security
 
@@ -235,6 +280,10 @@ If a design change is intentional and conflicts with a protected invariant, upda
 
 A change is not done merely because it compiles. It is done when:
 
+- useful inherited product content and functionality are preserved unless explicitly removed for a valid product/legal reason;
+- public Probo branding has been replaced with ZebraByte where appropriate;
+- inherited copy has been paraphrased/adapted where necessary without reducing factual depth;
+- ZebraByte-specific extensions remain intact;
 - behavior is preserved or intentionally changed;
 - inherited design changes were checked against the golden baseline where relevant;
 - public content provenance is valid and does not imply unsupported ZebraByte relationships;

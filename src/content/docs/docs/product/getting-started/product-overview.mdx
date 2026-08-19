@@ -1,56 +1,60 @@
 ---
 title: Product Overview
-description: Learn what Probo does, who uses it, and how a compliance program flows from frameworks and controls through evidence, risk, and audit findings.
+description: Learn what ZebraByte does, who uses the cloud platform, and how a compliance program flows from frameworks and controls through evidence, risk, privacy and audit findings.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-Probo is an open-source governance, risk, and compliance platform for engineering, security, and compliance teams. It connects requirements, implementation work, evidence, risk, privacy, vendors, audits, and approved public information in one organization-scoped system.
+ZebraByte is a cloud governance, risk and compliance platform for engineering, security, compliance teams and professional advisers. It connects requirements, implementation work, evidence, risk, privacy, vendors, audits and approved public information in one organization-scoped system.
 
-## What you can do with Probo
+The same platform can be used directly by an organization, operated by a consultant or adviser for client work, or paired with **ZebraByte Managed Compliance** when a company wants ZebraByte specialists to take on more of the operational workload.
 
-- **Run a compliance program** — Manage frameworks, controls, measures, tasks, evidence, obligations, and Statements of Applicability.
-- **Assess risk** — Maintain a risk register and model scopes, systems, threats, scenarios, and resulting risks.
-- **Manage third parties and privacy** — Inventory vendors and subprocessors, assess them, document processing, and manage DPIAs, TIAs, data, and rights requests.
-- **Control documents and audits** — Version and approve documents, collect signatures, scope audits, and track findings.
-- **Share approved information** — Publish certifications, commitments, references, and protected files through the Compliance Portal.
-- **Manage identity and access** — Configure SSO and SCIM, connect applications, and run access-review campaigns.
-- **Manage consent and devices** — Publish cookie banners, retain consent records, and collect endpoint posture through Probo Agent.
-- **Automate every domain** — Use GraphQL, the `prb` CLI, MCP, n8n, and webhooks instead of limiting work to the console.
+## What you can do with ZebraByte
 
-## Who uses Probo
+- **Run a compliance program** — Manage frameworks, controls, measures, tasks, evidence, obligations and Statements of Applicability.
+- **Assess risk** — Maintain a risk register and model scopes, systems, threats, scenarios and resulting risks.
+- **Manage third parties and privacy** — Inventory vendors and subprocessors, assess them, document processing and manage DPIAs, TIAs, data and rights requests.
+- **Control documents and audits** — Version and approve documents, collect signatures, scope audits and track findings.
+- **Share approved information** — Publish certifications, commitments, references and protected files through the Compliance Portal.
+- **Manage identity and access** — Configure SSO and SCIM, connect applications and run access-review campaigns.
+- **Manage consent and devices** — Publish cookie banners, retain consent records and collect endpoint posture through the ZebraByte Device Agent.
+- **Automate every domain** — Use GraphQL, the `prb` CLI, MCP, n8n and webhooks instead of limiting work to the console.
 
-Probo is designed for the people who share responsibility for compliance:
+## Who uses ZebraByte
+
+ZebraByte is designed for everyone who shares responsibility for compliance:
 
 - **Engineering and security leaders** demonstrate how systems and data are protected.
-- **Compliance teams** coordinate frameworks, controls, evidence, risks, policies, and audits.
+- **Compliance teams** coordinate frameworks, controls, evidence, risks, policies and audits.
 - **Control owners** complete assigned work and provide evidence that measures are operating.
+- **Professional advisers** can structure and manage compliance work for the organizations they support.
 - **Auditors and reviewers** evaluate the resulting records and supporting documentation.
+- **ZebraByte specialists** can operate the same program for customers using Managed Compliance.
 
 ## How a compliance program fits together
 
-1. Define the organization boundary, memberships, frameworks, and obligations.
+1. Define the organization boundary, memberships, frameworks and obligations.
 2. Review controls and connect them to the measures the team actually operates.
 3. Assign tasks and collect evidence showing that measures are in place.
-4. Identify assets, data, risks, and third parties, then connect safeguards and assessments.
-5. Approve controlled documents and prepare audit scope, evidence, and applicability records.
-6. Resolve findings, review access, and update the program as systems and requirements change.
+4. Identify assets, data, risks and third parties, then connect safeguards and assessments.
+5. Approve controlled documents and prepare audit scope, evidence and applicability records.
+6. Resolve findings, review access and update the program as systems and requirements change.
 
 Read [Core Concepts](/docs/product/getting-started/core-concepts) for a closer look at these relationships.
 
-## Choose how to use Probo
+## Choose how to use ZebraByte
 
-The same open-source product can be operated for you with Probo Cloud or deployed on infrastructure you control.
+ZebraByte is delivered as a managed cloud SaaS platform. The choice is **who operates the compliance program**, not whether you install the software yourself.
 
 <CardGrid>
   <LinkCard
-    title="Choose a deployment"
-    description="Compare managed Cloud, Docker Compose, and Kubernetes"
+    title="Choose an operating model"
+    description="Compare self-service Cloud, professional/adviser use and Managed Compliance"
     href="/docs/product/getting-started/choose-deployment"
   />
   <LinkCard
-    title="Self-hosted quickstart"
-    description="Run Probo locally with Docker Compose"
+    title="Cloud quickstart"
+    description="Start an organization and prepare your first framework in ZebraByte Cloud"
     href="/docs/product/getting-started/quickstart"
   />
   <LinkCard
@@ -64,3 +68,7 @@ The same open-source product can be operated for you with Probo Cloud or deploye
     href="/docs/product/getting-started/glossary"
   />
 </CardGrid>
+
+## Cloud delivery and technical lineage
+
+ZebraByte itself is not distributed as open-source or self-hosted software. The documentation preserves selected Docker and Kubernetes material from the platform lineage because it remains useful for architecture reviews, migration planning and understanding security boundaries. Those pages are reference material rather than a supported ZebraByte deployment method.

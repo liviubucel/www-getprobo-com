@@ -6,8 +6,12 @@
 
   const STATUS_API = "/api/status";
   const STATUS_PAGE = "https://status.zebrabyte.ro/";
+  const FETCH_TIMEOUT_MS = 6_000;
 
   let status = $state<PublicStatus>("no_data");
+  let checking = $state(true);
+  let primaryServiceId = $state<string | null>(null);
+  let affectedCount = $state(0);
 
   const dictionary: Record<PublicStatus, { label: () => string; color: string; live: boolean }> = {
     operational: {
@@ -26,7 +30,7 @@
       live: true,
     },
     no_data: {
-      label: () => browserT("Se verifică statusul", "Checking status"),
+      label: () => browserT("Status indisponibil", "Status unavailable"),
       color: "#8a8a8a",
       live: false,
     },
@@ -37,33 +41,95 @@
     },
   };
 
+  const serviceLabels: Record<string, () => string> = {
+    "client-portal": () => browserT("Portal", "Portal"),
+    "managed-hosting": () => browserT("Hosting", "Hosting"),
+    authentication: () => browserT("Autentificare", "Authentication"),
+    "payments-billing": () => browserT("Plăți", "Payments"),
+    "compliance-console": () => browserT("Compliance", "Compliance"),
+    "cookie-consent": () => browserT("Cookies", "Cookies"),
+    "accessibility-widget": () => browserT("Accesibilitate", "Accessibility"),
+    "files-documents": () => browserT("Fișiere", "Files"),
+    "zbt-edge-network": () => browserT("Edge/CDN", "Edge/CDN"),
+    "zbt-dns-routing": () => browserT("DNS", "DNS"),
+    "zbt-workers-apis": () => browserT("API-uri", "APIs"),
+    "zbt-security-waf": () => browserT("WAF", "WAF"),
+    "zbt-data-storage": () => browserT("Stocare", "Storage"),
+    "zbt-ai-services": () => browserT("AI", "AI"),
+    "zbt-email-services": () => browserT("Email", "Email"),
+  };
+
   let current = $derived(dictionary[status]);
-  let label = $derived(current.label());
+  let compactContextLabel = $derived.by(() => {
+    if (status !== "degraded" && status !== "outage") return null;
+    if (!primaryServiceId) return null;
+    const service = serviceLabels[primaryServiceId]?.();
+    if (!service) return null;
+
+    const stateLabel =
+      status === "outage"
+        ? browserT("Incident", "Incident")
+        : browserT("Degradat", "Degraded");
+    const additional = affectedCount > 1 ? ` +${affectedCount - 1}` : "";
+    return `${stateLabel} · ${service}${additional}`;
+  });
+  let label = $derived(
+    checking
+      ? browserT("Se verifică statusul", "Checking status")
+      : compactContextLabel ?? current.label(),
+  );
 
   onMount(() => {
     let stopped = false;
 
     const fetchStatus = async () => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
       try {
         const response = await fetch(STATUS_API, {
           headers: { Accept: "application/json" },
           cache: "no-store",
+          signal: controller.signal,
         });
-        const payload = (await response.json()) as { overall?: string };
-        const next = payload.overall;
-
-        if (
-          !stopped &&
-          (next === "operational" || next === "degraded" || next === "outage" || next === "no_data")
-        ) {
-          status = next;
-          return;
-        }
 
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        if (!stopped) status = "unknown";
+
+        const payload = (await response.json()) as {
+          overall?: string;
+          primaryServiceId?: string | null;
+          affectedCount?: number;
+        };
+        const next = payload.overall;
+
+        if (stopped) return;
+
+        primaryServiceId = typeof payload.primaryServiceId === "string" ? payload.primaryServiceId : null;
+        affectedCount = Number.isInteger(payload.affectedCount) && Number(payload.affectedCount) > 0
+          ? Number(payload.affectedCount)
+          : 0;
+
+        if (next === "operational" || next === "degraded" || next === "outage") {
+          status = next;
+        } else if (next === "no_data") {
+          status = "no_data";
+        } else {
+          status = "unknown";
+        }
+
+        if (status !== "degraded" && status !== "outage") {
+          primaryServiceId = null;
+          affectedCount = 0;
+        }
       } catch {
-        if (!stopped) status = "unknown";
+        if (!stopped) {
+          status = "unknown";
+          primaryServiceId = null;
+          affectedCount = 0;
+        }
+      } finally {
+        window.clearTimeout(timeout);
+        if (!stopped) checking = false;
       }
     };
 
@@ -84,17 +150,18 @@
 </script>
 
 <a
-  class="border border-border-mid bg-invert py-1.5 px-3 rounded-lg w-max flex items-center gap-2"
+  class="border border-border-mid bg-invert py-1.5 px-3 rounded-lg w-max max-w-full flex items-center gap-2 whitespace-nowrap"
   href={STATUS_PAGE}
   rel="noreferrer"
   target="_blank"
+  title={browserT("Deschide pagina de status", "Open status page")}
   aria-label={`${browserT("Status servicii ZebraByte", "ZebraByte service status")}: ${label}`}
 >
   <span class="status-dot-wrap" aria-hidden="true" style={`--status-color:${current.color}`}>
     {#if current.live}<span class="status-dot-pulse"></span>{/if}
     <span class="status-dot"></span>
   </span>
-  {label}
+  <span class="truncate">{label}</span>
 </a>
 
 <style>

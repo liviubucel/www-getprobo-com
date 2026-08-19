@@ -37,19 +37,19 @@ const menuId = "desktop-navigation-menu";
 
   <div
     data-hover-corridor
-    class="fixed top-12 left-1/2 z-10 h-7 w-[min(1120px,calc(100vw-40px))] -translate-x-1/2"
+    class="fixed top-12 left-1/2 z-10 h-7 w-[min(896px,calc(100vw-40px))] -translate-x-1/2"
     hidden
   ></div>
 
   <div
     id={menuId}
     data-menu-viewport
-    class="fixed top-16 left-1/2 z-10 w-[min(1120px,calc(100vw-40px))] pt-3"
+    class="fixed top-16 left-1/2 z-10 w-[min(896px,calc(100vw-40px))] pt-3"
     hidden
   >
     <div
       data-menu-shell
-      class="bg-secondary relative h-[min(29.5rem,calc(100vh-5.75rem))] overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_var(--color-border-low),0_16px_32px_rgba(186,193,122,0.2)]"
+      class="bg-secondary relative h-111 overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_var(--color-border-low),0_16px_32px_rgba(186,193,122,0.2)]"
     >
       {
         groups.map((group, index) => (
@@ -58,27 +58,27 @@ const menuId = "desktop-navigation-menu";
             data-menu-index={index}
             role="group"
             aria-labelledby={`${menuId}-trigger-${index}`}
-            class="absolute inset-0 grid grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)] items-start gap-5 p-3"
+            class="absolute inset-0 grid grid-cols-2 items-start gap-8 p-3"
             hidden
           >
-            <div class="flex min-w-0 flex-col items-start gap-6 self-start overflow-hidden px-2 py-5">
+            <div class="flex min-w-0 flex-col items-start gap-6 self-start px-2 py-5">
               {group.showLabel !== false && (
                 <p class="text-muted-foreground px-3 text-sm font-medium">
                   {group.label}
                 </p>
               )}
-              <div class="grid w-full grid-cols-2 gap-x-2.5 gap-y-1.5">
+              <div class="flex w-full flex-col">
                 {group.items.map((item) => (
                   <a
                     href={item.href}
-                    class="navigation-menu-link relative isolate flex min-h-19 min-w-0 items-start gap-3 rounded-2xl p-3 outline-none"
+                    class="navigation-menu-link relative isolate flex min-w-0 items-center gap-4 rounded-2xl p-3 outline-none"
                   >
-                    <span class="grid size-11 shrink-0 place-items-center rounded-[10px] border">
+                    <span class="grid size-12 shrink-0 place-items-center rounded-[10px] border">
                       <MenuIcon name={item.icon} />
                     </span>
-                    <span class="min-w-0 pt-0.5 text-[14.8px] leading-5">
-                      <span class="block font-semibold">{item.label}</span>
-                      <span class="text-muted-foreground mt-0.5 block text-[12.8px] leading-[17px]">
+                    <span class="min-w-0 text-base leading-6">
+                      <span class="block truncate font-semibold">{item.label}</span>
+                      <span class="text-muted-foreground block truncate">
                         {item.description}
                       </span>
                     </span>
@@ -307,8 +307,7 @@ const menuId = "desktop-navigation-menu";
         this.hideTimer = null;
       }
 
-      const previousIndex = this.activeIndex;
-      if (previousIndex === index && this.dataset.open === "true") return;
+      if (this.activeIndex === index && this.dataset.open === "true") return;
 
       this.loadPanelMedia(index);
       document.dispatchEvent(new CustomEvent("zbt:main-menu-open"));
@@ -385,9 +384,7 @@ const menuId = "desktop-navigation-menu";
         return;
       }
 
-      if (token !== this.transitionToken || this.activeIndex !== nextIndex) {
-        return;
-      }
+      if (token !== this.transitionToken || this.activeIndex !== nextIndex) return;
 
       visiblePanel.hidden = true;
       this.showPanel(nextPanel);
@@ -511,11 +508,22 @@ const menuId = "desktop-navigation-menu";
 
   .navigation-feature-halo {
     position: absolute;
-    inset: 18% -20% -38%;
+    bottom: -52px;
+    left: 50%;
+    z-index: 2;
     display: block;
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 45%, rgba(147, 201, 38, 0.2), transparent 62%);
+    width: 783px;
+    height: 783px;
+    transform: translateX(-50%);
     pointer-events: none;
+  }
+
+  .navigation-feature-halo::before {
+    position: absolute;
+    inset: -21.93%;
+    content: "";
+    background: url("/navigation/ellipse.svg") center / 100% 100% no-repeat;
+    transform: rotate(180deg) scaleY(-1);
   }
 
   @media (prefers-reduced-motion: reduce) {

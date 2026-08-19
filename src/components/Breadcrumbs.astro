@@ -11,10 +11,8 @@ interface Props {
 
 const { items, class: className } = Astro.props;
 
-// Build the full breadcrumb list with Home at the start
-const breadcrumbs: BreadcrumbItem[] = [{ label: "Home", href: "/" }, ...items];
+const breadcrumbs: BreadcrumbItem[] = [{ label: "Acasă", href: "/" }, ...items];
 
-// Generate structured data for SEO
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -39,7 +37,7 @@ const structuredData = {
       breadcrumbs.map((crumb, index) => {
         const isLast = index === breadcrumbs.length - 1;
         return (
-          <li class="flex items-center gap-1.5">
+          <li class="flex min-w-0 max-w-full items-center gap-1.5">
             {index > 0 && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,18 +49,18 @@ const structuredData = {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="text-quaternary"
+                class="text-quaternary shrink-0"
                 aria-hidden="true"
               >
                 <path d="m9 18 6-6-6-6" />
               </svg>
             )}
             {isLast || !crumb.href ? (
-              <span class="text-muted-foreground">{crumb.label}</span>
+              <span class="text-muted-foreground min-w-0 break-words">{crumb.label}</span>
             ) : (
               <a
                 href={crumb.href}
-                class="text-quaternary hover:text-primary transition-colors"
+                class="text-quaternary hover:text-primary min-w-0 break-words transition-colors"
               >
                 {crumb.label}
               </a>

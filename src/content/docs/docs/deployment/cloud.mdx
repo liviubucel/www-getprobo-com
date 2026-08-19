@@ -1,76 +1,85 @@
 ---
-title: Probo Cloud
-description: Probo Cloud is the managed offering with EU and US data regions, Probo-operated hosting, backups, and security controls, plus shared responsibilities.
+title: ZebraByte Cloud
+description: ZebraByte Cloud is the SaaS delivery model for the compliance platform, with ZebraByte-operated infrastructure, updates, backups, security controls and shared customer responsibilities.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-**Probo Cloud** is the managed offering. Probo hosts the platform, ships updates, and operates backups and security controls. It is intended for teams that want to use Probo without operating the underlying infrastructure.
+**ZebraByte Cloud** is the production delivery model for the platform. ZebraByte hosts and operates the application, ships updates and security fixes, and manages the underlying platform infrastructure so customers and professional advisers can focus on the compliance program rather than application operations.
 
-## Regions
+ZebraByte is not distributed as an open-source or customer-operated self-hosted edition.
 
-Choose a data region when your organization is onboarded:
+## Who can use ZebraByte Cloud
 
-| Region | Console                              |
-| ------ | ------------------------------------ |
-| **EU** | [eu.probo.com](https://eu.probo.com) |
-| **US** | [us.probo.com](https://us.probo.com) |
+The same SaaS platform supports several operating models:
 
-Your organization’s data is stored in the selected region. Customer organizations are logically isolated on shared regional infrastructure.
+- **Companies and internal teams** can run their own compliance program.
+- **Professional advisers** such as lawyers, DPOs, GRC consultants and compliance specialists can use the platform as the operating environment for client work.
+- **Managed Compliance customers** can have ZebraByte specialists run more of the compliance workload on the same platform.
 
-## What Probo operates
+## What ZebraByte operates
+
+At platform level, ZebraByte is responsible for areas such as:
 
 - application hosting and platform updates;
-- regional data storage and backups;
-- infrastructure monitoring and maintenance;
-- network, encryption, and secret-management controls.
+- infrastructure maintenance and security patching;
+- platform data storage and backup controls;
+- service monitoring and operational maintenance;
+- network, encryption and secret-management controls used by the SaaS service;
+- the platform integration and automation layer.
+
+Exact contractual commitments, availability, recovery objectives, retention and customer-specific controls are governed by the applicable ZebraByte service agreement and Compliance Portal material.
 
 ## Shared responsibility
 
-| Probo                                                              | Your organization                                                            |
-| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Hosting, updates, backups, infrastructure security, and monitoring | Users, roles, SSO/SCIM setup, integrations, compliance content, and evidence |
-| Protecting the managed platform and its service credentials        | Deciding which integrations to connect and who has administrative access     |
+| **ZebraByte platform responsibilities** | **Customer / professional responsibilities** |
+| --- | --- |
+| Hosting, updates, platform backups, infrastructure security and service monitoring | Users, roles, SSO/SCIM configuration, business approvals and appropriate use of the platform |
+| Protecting platform infrastructure and service credentials | Deciding which integrations to authorize and who receives administrative access |
+| Maintaining the SaaS application and supported integration layer | Providing accurate organizational information, evidence and control ownership |
+| Operating platform-level recovery and security processes | Operating the customer's own systems, source data and business continuity obligations |
 
-Contractual availability, recovery, retention, and security details are provided through customer agreements and the [Compliance Portal](https://compliance.probo.com).
+With **Managed Compliance**, ZebraByte can additionally take responsibility for agreed compliance operations such as evidence coordination, policy work, remediation tracking and audit preparation. That service-layer responsibility is separate from the cloud infrastructure boundary above.
 
 ## Security and privacy
 
 <CardGrid>
   <LinkCard
     title="Infrastructure security"
-    description="Review high-level security controls and tenant isolation"
+    description="Review high-level platform security controls and isolation boundaries"
     href="/docs/deployment/infrastructure-security"
   />
   <LinkCard
     title="Integration credentials"
-    description="How API keys and OAuth tokens are stored and used"
+    description="How connected-system API keys and OAuth tokens are handled"
     href="/docs/product/access-review/integration-security"
+  />
+  <LinkCard
+    title="Compliance Portal"
+    description="Share approved security and compliance information through controlled access"
+    href="/docs/product/compliance-portal"
   />
 </CardGrid>
 
-## Cloud vs self-hosting
+## Cloud SaaS vs historical deployment references
 
-|                                 | **Probo Cloud**            | **Self-hosted**                  |
-| ------------------------------- | -------------------------- | -------------------------------- |
-| **Who operates infrastructure** | Probo                      | Your team                        |
-| **Upgrades**                    | Managed by Probo           | Managed by your team             |
-| **Region choice**               | EU or US                   | Any hosting location you control |
-| **Best when**                   | You want a managed service | You need full control of hosting |
+The docs include preserved Docker Compose and Kubernetes pages from the platform's technical lineage. They document useful architecture assumptions around databases, object storage, secrets, ingress, monitoring and upgrades.
+
+Those pages are **reference material only**. ZebraByte customers do not clone a repository, install a Helm chart or operate the application stack themselves.
 
 <CardGrid>
   <LinkCard
-    title="Docker Compose"
-    description="Single-node deployment with all services included"
-    href="/docs/deployment/self-hosting/docker-compose"
+    title="Architecture & migration reference"
+    description="Review the preserved deployment lineage without treating it as a ZebraByte installation path"
+    href="/docs/deployment/self-hosting"
   />
   <LinkCard
-    title="Kubernetes"
-    description="Scalable deployment with Helm and managed services"
-    href="/docs/deployment/self-hosting/kubernetes"
+    title="Choose an operating model"
+    description="Compare self-service, professional/adviser use and Managed Compliance"
+    href="/docs/product/getting-started/choose-deployment"
   />
 </CardGrid>
 
-## Get Probo Cloud
+## Get ZebraByte Cloud
 
-To discuss region choice, onboarding, or a security review, [contact us](/contact).
+To discuss onboarding, professional use, security review requirements or Managed Compliance, [contact ZebraByte](/contact).

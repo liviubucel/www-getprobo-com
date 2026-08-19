@@ -1,96 +1,157 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+import WallCard from "../components/WallCard.astro";
 
 const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
+
+const reviews = (await getCollection("wall"))
+  .filter((post) => post.id.startsWith("zebrabyte-"))
+  .sort((a, b) => {
+    const featuredDiff = Number(Boolean(b.data.featured)) - Number(Boolean(a.data.featured));
+    if (featuredDiff !== 0) return featuredDiff;
+    return (a.data.order ?? 999) - (b.data.order ?? 999);
+  });
 ---
 
 <Layout
-  title="Recenzii Clienți ZebraByte"
-  description="Recenzii ZebraByte și formular securizat pentru feedback, păstrate din website-ul anterior și integrate în experiența Probo."
+  title="Recenzii clienți ZebraByte"
+  description="Feedback și recenzii ZebraByte, împreună cu un formular securizat pentru clienții care vor să trimită o recenzie."
 >
-  <main class="container py-12 sm:py-20">
-    <header class="mx-auto mb-12 max-w-190 text-center">
-      <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Customer reviews</p>
-      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">Ce spun clienții ZebraByte</h1>
-      <p class="text-muted-foreground text-lg">Păstrăm recenziile reale ZebraByte și formularul prin care clienții pot trimite feedback. Wall-ul și testimonialele originale Probo rămân separat, integral.</p>
-    </header>
-
-    <section class="mx-auto mb-14 max-w-3xl rounded-2xl border bg-active p-6 sm:p-8">
-      <div class="flex items-start justify-between gap-4">
+  <main>
+    <section class="container pb-12 pt-24 sm:pb-20 sm:pt-32">
+      <div class="grid gap-10 border-b pb-12 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-20 sm:pb-16">
         <div>
-          <p class="font-medium">Diana Ruse</p>
-          <p class="text-muted-foreground mt-1 text-sm">Testimonial video · 5/5 · 16 Jul 2025</p>
+          <p class="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-[0.12em]">Customer reviews</p>
+          <h1 class="text-h2 sm:text-h1 font-medium text-balance">Feedback de la clienți ZebraByte.</h1>
         </div>
-        <span class="text-sm" aria-label="5 din 5 stele">★★★★★</span>
+        <div>
+          <p class="text-muted-foreground max-w-2xl text-lg leading-relaxed">
+            Păstrăm feedback-ul ZebraByte împreună cu sursa lui și separăm recenziile clienților
+            de materialele editoriale sau reference insights. Dacă ai lucrat cu noi, poți trimite
+            feedback prin formularul securizat de mai jos.
+          </p>
+          <div class="text-muted-foreground mt-6 flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs">
+            <span>{reviews.length} review-uri ZebraByte</span>
+            <span>surse păstrate</span>
+            <span>feedback moderat înainte de publicare</span>
+          </div>
+        </div>
       </div>
-      <p class="text-muted-foreground mt-6 text-sm leading-relaxed">
-        Testimonialul video original este păstrat în repo-ul ZebraByte sursă ca <code>/images/reviews/diana-ruse-testimonial.mp4</code>. Nu îl înlocuim cu media generată sau cu alt client; fișierul binar trebuie transferat 1:1 înainte de publicarea clipului în acest repo.
-      </p>
     </section>
 
-    <div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-      <section class="space-y-4">
-        <h2 class="text-h3 font-medium">Recenziile sunt deja pe site</h2>
-        <p class="text-muted-foreground leading-relaxed">Homepage-ul și pagina Love from Customers includ feedback ZebraByte din sursele păstrate în website-ul anterior, iar dedesubt păstrăm și sliderul complet de testimoniale Probo cu fotografiile și citatele originale.</p>
-        <div class="grid gap-3 pt-3">
-          <a href="/love-from-customer" class="rounded-xl border p-5 hover:bg-subtle"><strong>Love from Customers</strong><p class="text-muted-foreground mt-2 text-sm">ZebraByte reviews + customer wall și testimoniale Probo.</p></a>
-          <a href="/stories" class="rounded-xl border p-5 hover:bg-subtle"><strong>Stories</strong><p class="text-muted-foreground mt-2 text-sm">Studii de caz ZebraByte + biblioteca Probo păstrată.</p></a>
-        </div>
-      </section>
-
-      <section class="rounded-2xl border p-6 sm:p-8">
-        <h2 class="mb-2 text-2xl font-medium">Lasă o recenzie</h2>
-        <p class="text-muted-foreground mb-7 text-sm">Formularul folosește același endpoint securizat ZebraByte cu Turnstile și Email Service.</p>
-
-        <form id="review-form" class="space-y-5">
-          <input type="hidden" name="service" value="Altceva" />
-          <input type="hidden" name="company" value="Customer review" />
-          <input type="hidden" name="phone" value="" />
-
-          <label class="block space-y-2 text-sm font-medium">
-            <span>Nume *</span>
-            <input name="name" required maxlength="100" autocomplete="name" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
-          </label>
-
-          <label class="block space-y-2 text-sm font-medium">
-            <span>Email *</span>
-            <input name="email" type="email" required maxlength="254" autocomplete="email" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
-          </label>
-
-          <fieldset>
-            <legend class="mb-2 text-sm font-medium">Rating *</legend>
-            <div class="flex gap-2">
-              {[1,2,3,4,5].map((rating) => (
-                <label class="cursor-pointer">
-                  <input class="peer sr-only" type="radio" name="rating" value={rating} required />
-                  <span class="peer-checked:bg-active grid size-10 place-items-center rounded-lg border">{rating}</span>
-                </label>
-              ))}
+    <section class="container pb-12 sm:pb-24">
+      <div class="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-16">
+        <div>
+          <div class="mb-8 flex items-end justify-between gap-6 border-b pb-5">
+            <div>
+              <p class="text-muted-foreground mb-2 text-sm font-medium uppercase tracking-wide">Published feedback</p>
+              <h2 class="text-h3 font-medium">Recenzii ZebraByte</h2>
             </div>
-          </fieldset>
+            <span class="text-muted-foreground hidden font-mono text-xs sm:block">CUSTOMER / SOURCE</span>
+          </div>
 
-          <label class="block space-y-2 text-sm font-medium">
-            <span>Recenzia ta *</span>
-            <textarea id="review-text" required maxlength="2000" rows="5" class="bg-level-0 w-full rounded-lg border px-3 py-2.5"></textarea>
-          </label>
+          <div class="columns-1 gap-5 md:columns-2">
+            {reviews.map((post) => <WallCard post={post} />)}
+          </div>
+        </div>
 
-          <input type="hidden" name="message" id="review-message" />
+        <aside class="lg:sticky lg:top-24">
+          <section class="border p-6 sm:p-8">
+            <div class="mb-8 border-b pb-6">
+              <p class="text-muted-foreground mb-2 font-mono text-xs">REVIEW / SUBMISSION</p>
+              <h2 class="text-h3 mb-3 font-medium">Lasă o recenzie</h2>
+              <p class="text-muted-foreground text-sm leading-relaxed">
+                Feedback-ul este verificat înainte de publicare. Formularul folosește Turnstile
+                și endpoint-ul securizat ZebraByte.
+              </p>
+            </div>
 
-          <label class="flex items-start gap-3 text-sm">
-            <input class="mt-1" type="checkbox" name="consent" value="yes" required />
-            <span class="text-muted-foreground">Sunt de acord ca feedback-ul și datele furnizate să fie procesate pentru verificarea și publicarea recenziei, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.</span>
-          </label>
+            <form id="review-form" class="space-y-5">
+              <input type="hidden" name="service" value="Altceva" />
+              <input type="hidden" name="company" value="Customer review" />
+              <input type="hidden" name="phone" value="" />
 
-          <div
-            data-turnstile-container
-            data-sitekey={turnstileSiteKey}
-            aria-label="Verificare de securitate"
-          ></div>
-          <div id="review-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
-          <button id="review-submit" type="submit" class="bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium disabled:opacity-50">Trimite recenzia</button>
-        </form>
-      </section>
-    </div>
+              <label class="block space-y-2 text-sm font-medium">
+                <span>Nume *</span>
+                <input name="name" required maxlength="100" autocomplete="name" class="bg-level-0 w-full border px-3 py-2.5" />
+              </label>
+
+              <label class="block space-y-2 text-sm font-medium">
+                <span>Email *</span>
+                <input name="email" type="email" required maxlength="254" autocomplete="email" class="bg-level-0 w-full border px-3 py-2.5" />
+              </label>
+
+              <fieldset>
+                <legend class="mb-3 text-sm font-medium">Rating *</legend>
+                <div class="grid grid-cols-5 border">
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <label class="cursor-pointer border-r last:border-r-0">
+                      <input class="peer sr-only" type="radio" name="rating" value={rating} required />
+                      <span class="peer-checked:bg-level-3 peer-checked:text-invert grid h-11 place-items-center text-sm transition-colors">{rating}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <label class="block space-y-2 text-sm font-medium">
+                <span>Recenzia ta *</span>
+                <textarea id="review-text" required maxlength="2000" rows="6" class="bg-level-0 w-full border px-3 py-2.5"></textarea>
+              </label>
+
+              <input type="hidden" name="message" id="review-message" />
+
+              <label class="flex items-start gap-3 border-y py-4 text-sm">
+                <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+                <span class="text-muted-foreground leading-relaxed">
+                  Sunt de acord ca feedback-ul și datele furnizate să fie procesate pentru
+                  verificarea și publicarea recenziei, conform <a class="underline underline-offset-4" href="/privacy">politicii de confidențialitate</a>.
+                </span>
+              </label>
+
+              <div
+                data-turnstile-container
+                data-sitekey={turnstileSiteKey}
+                aria-label="Verificare de securitate"
+              ></div>
+
+              <div id="review-status" class="hidden border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+
+              <button id="review-submit" type="submit" class="bg-primary text-primary-foreground w-full px-5 py-3 text-sm font-medium disabled:opacity-50">
+                Trimite recenzia
+              </button>
+            </form>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="bg-active py-12 sm:py-20">
+      <div class="container grid gap-10 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wide">More context</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium">Recenzii, reference insights și stories au roluri diferite.</h2>
+          <p class="text-muted-foreground text-lg leading-relaxed">
+            Pe această pagină afișăm feedback atribuit clienților ZebraByte. Biblioteca extinsă
+            păstrează separat și materialele de referință ale platformei, iar Stories oferă
+            context editorial și studii de caz.
+          </p>
+        </div>
+
+        <div class="border-y">
+          <a href="/love-from-customer" class="group grid gap-3 border-b py-6 sm:grid-cols-[0.7fr_1.3fr_auto] sm:items-center sm:gap-8">
+            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Feedback & Reference Insights</h3>
+            <p class="text-muted-foreground leading-relaxed">Biblioteca completă de feedback și material editorial de referință, cu provenance separat.</p>
+            <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
+          </a>
+          <a href="/stories" class="group grid gap-3 py-6 sm:grid-cols-[0.7fr_1.3fr_auto] sm:items-center sm:gap-8">
+            <h3 class="text-h5 font-medium group-hover:underline group-hover:underline-offset-4">Stories</h3>
+            <p class="text-muted-foreground leading-relaxed">Studii de caz și materiale editoriale despre probleme, procese și rezultate.</p>
+            <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>
 

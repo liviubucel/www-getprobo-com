@@ -1,0 +1,30 @@
+/* Shared responsive corrections found during the mobile design audit. */
+@media (max-width: 639px) {
+  /*
+   * Several ZebraByte security pages use a narrow index gutter plus a content
+   * column on mobile, then expand to three columns at sm+. Keep the third
+   * child (description) aligned with the title instead of letting CSS Grid
+   * auto-place it back into the narrow index gutter on the next row.
+   */
+  [class~="grid-cols-[52px_1fr]"] > :nth-child(3),
+  [class~="grid-cols-[56px_1fr]"] > :nth-child(3) {
+    grid-column: 2;
+  }
+}
+
+/*
+ * Inherited editorial content includes comparison tables and long code blocks.
+ * Keep those scrollable inside the article rather than widening the entire
+ * mobile viewport. This lives outside the protected Probo global stylesheet.
+ */
+.prose table,
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose table {
+  display: block;
+  overscroll-behavior-inline: contain;
+}

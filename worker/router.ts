@@ -27,11 +27,12 @@ const localizedResponseTtlSeconds = 60 * 60 * 24 * 7;
 // These pages are authored natively in Romanian. Returning the static asset body
 // directly keeps Cloudflare streaming intact and lets the browser discover CSS,
 // images and scripts immediately instead of waiting for a full HTML translation pass.
+// Blog listing/category/pagination pages are intentionally excluded because they
+// mix Romanian UI with inherited English article metadata that still needs localization.
 const nativeRomanianHtmlPaths = new Set([
   "/",
   "/hub",
   "/hub/compliance-recommender",
-  "/blog",
   "/changelog",
   "/tools",
   "/contact",
@@ -49,8 +50,6 @@ function normalizedPathname(pathname: string): string {
 function isNativeRomanianHtmlPath(pathname: string): boolean {
   const normalized = normalizedPathname(pathname);
   if (nativeRomanianHtmlPaths.has(normalized)) return true;
-  if (/^\/blog\/page\/\d+$/i.test(normalized)) return true;
-  if (/^\/blog\/categorie\/[^/]+$/i.test(normalized)) return true;
 
   const article = normalized.match(/^\/blog\/([^/]+)$/i);
   if (article?.[1] && zebrabyteBlogSlugs.has(decodeURIComponent(article[1]))) return true;

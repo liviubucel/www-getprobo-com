@@ -1,6 +1,6 @@
 ---
 title: "How Helix-DB became enterprise-ready with SOC 2"
-description: "How Helix-DB used Probo to become SOC 2 Type 2 audit-ready in weeks—without slowing engineering—so enterprise deals could move forward."
+description: "Reference case study: how a database infrastructure startup formalized security and became SOC 2 Type 2 audit-ready without turning engineers into compliance operators."
 date: 2026-05-05
 impacts:
   - title: SOC 2 Type 2
@@ -19,100 +19,83 @@ company:
   about: Helix-DB is a graph database built for modern data workloads—combining graph queries, vector search, and full-text search on object storage for large-scale, high-performance retrieval.
 ---
 
-Helix-DB had enterprise customers ready to sign.
+> **Reference case study.** This material preserves a real SOC 2 journey as an example of how a growing infrastructure company can use a structured compliance platform and expert guidance. Helix-DB is not represented as a ZebraByte customer.
 
-But they were blocked on one thing: **SOC 2**.
+Helix-DB had enterprise prospects ready to move forward, but formal security assurance had become a gating requirement.
 
-At the time, Helix-DB was moving fast, shipping a new enterprise product, onboarding users, and scaling infrastructure.
-
-But like most open-source-first companies, compliance hadn't caught up yet.
-
-They needed a SOC 2 Type 2 report, without losing momentum or getting dragged into weeks of admin and documentation.
+At the same time, the company was shipping product, onboarding users and scaling infrastructure. The challenge was to prepare for SOC 2 Type 2 without converting a small engineering team into a compliance department.
 
 ## About Helix-DB
 
-[**Helix-DB**](https://www.helix-db.com/) is a graph database built for modern data workloads.
+[Helix-DB](https://www.helix-db.com/) is a graph database for modern data workloads. It combines graph queries, vector search and full-text search while using object storage for large-scale retrieval.
 
-It combines:
-
-- graph queries
-- vector search
-- full-text search
-
-All natively, and all built on object storage for large-scale, high-performance retrieval.
-
-The company grew through **open-source adoption**, with developers pulling Helix-DB into production before any traditional enterprise motion existed.
+The company grew through developer adoption and later began receiving interest from larger organizations. That transition is common for infrastructure products: technical adoption can happen before the formal trust and procurement layer exists.
 
 ## The inflection point
 
-As usage grew, so did inbound interest from mid-market and enterprise companies.
+As enterprise interest increased, potential customers began asking for formal assurance around controls, operations and governance.
 
-But a lot of deals hit the same blocker:
+Helix-DB therefore needed more than a technically secure architecture. It needed a security program that could be demonstrated consistently to customers and auditors.
 
-_“Come back when you’re SOC 2 compliant.”_
+The gap was not necessarily a lack of security intent. It was the difference between informal practice and a documented, auditable operating model.
 
-Helix-DB had demand.
+## The operational reality
 
-They just didn’t have the trust layer enterprises needed.
+Like many early-stage technical teams, the company had pieces of the security system already in place, but not every process had the maturity expected by an enterprise buyer.
 
-## The reality
+Areas requiring formalization included:
 
-Under the hood, Helix-DB was still operating like a fast-moving, early-stage startup:
+- monitoring and alerting;
+- backup automation and restore testing;
+- access-control governance;
+- incident-response procedures;
+- policy ownership;
+- repeatable evidence collection.
 
-- Monitoring existed, but no real alerting
-- Backups were manual
-- Access control was informal
-- No formal incident response process
-
-Processes were there, but not packaged in a way that enterprise buyers could trust.
+These are exactly the areas where a compliance platform can create leverage: not by inventing security on behalf of the engineering team, but by turning technical reality into tracked controls, evidence, owners and recurring tasks.
 
 ## Rebuilding for enterprise
 
-At the same time Helix-DB was building its enterprise product, they rebuilt their infrastructure and security posture from the ground up.
+Alongside its enterprise product, Helix-DB strengthened its infrastructure and security posture with measures such as:
 
-They introduced:
+- dedicated enterprise architecture on AWS;
+- isolated customer environments;
+- automated backups and tested recovery procedures;
+- centralized logging and monitoring;
+- stronger access controls;
+- formal internal security processes.
 
-- A dedicated enterprise architecture on AWS
-- Isolated, per-customer environments (VPCs, clusters, storage)
-- Automated backups and tested restoration procedures
-- Centralized logging and monitoring with alerting
-- Formalized access control and internal processes
+The goal was not bureaucracy. It was to make security **visible, reliable and auditable**.
 
-This wasn’t about adding layers of bureaucracy.
+## From informal controls to audit readiness
 
-It was about making what already worked **visible, reliable, and auditable**.
+Within weeks, the company had a clearer production security architecture, documented controls, policies and evidence, and a structured path toward SOC 2 Type 2.
 
-> We had enterprise customers ready to move forward, but compliance was the blocker. We needed SOC 2 Type 2 fast, without slowing down the team or turning engineers into compliance people.
+The reference engagement shows the benefit of keeping expert guidance close to the software workflow. When teams can quickly distinguish a material requirement from a low-value compliance task, they spend less time interpreting frameworks and more time fixing the issues that matter.
 
-— **Xavier Cochran**, founder of Helix-DB
+For ZebraByte, that is the role split between the cloud platform and the service layer:
 
-## From “not ready” to audit-ready
+- the platform provides the system of record, automation, mappings, evidence and workflows;
+- a company or adviser can operate those capabilities directly;
+- ZebraByte Managed Compliance can add hands-on ownership when the organization prefers an expert-led model.
 
-Within weeks, Helix-DB had:
+## Unlocking enterprise conversations
 
-- A production-grade enterprise architecture
-- Documented, enforced security controls
-- Audit-ready policies and evidence
-- A clear path to SOC 2 Type 2 completion
+With formal compliance no longer blocking procurement, Helix-DB could move enterprise conversations forward, answer security reviews more confidently and position its infrastructure as production-ready for larger customers.
 
-> We didn’t have time to figure out compliance ourselves. Probo told us exactly what mattered, what didn’t, and helped us go from zero to audit-ready without slowing down the team.
-
-— **Xavier Cochran**, founder of Helix-DB
-
-## Unlocking enterprise
-
-With compliance no longer a blocker, Helix-DB could:
-
-- move forward with enterprise deals
-- engage security teams confidently
-- and position their infrastructure as production-ready
-
-Instead of slowing them down, compliance became a **growth enabler**.
-
-They recently launched [Helix Enterprise](https://www.helix-db.com/): "a horizontally distributed graph database that scales better and cheaper than anything else on the market."
+Compliance in this context becomes a growth enabler because it reduces uncertainty for the buyer. The company can show not only what security controls exist, but also how they are governed and reviewed.
 
 ## The takeaway
 
-Helix-DB didn’t “pause to get compliant.”
+Helix-DB did not need to stop product development in order to "do compliance." The more useful pattern was to strengthen the same infrastructure and operational practices needed for enterprise reliability, then organize them into an auditable program.
 
-They used compliance as a forcing function to become enterprise-ready, while continuing to ship.
+A similar technical company can apply the same sequence:
+
+1. identify the enterprise requirement creating commercial friction;
+2. map existing controls and operational practices;
+3. close material security gaps;
+4. centralize policies, evidence, risks and ownership;
+5. automate recurring evidence and reviews;
+6. prepare the audit from that live system rather than a separate compliance project.
+
+The central lesson is that **good compliance can be a forcing function for enterprise maturity without becoming a brake on engineering velocity.**

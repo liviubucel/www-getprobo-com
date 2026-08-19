@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import "../styles/mobile-audit.css";
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -49,7 +50,6 @@ const geistStylesheet =
     <title>{seoTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href={geistStylesheet} as="style" />
     <link
       href={geistStylesheet}
       rel="stylesheet"

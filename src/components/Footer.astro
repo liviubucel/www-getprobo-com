@@ -35,17 +35,21 @@ const menus = [
   {
     label: "Conformitate și juridic",
     items: [
+      { label: "Centru juridic", href: "/legal" },
+      { label: "Securitate ZebraByte", href: "/security" },
       { label: "Conformitate gestionată", href: "/managed-compliance" },
-      { label: "Platforma de conformitate", href: "/compliance-portal" },
+      { label: "Platforma GRC", href: "/compliance-platform" },
+      { label: "Trust Center", href: "/compliance-portal" },
       { label: "SOC 2", href: "/soc2" },
       { label: "ISO/IEC 27001", href: "/iso-27001" },
       { label: "GDPR și confidențialitate", href: "/gdpr" },
       { label: "NIS2", href: "/nis2" },
       { label: "Accesibilitate", href: "/accessibility" },
-      { label: "Centru de încredere", href: "https://trust.zebrabyte.ro" },
       { label: "Politica privind cookie-urile", href: "/cookie-policy" },
       { label: "Politica de confidențialitate", href: "/privacy" },
       { label: "Termeni și condiții", href: "/terms" },
+      { label: "Acord de prelucrare a datelor (DPA)", href: "/dpa" },
+      { label: "SLA găzduire", href: "/legal/hosting-sla" },
     ],
   },
 ];
@@ -66,13 +70,13 @@ type Props = {
       <Newsletter variant="footer" />
     </div>
 
-    <div class="grid grid-cols-2 gap-6 text-xs sm:grid-cols-3">
-      {menus.map((menu) => (
-        <div class="space-y-3">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 sm:gap-y-6">
+      {menus.map((menu, index) => (
+        <div class:list={["space-y-3", index === 2 && "col-span-2 sm:col-span-1"]}>
           <div class="mb-3 font-medium">{menu.label}</div>
-          <ul class="space-y-3">
+          <ul class:list={["space-y-3", index === 2 && "columns-2 gap-x-8 sm:columns-1"]}>
             {menu.items.map((item) => (
-              <li>
+              <li class="break-inside-avoid">
                 <a href={item.href} class="text-tertiary-foreground text-sm hover:text-white hover:underline">
                   {item.label}
                 </a>

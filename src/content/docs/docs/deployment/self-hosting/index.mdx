@@ -1,26 +1,67 @@
 ---
-title: Self-hosting
-description: Compares Docker Compose and Kubernetes self-hosting architectures for Probo and lists operator responsibilities for security, backups, and upgrades.
+title: Architecture & Migration Reference
+description: Preserved Docker Compose and Kubernetes deployment-lineage documentation for architecture review and migration planning; ZebraByte itself is delivered as managed Cloud SaaS.
 ---
 
-Probo is distributed as a containerized application backed by PostgreSQL and S3-compatible object storage. A production deployment must provide durable data services, TLS, secrets, outbound email, backups, monitoring, and an upgrade process.
+import { Aside, LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-## Deployment models
+<Aside type="caution" title="Reference material — not a ZebraByte installation path">
+  ZebraByte is delivered as a managed Cloud SaaS platform and is not distributed
+  as open-source or self-hosted software. This section is intentionally preserved
+  because the earlier Docker and Kubernetes architecture remains useful for
+  migration planning, security analysis and understanding platform dependencies.
+</Aside>
 
-- **Docker Compose** is intended for a single host and smaller installations. The production compose definition in the Probo repository runs `probod` with PostgreSQL and SeaweedFS.
-- **Kubernetes** uses the Probo Helm chart and is better suited to operators that already manage Kubernetes, ingress, secrets, and persistent services.
+The platform lineage documented here used a containerized application backed by PostgreSQL and S3-compatible object storage. A production deployment of that architecture had to provide durable data services, TLS, secrets, outbound email, backups, monitoring and an upgrade process.
 
-The [Docker Compose](/docs/deployment/self-hosting/docker-compose) and [Kubernetes](/docs/deployment/self-hosting/kubernetes) pages contain installation procedures and can be consulted when you are ready to deploy.
+That information remains relevant when evaluating a migration into ZebraByte Cloud or reviewing historical security boundaries, but ZebraByte customers do not operate these components themselves.
 
-## Operator responsibilities
+## Preserved architecture models
 
-A self-hosted operator is responsible for:
+- **Docker Compose reference** documents the former single-host model and the services, secrets, persistence and network exposure that had to be managed by an operator.
+- **Kubernetes reference** documents the former Helm-based model and its dependencies on ingress, secrets, PostgreSQL, object storage, monitoring and cluster operations.
 
-- restricting access to the application, database, and object storage;
-- generating and rotating strong application and integration secrets;
+<CardGrid>
+  <LinkCard
+    title="Docker Compose reference"
+    description="Review the preserved single-host architecture, configuration, backup and security considerations"
+    href="/docs/deployment/self-hosting/docker-compose"
+  />
+  <LinkCard
+    title="Kubernetes reference"
+    description="Review the preserved Helm/Kubernetes architecture, data services, ingress and operational considerations"
+    href="/docs/deployment/self-hosting/kubernetes"
+  />
+</CardGrid>
+
+## What ZebraByte Cloud changes
+
+In ZebraByte Cloud, customers and professional advisers no longer have to operate the application stack. ZebraByte handles the platform-level responsibilities that a self-hosted operator previously had to manage, including infrastructure maintenance, application updates and platform operational controls.
+
+Your organization still controls its own compliance data, users, approvals, connected systems and business decisions. If you choose [Managed Compliance](/managed-compliance), ZebraByte can also take on more of the compliance-program workload itself.
+
+## Why keep these docs?
+
+The material is retained because it can still help technical teams:
+
+- identify data and service dependencies during migration;
+- understand former database and object-storage responsibilities;
+- map legacy environment/configuration concepts to a cloud transition;
+- review historical network, secrets and TLS assumptions;
+- understand how backups, monitoring and upgrade responsibilities changed when moving to SaaS;
+- perform architecture and threat-model analysis when integrating ZebraByte with existing systems.
+
+## Operator responsibilities in the historical model
+
+An operator of the earlier self-managed architecture was responsible for:
+
+- restricting access to the application, database and object storage;
+- generating and rotating application and integration secrets;
 - backing up PostgreSQL and stored files as one consistent system;
-- monitoring health, capacity, logs, and certificate expiry;
+- monitoring health, capacity, logs and certificate expiry;
 - testing upgrades and rollback procedures;
 - configuring email and identity services used by the organization.
 
-Review [configuration](/docs/deployment/configuration/overview) and [infrastructure security](/docs/deployment/infrastructure-security) before exposing a deployment to users.
+Those responsibilities are preserved here to make the architectural difference explicit; they are **not requirements for a ZebraByte Cloud customer**.
+
+For the current product, continue with [ZebraByte Cloud](/docs/deployment/cloud) or the [Cloud quickstart](/docs/product/getting-started/quickstart).

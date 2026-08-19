@@ -1,0 +1,102 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="SLA pentru găzduire și infrastructură"
+  description="Nivelul de serviciu aplicabil planurilor ZebraByte de găzduire sau infrastructură pentru care comanda confirmă în mod expres includerea acestui SLA."
+>
+  <h2>1. Aplicabilitate</h2>
+  <p>
+    Acest SLA se aplică numai serviciilor de găzduire web sau infrastructură pentru care
+    planul, comanda ori contractul Clientului indică includerea unui SLA ZebraByte.
+    Serviciile trial, beta, gratuite și componentele terțe neincluse expres nu sunt
+    acoperite.
+  </p>
+
+  <h2>2. Angajamentul de disponibilitate</h2>
+  <p>
+    Pentru serviciile eligibile, ZebraByte urmărește o disponibilitate de
+    <strong>99,9%</strong> în perioada de măsurare aplicabilă serviciului. Disponibilitatea
+    reprezintă timpul în care serviciul de bază poate răspunde cererilor valide din
+    internet, măsurat folosind monitorizarea ZebraByte și telemetria relevantă serviciului.
+  </p>
+  <p>
+    O întrerupere începe atunci când monitorizarea confirmă indisponibilitatea serviciului
+    acoperit și se termină când serviciul revine la funcționare. Evenimentele izolate la
+    nivelul unui ISP, dispozitiv, configurație sau aplicație a Clientului nu reprezintă
+    automat downtime al platformei ZebraByte.
+  </p>
+
+  <h2>3. Service credits</h2>
+  <p>
+    Dacă disponibilitatea unui serviciu eligibil scade sub 99,9% într-o perioadă de
+    facturare, Clientul poate solicita un credit aplicat taxei recurente pentru componenta
+    afectată:
+  </p>
+  <table>
+    <thead><tr><th>Disponibilitate</th><th>Credit</th></tr></thead>
+    <tbody>
+      <tr><td>99,0% – 99,89%</td><td>5%</td></tr>
+      <tr><td>98,0% – 98,99%</td><td>10%</td></tr>
+      <tr><td>95,0% – 97,99%</td><td>20%</td></tr>
+      <tr><td>90,0% – 94,99%</td><td>50%</td></tr>
+      <tr><td>sub 90,0%</td><td>100%</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Creditul maxim este taxa recurentă plătită pentru componenta afectată în perioada
+    respectivă și nu poate genera un sold în numerar. Cererea trebuie transmisă prin
+    canalul oficial de suport în maximum 30 de zile de la incident și să identifice
+    serviciul și intervalul reclamat.
+  </p>
+
+  <h2>4. Mentenanță</h2>
+  <p>
+    Mentenanța programată necesară pentru securitate, fiabilitate sau upgrade-uri nu este
+    considerată downtime dacă este anunțată în avans într-un interval rezonabil. Pentru
+    intervenții planificate cu impact material și durată estimată mai mare de 15 minute,
+    ZebraByte urmărește să comunice notificarea cu cel puțin 48 de ore înainte.
+    Intervențiile de urgență pentru securitate sau stabilitate pot necesita un termen mai
+    scurt.
+  </p>
+
+  <h2>5. Excluderi</h2>
+  <p>SLA-ul nu acoperă indisponibilitatea cauzată în principal de:</p>
+  <ul>
+    <li>configurații, cod, conținut, credențiale sau acțiuni aflate sub controlul Clientului;</li>
+    <li>suspendarea justificată pentru neplată, abuz, risc de securitate sau obligații legale;</li>
+    <li>servicii DNS, aplicații, API-uri, rețele sau furnizori terți care nu fac parte din componenta acoperită;</li>
+    <li>atacuri sau evenimente excepționale care depășesc măsurile rezonabile de protecție ale serviciului contractat;</li>
+    <li>forță majoră ori incidente de internet/routing în afara controlului rezonabil ZebraByte;</li>
+    <li>mentenanță programată sau intervenții de urgență excluse conform secțiunii 4.</li>
+  </ul>
+
+  <h2>6. Servicii administrate de Client</h2>
+  <p>
+    Dacă ZebraByte furnizează numai conectivitate, DNS, edge security sau o altă
+    componentă limitată, SLA-ul se aplică exclusiv acelei componente și nu disponibilității
+    aplicației, serverului sau stack-ului administrat de Client.
+  </p>
+
+  <h2>7. Remediu SLA</h2>
+  <p>
+    Pentru clienții business, service credit-ul prevăzut aici este remediul contractual
+    specific pentru nerespectarea angajamentului de disponibilitate, fără a limita
+    drepturile sau răspunderea care nu pot fi excluse prin lege ori prin contractul
+    principal.
+  </p>
+
+  <h2>8. Status și incidente</h2>
+  <p>
+    ZebraByte poate publica starea serviciilor și comunicări despre incidente pe pagina
+    sa publică de status. Datele de pe status page au rol operațional; determinarea finală
+    a eligibilității pentru credit se face pe baza evidențelor serviciului afectat.
+  </p>
+
+  <h2>9. Contact</h2>
+  <p>
+    Solicitările SLA se transmit prin canalul oficial de suport ZebraByte. Pentru aspecte
+    contractuale: <a href="mailto:legal@zebrabyte.co.uk">legal@zebrabyte.co.uk</a>.
+  </p>
+</LegalLayout>

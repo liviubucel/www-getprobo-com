@@ -1,84 +1,81 @@
 ---
-title: Choose a Deployment
-description: Compare Probo Cloud against self-hosting with Docker Compose or Kubernetes, and see what a production self-hosted deployment requires.
+title: Choose an Operating Model
+description: Compare ZebraByte Cloud self-service, professional/adviser use and ZebraByte Managed Compliance, with preserved deployment-lineage references for architecture and migration work.
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
 
-For most organizations, **Probo Cloud is the recommended starting point**. Choose self-hosting when a specific security, infrastructure, or data-location requirement makes operating Probo yourself necessary.
+ZebraByte is delivered as a **Cloud SaaS platform**. You do not choose between a ZebraByte cloud edition and an open-source/self-hosted edition; instead, you choose **who operates the compliance program and how much expert support you want**.
 
-## Make the decision
+## Choose the model that fits your organization
 
-Choose **Probo Cloud** if you want:
+### Self-service Cloud
 
-- a production service without operating application infrastructure;
-- updates and security patches applied by Probo;
-- managed backups, monitoring, availability, and incident response;
-- EU or US data residency;
-- new OAuth connectors to work without configuring provider credentials at the deployment level.
+Choose **ZebraByte Cloud** when your internal team wants to run the compliance program directly. ZebraByte operates the application infrastructure, updates, security controls, backups and platform availability while your organization manages its compliance content, users, integrations and evidence.
 
-Choose **self-hosting** if you require:
+This model is a good fit when you already have internal security, compliance or governance expertise and mainly need a structured system of record and automation layer.
 
-- a hosting location outside Probo Cloud's EU and US regions;
-- deployment inside a private network or an existing infrastructure boundary;
-- direct control over PostgreSQL, object storage, encryption keys, backups, and logs;
-- integration with your own ingress, secret management, monitoring, or recovery systems;
-- an internally operated platform—and a team prepared to maintain it.
+### Professional / adviser use
 
-Self-hosting transfers operational control to your organization, but it also transfers responsibility for availability, upgrades, security patches, backups, monitoring, and connector configuration.
+Consultants, lawyers, DPOs, GRC specialists and other professional advisers can use the same ZebraByte Cloud platform as the operating environment for compliance work delivered to clients.
 
-## Before you self-host
+This model is useful when the specialist wants software for:
 
-A production self-hosted deployment needs more than a running Probo container. Confirm that your team can provide and maintain:
+- framework and control management;
+- risk and vendor registers;
+- policy and evidence workflows;
+- audit preparation;
+- access reviews and integrations;
+- repeatable client delivery without maintaining a separate self-hosted stack.
 
-- PostgreSQL and S3-compatible object storage with coordinated backups;
-- HTTPS ingress, DNS, and certificate renewal;
-- stable encryption, cookie, signing, and password-pepper secrets;
-- outbound email and any required identity-provider configuration;
-- monitoring for application health, capacity, logs, and certificate expiry;
-- tested upgrade, rollback, restore, and incident-response procedures;
-- OAuth client credentials for each connector your organizations need.
+### ZebraByte Managed Compliance
 
-If these responsibilities are outside your team's scope, use Probo Cloud.
+Choose **Managed Compliance** when you want ZebraByte specialists to take on more of the work. The underlying product remains the same cloud platform, but ZebraByte can help operate the program: controls, policies, evidence, risk work, remediation tracking, audit preparation and recurring compliance activities.
 
-## Choose a self-hosted architecture
+The exact responsibility split depends on the engagement and framework.
 
-After deciding to self-host, choose the architecture that matches your operating environment:
+## Responsibility model
 
-|                        | **Docker Compose**                            | **Kubernetes**                                            |
-| ---------------------- | --------------------------------------------- | --------------------------------------------------------- |
-| **Use when**           | You need a straightforward single-host setup  | Your team already operates Kubernetes                     |
-| **Infrastructure**     | One host running the application and services | Cluster, ingress, secrets, and persistent data services   |
-| **Operational effort** | Lower initial complexity                      | More flexibility with greater operational complexity      |
-| **Production fit**     | Smaller installations with a capable host     | Environments requiring orchestration and managed services |
+| Area | **Self-service / Professional** | **Managed Compliance** |
+| --- | --- | --- |
+| Cloud infrastructure | ZebraByte | ZebraByte |
+| Platform updates and security | ZebraByte | ZebraByte |
+| Organization setup | Customer/adviser | Shared or ZebraByte-led |
+| Framework and control operation | Customer/adviser | Shared or ZebraByte-led |
+| Evidence collection | Customer/adviser with automation | Shared / ZebraByte coordinated |
+| Policies and remediation | Customer/adviser | Shared / ZebraByte supported |
+| Audit preparation | Customer/adviser | ZebraByte-supported |
+| Final business decisions and approvals | Customer | Customer |
 
-The local quickstart uses Docker Compose for evaluation. Do not treat its development defaults as a production configuration.
+## ZebraByte is not distributed as self-hosted software
 
-## Start your deployment
+ZebraByte does not provide an open-source edition or a supported customer-operated Docker/Kubernetes distribution. This avoids making each customer responsible for patching, secrets, database operations, object storage, monitoring, backups and upgrade compatibility.
+
+The documentation still preserves the platform's earlier Docker Compose and Kubernetes material as **technical lineage and migration reference**. It can help architects understand deployment assumptions, data services and historical operational boundaries, but those pages are not instructions for installing ZebraByte.
+
+## Start with ZebraByte Cloud
 
 <CardGrid>
   <LinkCard
-    title="Probo Cloud"
-    description="Review regions, managed operations, security, and shared responsibilities"
+    title="ZebraByte Cloud"
+    description="Review cloud delivery, platform responsibilities and security boundaries"
     href="/docs/deployment/cloud"
   />
   <LinkCard
-    title="Self-hosted quickstart"
-    description="Run Probo locally with Docker Compose"
+    title="Cloud quickstart"
+    description="Create an organization and start your first compliance framework"
     href="/docs/product/getting-started/quickstart"
   />
   <LinkCard
-    title="Docker Compose guide"
-    description="Plan and operate a production single-host deployment"
-    href="/docs/deployment/self-hosting/docker-compose"
+    title="Managed Compliance"
+    description="See the expert-led option when you do not want to operate the whole program internally"
+    href="/managed-compliance"
   />
   <LinkCard
-    title="Kubernetes guide"
-    description="Deploy Probo with Helm and managed infrastructure services"
-    href="/docs/deployment/self-hosting/kubernetes"
+    title="Architecture reference"
+    description="Review preserved Docker and Kubernetes deployment lineage for migration and architecture analysis"
+    href="/docs/deployment/self-hosting"
   />
 </CardGrid>
 
-Probo Cloud is provisioned through onboarding. To discuss region choice or security requirements, [contact Probo](/contact).
-
-After Probo is available, [set up your organization and first framework](/docs/product/getting-started/first-organization-and-framework).
+To discuss onboarding, professional use or Managed Compliance, [contact ZebraByte](/contact). After access is provisioned, [set up your organization and first framework](/docs/product/getting-started/first-organization-and-framework).

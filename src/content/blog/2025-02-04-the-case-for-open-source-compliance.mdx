@@ -1,62 +1,83 @@
 ---
-title: "The case for open-source compliance"
+title: "Platform lineage: the case for open-source compliance"
 date: 2025-02-04
-excerpt: "Why traditional compliance tools fail founders and how an open-source
-  approach fixes the industry's pricing, flexibility, and lock-in problems."
+excerpt: "A preserved editorial from the platform lineage on pricing, flexibility, ownership and lock-in in compliance software, with context for ZebraByte's current Cloud SaaS model."
 author:
   name: "Antoine Bouchardy"
 ogImage: "/blog/The_case_for_open_source_compliance.png"
 ---
 
-In our past experience, my cofounder & I faced a harsh reality with compliance
-tools:
+> **Platform-lineage editorial.** This article is preserved because the arguments around pricing, flexibility, data portability and vendor lock-in remain relevant to compliance software. ZebraByte today is delivered as a **Cloud SaaS platform**, not as an open-source or self-hosted product. The current ZebraByte model applies these lessons through product portability, professional/adviser access and an optional Managed Compliance service rather than through source-code distribution.
 
-- Basic functionality hidden behind a $10k paywall
-- Rigid, [one-size-fits-all solutions](/blog/2025-02-17-why-a-one-size-fit-all-solution-like-vanta-is-not-ideal) that are not tailored to your business
-- No guidance, leaving you guessing what you actually need to do
+The original argument started from a recurring problem encountered by founders evaluating compliance tools:
 
-That's why we are building Probo.
+- basic functionality hidden behind large annual contracts;
+- rigid, [one-size-fits-all solutions](/blog/2025-02-17-why-a-one-size-fit-all-solution-like-vanta-is-not-ideal) that do not reflect the business;
+- little practical guidance on what the company actually needs to implement;
+- escalating prices as more frameworks or entities are added.
 
-## The Compliance Tool Trap
+Those complaints are still useful when evaluating a modern compliance platform, even when the delivery model is SaaS.
 
-When building a new product, you're juggling dozens of priorities. Then
-suddenly, a customer asks for a [SOC 2](/blog/2025-10-28-what-is-soc2) report.
+## The compliance-tool trap
 
-1. You will take a 30 minutes sales call to get a price indexed on how desperate
-   you are
-2. You pay to access a 80 tasks board and 20 templates that are the same for a
-   F500 or a small company
-3. You invest time to complete this generic board list, and realize you have to
-   pay for an external auditor ontop of your tool
-4. As you grow and add new framework, the bill get insanely high for the exact
-   same templates and tasks.
+When building a new product, a team is already balancing dozens of priorities. Then an enterprise prospect asks for a [SOC 2](/blog/2025-10-28-what-is-soc2) report or another formal assurance requirement.
 
-Ultimately, you end up implementing measures you don't need, maintaining
-processes you barely understand, all while paying premium prices for basic
-functionality. After speaking with over 100 founders, one thing is clear:
-everyone feels extorted and locked into these platforms.
+A poor buying experience can look like this:
 
-## Time for a change: open-source compliance
+1. the company must take a sales call before it can understand the real commercial model;
+2. it buys access to a generic task board and template library that may be almost identical for a small startup and a much larger organization;
+3. the internal team completes a long list of tasks only to discover that the audit, remediation and specialist work sit outside the software subscription;
+4. as the organization adds frameworks, teams or entities, the recurring software bill grows while much of the underlying workflow remains the same.
 
-Here is our vision of how compliance should work:
+The result can be a compliance program full of controls the company does not understand, processes maintained for appearances rather than risk reduction, and data that becomes painful to move elsewhere.
 
-- **Core frameworks and templates should be free:** We’re making those tasks and
-  templates freely available to everyone. The fundamentals of compliance
-  shouldn't be locked behind paywalls.
+## What the open-source argument was trying to solve
 
-- **Complete data ownership:** Your compliance data belongs to you. You should
-  not be locked in a supplier that will end up charging you $100k+ as you grow
-  just because you can’t easily leave.
+The original platform lineage proposed open source as one answer to several structural problems in compliance software. The important ideas behind that proposal were broader than source availability itself.
 
-- **Build your own integrations instead of taking endless screenshots:** If an
-  integration is missing, feel free to build it and add it to the product. It
-  will save you time in the long run and benefit the whole community.
+### Core compliance knowledge should not depend on artificial scarcity
 
-- **Pay only for actual value-added services, with transparent pricing:** You
-  should be able to test the product before you buy. Our price will always be
-  fair, transparent and predictable.
+Framework requirements, common control patterns and policy concepts should be understandable before a company signs a large software contract. A buyer should know what a platform helps it do and where expert work is still required.
 
-<br />
+### Customers need meaningful control over their compliance data
 
-If you’re aligned with our vision and would like to contribute, please [reach
-out](/contact)!
+Risk registers, evidence, policies, vendors, audit records and control mappings can become deeply embedded in a platform. A good SaaS product should therefore make data ownership, exportability, retention and contractual boundaries clear rather than relying on lock-in.
+
+### Integrations should not become a permanent bottleneck
+
+Compliance programs touch identity providers, source control, cloud infrastructure, ticketing, HR, security tooling and many other systems. Customers and professional advisers need APIs and automation interfaces that let them connect the platform to their operating environment instead of taking endless screenshots.
+
+For ZebraByte, that principle is expressed through the cloud product's GraphQL, CLI, MCP, n8n and webhook interfaces rather than through asking customers to fork the application source.
+
+### Customers should pay for actual value
+
+A platform should separate the value of software automation from the value of expert execution. Some organizations want to operate the program themselves. Others want a professional adviser to run it. Others want ZebraByte to take on much of the work through Managed Compliance.
+
+That is why ZebraByte's current model supports:
+
+- **Self-service Cloud** for internal compliance and security teams;
+- **Professional / adviser use** for lawyers, DPOs, GRC consultants and other specialists working with client organizations;
+- **Managed Compliance** when the customer wants ZebraByte specialists to operate more of the controls, evidence, policy, remediation and audit-readiness workload.
+
+## Why ZebraByte is Cloud SaaS today
+
+Keeping the product in ZebraByte Cloud changes the operational responsibility boundary. Customers do not need to patch the application, maintain PostgreSQL or object storage, secure an ingress layer, test Helm upgrades or operate the platform's backup system.
+
+That allows the product team to provide one maintained service while still applying the useful principles behind the earlier open-source argument:
+
+- transparent product scope;
+- clear data responsibility;
+- strong APIs and integrations;
+- avoidance of unnecessary compliance busywork;
+- the ability to use the software directly or bring in expert help;
+- predictable ownership of the infrastructure and security boundary.
+
+The historical Docker and Kubernetes architecture is still documented in the [architecture and migration reference](/docs/deployment/self-hosting), but it is not offered as a current ZebraByte installation method.
+
+## The principle that remains
+
+The important question is not whether a compliance platform is open source, closed source or SaaS. The better question is whether the customer can understand what it is buying, control its information, integrate the system into real operations and choose how much expert support it needs.
+
+That principle remains part of ZebraByte's product direction even though the delivery model is now Cloud SaaS.
+
+If you want to evaluate the platform as a company, professional adviser or Managed Compliance customer, [contact ZebraByte](/contact).

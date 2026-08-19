@@ -1,5 +1,98 @@
 ---
-import ComparisonPage from "./probo-vs-vanta.astro";
+import Layout from "../../layouts/Layout.astro";
+import ArticleSchema from "../../components/schema/ArticleSchema.astro";
+
+const updated = "2026-08-18";
 ---
 
-<ComparisonPage />
+<Layout
+  title="ZebraByte vs Vanta: două modele pentru conformitate"
+  description="Comparație practică între un program ZebraByte administrat și o platformă de automatizare a conformității precum Vanta. Alege modelul potrivit pentru echipa ta."
+>
+  <ArticleSchema
+    title="ZebraByte vs Vanta: două modele pentru conformitate"
+    description="Comparație practică între un program ZebraByte administrat și o platformă de automatizare a conformității precum Vanta."
+    url="https://www.zebrabyte.ro/hub/zebrabyte-vs-vanta"
+    datePublished={updated}
+    dateModified={updated}
+  />
+
+  <main class="container my-10 sm:mt-20 sm:mb-28">
+    <article class="mx-auto max-w-[820px]">
+      <a href="/hub" class="text-muted-foreground hover:text-foreground mb-8 inline-flex text-sm transition-colors">← Hub</a>
+
+      <header class="mb-12">
+        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Comparație · actualizată august 2026</p>
+        <h1 class="text-h1 mb-5 font-medium">ZebraByte vs Vanta</h1>
+        <p class="text-muted-foreground max-w-3xl text-lg leading-relaxed">
+          Diferența utilă nu este „cine are mai multe funcții”, ci ce model vrei să cumperi: o platformă de automatizare pe care echipa ta o operează sau un program administrat în care implementarea, remedierea și menținerea dovezilor fac parte din serviciu.
+        </p>
+      </header>
+
+      <section class="mb-12">
+        <h2 class="text-h3 mb-4 font-medium">Pe scurt</h2>
+        <div class="overflow-x-auto rounded-lg border">
+          <table class="w-full min-w-[640px] text-left text-sm">
+            <thead class="bg-active">
+              <tr>
+                <th class="px-4 py-3 font-medium">Criteriu</th>
+                <th class="px-4 py-3 font-medium">ZebraByte</th>
+                <th class="px-4 py-3 font-medium">Vanta</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr>
+                <td class="px-4 py-3 font-medium">Model principal</td>
+                <td class="px-4 py-3 text-muted-foreground">Program administrat + platformă</td>
+                <td class="px-4 py-3 text-muted-foreground">Platformă de automatizare și monitorizare continuă</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Dovezi și controale</td>
+                <td class="px-4 py-3 text-muted-foreground">Colectare, organizare și lucru de implementare în cadrul programului</td>
+                <td class="px-4 py-3 text-muted-foreground">Automatizare, integrări și monitorizare continuă în platformă</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Implicarea echipei interne</td>
+                <td class="px-4 py-3 text-muted-foreground">Orientat spre delegarea unei părți mai mari din execuție</td>
+                <td class="px-4 py-3 text-muted-foreground">Depinde de modul în care organizația configurează platforma și serviciile asociate</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Potrivit când</td>
+                <td class="px-4 py-3 text-muted-foreground">Vrei un partener care să lucreze efectiv în programul de conformitate și securitate</td>
+                <td class="px-4 py-3 text-muted-foreground">Vrei o platformă matură pentru automatizarea programului și monitorizarea controalelor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="prose prose-neutral max-w-none mb-12">
+        <h2>Ce oferă Vanta în această comparație</h2>
+        <p>
+          Vanta își prezintă produsul ca o platformă pentru automatizarea conformității, colectarea automată a dovezilor și monitorizarea continuă a controalelor. Platforma include integrări, fluxuri de remediere și funcții pentru programe de conformitate și trust.
+        </p>
+        <p>
+          Asta înseamnă că Vanta trebuie evaluată ca o platformă serioasă de GRC/compliance automation, nu ca un simplu instrument de checklist. Oferta exactă, serviciile și pachetele se pot schimba, de aceea decizia comercială trebuie făcută pe baza scope-ului și ofertei curente primite de la fiecare furnizor.
+        </p>
+
+        <h2>Ce înseamnă modelul ZebraByte</h2>
+        <p>
+          ZebraByte poziționează conformitatea ca program administrat: evaluarea inițială, planul de remediere, controalele, documentele, dovezile și activitățile de securitate sunt urmărite într-un singur flux. Platforma este infrastructura de lucru; serviciul include și execuția necesară pentru a menține programul util în practică.
+        </p>
+
+        <h2>Cum alegi</h2>
+        <p>
+          Alege în funcție de cine va deține munca zilnică. Dacă ai deja o echipă de security/compliance care vrea automatizare și vizibilitate centralizată, compară atent capabilitățile platformelor. Dacă vrei să delegi o parte semnificativă din implementare și operare, evaluează explicit componenta de serviciu, responsabilitățile și rezultatele incluse.
+        </p>
+      </section>
+
+      <aside class="bg-active rounded-lg border p-6">
+        <h2 class="mb-2 text-lg font-medium">Compară pe scope-ul tău real</h2>
+        <p class="text-muted-foreground mb-5 text-sm leading-relaxed">
+          Spune-ne framework-ul, termenul, infrastructura și ce resurse ai intern. Îți putem spune ce parte poate fi administrată de ZebraByte și ce rămâne responsabilitatea organizației sau a auditorului independent.
+        </p>
+        <a href="/contact" class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex rounded-lg px-5 py-3 text-sm font-medium transition-colors">Discută cu ZebraByte</a>
+      </aside>
+    </article>
+  </main>
+</Layout>

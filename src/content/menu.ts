@@ -46,10 +46,16 @@ export const menuGroups: MenuGroup[] = [
     label: "Conformitate",
     items: [
       {
-        label: "Platforma de conformitate",
-        description: "Controale, dovezi și partajare securizată",
-        href: "/compliance-portal",
+        label: "Platforma GRC",
+        description: "Workspace intern pentru controale, riscuri, dovezi și audit",
+        href: "/compliance-platform",
         icon: "shield-check",
+      },
+      {
+        label: "Trust Center",
+        description: "Portal extern pentru clienți: documente, NDA și acces securizat",
+        href: "/compliance-portal",
+        icon: "monitor",
       },
       {
         label: "SOC 2",
@@ -223,9 +229,15 @@ export const menuGroups: MenuGroup[] = [
         icon: "handshake",
       },
       {
-        label: "Trust Center",
-        description: "Postura ZebraByte de securitate și conformitate",
-        href: "https://trust.zebrabyte.ro",
+        label: "Program pentru startup-uri YC",
+        description: "Oferta de conformitate pentru startup-uri Y Combinator eligibile",
+        href: "/yc",
+        icon: "sparkle",
+      },
+      {
+        label: "Securitate ZebraByte",
+        description: "Practicile și postura operațională de securitate",
+        href: "/security",
         icon: "shield-check",
       },
       {
@@ -268,8 +280,8 @@ export const menuGroups: MenuGroup[] = [
         icon: "code",
       },
       {
-        label: "Implementare",
-        description: "Cloud, self-hosting, configurare și operațiuni",
+        label: "Cloud & arhitectură",
+        description: "SaaS Cloud, securitatea infrastructurii și referințe de arhitectură/migrare",
         href: "/docs/deployment",
         icon: "compass",
       },

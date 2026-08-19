@@ -3,13 +3,20 @@ import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.svelte";
 import { zebraByteIndustries } from "../content/zebrabyte-industries";
 
+const operatingModel = [
+  { step: "01", title: "Assess", text: "Înțelegem activele, datele, serviciile expuse, furnizorii și obligațiile care schimbă riscul sectorului respectiv." },
+  { step: "02", title: "Protect", text: "Implementăm hardening, identity controls, website/email security și alte măsuri tehnice potrivite mediului real." },
+  { step: "03", title: "Govern", text: "Legăm riscurile și măsurile de GDPR, NIS2, ISO 27001, SOC 2 sau alte cerințe relevante fără să le tratăm ca framework-uri identice." },
+  { step: "04", title: "Evidence", text: "Controls, reviews, approvals și rezultate tehnice rămân conectate la programul de compliance și risk management." },
+  { step: "05", title: "Respond", text: "Pregătim incident response și recovery înainte de incident și transformăm findings în remediation după un eveniment real." },
+  { step: "06", title: "Improve", text: "Revizuim programul pe măsură ce aplicațiile, furnizorii, obligațiile și amenințările se schimbă." },
+];
+
 const capabilities = [
-  { title: "Assess", text: "Înțelegem suprafața expusă, activele critice, furnizorii și obligațiile aplicabile." },
-  { title: "Protect", text: "Implementăm hardening, WAF, email authentication, access controls și măsuri tehnice potrivite contextului." },
-  { title: "Govern", text: "Legăm riscurile și măsurile tehnice de GDPR, NIS2, ISO 27001 readiness și procesele interne." },
-  { title: "Evidence", text: "Urmărim controalele, schimbările și dovezile în programul continuu ZebraByte." },
-  { title: "Respond", text: "Pregătim incident response și recovery înainte să fie nevoie de ele și intervenim când apare un incident real." },
-  { title: "Improve", text: "Revizuim periodic postura și ajustăm programul când se schimbă infrastructura, riscul sau cerințele." },
+  { title: "Managed Compliance", text: "Controls, risk, evidence, privacy și audit readiness într-un program operat continuu.", href: "/managed-compliance" },
+  { title: "Cyber Security", text: "Assessment, identity, website/email security, hardening și incident response pentru riscul tehnic real.", href: "/cyber-security" },
+  { title: "Privacy & regulatory readiness", text: "GDPR, NIS2, ISO 27001 și alte obligații conectate la procese și măsuri demonstrabile.", href: "/gdpr" },
+  { title: "Secure Managed Hosting", text: "Infrastructură, migration, monitoring și recovery pentru workload-uri care au nevoie de ownership după deploy.", href: "/secure-hosting" },
 ];
 ---
 
@@ -17,81 +24,90 @@ const capabilities = [
   title="Industrii"
   description="Cyber security, managed compliance, privacy, NIS2, ISO 27001 readiness și secure infrastructure adaptate pentru legal, medical, sector public, e-commerce, logistică, educație și alte industrii."
 >
-  <main>
-    <animated-hero class="relative -mt-16 block overflow-hidden px-5 pt-32 pb-16 sm:pt-40 sm:pb-24">
-      <div class="container text-center">
-        <div class="border-border-low text-tertiary-foreground animate-perspective-in mx-auto mb-6 w-max rounded-lg border px-2 py-0.5 text-sm font-medium">Industrii</div>
-        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-230 font-medium text-balance">Aceleași controale. Riscuri diferite în fiecare industrie.</h1>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-190 text-lg text-balance">
-          Nu vindem un pachet identic tuturor și nici servicii IT generice. Adaptăm managed compliance, cybersecurity și infrastructura security-first la datele, serviciile și obligațiile sectorului tău.
-        </p>
-        <div class="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/contact" size="lg">Discută despre industria ta</Button>
-          <Button href="/security-assessment" variant="secondary" size="lg">Începe cu un assessment</Button>
+  <main class="-mt-16 overflow-hidden pt-16">
+    <animated-hero class="relative block overflow-hidden">
+      <section class="container py-16 text-center sm:py-24">
+        <div class="text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 w-max rounded-lg border px-3 py-1 text-sm font-medium">Industrii</div>
+        <h1 class="text-h2 sm:text-h1 mx-auto mb-6 max-w-210 overflow-hidden font-medium text-balance">
+          <span class="animate-perspective-in block">Aceleași discipline.</span>
+          <span class="animate-perspective-in animation-delay-100 block">Riscuri diferite în fiecare industrie.</span>
+        </h1>
+        <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-8 max-w-170 text-lg text-balance">Adaptăm cybersecurity, compliance și infrastructura la datele, serviciile, dependențele și obligațiile sectorului — fără să transformăm fiecare industrie într-un pachet IT generic cu alt nume.</p>
+        <div class="animate-perspective-in animation-delay-300 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button variant="secondary" size="lg" href="/security-assessment">Începe cu un assessment</Button>
+          <Button size="lg" href="/contact">Discută despre industria ta</Button>
         </div>
-      </div>
+      </section>
     </animated-hero>
 
-    <section class="container py-16 sm:py-24">
-      <div class="mx-auto mb-12 max-w-180 text-center">
-        <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Sectoare</p>
-        <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Domenii pentru care programul trebuie adaptat.</h2>
-        <p class="text-muted-foreground text-lg">Fiecare card deschide pagina dedicată, construită pe riscurile și scenariile reale ale sectorului.</p>
-      </div>
-
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {zebraByteIndustries.map((industry) => (
-          <a
-            href={`/industrii/${industry.slug}`}
-            class="bg-level-0 group rounded-2xl border p-6 transition-colors hover:bg-subtle sm:p-8"
-          >
-            <div class="mb-7 flex items-start justify-between gap-4">
-              <h3 class="text-xl font-medium group-hover:underline group-hover:underline-offset-4">{industry.shortTitle}</h3>
-              <span class="text-muted-foreground" aria-hidden="true">↗</span>
-            </div>
-            <p class="text-muted-foreground mb-7 leading-relaxed">{industry.description}</p>
-            <div class="flex flex-wrap gap-2">
-              {industry.priorities.slice(0, 4).map((priority) => (
-                <span class="bg-active rounded-full px-3 py-1 text-xs">{priority}</span>
-              ))}
-            </div>
-          </a>
-        ))}
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Sector atlas</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Contextul schimbă ordinea priorităților.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Un cabinet de avocatură, o clinică și o companie de logistică pot folosi aceleași discipline de security și compliance, dar activele critice, impactul și dependențele nu sunt aceleași.</p>
+        </div>
+        <div class="divide-y border-y">
+          {zebraByteIndustries.map((industry, index) => (
+            <a href={`/industrii/${industry.slug}`} class="group grid gap-4 py-6 sm:grid-cols-[64px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{industry.shortTitle}</h3>
+                <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
+                  {industry.priorities.slice(0, 3).map((priority) => <span class="text-muted-foreground text-xs">{priority}</span>)}
+                </div>
+              </div>
+              <p class="text-muted-foreground leading-relaxed">{industry.description}</p>
+              <span class="text-muted-foreground hidden transition-transform group-hover:translate-x-1 sm:block">→</span>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="bg-active py-16 sm:py-24">
+    <section class="bg-level-3 py-16 text-invert sm:py-28">
       <div class="container">
-        <div class="mb-12 max-w-180">
-          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Model operațional</p>
-          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Procesul rămâne coerent chiar dacă industria se schimbă.</h2>
-          <p class="text-muted-foreground text-lg">Același model leagă compliance-ul continuu de controale tehnice și security operations.</p>
+        <div class="mx-auto mb-14 max-w-190 text-center">
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.12em] opacity-55">Cross-sector operating model</p>
+          <h2 class="text-h3 sm:text-h2 mb-4 font-medium">Disciplina rămâne coerentă chiar dacă sectorul se schimbă.</h2>
+          <p class="text-lg leading-relaxed opacity-65">Schimbăm contextul și prioritățile, nu inventăm un proces complet diferit pentru fiecare verticală.</p>
         </div>
-        <div class="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {capabilities.map((capability, index) => (
-            <article class="bg-level-0 p-6 sm:p-8">
-              <div class="text-muted-foreground mb-8 text-sm">0{index + 1}</div>
-              <h3 class="mb-3 text-xl font-medium">{capability.title}</h3>
-              <p class="text-muted-foreground leading-relaxed">{capability.text}</p>
+        <div class="mx-auto max-w-5xl border-y border-invert/15">
+          {operatingModel.map((item, index) => (
+            <article class="grid gap-3 border-b border-invert/15 py-6 last:border-b-0 sm:grid-cols-[80px_0.75fr_1.25fr_auto] sm:items-start sm:gap-8">
+              <span class="font-mono text-sm opacity-40">{item.step}</span>
+              <h3 class="text-h5 font-medium">{item.title}</h3>
+              <p class="leading-relaxed opacity-65">{item.text}</p>
+              <span class="hidden font-mono text-xs opacity-35 sm:block">{index < operatingModel.length - 1 ? "→" : "↻"}</span>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="container py-16 sm:py-24">
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <a href="/managed-compliance" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Managed Compliance</h3><p class="text-muted-foreground text-sm">Program gestionat și audit readiness continuă.</p></a>
-        <a href="/cyber-security" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Cyber Security</h3><p class="text-muted-foreground text-sm">Programul tehnic de protecție și resilience.</p></a>
-        <a href="/gdpr" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">GDPR & Privacy</h3><p class="text-muted-foreground text-sm">Privacy governance și măsuri tehnice.</p></a>
-        <a href="/secure-hosting" class="hover:bg-subtle rounded-xl border p-6 transition-colors"><h3 class="mb-2 font-medium">Secure Managed Hosting</h3><p class="text-muted-foreground text-sm">Infrastructură administrată security-first.</p></a>
+    <section class="container py-16 sm:py-28">
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-[0.12em]">Capability mix</p>
+          <h2 class="text-h3 sm:text-h2 mb-5 font-medium text-balance">Un singur program poate combina mai multe capabilități.</h2>
+          <p class="text-muted-foreground max-w-150 text-lg leading-relaxed">Unele organizații au nevoie doar de un assessment. Altele au nevoie de controls tehnice, compliance și ownership operațional în același scope. Alegem combinația după risc, nu după eticheta industriei.</p>
+        </div>
+        <div class="divide-y border-y">
+          {capabilities.map((item, index) => (
+            <a href={item.href} class="group grid grid-cols-[56px_1fr] gap-4 py-6 sm:grid-cols-[72px_0.7fr_1.3fr] sm:gap-8">
+              <span class="text-muted-foreground font-mono text-xs">0{index + 1}</span>
+              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+              <p class="text-muted-foreground leading-relaxed">{item.text}</p>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="border-t py-16 text-center sm:py-24">
+    <section class="border-t py-16 text-center sm:py-28">
       <div class="container">
-        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">Nu vezi industria ta în listă?</h2>
-        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Pornim de la date, aplicații și risc, nu de la eticheta sectorului.</p>
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-190 font-medium text-balance">Nu vezi industria ta în listă?</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">Pornim de la date, aplicații, furnizori și risc. Nu este nevoie să forțăm organizația într-o categorie doar ca să putem începe.</p>
         <Button href="/contact" size="lg">Descrie-ne contextul</Button>
       </div>
     </section>
