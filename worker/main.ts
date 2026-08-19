@@ -5,6 +5,7 @@ import {
   handleZebraByteFormsApi,
   type FormsEnv,
 } from "./forms";
+import { handleMailDashboardApi } from "./mail-dashboard";
 import {
   handleMailPlatformApi,
   processCampaignDeliveryMessage,
@@ -135,6 +136,9 @@ export default {
         }
         return upmindMailResponse;
       }
+
+      const mailDashboardResponse = await handleMailDashboardApi(request, env);
+      if (mailDashboardResponse) return mailDashboardResponse;
 
       const mailPlatformResponse = await handleMailPlatformApi(request, env);
       if (mailPlatformResponse) {
