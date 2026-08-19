@@ -13,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: main
       - uses: actions/upload-artifact@v4
         with:
-          name: homepage-mp4-current
+          name: homepage-mp4-originals
           path: |
             public/videos/keyshot1.mp4
             public/videos/keyshot2.mp4
