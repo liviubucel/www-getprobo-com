@@ -1,0 +1,104 @@
+name: Perfect polish homepage MP4 branding
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/home-video-perfect-polish.yml
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2
+
+      - name: Restore pristine original MP4s
+        run: |
+          git fetch origin main --depth=1
+          git checkout origin/main -- public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
+
+      - name: Restore frame-accurate tracking tools from known-good history
+        run: |
+          git fetch origin 698b5134bfff5eee90016f11d35b7506d75f410a --depth=1
+          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/rebrand-home-videos.py > tools/rebrand-home-videos.py
+          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-tracking.b64 > tools/home-video-tracking.b64
+          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-mark-alpha.b64 > tools/home-video-mark-alpha.b64
+          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-text-alpha.b64 > tools/home-video-text-alpha.b64
+
+      - name: Make ZebraByte mark subtly smaller and validate tracking coverage
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, json, zlib
+
+          script = Path('tools/rebrand-home-videos.py')
+          text = script.read_text()
+          text = text.replace('padding = max(1, int(side * 0.18))', 'padding = max(1, int(side * 0.22))')
+          script.write_text(text)
+
+          track_path = Path('tools/home-video-tracking.b64')
+          tracks = json.loads(zlib.decompress(base64.b64decode(track_path.read_text().strip())))
+          for key in ('1','2','3','4'):
+              entries = {int(k): v for k,v in tracks[key]['entries'].items()}
+              ids = sorted(entries)
+              gaps = []
+              for a,b in zip(ids, ids[1:]):
+                  if b-a > 1:
+                      gaps.append((a,b,b-a-1))
+              print(f'keyshot{key}: frames={tracks[key]["frames"]}; tracked={len(ids)}; first={ids[0] if ids else None}; last={ids[-1] if ids else None}; gaps={gaps[:20]}')
+          PY
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Rebrand original MP4s directly with frame-accurate tracking
+        run: |
+          set -euo pipefail
+          for idx in 1 2 3 4; do
+            src="public/videos/keyshot${idx}.mp4"
+            out="/tmp/keyshot${idx}-perfect.mp4"
+            fps="$(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=nw=1:nk=1 "$src")"
+            ffmpeg -loglevel error -i "$src" -f rawvideo -pix_fmt bgr24 - \
+              | python3 tools/rebrand-home-videos.py "$idx" \
+              | ffmpeg -loglevel error -y -f rawvideo -pix_fmt bgr24 -s 1000x720 -r "$fps" -i - -an \
+                  -c:v libx264 -preset slow -tune animation -crf 16 -pix_fmt yuv420p -movflags +faststart "$out"
+            mv "$out" "$src"
+          done
+
+      - name: Validate frame counts, geometry and produce dense visual proof
+        run: |
+          rm -rf /tmp/video-proof
+          mkdir -p /tmp/video-proof
+          for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
+            name="$(basename "$file" .mp4)"
+            ffprobe -v error -show_entries stream=width,height,nb_frames,r_frame_rate -show_entries format=duration,size -of default=nw=1 "$file" | tee "/tmp/video-proof/${name}-meta.txt"
+            ffmpeg -loglevel error -y -i "$file" -vf "fps=5,scale=250:180:force_original_aspect_ratio=decrease,tile=10x8:padding=1:margin=1" -frames:v 1 "/tmp/video-proof/${name}-dense.jpg"
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: homepage-video-perfect-proof
+          path: /tmp/video-proof
+          retention-days: 3
+
+      - name: Remove temporary tracking tools
+        run: |
+          rm -f tools/rebrand-home-videos.py tools/home-video-tracking.b64 tools/home-video-mark-alpha.b64 tools/home-video-text-alpha.b64
+
+      - name: Commit only the four polished MP4s
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
+          git diff --cached --quiet && exit 1
+          git commit -m "feat: perfect ZebraByte branding in homepage MP4s"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
