@@ -121,7 +121,7 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
       });
       const payload = await readPayload(response);
 
-      if (!response.ok || payload.success === false) {
+      if (!response.ok || payload.success !== true) {
         setStatus(
           status,
           payload.error || payload.message || copy.requestError,
