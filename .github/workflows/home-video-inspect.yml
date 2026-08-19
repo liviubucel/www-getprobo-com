@@ -6,10 +6,6 @@ on:
       - main
     paths:
       - .github/workflows/home-video-inspect.yml
-      - tools/rebrand-home-videos.py
-      - tools/home-video-tracking.b64
-      - tools/home-video-mark-alpha.b64
-      - tools/home-video-text-alpha.b64
 
 permissions:
   contents: write
@@ -21,47 +17,150 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - name: Install FFmpeg
+          fetch-depth: 1
+
+      - name: Install media tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
-      - name: Rebrand original Probo MP4s frame-for-frame
-        shell: bash
+          sudo apt-get install -y ffmpeg python3-opencv librsvg2-bin
+
+      - name: Render ZebraByte mark
+        run: rsvg-convert public/favicon.svg -w 256 -h 256 -o /tmp/zbt-mark.png
+
+      - name: Rebrand original MP4s frame-for-frame
         run: |
-          set -euo pipefail
-          mkdir -p .home-video-output
-          for number in 1 2 3 4; do
-            source="public/videos/keyshot${number}.mp4"
-            target=".home-video-output/keyshot${number}.mp4"
-            ffmpeg -loglevel error -i "$source" -an -f rawvideo -pix_fmt bgr24 - \
-              | python3 tools/rebrand-home-videos.py "$number" \
-              | ffmpeg -loglevel error -y -f rawvideo -pix_fmt bgr24 -s 1000x720 -r 60 -i - -an \
-                  -c:v libx264 -preset veryfast -crf 16 -pix_fmt yuv420p -movflags +faststart "$target"
-            mv "$target" "$source"
-          done
-      - name: Build visual verification sheets
+          cat > /tmp/rebrand.py <<'PY'
+          import cv2
+          import numpy as np
+          import os
+          import subprocess
+
+          SPECS = {
+              1: {"time": 1.0, "core": (170,324,56,56), "icon": (76,76), "offset": (4,4), "threshold": .70, "roi": (20,100,450,650), "slack": True,  "minimum": 400},
+              2: {"time": 1.0, "core": (174,198,56,56), "icon": (64,65), "offset": (3,3), "threshold": .40, "roi": (80,100,430,330), "slack": False, "minimum": 900},
+              3: {"time": 2.0, "core": (73,378,56,56),  "icon": (72,72), "offset": (4,4), "threshold": .40, "roi": (0,250,400,650),  "slack": False, "minimum": 145},
+              4: {"time": 1.0, "core": (151,290,56,56), "icon": (69,70), "offset": (4,4), "threshold": .40, "roi": (40,0,500,650),   "slack": False, "minimum": 600},
+          }
+
+          def rounded_mask(size, radius):
+              mask = np.zeros((size, size), dtype=np.uint8)
+              cv2.rectangle(mask, (radius,0), (size-radius-1,size-1), 255, -1)
+              cv2.rectangle(mask, (0,radius), (size-1,size-radius-1), 255, -1)
+              for cx,cy in ((radius,radius),(size-radius-1,radius),(radius,size-radius-1),(size-radius-1,size-radius-1)):
+                  cv2.circle(mask, (cx,cy), radius, 255, -1)
+              return mask
+
+          def build_tile():
+              raw = cv2.imread('/tmp/zbt-mark.png', cv2.IMREAD_UNCHANGED)
+              if raw is None:
+                  raise RuntimeError('ZebraByte mark render failed')
+              alpha = raw[:,:,3] if raw.shape[2] == 4 else 255 - cv2.cvtColor(raw[:,:,:3], cv2.COLOR_BGR2GRAY)
+              ys,xs = np.where(alpha > 12)
+              if not len(xs):
+                  raise RuntimeError('ZebraByte mark is empty')
+              mark = alpha[ys.min():ys.max()+1, xs.min():xs.max()+1]
+              mark = cv2.resize(mark, (38,38), interpolation=cv2.INTER_LANCZOS4)
+              tile = np.zeros((72,72,4), dtype=np.uint8)
+              tile[:,:,:3] = (18,30,20)
+              tile[:,:,3] = rounded_mask(72,12)
+              roi = tile[17:55,17:55]
+              roi[:,:,:3] = 255
+              roi[:,:,3] = np.minimum(roi[:,:,3], mark)
+              return tile
+
+          TILE = build_tile()
+
+          def overlay(frame, ov, x, y):
+              h,w = ov.shape[:2]
+              if x < 0 or y < 0 or x+w > frame.shape[1] or y+h > frame.shape[0]:
+                  return False
+              a = ov[:,:,3:4].astype(np.float32) / 255.0
+              frame[y:y+h,x:x+w] = (ov[:,:,:3]*a + frame[y:y+h,x:x+w]*(1-a)).astype(np.uint8)
+              return True
+
+          def reference(path, seconds):
+              cap = cv2.VideoCapture(path)
+              cap.set(cv2.CAP_PROP_POS_MSEC, seconds*1000)
+              ok, frame = cap.read()
+              cap.release()
+              if not ok:
+                  raise RuntimeError(f'Cannot read reference from {path}')
+              return frame
+
+          def process(idx, cfg):
+              src = f'public/videos/keyshot{idx}.mp4'
+              dst = f'/tmp/keyshot{idx}-zbt.mp4'
+              ref = reference(src, cfg['time'])
+              x,y,w,h = cfg['core']
+              template = cv2.cvtColor(ref[y:y+h,x:x+w], cv2.COLOR_BGR2GRAY)
+
+              cap = cv2.VideoCapture(src)
+              fps = cap.get(cv2.CAP_PROP_FPS)
+              W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+              H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+              total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+              iw,ih = cfg['icon']
+              tile = cv2.resize(TILE, (iw,ih), interpolation=cv2.INTER_LANCZOS4)
+
+              enc = subprocess.Popen([
+                  'ffmpeg','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24',
+                  '-s',f'{W}x{H}','-r',str(fps),'-i','-','-an','-c:v','libx264',
+                  '-preset','medium','-crf','14','-pix_fmt','yuv420p','-movflags','+faststart',dst
+              ], stdin=subprocess.PIPE)
+
+              rx1,ry1,rx2,ry2 = cfg['roi']
+              replaced = 0
+              for _ in range(total):
+                  ok, frame = cap.read()
+                  if not ok:
+                      break
+                  gray = cv2.cvtColor(frame[ry1:ry2,rx1:rx2], cv2.COLOR_BGR2GRAY)
+                  result = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
+                  _,score,_,loc = cv2.minMaxLoc(result)
+                  if score >= cfg['threshold']:
+                      ix = rx1 + loc[0] - cfg['offset'][0]
+                      iy = ry1 + loc[1] - cfg['offset'][1]
+                      slack_patch = None
+                      sx = sy = 0
+                      if cfg['slack']:
+                          sx,sy = ix+52,iy+54
+                          if 0 <= sx < W-30 and 0 <= sy < H-30:
+                              patch = frame[sy:sy+30,sx:sx+30].copy()
+                              hsv = cv2.cvtColor(patch, cv2.COLOR_BGR2HSV)
+                              if float(np.mean(hsv[:,:,1])) > 35:
+                                  slack_patch = patch
+                      if overlay(frame, tile, ix, iy):
+                          if slack_patch is not None:
+                              frame[sy:sy+30,sx:sx+30] = slack_patch
+                          replaced += 1
+                  enc.stdin.write(frame.tobytes())
+
+              cap.release()
+              enc.stdin.close()
+              if enc.wait() != 0:
+                  raise RuntimeError(f'Encode failed for keyshot{idx}')
+              if replaced < cfg['minimum']:
+                  raise RuntimeError(f'keyshot{idx}: {replaced} replacements, expected >= {cfg["minimum"]}')
+              os.replace(dst, src)
+              print(f'keyshot{idx}: {total} original frames retained; ZebraByte mark applied to {replaced} frames')
+
+          for idx,cfg in SPECS.items():
+              process(idx,cfg)
+          PY
+
+          python3 /tmp/rebrand.py
+
+      - name: Validate video geometry and duration
         run: |
-          rm -rf video-preview
-          mkdir -p video-preview
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
-            name="$(basename "$file" .mp4)"
-            ffprobe -v error -show_entries stream=width,height,r_frame_rate,nb_frames -show_entries format=duration -of default=nw=1 "$file" > "video-preview/${name}-meta.txt"
-            ffmpeg -y -i "$file" -vf "fps=1,scale=280:180:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x3:padding=3:margin=3" -frames:v 1 -q:v 8 "video-preview/${name}.jpg"
+            ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file"
           done
-      - uses: actions/upload-artifact@v4
-        with:
-          name: homepage-video-rebrand-preview
-          path: video-preview/
-          retention-days: 3
-      - name: Commit rebranded MP4s to PR branch
+
+      - name: Commit the four edited MP4s
         run: |
-          git config user.name "zebrabyte-video-rebrand"
-          git config user.email "actions@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
-          if git diff --cached --quiet; then
-            echo "No video changes to commit"
-            exit 0
-          fi
+          git diff --cached --quiet && exit 1
           git commit -m "feat: rebrand original Probo homepage videos"
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
