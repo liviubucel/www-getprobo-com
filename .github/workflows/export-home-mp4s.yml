@@ -1,0 +1,25 @@
+name: Export homepage MP4s
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/export-home-mp4s.yml
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: homepage-mp4-current
+          path: |
+            public/videos/keyshot1.mp4
+            public/videos/keyshot2.mp4
+            public/videos/keyshot3.mp4
+            public/videos/keyshot4.mp4
+          retention-days: 1
