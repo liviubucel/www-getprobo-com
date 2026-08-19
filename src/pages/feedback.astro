@@ -23,17 +23,17 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       <div class="grid gap-5 sm:grid-cols-2">
         <label class="space-y-2 text-sm font-medium">
           <span>Nume *</span>
-          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="name" required maxlength="100" autocomplete="name" />
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" name="name" required maxlength="100" autocomplete="name" />
         </label>
         <label class="space-y-2 text-sm font-medium">
           <span>Email *</span>
-          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="email" type="email" required maxlength="254" autocomplete="email" />
+          <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" name="email" type="email" required maxlength="254" autocomplete="email" />
         </label>
       </div>
 
       <label class="block space-y-2 text-sm font-medium">
         <span>Companie</span>
-        <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5" name="company" maxlength="150" autocomplete="organization" />
+        <input class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" name="company" maxlength="150" autocomplete="organization" />
       </label>
 
       <fieldset>
@@ -41,8 +41,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
         <div class="flex flex-wrap gap-2">
           {[1, 2, 3, 4, 5].map((rating) => (
             <label class="cursor-pointer">
-              <input class="peer sr-only" type="radio" name="rating" value={rating} required />
-              <span class="peer-checked:bg-active grid size-10 place-items-center rounded-lg border text-sm">{rating}</span>
+              <input class="peer sr-only" type="radio" name="rating" value={rating} required aria-label={`${rating} din 5`} />
+              <span class="peer-checked:bg-active peer-focus-visible:ring-primary grid size-10 place-items-center rounded-lg border text-sm peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2">{rating}</span>
             </label>
           ))}
         </div>
@@ -50,7 +50,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
       <label class="block space-y-2 text-sm font-medium">
         <span>Mesaj *</span>
-        <textarea id="feedback-text" class="bg-level-0 min-h-40 w-full resize-y rounded-lg border px-3 py-2.5" required maxlength="4500"></textarea>
+        <textarea id="feedback-text" class="bg-level-0 min-h-40 w-full resize-y rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" required maxlength="4500"></textarea>
       </label>
       <input id="feedback-message" type="hidden" name="message" />
 
@@ -63,7 +63,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
       <div data-turnstile-container data-sitekey={turnstileSiteKey} aria-label="Verificare de securitate"></div>
       <div id="feedback-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
-      <button id="feedback-submit" type="submit" class="bg-primary text-primary-foreground h-11 rounded-lg px-5 text-sm font-medium disabled:opacity-50">
+      <button id="feedback-submit" type="submit" class="bg-primary text-primary-foreground h-11 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50">
         Trimite feedback
       </button>
     </form>
@@ -71,8 +71,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 </Layout>
 
 <script>
-  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
-  import { ensureTurnstileToken, lazyRenderTurnstile, resetTurnstile } from "../lib/turnstile";
+  import { browserT } from "../lib/browser-i18n";
+  import { bindPublicForm } from "../lib/public-form";
 
   function setupFeedbackForm() {
     const form = document.querySelector<HTMLFormElement>("#feedback-form");
@@ -84,41 +84,37 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
     if (!form || !status || !submit || !text || !message || form.dataset.ready === "true") return;
     form.dataset.ready = "true";
 
-    const cleanup = lazyRenderTurnstile(turnstile);
-    document.addEventListener("astro:before-swap", cleanup, { once: true });
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
-      if (!rating) return;
-      message.value = `[FEEDBACK ${rating}/5]\n\n${text.value}`;
-      submit.disabled = true;
-      status.classList.add("hidden");
-
-      try {
-        const verified = await ensureTurnstileToken(turnstile);
-        if (!verified) throw new Error("turnstile");
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Accept-Language": getBrowserLocale() },
-          body: new FormData(form),
-        });
-        const payload = (await response.json()) as { success?: boolean };
-        status.classList.remove("hidden");
-        if (!response.ok || !payload.success) {
-          status.textContent = browserT("Feedback-ul nu a putut fi trimis.", "Your feedback could not be sent.");
-          return;
-        }
-        status.textContent = browserT("Mulțumim pentru feedback.", "Thank you for your feedback.");
-        form.reset();
-      } catch {
-        status.classList.remove("hidden");
-        status.textContent = browserT("A apărut o eroare. Încearcă din nou.", "An error occurred. Please try again.");
-      } finally {
-        resetTurnstile(turnstile);
-        submit.disabled = false;
-      }
+    const cleanup = bindPublicForm({
+      form,
+      status,
+      submit,
+      turnstile,
+      endpoint: "/api/contact",
+      prepare: () => {
+        const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
+        if (!rating) return false;
+        message.value = `[FEEDBACK ${rating}/5]\n\n${text.value}`;
+      },
+      copy: {
+        verifying: browserT("Se verifică...", "Verifying..."),
+        sending: browserT("Se trimite...", "Sending..."),
+        success: browserT("Mulțumim pentru feedback.", "Thank you for your feedback."),
+        securityError: browserT(
+          "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+          "Security verification is not ready yet. Please try again.",
+        ),
+        requestError: browserT(
+          "Feedback-ul nu a putut fi trimis.",
+          "Your feedback could not be sent.",
+        ),
+        networkError: browserT(
+          "A apărut o eroare de rețea. Încearcă din nou.",
+          "A network error occurred. Please try again.",
+        ),
+      },
     });
+
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
   }
 
   document.addEventListener("astro:page-load", setupFeedbackForm);
