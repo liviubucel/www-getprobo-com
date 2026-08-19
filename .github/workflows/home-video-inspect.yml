@@ -22,7 +22,7 @@ jobs:
       - name: Install media tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg python3-opencv python3-pil librsvg2-bin fonts-noto-core
+          sudo apt-get install -y ffmpeg python3-opencv python3-pil librsvg2-bin fonts-noto-core fontconfig
 
       - name: Render ZebraByte mark
         run: rsvg-convert public/favicon.svg -w 256 -h 256 -o /tmp/zbt-mark.png
@@ -43,7 +43,21 @@ jobs:
               4: {"time": 1.0, "core": (151,290,56,56), "icon": (69,70), "offset": (4,4), "threshold": .40, "roi": (40,0,500,650),   "slack": False, "minimum": 600},
           }
 
-          FONT = ImageFont.truetype('/usr/share/fonts/truetype/noto/NotoSans-ExtraCondensedBold.ttf', 20)
+          FONT_PATH = subprocess.check_output(
+              ['fc-match', '-f', '%{file}', 'Noto Sans Condensed:style=Bold'],
+              text=True,
+          ).strip()
+          if not FONT_PATH or not os.path.exists(FONT_PATH):
+              raise RuntimeError(f'Could not resolve branding font: {FONT_PATH!r}')
+          font_size = 20
+          while True:
+              FONT = ImageFont.truetype(FONT_PATH, font_size)
+              probe = Image.new('RGB', (180, 40), 'white')
+              bbox = ImageDraw.Draw(probe).textbbox((0, 0), 'ZEBRABYTE', font=FONT)
+              if bbox[2] - bbox[0] <= 84 or font_size <= 11:
+                  break
+              font_size -= 1
+          print(f'Brand font: {FONT_PATH} @ {font_size}px')
 
           def rounded_mask(size, radius):
               mask = np.zeros((size, size), dtype=np.uint8)
