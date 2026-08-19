@@ -177,12 +177,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 <script>
   import { AnimatedHero } from "../lib/elements/hero";
   import { customElementDefine } from "../lib/dom";
-  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
-  import {
-    ensureTurnstileToken,
-    lazyRenderTurnstile,
-    resetTurnstile,
-  } from "../lib/turnstile";
+  import { browserT } from "../lib/browser-i18n";
+  import { bindPublicForm } from "../lib/public-form";
 
   customElementDefine("animated-hero", () => AnimatedHero);
 
@@ -194,60 +190,36 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
     if (!form || !status || !submit || form.dataset.ready === "true") return;
     form.dataset.ready = "true";
-    const cleanupTurnstile = lazyRenderTurnstile(turnstile);
-    document.addEventListener("astro:before-swap", cleanupTurnstile, { once: true });
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      submit.disabled = true;
-      status.classList.add("hidden");
-
-      try {
-        const verified = await ensureTurnstileToken(turnstile);
-        if (!verified) {
-          status.classList.remove("hidden");
-          status.textContent = browserT(
-            "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
-            "Security verification is not ready yet. Please try again.",
-          );
-          return;
-        }
-
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Accept-Language": getBrowserLocale() },
-          body: new FormData(form),
-        });
-        const payload = (await response.json()) as {
-          success?: boolean;
-          error?: string;
-        };
-
-        status.classList.remove("hidden");
-        if (!response.ok || !payload.success) {
-          status.textContent = browserT(
-            "Mesajul nu a putut fi trimis.",
-            "The message could not be sent.",
-          );
-          return;
-        }
-
-        status.textContent = browserT(
+    const cleanup = bindPublicForm({
+      form,
+      status,
+      submit,
+      turnstile,
+      endpoint: "/api/contact",
+      copy: {
+        verifying: browserT("Se verifică...", "Verifying..."),
+        sending: browserT("Se trimite...", "Sending..."),
+        success: browserT(
           "Mesajul a fost trimis. Mulțumim!",
           "Your message has been sent. Thank you!",
-        );
-        form.reset();
-      } catch {
-        status.classList.remove("hidden");
-        status.textContent = browserT(
+        ),
+        securityError: browserT(
+          "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+          "Security verification is not ready yet. Please try again.",
+        ),
+        requestError: browserT(
+          "Mesajul nu a putut fi trimis.",
+          "The message could not be sent.",
+        ),
+        networkError: browserT(
           "A apărut o eroare de rețea. Încearcă din nou.",
           "A network error occurred. Please try again.",
-        );
-      } finally {
-        resetTurnstile(turnstile);
-        submit.disabled = false;
-      }
+        ),
+      },
     });
+
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
   };
 
   document.addEventListener("astro:page-load", setupContactForm);
