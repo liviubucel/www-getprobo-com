@@ -17,47 +17,40 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 1
+          fetch-depth: 2
 
-      - name: Install media tools
+      - name: Restore pristine Probo source MP4s from main
+        run: |
+          git fetch origin main --depth=1
+          git checkout origin/main -- public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
+
+      - name: Install FFmpeg and OpenCV
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg python3-opencv python3-pil librsvg2-bin fonts-noto-core fontconfig
-
-      - name: Render ZebraByte mark
-        run: rsvg-convert public/favicon.svg -w 256 -h 256 -o /tmp/zbt-mark.png
+          sudo apt-get install -y ffmpeg python3-pip
+          python3 -m pip install --break-system-packages --disable-pip-version-check opencv-python-headless==4.10.0.84
 
       - name: Rebrand original MP4s frame-for-frame
         run: |
           cat > /tmp/rebrand.py <<'PY'
+          import base64
           import cv2
           import numpy as np
           import os
           import subprocess
-          from PIL import Image, ImageDraw, ImageFont
 
           SPECS = {
-              1: {"time": 1.0, "core": (170,324,56,56), "icon": (76,76), "offset": (4,4), "threshold": .70, "roi": (20,100,450,650), "slack": True,  "minimum": 400},
-              2: {"time": 1.0, "core": (174,198,56,56), "icon": (64,65), "offset": (3,3), "threshold": .40, "roi": (80,100,430,330), "slack": False, "minimum": 900},
-              3: {"time": 2.0, "core": (73,378,56,56),  "icon": (72,72), "offset": (4,4), "threshold": .40, "roi": (0,250,400,650),  "slack": False, "minimum": 145},
-              4: {"time": 1.0, "core": (151,290,56,56), "icon": (69,70), "offset": (4,4), "threshold": .40, "roi": (40,0,500,650),   "slack": False, "minimum": 600},
+              1: {"time": 1.0, "core": (170,324,56,56), "icon": (76,76), "offset": (4,4), "threshold": .70, "roi": (0,0,1000,720), "slack": True,  "minimum": 400},
+              2: {"time": 1.0, "core": (174,198,56,56), "icon": (64,65), "offset": (3,3), "threshold": .90, "roi": (80,100,430,330), "slack": False, "minimum": 700},
+              3: {"time": 2.0, "core": (73,378,56,56),  "icon": (72,72), "offset": (4,4), "threshold": .90, "roi": (0,250,400,650),  "slack": False, "minimum": 140},
+              4: {"time": 1.0, "core": (151,290,56,56), "icon": (69,70), "offset": (4,4), "threshold": .90, "roi": (0,0,500,650),   "slack": False, "minimum": 580},
           }
 
-          FONT_PATH = subprocess.check_output(
-              ['fc-match', '-f', '%{file}', 'Noto Sans Condensed:style=Bold'],
-              text=True,
-          ).strip()
-          if not FONT_PATH or not os.path.exists(FONT_PATH):
-              raise RuntimeError(f'Could not resolve branding font: {FONT_PATH!r}')
-          font_size = 20
-          while True:
-              FONT = ImageFont.truetype(FONT_PATH, font_size)
-              probe = Image.new('RGB', (180, 40), 'white')
-              bbox = ImageDraw.Draw(probe).textbbox((0, 0), 'ZEBRABYTE', font=FONT)
-              if bbox[2] - bbox[0] <= 84 or font_size <= 11:
-                  break
-              font_size -= 1
-          print(f'Brand font: {FONT_PATH} @ {font_size}px')
+          MARK_W = MARK_H = 48
+          mark_alpha = np.frombuffer(
+              base64.b64decode(open('tools/home-video-mark-alpha.b64', encoding='ascii').read().strip()),
+              dtype=np.uint8,
+          ).reshape(MARK_H, MARK_W)
 
           def rounded_mask(size, radius):
               mask = np.zeros((size, size), dtype=np.uint8)
@@ -68,21 +61,15 @@ jobs:
               return mask
 
           def build_tile():
-              raw = cv2.imread('/tmp/zbt-mark.png', cv2.IMREAD_UNCHANGED)
-              if raw is None:
-                  raise RuntimeError('ZebraByte mark render failed')
-              alpha = raw[:,:,3] if raw.shape[2] == 4 else 255 - cv2.cvtColor(raw[:,:,:3], cv2.COLOR_BGR2GRAY)
-              ys,xs = np.where(alpha > 12)
-              if not len(xs):
-                  raise RuntimeError('ZebraByte mark is empty')
-              mark = alpha[ys.min():ys.max()+1, xs.min():xs.max()+1]
-              mark = cv2.resize(mark, (54,54), interpolation=cv2.INTER_LANCZOS4)
-              tile = np.zeros((72,72,4), dtype=np.uint8)
-              tile[:,:,:3] = (18,30,20)
-              tile[:,:,3] = rounded_mask(72,12)
-              roi = tile[9:63,9:63]
-              roi[:,:,:3] = 255
-              roi[:,:,3] = np.minimum(roi[:,:,3], mark)
+              # Larger high-contrast mark while preserving the original Probo icon footprint.
+              mark = cv2.resize(mark_alpha, (74,74), interpolation=cv2.INTER_LANCZOS4)
+              tile = np.zeros((96,96,4), dtype=np.uint8)
+              tile[:,:,:3] = (22,35,16)  # ZebraByte #102316, BGR
+              tile[:,:,3] = rounded_mask(96,18)
+              roi = tile[11:85,11:85]
+              white = np.full((74,74,3), 255, dtype=np.uint8)
+              a = mark[:,:,None].astype(np.float32) / 255.0
+              roi[:,:,:3] = (white*a + roi[:,:,:3]*(1-a)).astype(np.uint8)
               return tile
 
           TILE = build_tile()
@@ -95,7 +82,7 @@ jobs:
               frame[y:y+h,x:x+w] = (ov[:,:,:3]*a + frame[y:y+h,x:x+w]*(1-a)).astype(np.uint8)
               return True
 
-          def replace_brand_word(frame, x, y, width=88, height=29):
+          def replace_brand_word(frame, x, y, width=92, height=28):
               x = max(0, int(x))
               y = max(0, int(y))
               sample = frame[max(0,y-8):max(1,y-3), x:min(frame.shape[1],x+width)]
@@ -107,9 +94,7 @@ jobs:
                   tuple(int(v) for v in bg),
                   -1,
               )
-              pil = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-              ImageDraw.Draw(pil).text((x,y+1), 'ZEBRABYTE', font=FONT, fill=(20,20,20), anchor='lt')
-              frame[:] = cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR)
+              cv2.putText(frame, 'ZEBRABYTE', (x, y+13), cv2.FONT_HERSHEY_DUPLEX, 0.45, (20,20,20), 1, cv2.LINE_AA)
 
           def reference(path, seconds):
               cap = cv2.VideoCapture(path)
@@ -138,7 +123,7 @@ jobs:
               enc = subprocess.Popen([
                   'ffmpeg','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24',
                   '-s',f'{W}x{H}','-r',str(fps),'-i','-','-an','-c:v','libx264',
-                  '-preset','medium','-crf','14','-pix_fmt','yuv420p','-movflags','+faststart',dst
+                  '-preset','slow','-crf','16','-pix_fmt','yuv420p','-movflags','+faststart',dst
               ], stdin=subprocess.PIPE)
 
               rx1,ry1,rx2,ry2 = cfg['roi']
@@ -169,7 +154,6 @@ jobs:
                           if slack_patch is not None:
                               frame[sy:sy+30,sx:sx+30] = slack_patch
                           replaced += 1
-
                           if idx == 1:
                               replace_brand_word(frame, ix + (96 if has_slack else 107), iy + (1 if has_slack else 0))
                               text_replaced += 1
@@ -188,7 +172,7 @@ jobs:
               if replaced < cfg['minimum']:
                   raise RuntimeError(f'keyshot{idx}: {replaced} replacements, expected >= {cfg["minimum"]}')
               os.replace(dst, src)
-              print(f'keyshot{idx}: {total} frames; mark={replaced}; ZEBRABYTE text={text_replaced}')
+              print(f'keyshot{idx}: frames={total}; ZebraByte mark={replaced}; ZEBRABYTE text={text_replaced}')
 
           for idx,cfg in SPECS.items():
               process(idx,cfg)
@@ -196,7 +180,7 @@ jobs:
 
           python3 /tmp/rebrand.py
 
-      - name: Validate video geometry and duration
+      - name: Validate video geometry and build visual proof
         run: |
           rm -rf /tmp/video-preview
           mkdir -p /tmp/video-preview
@@ -212,11 +196,11 @@ jobs:
           path: /tmp/video-preview
           retention-days: 3
 
-      - name: Commit the four edited MP4s
+      - name: Commit the four directly edited MP4s
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
           git diff --cached --quiet && exit 1
-          git commit -m "feat: polish ZebraByte branding in homepage videos"
+          git commit -m "feat: finalize ZebraByte branding in homepage MP4s"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
