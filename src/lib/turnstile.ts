@@ -24,9 +24,36 @@ type TurnstileWindow = Window & {
 
 const SCRIPT_ID = "zbt-turnstile-api";
 const SCRIPT_URL = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+const TURNSTILE_RESPONSE_FIELD = "cf-turnstile-response";
 
 function targetWindow(): TurnstileWindow {
   return window as TurnstileWindow;
+}
+
+function syncTurnstileFormToken(container: HTMLElement, token: string): void {
+  const form = container.closest("form");
+  if (!form) return;
+
+  const fields = [...form.querySelectorAll<HTMLInputElement>(`input[name="${TURNSTILE_RESPONSE_FIELD}"]`)];
+  if (fields.length > 0) {
+    for (const field of fields) field.value = token;
+    return;
+  }
+
+  const field = document.createElement("input");
+  field.type = "hidden";
+  field.name = TURNSTILE_RESPONSE_FIELD;
+  field.value = token;
+  field.dataset.zbtTurnstileToken = "true";
+  form.append(field);
+}
+
+function clearTurnstileFormToken(container: HTMLElement): void {
+  const form = container.closest("form");
+  if (!form) return;
+  for (const field of form.querySelectorAll<HTMLInputElement>(`input[name="${TURNSTILE_RESPONSE_FIELD}"]`)) {
+    field.value = "";
+  }
 }
 
 function loadTurnstile(): Promise<TurnstileApi> {
@@ -90,9 +117,18 @@ export async function renderTurnstile(container: HTMLElement): Promise<string | 
     size: container.dataset.size === "flexible" ? "flexible" : "normal",
     appearance: "interaction-only",
     language: document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "ro",
-    callback: () => container.dispatchEvent(new CustomEvent("zbt:turnstile-ready")),
-    "expired-callback": () => container.dispatchEvent(new CustomEvent("zbt:turnstile-expired")),
-    "error-callback": () => container.dispatchEvent(new CustomEvent("zbt:turnstile-error")),
+    callback: (token) => {
+      syncTurnstileFormToken(container, token);
+      container.dispatchEvent(new CustomEvent<string>("zbt:turnstile-ready", { detail: token }));
+    },
+    "expired-callback": () => {
+      clearTurnstileFormToken(container);
+      container.dispatchEvent(new CustomEvent("zbt:turnstile-expired"));
+    },
+    "error-callback": () => {
+      clearTurnstileFormToken(container);
+      container.dispatchEvent(new CustomEvent("zbt:turnstile-error"));
+    },
   });
   container.dataset.turnstileWidgetId = widgetId;
   return widgetId;
@@ -107,29 +143,38 @@ export async function ensureTurnstileToken(
   if (!widgetId) return false;
 
   const api = targetWindow().turnstile;
-  if (api?.getResponse(widgetId)) return true;
+  const existingToken = api?.getResponse(widgetId) || "";
+  if (existingToken) {
+    syncTurnstileFormToken(container, existingToken);
+    return true;
+  }
 
   return new Promise<boolean>((resolve) => {
     let settled = false;
-    const finish = (value: boolean) => {
+    const finish = (token: string) => {
       if (settled) return;
       settled = true;
       window.clearTimeout(timer);
-      container.removeEventListener("zbt:turnstile-ready", onReady);
+      container.removeEventListener("zbt:turnstile-ready", onReady as EventListener);
       container.removeEventListener("zbt:turnstile-error", onError);
-      resolve(value);
+      if (token) syncTurnstileFormToken(container, token);
+      resolve(Boolean(token));
     };
-    const onReady = () => finish(true);
-    const onError = () => finish(false);
-    const timer = window.setTimeout(() => finish(Boolean(api?.getResponse(widgetId))), timeoutMs);
+    const onReady = (event: Event) => {
+      const callbackToken = event instanceof CustomEvent ? String(event.detail || "") : "";
+      finish(callbackToken || api?.getResponse(widgetId) || "");
+    };
+    const onError = () => finish("");
+    const timer = window.setTimeout(() => finish(api?.getResponse(widgetId) || ""), timeoutMs);
 
-    container.addEventListener("zbt:turnstile-ready", onReady, { once: true });
+    container.addEventListener("zbt:turnstile-ready", onReady as EventListener, { once: true });
     container.addEventListener("zbt:turnstile-error", onError, { once: true });
   });
 }
 
 export function resetTurnstile(container: HTMLElement | null): void {
   if (!container) return;
+  clearTurnstileFormToken(container);
   const widgetId = container.dataset.turnstileWidgetId;
   if (!widgetId) return;
   targetWindow().turnstile?.reset(widgetId);
@@ -137,6 +182,7 @@ export function resetTurnstile(container: HTMLElement | null): void {
 
 export function destroyTurnstile(container: HTMLElement | null): void {
   if (!container) return;
+  clearTurnstileFormToken(container);
   const widgetId = container.dataset.turnstileWidgetId;
   if (!widgetId) return;
 
