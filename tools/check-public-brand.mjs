@@ -6,6 +6,7 @@ const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/i;
 const legacyExternalDomainPattern = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
 const legacyMediaAssetPattern = /(?:^|[/_.-])(?:get)?probo(?:[/_.-]|$)/i;
 const mediaExtensionPattern = /\.(?:svg|png|jpe?g|webp|gif|avif|mp4|webm)(?:[?#].*)?$/i;
+const absoluteUrlPattern = /https?:\/\/[^\s)<>'"\]]+/gi;
 
 function findFiles(dir) {
   if (!existsSync(dir)) return [];
@@ -32,14 +33,22 @@ function compactContext(value, index, length) {
   return value.slice(start, end).replace(/\s+/g, " ").trim();
 }
 
-function textLeak(text) {
+function visibleBrandLeak(text) {
   const brand = legacyVisibleBrandPattern.exec(text);
-  if (brand) {
-    return { kind: "visible-brand", token: brand[0], context: compactContext(text, brand.index, brand[0].length) };
-  }
-  const domain = legacyExternalDomainPattern.exec(text);
-  if (domain) {
-    return { kind: "external-domain", token: domain[0], context: compactContext(text, domain.index, domain[0].length) };
+  if (!brand) return null;
+  return {
+    kind: "visible-brand",
+    token: brand[0],
+    context: compactContext(text, brand.index, brand[0].length),
+  };
+}
+
+function upstreamUrlLeak(urls) {
+  for (const url of urls) {
+    const match = legacyExternalDomainPattern.exec(url);
+    if (match) {
+      return { kind: "external-domain", token: match[0], context: url };
+    }
   }
   return null;
 }
@@ -49,12 +58,20 @@ function htmlAuditView(html) {
     /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
-  const externalUrls = collectAttributeValues(withoutRuntimeOrCode, ["href", "action", "formaction", "src", "poster"]).filter((value) => /^https?:\/\//i.test(value));
-  const localMediaRefs = collectAttributeValues(withoutRuntimeOrCode, ["src", "poster"]).filter(
-    (value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value),
-  );
-  const visibleText = withoutRuntimeOrCode.replace(/<[^>]+>/g, " ");
-  return { text: `${visibleText}\n${externalUrls.join("\n")}`, mediaRefs: localMediaRefs };
+  const refs = collectAttributeValues(withoutRuntimeOrCode, [
+    "href",
+    "action",
+    "formaction",
+    "src",
+    "poster",
+  ]);
+  return {
+    visibleText: withoutRuntimeOrCode.replace(/<[^>]+>/g, " "),
+    externalUrls: refs.filter((value) => /^https?:\/\//i.test(value)),
+    localMediaRefs: refs.filter(
+      (value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value),
+    ),
+  };
 }
 
 function markdownAuditView(markdown) {
@@ -62,44 +79,52 @@ function markdownAuditView(markdown) {
     .replace(/```[\s\S]*?```/g, "")
     .replace(/~~~[\s\S]*?~~~/g, "")
     .replace(/`[^`\n]+`/g, "");
-  const externalUrls = Array.from(withoutCode.matchAll(/https?:\/\/[^\s)<>'"\]]+/gi)).map((match) => match[0]).join("\n");
-  const visibleText = withoutCode.replace(/(?:https?:\/\/|\/)[^\s)<>'"\]]+/gi, " ");
-  return `${visibleText}\n${externalUrls}`;
+  const externalUrls = Array.from(withoutCode.matchAll(absoluteUrlPattern)).map((match) => match[0]);
+  const visibleText = withoutCode
+    .replace(absoluteUrlPattern, " ")
+    .replace(/\]\([^)]*\)/g, "]")
+    .replace(/(?:^|\s)\/[a-z0-9][^\s)<>'"\]]*/gi, " ");
+  return { visibleText, externalUrls };
 }
 
 function svgAuditView(svg) {
   const withoutRuntimeOrStyle = svg.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "");
   const refs = collectAttributeValues(withoutRuntimeOrStyle, ["href", "xlink:href", "src"]);
-  const visibleText = withoutRuntimeOrStyle.replace(/<[^>]+>/g, " ");
   return {
-    text: `${visibleText}\n${refs.filter((value) => /^https?:\/\//i.test(value)).join("\n")}`,
-    mediaRefs: refs.filter((value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value)),
+    visibleText: withoutRuntimeOrStyle.replace(/<[^>]+>/g, " "),
+    externalUrls: refs.filter((value) => /^https?:\/\//i.test(value)),
+    localMediaRefs: refs.filter(
+      (value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value),
+    ),
   };
 }
 
+function xmlAuditView(xml) {
+  const externalUrls = Array.from(xml.matchAll(absoluteUrlPattern)).map((match) => match[0]);
+  // Preserve legacy ZebraByte route slugs for SEO/compatibility, but never treat
+  // the route text itself as a visible upstream brand claim.
+  const visibleText = xml
+    .replace(absoluteUrlPattern, " ")
+    .replace(/<[^>]+>/g, " ");
+  return { visibleText, externalUrls };
+}
+
+function structuredLeak(view) {
+  const visible = visibleBrandLeak(view.visibleText);
+  if (visible) return visible;
+  const upstream = upstreamUrlLeak(view.externalUrls ?? []);
+  if (upstream) return upstream;
+  const media = (view.localMediaRefs ?? []).find((ref) => legacyMediaAssetPattern.test(ref));
+  if (media) return { kind: "media-ref", token: media, context: media };
+  return null;
+}
+
 function findLeak(file, content) {
-  if (file.endsWith(".xml")) return textLeak(content);
-
-  if (file.endsWith(".html")) {
-    const audit = htmlAuditView(content);
-    const text = textLeak(audit.text);
-    if (text) return text;
-    const media = audit.mediaRefs.find((ref) => legacyMediaAssetPattern.test(ref));
-    if (media) return { kind: "media-ref", token: media, context: media };
-    return null;
-  }
-
-  if (file.endsWith(".svg")) {
-    const audit = svgAuditView(content);
-    const text = textLeak(audit.text);
-    if (text) return text;
-    const media = audit.mediaRefs.find((ref) => legacyMediaAssetPattern.test(ref));
-    if (media) return { kind: "media-ref", token: media, context: media };
-    return null;
-  }
-
-  const auditable = file.endsWith(".md") || file.endsWith(".txt") ? markdownAuditView(content) : content;
-  return textLeak(auditable);
+  if (file.endsWith(".html")) return structuredLeak(htmlAuditView(content));
+  if (file.endsWith(".svg")) return structuredLeak(svgAuditView(content));
+  if (file.endsWith(".xml")) return structuredLeak(xmlAuditView(content));
+  if (file.endsWith(".md") || file.endsWith(".txt")) return structuredLeak(markdownAuditView(content));
+  return visibleBrandLeak(content);
 }
 
 if (!existsSync(distDir)) {
@@ -125,4 +150,4 @@ if (leaks.length) {
   process.exit(1);
 }
 
-console.log("[public-brand] PASS: no legacy upstream brand claims, external domains, or branded SVG/media references in generated public output.");
+console.log("[public-brand] PASS: no legacy upstream brand claims, upstream domains, or branded public media references in generated output.");
