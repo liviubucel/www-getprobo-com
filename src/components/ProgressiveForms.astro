@@ -1,0 +1,475 @@
+<script>
+  type StepCopy = readonly [string, string];
+  type StepSpec = {
+    title: StepCopy;
+    nodes: HTMLElement[];
+  };
+
+  const t = (ro: string, en: string) =>
+    document.documentElement.lang.toLowerCase().startsWith("en") ? en : ro;
+
+  const prefersReducedMotion = () =>
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+  const asElement = <T extends HTMLElement>(value: Element | null): T | null =>
+    value instanceof HTMLElement ? (value as T) : null;
+
+  const directChild = (form: HTMLFormElement, element: HTMLElement | null) => {
+    if (!element) return null;
+    let current: HTMLElement | null = element;
+    while (current && current.parentElement !== form) current = current.parentElement;
+    return current?.parentElement === form ? current : null;
+  };
+
+  const labelFor = (form: HTMLFormElement, selector: string) => {
+    const control = form.querySelector(selector);
+    return directChild(form, asElement(control?.closest("label") || null));
+  };
+
+  const uniqueNodes = (nodes: Array<HTMLElement | null>) =>
+    [...new Set(nodes.filter((node): node is HTMLElement => Boolean(node)))];
+
+  function validateStep(step: HTMLElement) {
+    const controls = Array.from(
+      step.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        "input, select, textarea",
+      ),
+    );
+
+    for (const control of controls) {
+      if (control.disabled || control.type === "hidden") continue;
+      if (!control.checkValidity()) {
+        control.reportValidity();
+        control.focus({ preventScroll: true });
+        control.scrollIntoView({
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+          block: "center",
+        });
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function enhanceWizard(
+    form: HTMLFormElement,
+    specs: StepSpec[],
+    options: {
+      submit: HTMLButtonElement;
+      reset?: HTMLButtonElement | null;
+      status?: HTMLElement | null;
+    },
+  ) {
+    if (form.dataset.progressiveWizard === "true" || specs.length < 2) return;
+
+    const normalized = specs
+      .map((spec) => ({ ...spec, nodes: uniqueNodes(spec.nodes.map((node) => directChild(form, node))) }))
+      .filter((spec) => spec.nodes.length > 0);
+    if (normalized.length < 2) return;
+
+    const allNodes = uniqueNodes(normalized.flatMap((spec) => spec.nodes));
+    const anchor = allNodes[0];
+    if (!anchor) return;
+
+    form.dataset.progressiveWizard = "true";
+
+    const marker = document.createComment("zbt-progressive-wizard");
+    form.insertBefore(marker, anchor);
+
+    const chrome = document.createElement("div");
+    chrome.className = "zbt-wizard-chrome";
+    chrome.innerHTML = `
+      <div class="zbt-wizard-meta">
+        <span class="zbt-wizard-count"></span>
+        <span class="zbt-wizard-title"></span>
+      </div>
+      <div class="zbt-wizard-track" role="progressbar" aria-valuemin="1" aria-valuemax="${normalized.length}" aria-valuenow="1">
+        <span class="zbt-wizard-progress"></span>
+      </div>
+    `;
+
+    const count = chrome.querySelector<HTMLElement>(".zbt-wizard-count");
+    const title = chrome.querySelector<HTMLElement>(".zbt-wizard-title");
+    const track = chrome.querySelector<HTMLElement>(".zbt-wizard-track");
+    const progress = chrome.querySelector<HTMLElement>(".zbt-wizard-progress");
+    if (title) title.tabIndex = -1;
+
+    const steps = normalized.map((spec, index) => {
+      const fieldset = document.createElement("fieldset");
+      fieldset.className = "zbt-wizard-step";
+      fieldset.dataset.wizardStep = String(index);
+      fieldset.setAttribute("aria-label", spec.title[0]);
+      for (const node of spec.nodes) fieldset.append(node);
+      return fieldset;
+    });
+
+    const controls = document.createElement("div");
+    controls.className = "zbt-wizard-controls";
+
+    const previous = document.createElement("button");
+    previous.type = "button";
+    previous.className = "zbt-wizard-button zbt-wizard-button-secondary";
+    previous.textContent = t("Înapoi", "Back");
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "zbt-wizard-button zbt-wizard-button-primary";
+    next.textContent = t("Continuă", "Continue");
+
+    controls.append(previous, next);
+    if (options.reset) controls.append(options.reset);
+    controls.append(options.submit);
+
+    marker.replaceWith(chrome, ...steps);
+    if (options.status) form.append(options.status);
+    form.append(controls);
+
+    let current = 0;
+
+    const render = (focus = false) => {
+      steps.forEach((step, index) => {
+        step.hidden = index !== current;
+        step.setAttribute("aria-hidden", index === current ? "false" : "true");
+      });
+
+      const pair = normalized[current].title;
+      if (count) count.textContent = t(`Pasul ${current + 1} din ${steps.length}`, `Step ${current + 1} of ${steps.length}`);
+      if (title) title.textContent = t(pair[0], pair[1]);
+      if (track) track.setAttribute("aria-valuenow", String(current + 1));
+      if (progress) progress.style.width = `${((current + 1) / steps.length) * 100}%`;
+
+      previous.hidden = current === 0;
+      next.hidden = current === steps.length - 1;
+      options.submit.hidden = current !== steps.length - 1;
+
+      if (focus && title) {
+        requestAnimationFrame(() => {
+          title.focus({ preventScroll: true });
+          chrome.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "start",
+          });
+        });
+      }
+    };
+
+    previous.addEventListener("click", () => {
+      if (current === 0) return;
+      current -= 1;
+      render(true);
+    });
+
+    next.addEventListener("click", () => {
+      if (!validateStep(steps[current])) return;
+      if (current >= steps.length - 1) return;
+      current += 1;
+      render(true);
+    });
+
+    form.addEventListener("reset", () => {
+      window.setTimeout(() => {
+        current = 0;
+        render(false);
+      }, 0);
+    });
+
+    render(false);
+  }
+
+  function enhanceComplianceRecommender() {
+    const form = document.querySelector<HTMLFormElement>("#framework-assessment");
+    if (!form) return;
+    const fieldsets = Array.from(form.querySelectorAll<HTMLElement>(":scope > fieldset.assessment-section"));
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const reset = form.querySelector<HTMLButtonElement>('button[type="reset"]');
+    const status = form.querySelector<HTMLElement>("#assessment-error");
+    if (fieldsets.length < 2 || !submit) return;
+
+    const titles: StepCopy[] = [
+      ["Organizația", "Organisation"],
+      ["Unde operezi", "Where you operate"],
+      ["Clienți și beneficiari", "Customers and beneficiaries"],
+      ["Date și sisteme", "Data and systems"],
+      ["Context de reglementare", "Regulatory context"],
+      ["Obiectivul actual", "Current objective"],
+    ];
+
+    enhanceWizard(
+      form,
+      fieldsets.map((fieldset, index) => ({
+        title: titles[index] || [fieldset.textContent?.trim() || "", fieldset.textContent?.trim() || ""],
+        nodes: [fieldset],
+      })),
+      { submit, reset, status },
+    );
+  }
+
+  function enhanceContact() {
+    const form = document.querySelector<HTMLFormElement>("#contact-form");
+    const submit = form?.querySelector<HTMLButtonElement>("#contact-submit");
+    if (!form || !submit) return;
+
+    const name = form.querySelector('input[name="name"]');
+    const identityGrid = directChild(form, asElement(name?.closest("div.grid") || null));
+    const service = labelFor(form, 'select[name="service"]');
+    const message = labelFor(form, 'textarea[name="message"]');
+    const consent = labelFor(form, 'input[name="consent"]');
+    const turnstile = directChild(form, form.querySelector<HTMLElement>("[data-turnstile-container]"));
+    const status = form.querySelector<HTMLElement>("#contact-status");
+
+    enhanceWizard(
+      form,
+      [
+        { title: ["Date de contact", "Contact details"], nodes: uniqueNodes([identityGrid]) },
+        { title: ["Solicitarea", "Your request"], nodes: uniqueNodes([service, message]) },
+        { title: ["Confirmare și trimitere", "Review and send"], nodes: uniqueNodes([consent, turnstile]) },
+      ],
+      { submit, status },
+    );
+  }
+
+  function enhanceFeedback() {
+    const form = document.querySelector<HTMLFormElement>("#feedback-form");
+    const submit = form?.querySelector<HTMLButtonElement>("#feedback-submit");
+    if (!form || !submit) return;
+
+    const name = form.querySelector('input[name="name"]');
+    const identityGrid = directChild(form, asElement(name?.closest("div.grid") || null));
+    const company = labelFor(form, 'input[name="company"]');
+    const rating = directChild(form, asElement(form.querySelector('input[name="rating"]')?.closest("fieldset") || null));
+    const feedback = labelFor(form, "#feedback-text");
+    const consent = labelFor(form, 'input[name="consent"]');
+    const turnstile = directChild(form, form.querySelector<HTMLElement>("[data-turnstile-container]"));
+    const status = form.querySelector<HTMLElement>("#feedback-status");
+
+    enhanceWizard(
+      form,
+      [
+        { title: ["Despre tine", "About you"], nodes: uniqueNodes([identityGrid, company]) },
+        { title: ["Experiența ta", "Your experience"], nodes: uniqueNodes([rating, feedback]) },
+        { title: ["Confirmare și trimitere", "Review and send"], nodes: uniqueNodes([consent, turnstile]) },
+      ],
+      { submit, status },
+    );
+  }
+
+  function enhanceOrder() {
+    const form = document.querySelector<HTMLFormElement>("#order-form");
+    const submit = form?.querySelector<HTMLButtonElement>("#order-submit");
+    if (!form || !submit) return;
+
+    const name = form.querySelector('input[name="name"]');
+    const identityGrid = directChild(form, asElement(name?.closest("div.grid") || null));
+    const company = labelFor(form, 'input[name="company"]');
+    const service = directChild(form, asElement(form.querySelector("#order-service")?.closest("label") || null));
+    const domain = form.querySelector("#order-domain");
+    const projectGrid = directChild(form, asElement(domain?.closest("div.grid") || null));
+    const details = directChild(form, asElement(form.querySelector("#order-details")?.closest("label") || null));
+    const consent = labelFor(form, 'input[name="consent"]');
+    const turnstile = directChild(form, form.querySelector<HTMLElement>("[data-turnstile-container]"));
+    const status = form.querySelector<HTMLElement>("#order-status");
+
+    enhanceWizard(
+      form,
+      [
+        { title: ["Organizația", "Organisation"], nodes: uniqueNodes([identityGrid, company]) },
+        { title: ["Serviciu și termen", "Service and timing"], nodes: uniqueNodes([service, projectGrid]) },
+        { title: ["Contextul proiectului", "Project context"], nodes: uniqueNodes([details]) },
+        { title: ["Confirmare și trimitere", "Review and send"], nodes: uniqueNodes([consent, turnstile]) },
+      ],
+      { submit, status },
+    );
+  }
+
+  function enhanceReview() {
+    const form = document.querySelector<HTMLFormElement>("#review-form");
+    const submit = form?.querySelector<HTMLButtonElement>("#review-submit");
+    if (!form || !submit) return;
+
+    const name = labelFor(form, 'input[name="name"]');
+    const email = labelFor(form, 'input[name="email"]');
+    const rating = directChild(form, asElement(form.querySelector('input[name="rating"]')?.closest("fieldset") || null));
+    const review = directChild(form, asElement(form.querySelector("#review-text")?.closest("label") || null));
+    const consent = labelFor(form, 'input[name="consent"]');
+    const turnstile = directChild(form, form.querySelector<HTMLElement>("[data-turnstile-container]"));
+    const status = form.querySelector<HTMLElement>("#review-status");
+
+    enhanceWizard(
+      form,
+      [
+        { title: ["Date de contact", "Contact details"], nodes: uniqueNodes([name, email]) },
+        { title: ["Recenzia", "Your review"], nodes: uniqueNodes([rating, review]) },
+        { title: ["Confirmare și trimitere", "Review and send"], nodes: uniqueNodes([consent, turnstile]) },
+      ],
+      { submit, status },
+    );
+  }
+
+  function setupProgressiveForms() {
+    enhanceComplianceRecommender();
+    enhanceContact();
+    enhanceFeedback();
+    enhanceOrder();
+    enhanceReview();
+  }
+
+  document.addEventListener("astro:page-load", setupProgressiveForms);
+  setupProgressiveForms();
+</script>
+
+<style is:global>
+  .zbt-wizard-chrome {
+    margin-bottom: 1.75rem;
+    scroll-margin-top: 7rem;
+  }
+
+  .zbt-wizard-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .zbt-wizard-count,
+  .zbt-wizard-title {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .zbt-wizard-count {
+    color: var(--color-muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zbt-wizard-title {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-align: right;
+    outline: none;
+  }
+
+  .zbt-wizard-track {
+    height: 2px;
+    overflow: hidden;
+    background: var(--color-border-mid);
+  }
+
+  .zbt-wizard-progress {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 220ms ease;
+  }
+
+  .zbt-wizard-step {
+    min-width: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    animation: zbt-wizard-enter 180ms ease-out both;
+  }
+
+  .zbt-wizard-step[hidden] {
+    display: none !important;
+  }
+
+  .zbt-wizard-step > :first-child {
+    margin-top: 0;
+  }
+
+  .zbt-wizard-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border-mid);
+  }
+
+  .zbt-wizard-button {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0 1.15rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease;
+  }
+
+  .zbt-wizard-button-primary {
+    border: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  .zbt-wizard-button-secondary {
+    border: 1px solid var(--color-border-mid);
+    background: transparent;
+    color: var(--color-primary);
+  }
+
+  .zbt-wizard-button:hover {
+    opacity: 0.82;
+  }
+
+  .zbt-wizard-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  .zbt-wizard-controls > [type="submit"] {
+    margin-left: auto;
+  }
+
+  .zbt-wizard-controls > [type="reset"] {
+    order: 3;
+  }
+
+  @keyframes zbt-wizard-enter {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .zbt-wizard-meta {
+      align-items: flex-start;
+    }
+
+    .zbt-wizard-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .zbt-wizard-controls > [type="submit"] {
+      grid-column: 1 / -1;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .zbt-wizard-controls > [type="reset"] {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zbt-wizard-step {
+      animation: none;
+    }
+
+    .zbt-wizard-progress,
+    .zbt-wizard-button {
+      transition: none;
+    }
+  }
+</style>
