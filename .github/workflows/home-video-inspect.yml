@@ -22,7 +22,7 @@ jobs:
       - name: Install media tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg python3-opencv librsvg2-bin
+          sudo apt-get install -y ffmpeg python3-opencv python3-pil librsvg2-bin fonts-noto-core
 
       - name: Render ZebraByte mark
         run: rsvg-convert public/favicon.svg -w 256 -h 256 -o /tmp/zbt-mark.png
@@ -34,6 +34,7 @@ jobs:
           import numpy as np
           import os
           import subprocess
+          from PIL import Image, ImageDraw, ImageFont
 
           SPECS = {
               1: {"time": 1.0, "core": (170,324,56,56), "icon": (76,76), "offset": (4,4), "threshold": .70, "roi": (20,100,450,650), "slack": True,  "minimum": 400},
@@ -41,6 +42,8 @@ jobs:
               3: {"time": 2.0, "core": (73,378,56,56),  "icon": (72,72), "offset": (4,4), "threshold": .40, "roi": (0,250,400,650),  "slack": False, "minimum": 145},
               4: {"time": 1.0, "core": (151,290,56,56), "icon": (69,70), "offset": (4,4), "threshold": .40, "roi": (40,0,500,650),   "slack": False, "minimum": 600},
           }
+
+          FONT = ImageFont.truetype('/usr/share/fonts/truetype/noto/NotoSans-ExtraCondensedBold.ttf', 20)
 
           def rounded_mask(size, radius):
               mask = np.zeros((size, size), dtype=np.uint8)
@@ -59,11 +62,11 @@ jobs:
               if not len(xs):
                   raise RuntimeError('ZebraByte mark is empty')
               mark = alpha[ys.min():ys.max()+1, xs.min():xs.max()+1]
-              mark = cv2.resize(mark, (38,38), interpolation=cv2.INTER_LANCZOS4)
+              mark = cv2.resize(mark, (54,54), interpolation=cv2.INTER_LANCZOS4)
               tile = np.zeros((72,72,4), dtype=np.uint8)
               tile[:,:,:3] = (18,30,20)
               tile[:,:,3] = rounded_mask(72,12)
-              roi = tile[17:55,17:55]
+              roi = tile[9:63,9:63]
               roi[:,:,:3] = 255
               roi[:,:,3] = np.minimum(roi[:,:,3], mark)
               return tile
@@ -77,6 +80,22 @@ jobs:
               a = ov[:,:,3:4].astype(np.float32) / 255.0
               frame[y:y+h,x:x+w] = (ov[:,:,:3]*a + frame[y:y+h,x:x+w]*(1-a)).astype(np.uint8)
               return True
+
+          def replace_brand_word(frame, x, y, width=88, height=29):
+              x = max(0, int(x))
+              y = max(0, int(y))
+              sample = frame[max(0,y-8):max(1,y-3), x:min(frame.shape[1],x+width)]
+              bg = np.median(sample.reshape(-1,3), axis=0).astype(np.uint8) if sample.size else np.array([250,250,250], dtype=np.uint8)
+              cv2.rectangle(
+                  frame,
+                  (max(0,x-3), max(0,y-3)),
+                  (min(frame.shape[1]-1,x+width), min(frame.shape[0]-1,y+height)),
+                  tuple(int(v) for v in bg),
+                  -1,
+              )
+              pil = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+              ImageDraw.Draw(pil).text((x,y+1), 'ZEBRABYTE', font=FONT, fill=(20,20,20), anchor='lt')
+              frame[:] = cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR)
 
           def reference(path, seconds):
               cap = cv2.VideoCapture(path)
@@ -110,6 +129,7 @@ jobs:
 
               rx1,ry1,rx2,ry2 = cfg['roi']
               replaced = 0
+              text_replaced = 0
               for _ in range(total):
                   ok, frame = cap.read()
                   if not ok:
@@ -122,6 +142,7 @@ jobs:
                       iy = ry1 + loc[1] - cfg['offset'][1]
                       slack_patch = None
                       sx = sy = 0
+                      has_slack = False
                       if cfg['slack']:
                           sx,sy = ix+52,iy+54
                           if 0 <= sx < W-30 and 0 <= sy < H-30:
@@ -129,10 +150,21 @@ jobs:
                               hsv = cv2.cvtColor(patch, cv2.COLOR_BGR2HSV)
                               if float(np.mean(hsv[:,:,1])) > 35:
                                   slack_patch = patch
+                                  has_slack = True
                       if overlay(frame, tile, ix, iy):
                           if slack_patch is not None:
                               frame[sy:sy+30,sx:sx+30] = slack_patch
                           replaced += 1
+
+                          if idx == 1:
+                              replace_brand_word(frame, ix + (96 if has_slack else 107), iy + (1 if has_slack else 0))
+                              text_replaced += 1
+                          elif idx == 3:
+                              replace_brand_word(frame, ix + 96, iy - 3)
+                              text_replaced += 1
+                          elif idx == 4:
+                              replace_brand_word(frame, ix + 96, iy - 4)
+                              text_replaced += 1
                   enc.stdin.write(frame.tobytes())
 
               cap.release()
@@ -142,7 +174,7 @@ jobs:
               if replaced < cfg['minimum']:
                   raise RuntimeError(f'keyshot{idx}: {replaced} replacements, expected >= {cfg["minimum"]}')
               os.replace(dst, src)
-              print(f'keyshot{idx}: {total} original frames retained; ZebraByte mark applied to {replaced} frames')
+              print(f'keyshot{idx}: {total} frames; mark={replaced}; ZEBRABYTE text={text_replaced}')
 
           for idx,cfg in SPECS.items():
               process(idx,cfg)
@@ -152,9 +184,19 @@ jobs:
 
       - name: Validate video geometry and duration
         run: |
+          rm -rf /tmp/video-preview
+          mkdir -p /tmp/video-preview
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
-            ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file"
+            name="$(basename "$file" .mp4)"
+            ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file" > "/tmp/video-preview/${name}-meta.txt"
+            ffmpeg -loglevel error -y -i "$file" -vf "fps=1,scale=360:260:force_original_aspect_ratio=decrease,tile=4x4:padding=2:margin=2" -frames:v 1 "/tmp/video-preview/${name}.jpg"
           done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: homepage-video-final-preview
+          path: /tmp/video-preview
+          retention-days: 3
 
       - name: Commit the four edited MP4s
         run: |
@@ -162,5 +204,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
           git diff --cached --quiet && exit 1
-          git commit -m "feat: rebrand original Probo homepage videos"
+          git commit -m "feat: polish ZebraByte branding in homepage videos"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
