@@ -4,6 +4,12 @@ import {
   type FormsEnv,
 } from "./forms";
 import {
+  handleMailPlatformApi,
+  processCampaignDeliveryMessage,
+  type MailPlatformEnv,
+} from "./mail-platform";
+import type { MailQueueBatch } from "./mail-queue-types";
+import {
   handleNewsletterDispatchApi,
   type NewsletterDispatchEnv,
 } from "./newsletter-dispatch";
@@ -22,16 +28,23 @@ import {
   type SentryEnv,
 } from "./sentry";
 import {
+  handleUpmindMailSyncApi,
+  processUpmindClientSyncMessage,
+  type UpmindMailSyncEnv,
+} from "./upmind-mail-sync";
+import {
   handleYcDealApi,
   type YcDealEnv,
 } from "./yc-deal";
 
 type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
+  MailPlatformEnv &
   NewsletterDispatchEnv &
   PublicStatusEnv &
   SecurityReportEnv &
   SentryEnv &
+  UpmindMailSyncEnv &
   YcDealEnv;
 
 type ExecutionContextLike = {
@@ -77,6 +90,36 @@ export default {
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
+
+      const upmindMailResponse = await handleUpmindMailSyncApi(request, env);
+      if (upmindMailResponse) {
+        if (upmindMailResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte Upmind mail sync returned a server error", {
+              request,
+              component: "mail.upmind",
+              status: upmindMailResponse.status,
+            }),
+          );
+        }
+        return upmindMailResponse;
+      }
+
+      const mailPlatformResponse = await handleMailPlatformApi(request, env);
+      if (mailPlatformResponse) {
+        if (mailPlatformResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte mail platform returned a server error", {
+              request,
+              component: "mail.platform",
+              status: mailPlatformResponse.status,
+            }),
+          );
+        }
+        return mailPlatformResponse;
+      }
 
       const securityReportResponse = await handleSecurityReportApi(request, env);
       if (securityReportResponse) {
@@ -141,6 +184,26 @@ export default {
         component: "worker.unhandled",
       });
       throw error;
+    }
+  },
+
+  async queue(batch: MailQueueBatch, env: WorkerEnv): Promise<void> {
+    for (const message of batch.messages) {
+      if (message.body?.kind === "campaign-delivery") {
+        await processCampaignDeliveryMessage(message, env);
+        continue;
+      }
+
+      if (message.body?.kind === "upmind-client-sync") {
+        await processUpmindClientSyncMessage(message, env);
+        continue;
+      }
+
+      message.ack();
+      await captureSentryMessage(env, "Unknown ZebraByte mail queue message was discarded", {
+        component: "mail.queue",
+        level: "warning",
+      });
     }
   },
 };
