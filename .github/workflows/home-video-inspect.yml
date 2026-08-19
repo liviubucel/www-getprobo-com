@@ -21,10 +21,11 @@ jobs:
           sudo apt-get install -y ffmpeg
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
-      - name: Build contact sheets
+      - name: Build source pack
         run: |
           rm -rf video-inspect
-          mkdir -p video-inspect/originals
+          mkdir -p video-inspect/originals video-inspect/brand
+          cp public/favicon.svg video-inspect/brand/zebrabyte-mark.svg
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
             name="$(basename "$file" .mp4)"
             cp "$file" "video-inspect/originals/${name}.mp4"
