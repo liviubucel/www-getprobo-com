@@ -1,4 +1,4 @@
-// Notify confirmed ZebraByte newsletter subscribers about a published article.
+// Queue a notification to confirmed ZebraByte newsletter subscribers about a published article.
 //
 // Usage:
 //   npm run newsletter:notify-post -- "Titlu articol" article-slug "Excerpt optional" [ro|en]
@@ -33,8 +33,16 @@ const response = await fetch(new URL("/api/newsletter/notify-post", siteUrl), {
 
 const data = await response.json();
 if (!response.ok || !data.success) {
-  console.error("Failed to notify newsletter subscribers:", data);
+  console.error("Failed to queue newsletter notification:", data);
   process.exit(1);
 }
 
-console.log(`Sent to ${data.sent}/${data.total} subscribers (${data.failed ?? 0} failed).`);
+if (data.campaign) {
+  const duplicateNote = data.duplicate ? " (already queued earlier)" : "";
+  console.log(
+    `Campaign ${data.campaign.id} covers ${data.campaign.total} subscriber(s); status: ${data.campaign.status}${duplicateNote}.`,
+  );
+} else {
+  // Compatibility with a deployment that still uses the pre-Queue dispatcher.
+  console.log(`Sent to ${data.sent}/${data.total} subscribers (${data.failed ?? 0} failed).`);
+}
