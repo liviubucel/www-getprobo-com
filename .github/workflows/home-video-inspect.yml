@@ -1,4 +1,4 @@
-name: Inspect homepage videos
+name: Rebrand homepage videos
 
 on:
   pull_request:
@@ -6,34 +6,48 @@ on:
       - main
     paths:
       - .github/workflows/home-video-inspect.yml
+      - tools/rebrand-home-videos.py
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  contact-sheets:
+  rebrand:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install media tools
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Install media dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          ffmpeg -version | head -n 1
-          ffprobe -version | head -n 1
-      - name: Build source pack
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check opencv-python-headless numpy pillow cairosvg
+      - name: Rebrand original Probo MP4s
+        run: python tools/rebrand-home-videos.py
+      - name: Build visual verification sheets
         run: |
-          rm -rf video-inspect
-          mkdir -p video-inspect/originals video-inspect/brand
-          cp public/favicon.svg video-inspect/brand/zebrabyte-mark.svg
+          rm -rf video-preview
+          mkdir -p video-preview
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
             name="$(basename "$file" .mp4)"
-            cp "$file" "video-inspect/originals/${name}.mp4"
-            ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file" > "video-inspect/${name}-meta.txt"
-            ffmpeg -y -i "$file" -vf "fps=1,scale=280:180:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x3:padding=3:margin=3" -frames:v 1 -q:v 8 "video-inspect/${name}-sheet.jpg"
+            ffprobe -v error -show_entries stream=width,height,r_frame_rate,nb_frames -show_entries format=duration -of default=nw=1 "$file" > "video-preview/${name}-meta.txt"
+            ffmpeg -y -i "$file" -vf "fps=1,scale=280:180:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x3:padding=3:margin=3" -frames:v 1 -q:v 8 "video-preview/${name}.jpg"
           done
       - uses: actions/upload-artifact@v4
         with:
-          name: homepage-video-source-pack
-          path: video-inspect/
+          name: homepage-video-rebrand-preview
+          path: video-preview/
           retention-days: 3
+      - name: Commit rebranded MP4s to PR branch
+        run: |
+          git config user.name "zebrabyte-video-rebrand"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
+          if git diff --cached --quiet; then
+            echo "No video changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: rebrand original Probo homepage videos"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
