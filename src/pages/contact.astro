@@ -20,7 +20,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           </h1>
           <p class="text-muted-foreground animate-slide-in animation-delay-100 text-lg text-balance">
             Spune-ne ce vrei să securizezi, ce obligații de conformitate ai sau unde
-            ai nevoie de ajutor. Pornim de la contextul real, nu de la un pachet generic.
+            ai nevoie de ajutor. Formularul se adaptează solicitării tale, ca să nu completăm
+            întrebări care nu sunt relevante.
           </p>
         </div>
 
@@ -38,9 +39,17 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
               <section class="py-5 sm:py-6">
                 <h2 class="mb-3 font-medium">Pentru incidente urgente</h2>
                 <p class="text-muted-foreground text-sm leading-relaxed">
-                  Dacă ai un incident activ, selectează „Incident / urgență de securitate”
-                  în formular și descrie pe scurt ce observi. Nu include parole, chei API
+                  Dacă ai un incident activ, selectează „Incident / urgență de securitate”.
+                  Solicitarea este marcată distinct. Nu include parole, chei API, token-uri
                   sau alte secrete în mesaj.
+                </p>
+              </section>
+
+              <section class="py-5 sm:py-6">
+                <h2 class="mb-3 font-medium">Ce se întâmplă după trimitere</h2>
+                <p class="text-muted-foreground text-sm leading-relaxed">
+                  Primești confirmare pe email, iar solicitarea este direcționată către zona
+                  relevantă de securitate, conformitate sau infrastructură.
                 </p>
               </section>
 
@@ -59,115 +68,244 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
             </div>
           </aside>
 
-          <form id="contact-form" class="space-y-5 rounded-2xl border p-5 sm:p-8">
-            <div class="grid gap-5 sm:grid-cols-2">
-              <label class="space-y-2 text-sm font-medium">
-                <span>Nume *</span>
-                <input
-                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                  type="text"
-                  name="name"
-                  maxlength="100"
-                  autocomplete="name"
-                  required
-                />
+          <div class="min-w-0">
+            <form id="contact-form" class="space-y-5 rounded-2xl border p-5 sm:p-8">
+              <div class="grid gap-5 sm:grid-cols-2">
+                <label class="space-y-2 text-sm font-medium">
+                  <span>Nume *</span>
+                  <input
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    type="text"
+                    name="name"
+                    maxlength="100"
+                    autocomplete="name"
+                    required
+                  />
+                </label>
+
+                <label class="space-y-2 text-sm font-medium">
+                  <span>Email de lucru *</span>
+                  <input
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    type="email"
+                    name="email"
+                    maxlength="254"
+                    autocomplete="email"
+                    required
+                  />
+                </label>
+
+                <label class="space-y-2 text-sm font-medium">
+                  <span>Telefon</span>
+                  <input
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    type="tel"
+                    name="phone"
+                    maxlength="20"
+                    autocomplete="tel"
+                  />
+                </label>
+
+                <label class="space-y-2 text-sm font-medium">
+                  <span>Companie</span>
+                  <input
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    type="text"
+                    name="company"
+                    maxlength="150"
+                    autocomplete="organization"
+                  />
+                </label>
+
+                <label class="space-y-2 text-sm font-medium sm:col-span-2">
+                  <span>Mărimea organizației *</span>
+                  <select
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    name="organisationSize"
+                    required
+                  >
+                    <option value="">Selectează</option>
+                    <option value="1-10">1–10 persoane</option>
+                    <option value="11-50">11–50 persoane</option>
+                    <option value="51-200">51–200 persoane</option>
+                    <option value="201-1000">201–1.000 persoane</option>
+                    <option value="1000+">Peste 1.000 persoane</option>
+                  </select>
+                </label>
+              </div>
+
+              <div id="contact-request-context" class="space-y-5">
+                <label class="block space-y-2 text-sm font-medium">
+                  <span>Cu ce te putem ajuta? *</span>
+                  <select
+                    class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    name="service"
+                    required
+                  >
+                    <option value="">Selectează</option>
+                    <option value="Managed Compliance">Managed Compliance</option>
+                    <option value="SOC 2">SOC 2</option>
+                    <option value="ISO/IEC 27001">ISO/IEC 27001</option>
+                    <option value="GDPR & Privacy">GDPR & Privacy</option>
+                    <option value="NIS2 & Compliance">NIS2 & Compliance</option>
+                    <option value="Accessibility">Accessibility</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Security Assessment">Security Assessment</option>
+                    <option value="Website Security">Website Security</option>
+                    <option value="Email Security">Email Security</option>
+                    <option value="Incident / urgență de securitate">Incident / urgență de securitate</option>
+                    <option value="Secure Managed Hosting">Secure Managed Hosting</option>
+                    <option value="Altceva">Altceva</option>
+                  </select>
+                </label>
+
+                <div class="grid gap-5 sm:grid-cols-2">
+                  <label class="space-y-2 text-sm font-medium">
+                    <span>Când ai nevoie de rezultat? *</span>
+                    <select
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      name="timeline"
+                      required
+                    >
+                      <option value="">Selectează</option>
+                      <option value="urgent">Urgent / sub 30 zile</option>
+                      <option value="1-3-months">1–3 luni</option>
+                      <option value="3-6-months">3–6 luni</option>
+                      <option value="exploring">Analizez opțiunile</option>
+                    </select>
+                  </label>
+
+                  <label class="space-y-2 text-sm font-medium" data-contact-context="compliance" hidden>
+                    <span>În ce stadiu ești?</span>
+                    <select
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      name="complianceStage"
+                      disabled
+                    >
+                      <option value="">Selectează</option>
+                      <option value="starting">Pornim de la zero</option>
+                      <option value="in-progress">Avem deja controale / documentație</option>
+                      <option value="audit-planned">Avem audit / evaluare planificată</option>
+                      <option value="maintaining">Vrem să menținem conformitatea</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2" data-contact-context="security" hidden>
+                  <label class="space-y-2 text-sm font-medium">
+                    <span>Ce intră în scope?</span>
+                    <select
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      name="securityScope"
+                      disabled
+                    >
+                      <option value="">Selectează</option>
+                      <option value="website-domain">Website / domeniu</option>
+                      <option value="email-identity">Email / identitate</option>
+                      <option value="cloud-saas">Cloud / SaaS</option>
+                      <option value="network-endpoints">Rețea / endpoint-uri</option>
+                      <option value="mixed">Mai multe zone</option>
+                      <option value="active-incident">Incident activ</option>
+                    </select>
+                  </label>
+
+                  <label class="space-y-2 text-sm font-medium">
+                    <span>Câte sisteme / active sunt aproximativ?</span>
+                    <select
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      name="assetCount"
+                      disabled
+                    >
+                      <option value="">Nu știu încă</option>
+                      <option value="1-10">1–10</option>
+                      <option value="11-50">11–50</option>
+                      <option value="51-200">51–200</option>
+                      <option value="200+">Peste 200</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2" data-contact-context="web" hidden>
+                  <label class="space-y-2 text-sm font-medium">
+                    <span>Website / domeniu principal</span>
+                    <input
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      type="url"
+                      name="websiteUrl"
+                      maxlength="500"
+                      placeholder="https://exemplu.ro"
+                      disabled
+                    />
+                  </label>
+
+                  <label class="space-y-2 text-sm font-medium" data-contact-context="hosting" hidden>
+                    <span>Câte site-uri / domenii sunt în scope?</span>
+                    <select
+                      class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                      name="siteCount"
+                      disabled
+                    >
+                      <option value="">Selectează</option>
+                      <option value="1">1</option>
+                      <option value="2-5">2–5</option>
+                      <option value="6-20">6–20</option>
+                      <option value="20+">Peste 20</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label class="block space-y-2 text-sm font-medium">
+                  <span>Spune-ne pe scurt contextul *</span>
+                  <textarea
+                    class="bg-level-0 min-h-36 w-full resize-y rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
+                    name="message"
+                    maxlength="5000"
+                    placeholder="Ce vrei să obții, ce problemă ai acum și ce ar însemna un rezultat bun pentru tine?"
+                    required
+                  ></textarea>
+                </label>
+              </div>
+
+              <label class="flex items-start gap-3 text-sm">
+                <input class="mt-1" type="checkbox" name="consent" value="yes" required />
+                <span class="text-muted-foreground">
+                  Sunt de acord ca datele furnizate să fie folosite pentru a răspunde
+                  solicitării mele, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.
+                </span>
               </label>
 
-              <label class="space-y-2 text-sm font-medium">
-                <span>Email *</span>
-                <input
-                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                  type="email"
-                  name="email"
-                  maxlength="254"
-                  autocomplete="email"
-                  required
-                />
-              </label>
+              <div
+                data-turnstile-container
+                data-sitekey={turnstileSiteKey}
+                aria-label="Verificare de securitate"
+              ></div>
 
-              <label class="space-y-2 text-sm font-medium">
-                <span>Telefon</span>
-                <input
-                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                  type="tel"
-                  name="phone"
-                  maxlength="20"
-                  autocomplete="tel"
-                />
-              </label>
+              <div id="contact-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
 
-              <label class="space-y-2 text-sm font-medium">
-                <span>Companie</span>
-                <input
-                  class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                  type="text"
-                  name="company"
-                  maxlength="150"
-                  autocomplete="organization"
-                />
-              </label>
-            </div>
-
-            <label class="block space-y-2 text-sm font-medium">
-              <span>Cu ce te putem ajuta?</span>
-              <select
-                class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                name="service"
+              <button
+                id="contact-submit"
+                type="submit"
+                class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <option value="">Selectează</option>
-                <option value="Managed Compliance">Managed Compliance</option>
-                <option value="SOC 2">SOC 2</option>
-                <option value="ISO/IEC 27001">ISO/IEC 27001</option>
-                <option value="GDPR & Privacy">GDPR & Privacy</option>
-                <option value="NIS2 & Compliance">NIS2 & Compliance</option>
-                <option value="Accessibility">Accessibility</option>
-                <option value="Cyber Security">Cyber Security</option>
-                <option value="Security Assessment">Security Assessment</option>
-                <option value="Website Security">Website Security</option>
-                <option value="Email Security">Email Security</option>
-                <option value="Incident / urgență de securitate">Incident / urgență de securitate</option>
-                <option value="Secure Managed Hosting">Secure Managed Hosting</option>
-                <option value="Altceva">Altceva</option>
-              </select>
-              <span class="text-muted-foreground block text-xs font-normal">
-                Accessibility și instrumentele gratuite sunt gestionate în zona de Compliance, nu ca linie comercială separată.
-              </span>
-            </label>
+                Trimite solicitarea
+              </button>
+            </form>
 
-            <label class="block space-y-2 text-sm font-medium">
-              <span>Mesaj *</span>
-              <textarea
-                class="bg-level-0 min-h-36 w-full resize-y rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"
-                name="message"
-                maxlength="5000"
-                required
-              ></textarea>
-            </label>
-
-            <label class="flex items-start gap-3 text-sm">
-              <input class="mt-1" type="checkbox" name="consent" value="yes" required />
-              <span class="text-muted-foreground">
-                Sunt de acord ca datele furnizate să fie folosite pentru a răspunde
-                solicitării mele, conform <a class="underline" href="/privacy">politicii de confidențialitate</a>.
-              </span>
-            </label>
-
-            <div
-              data-turnstile-container
-              data-sitekey={turnstileSiteKey}
-              aria-label="Verificare de securitate"
-            ></div>
-
-            <div id="contact-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
-
-            <button
-              id="contact-submit"
-              type="submit"
-              class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Trimite mesajul
-            </button>
-          </form>
+            <div id="contact-success" class="hidden rounded-2xl border p-8 text-center sm:p-12" role="status" aria-live="polite">
+              <img src="/favicon.svg" alt="ZebraByte" width="52" height="52" class="mx-auto mb-6 size-13" />
+              <p class="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-[0.12em]">Solicitare primită</p>
+              <h2 class="text-h3 mb-4 font-medium">Am primit mesajul tău</h2>
+              <p class="text-muted-foreground mx-auto mb-3 max-w-120 text-lg">
+                Solicitarea a fost trimisă către ZebraByte și vei primi și o confirmare pe email.
+              </p>
+              <p class="text-muted-foreground mx-auto mb-8 max-w-120 text-sm" data-contact-success-detail>
+                Revenim de regulă în maximum o zi lucrătoare.
+              </p>
+              <a class="bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-medium" href="/">
+                Înapoi la ZebraByte
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </animated-hero>
@@ -186,14 +324,89 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
   customElementDefine("animated-hero", () => AnimatedHero);
 
+  const complianceServices = new Set([
+    "Managed Compliance",
+    "SOC 2",
+    "ISO/IEC 27001",
+    "GDPR & Privacy",
+    "NIS2 & Compliance",
+  ]);
+  const securityServices = new Set([
+    "Cyber Security",
+    "Security Assessment",
+    "Website Security",
+    "Email Security",
+    "Incident / urgență de securitate",
+  ]);
+  const webServices = new Set(["Website Security", "Accessibility", "Secure Managed Hosting"]);
+
+  const setContextVisibility = (root: HTMLElement, visible: boolean) => {
+    root.hidden = !visible;
+    root.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input,select,textarea").forEach((control) => {
+      control.disabled = !visible;
+    });
+  };
+
   const setupContactForm = () => {
     const form = document.querySelector<HTMLFormElement>("#contact-form");
     const status = document.querySelector<HTMLElement>("#contact-status");
     const submit = document.querySelector<HTMLButtonElement>("#contact-submit");
+    const success = document.querySelector<HTMLElement>("#contact-success");
+    const successDetail = success?.querySelector<HTMLElement>("[data-contact-success-detail]");
     const turnstile = form?.querySelector<HTMLElement>("[data-turnstile-container]");
+    const service = form?.querySelector<HTMLSelectElement>('select[name="service"]');
+    const message = form?.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    const contextGroups = Array.from(form?.querySelectorAll<HTMLElement>("[data-contact-context]") || []);
 
-    if (!form || !status || !submit || form.dataset.ready === "true") return;
+    if (!form || !status || !submit || !success || !service || form.dataset.ready === "true") return;
     form.dataset.ready = "true";
+
+    const refreshAdaptiveFields = () => {
+      const value = service.value;
+      contextGroups.forEach((group) => {
+        const kind = group.dataset.contactContext;
+        const visible =
+          (kind === "compliance" && complianceServices.has(value)) ||
+          (kind === "security" && securityServices.has(value)) ||
+          (kind === "web" && webServices.has(value)) ||
+          (kind === "hosting" && value === "Secure Managed Hosting");
+        setContextVisibility(group, visible);
+      });
+
+      if (message) {
+        message.placeholder =
+          value === "Incident / urgență de securitate"
+            ? "Ce observi acum, când a început și ce sisteme par afectate? Nu include parole sau alte secrete."
+            : complianceServices.has(value)
+              ? "Ce framework sau obligație urmărești, ce ai deja implementat și care este termenul?"
+              : securityServices.has(value)
+                ? "Ce vrei să evaluăm sau să protejăm și ce problemă te preocupă cel mai mult?"
+                : value === "Secure Managed Hosting"
+                  ? "Ce vrei să migrezi, unde este găzduit acum și ce cerințe de securitate sau disponibilitate ai?"
+                  : "Ce vrei să obții, ce problemă ai acum și ce ar însemna un rezultat bun pentru tine?";
+      }
+    };
+
+    const composeRequestMessage = (data: FormData) => {
+      const originalMessage = String(data.get("message") || "").trim();
+      const rows: Array<[string, string]> = [
+        ["Mărimea organizației", String(data.get("organisationSize") || "")],
+        ["Termen", String(data.get("timeline") || "")],
+        ["Stadiu compliance", String(data.get("complianceStage") || "")],
+        ["Scope securitate", String(data.get("securityScope") || "")],
+        ["Număr active", String(data.get("assetCount") || "")],
+        ["Website / domeniu", String(data.get("websiteUrl") || "")],
+        ["Număr site-uri / domenii", String(data.get("siteCount") || "")],
+      ].filter(([, value]) => value.trim()) as Array<[string, string]>;
+
+      if (rows.length === 0) return originalMessage;
+      const context = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
+      return `Context de calificare:\n${context}\n\nMesaj:\n${originalMessage}`;
+    };
+
+    service.addEventListener("change", refreshAdaptiveFields);
+    refreshAdaptiveFields();
+
     const cleanupTurnstile = lazyRenderTurnstile(turnstile);
     document.addEventListener("astro:before-swap", cleanupTurnstile, { once: true });
 
@@ -213,30 +426,40 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           return;
         }
 
+        const data = new FormData(form);
+        data.set("message", composeRequestMessage(data));
+
         const response = await fetch("/api/contact", {
           method: "POST",
           headers: { "Accept-Language": getBrowserLocale() },
-          body: new FormData(form),
+          body: data,
         });
         const payload = (await response.json()) as {
           success?: boolean;
           error?: string;
         };
 
-        status.classList.remove("hidden");
         if (!response.ok || !payload.success) {
+          status.classList.remove("hidden");
           status.textContent = browserT(
-            "Mesajul nu a putut fi trimis.",
-            "The message could not be sent.",
+            "Solicitarea nu a putut fi trimisă. Verifică datele și încearcă din nou.",
+            "Your request could not be sent. Check the details and try again.",
           );
           return;
         }
 
-        status.textContent = browserT(
-          "Mesajul a fost trimis. Mulțumim!",
-          "Your message has been sent. Thank you!",
-        );
-        form.reset();
+        const selectedService = service.value;
+        if (successDetail && selectedService === "Incident / urgență de securitate") {
+          successDetail.textContent = browserT(
+            "Ai indicat un incident activ; solicitarea este tratată cu prioritate. Păstrează orice dovezi relevante, dar nu trimite secrete prin email.",
+            "You indicated an active incident; the request is prioritised. Preserve relevant evidence, but do not email secrets.",
+          );
+        }
+
+        form.hidden = true;
+        success.classList.remove("hidden");
+        success.hidden = false;
+        success.scrollIntoView({ behavior: "smooth", block: "center" });
       } catch {
         status.classList.remove("hidden");
         status.textContent = browserT(

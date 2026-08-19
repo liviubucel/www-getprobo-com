@@ -26,6 +26,8 @@
     "indexnow:submit": "node --env-file=.env tools/submit-indexnow.mjs",
     "newsletter:announce": "node --env-file=.env tools/send-newsletter-announcement.mjs",
     "newsletter:notify-post": "node --env-file=.env tools/notify-newsletter-post.mjs",
+    "mail:campaign": "node --env-file=.env tools/send-mail-campaign.mjs",
+    "mail:clients:import": "node --env-file=.env tools/import-mail-clients.mjs",
     "format": "node tools/format-changed.mjs",
     "preview": "astro preview",
     "astro": "astro",

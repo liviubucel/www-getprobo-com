@@ -1,32 +1,64 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/ui/Button.svelte";
-
-const status = Astro.url.searchParams.get("status");
-const content =
-  status === "confirmed"
-    ? {
-        title: "Abonare confirmată",
-        description: "Adresa ta a fost confirmată și este acum abonată la newsletter-ul ZebraByte.",
-      }
-    : status === "unsubscribed"
-      ? {
-          title: "Dezabonare finalizată",
-          description: "Adresa a fost eliminată din lista newsletter-ului ZebraByte.",
-        }
-      : {
-          title: "Link invalid sau expirat",
-          description: "Linkul nu mai este valid. Poți reveni pe site și iniția din nou abonarea.",
-        };
 ---
 
-<Layout title={content.title} description={content.description} noIndex>
+<Layout
+  title="Rezultat newsletter ZebraByte"
+  description="Confirmarea sau dezabonarea newsletter-ului ZebraByte."
+  noIndex
+>
   <main class="container py-20 sm:py-32">
-    <div class="mx-auto max-w-160 rounded-2xl border p-8 text-center sm:p-12">
+    <div class="mx-auto max-w-160 rounded-2xl border p-8 text-center sm:p-12" data-newsletter-result>
       <img src="/favicon.svg" alt="ZebraByte" width="52" height="52" class="mx-auto mb-6 size-13" />
-      <h1 class="text-h3 sm:text-h2 mb-4 font-medium">{content.title}</h1>
-      <p class="text-muted-foreground mb-8 text-lg">{content.description}</p>
+      <p class="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-[0.12em]" data-result-kicker>
+        Newsletter ZebraByte
+      </p>
+      <h1 class="text-h3 sm:text-h2 mb-4 font-medium" data-result-title>Se verifică rezultatul…</h1>
+      <p class="text-muted-foreground mb-8 text-lg" data-result-description>
+        Verificăm starea linkului de newsletter.
+      </p>
       <Button href="/" size="lg">Înapoi la ZebraByte</Button>
     </div>
   </main>
 </Layout>
+
+<script>
+  const renderNewsletterResult = () => {
+    const root = document.querySelector<HTMLElement>("[data-newsletter-result]");
+    const title = root?.querySelector<HTMLElement>("[data-result-title]");
+    const description = root?.querySelector<HTMLElement>("[data-result-description]");
+    const kicker = root?.querySelector<HTMLElement>("[data-result-kicker]");
+    if (!root || !title || !description || !kicker) return;
+
+    const status = new URL(window.location.href).searchParams.get("status");
+    const copy =
+      status === "confirmed"
+        ? {
+            kicker: "Abonare confirmată",
+            title: "Ești abonat la newsletter-ul ZebraByte",
+            description:
+              "Adresa ta a fost confirmată. De acum vei primi analizele și actualizările ZebraByte pe care le-ai solicitat.",
+          }
+        : status === "unsubscribed"
+          ? {
+              kicker: "Preferințe actualizate",
+              title: "Dezabonarea a fost finalizată",
+              description:
+                "Adresa a fost eliminată din lista newsletter-ului ZebraByte. Nu vei mai primi comunicări de marketing din această listă.",
+            }
+          : {
+              kicker: "Link indisponibil",
+              title: "Link invalid sau expirat",
+              description:
+                "Linkul nu mai este valid. Poți reveni pe site și iniția din nou abonarea dacă dorești.",
+            };
+
+    kicker.textContent = copy.kicker;
+    title.textContent = copy.title;
+    description.textContent = copy.description;
+  };
+
+  document.addEventListener("astro:page-load", renderNewsletterResult);
+  renderNewsletterResult();
+</script>

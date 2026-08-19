@@ -1,6 +1,7 @@
 import {
   contactConfirmationEmail,
   newsletterConfirmationEmail,
+  securityReportConfirmationEmail,
   type EmailLocale,
 } from "./email-templates";
 
@@ -213,7 +214,7 @@ async function handleContact(
     });
 
     try {
-      const confirmation = contactConfirmationEmail(name, message, locale);
+      const confirmation = contactConfirmationEmail(name, message, locale, service);
       await env.EMAIL.send({
         from: env.CONTACT_FROM_EMAIL,
         to: email,
@@ -323,7 +324,7 @@ async function handleSecurityReport(
     });
 
     try {
-      const confirmation = securityReportConfirmation(referenceId, locale);
+      const confirmation = securityReportConfirmationEmail(referenceId, locale);
       await env.EMAIL.send({
         from: env.CONTACT_FROM_EMAIL,
         to: email,
@@ -546,26 +547,6 @@ function newsletterSubscriberKey(email: string): string {
 function securityReferenceId(): string {
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   return `ZBT-SEC-${date}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
-}
-
-function securityReportConfirmation(referenceId: string, locale: EmailLocale) {
-  if (locale === "en") {
-    const subject = `ZebraByte security report received — ${referenceId}`;
-    const text = `We received your security report. Reference: ${referenceId}. Keep this reference for follow-up. Please do not send passwords, private keys, access tokens, or unnecessary personal data by email.`;
-    return {
-      subject,
-      text,
-      html: `<p>We received your security report.</p><p><strong>Reference: ${escapeHtml(referenceId)}</strong></p><p>Keep this reference for follow-up. Please do not send passwords, private keys, access tokens, or unnecessary personal data by email.</p>`,
-    };
-  }
-
-  const subject = `Raport de securitate ZebraByte primit — ${referenceId}`;
-  const text = `Am primit raportul tău de securitate. Referință: ${referenceId}. Păstrează această referință pentru comunicările ulterioare. Nu trimite prin email parole, chei private, token-uri de acces sau date personale care nu sunt necesare.`;
-  return {
-    subject,
-    text,
-    html: `<p>Am primit raportul tău de securitate.</p><p><strong>Referință: ${escapeHtml(referenceId)}</strong></p><p>Păstrează această referință pentru comunicările ulterioare. Nu trimite prin email parole, chei private, token-uri de acces sau date personale care nu sunt necesare.</p>`,
-  };
 }
 
 function redirectNewsletterResult(

@@ -21,6 +21,37 @@
       "id": "a3474e304aeb47168fb65edfaad5ead1"
     }
   ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "MAIL_ANALYTICS",
+      "dataset": "zebrabyte_mail"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "MAIL_SCHEDULER",
+      "name": "zebrabyte-mail-scheduler",
+      "class_name": "MailCampaignWorkflow"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "MAIL_QUEUE",
+        "queue": "zebrabyte-mail"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "zebrabyte-mail",
+        "max_batch_size": 10,
+        "max_batch_timeout": 5,
+        "max_retries": 5,
+        "dead_letter_queue": "zebrabyte-mail-dlq",
+        "max_concurrency": 1
+      }
+    ]
+  },
   "services": [
     {
       "binding": "STATUS_ENGINE",
@@ -30,7 +61,11 @@
   ],
   "send_email": [
     {
-      "name": "EMAIL"
+      "name": "EMAIL",
+      "allowed_sender_addresses": [
+        "noreply@zebrabyte.ro",
+        "newsletter@zebrabyte.ro"
+      ]
     }
   ],
   "vars": {
@@ -38,6 +73,7 @@
     "CONTACT_TO_EMAIL": "info@zebrabyte.ro",
     "CONTACT_FROM_EMAIL": "noreply@zebrabyte.ro",
     "NEWSLETTER_FROM_EMAIL": "newsletter@zebrabyte.ro",
+    "UPMIND_WEBHOOK_ALLOWED_IPS": "91.240.229.1,91.240.229.2,91.240.229.3",
     "SENTRY_DSN": "https://3911779244253b927f077fff97216671@o4511598677852160.ingest.de.sentry.io/4511598685323344",
     "SENTRY_ENVIRONMENT": "production"
   }
