@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: "ZebraByte Changelog",
     description:
-      "Platform updates, including the preserved upstream Probo history and future ZebraByte changes.",
+      "Actualizări ZebraByte despre platformă, integrări, securitate, conformitate și schimbări de produs.",
     site: context.site!,
     items: entries.map((entry) => ({
       title: entry.data.title,
