@@ -22,10 +22,9 @@ jobs:
       - name: Install media dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install --disable-pip-version-check opencv-python-headless numpy pillow cairosvg
+          sudo apt-get install -y ffmpeg fonts-dejavu-core python3-opencv python3-numpy python3-pil python3-cairosvg
       - name: Rebrand original Probo MP4s
-        run: python tools/rebrand-home-videos.py
+        run: python3 tools/rebrand-home-videos.py
       - name: Build visual verification sheets
         run: |
           rm -rf video-preview
