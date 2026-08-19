@@ -14,6 +14,10 @@ import {
   type NewsletterDispatchEnv,
 } from "./newsletter-dispatch";
 import {
+  handleNewsletterQueueCompatApi,
+  type NewsletterQueueCompatEnv,
+} from "./newsletter-queue-compat";
+import {
   handlePublicStatusApi,
   type PublicStatusEnv,
 } from "./public-status";
@@ -45,6 +49,7 @@ type WorkerEnv = Parameters<typeof router.fetch>[1] &
   FormsEnv &
   MailPlatformEnv &
   NewsletterDispatchEnv &
+  NewsletterQueueCompatEnv &
   PublicStatusEnv &
   SecurityReportEnv &
   SentryEnv &
@@ -91,6 +96,21 @@ export default {
           );
         }
         return publicStatusResponse;
+      }
+
+      const queuedNewsletterResponse = await handleNewsletterQueueCompatApi(request, env);
+      if (queuedNewsletterResponse) {
+        if (queuedNewsletterResponse.status >= 500) {
+          reportInBackground(
+            context,
+            captureSentryMessage(env, "ZebraByte queued newsletter compatibility API returned a server error", {
+              request,
+              component: "mail.newsletter-compat",
+              status: queuedNewsletterResponse.status,
+            }),
+          );
+        }
+        return queuedNewsletterResponse;
       }
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
