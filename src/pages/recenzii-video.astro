@@ -49,12 +49,12 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
           <label class="block space-y-2 text-sm font-medium">
             <span>Nume *</span>
-            <input name="name" required maxlength="100" autocomplete="name" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
+            <input name="name" required maxlength="100" autocomplete="name" class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" />
           </label>
 
           <label class="block space-y-2 text-sm font-medium">
             <span>Email *</span>
-            <input name="email" type="email" required maxlength="254" autocomplete="email" class="bg-level-0 w-full rounded-lg border px-3 py-2.5" />
+            <input name="email" type="email" required maxlength="254" autocomplete="email" class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10" />
           </label>
 
           <fieldset>
@@ -62,8 +62,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
             <div class="flex gap-2">
               {[1,2,3,4,5].map((rating) => (
                 <label class="cursor-pointer">
-                  <input class="peer sr-only" type="radio" name="rating" value={rating} required />
-                  <span class="peer-checked:bg-active grid size-10 place-items-center rounded-lg border">{rating}</span>
+                  <input class="peer sr-only" type="radio" name="rating" value={rating} required aria-label={`${rating} din 5`} />
+                  <span class="peer-checked:bg-active peer-focus-visible:ring-primary grid size-10 place-items-center rounded-lg border peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2">{rating}</span>
                 </label>
               ))}
             </div>
@@ -71,7 +71,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
           <label class="block space-y-2 text-sm font-medium">
             <span>Recenzia ta *</span>
-            <textarea id="review-text" required maxlength="2000" rows="5" class="bg-level-0 w-full rounded-lg border px-3 py-2.5"></textarea>
+            <textarea id="review-text" required maxlength="2000" rows="5" class="bg-level-0 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2 focus:ring-black/10"></textarea>
           </label>
 
           <input type="hidden" name="message" id="review-message" />
@@ -87,7 +87,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
             aria-label="Verificare de securitate"
           ></div>
           <div id="review-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
-          <button id="review-submit" type="submit" class="bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium disabled:opacity-50">Trimite recenzia</button>
+          <button id="review-submit" type="submit" class="bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50">Trimite recenzia</button>
         </form>
       </section>
     </div>
@@ -95,12 +95,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 </Layout>
 
 <script>
-  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
-  import {
-    ensureTurnstileToken,
-    lazyRenderTurnstile,
-    resetTurnstile,
-  } from "../lib/turnstile";
+  import { browserT } from "../lib/browser-i18n";
+  import { bindPublicForm } from "../lib/public-form";
 
   function setupReviewForm() {
     const form = document.querySelector<HTMLFormElement>("#review-form");
@@ -112,58 +108,42 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
     if (!form || !status || !submit || !text || !message || form.dataset.ready === "true") return;
     form.dataset.ready = "true";
 
-    const cleanupTurnstile = lazyRenderTurnstile(turnstile);
-    document.addEventListener("astro:before-swap", cleanupTurnstile, { once: true });
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
-      if (!rating) return;
-      message.value = `[CUSTOMER REVIEW ${rating}/5]\n\n${text.value}`;
-      submit.disabled = true;
-      status.classList.add("hidden");
-      try {
-        const verified = await ensureTurnstileToken(turnstile);
-        if (!verified) {
-          status.classList.remove("hidden");
-          status.textContent = browserT(
-            "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
-            "Security verification is not ready yet. Please try again.",
-          );
-          return;
-        }
-
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Accept-Language": getBrowserLocale() },
-          body: new FormData(form),
-        });
-        const payload = (await response.json()) as { success?: boolean; error?: string };
-        status.classList.remove("hidden");
-        if (!response.ok || !payload.success) {
-          status.textContent = browserT(
-            "Recenzia nu a putut fi trimisă.",
-            "The review could not be sent.",
-          );
-          return;
-        }
-        status.textContent = browserT(
+    const cleanup = bindPublicForm({
+      form,
+      status,
+      submit,
+      turnstile,
+      endpoint: "/api/contact",
+      prepare: () => {
+        const rating = form.querySelector<HTMLInputElement>('input[name="rating"]:checked')?.value;
+        if (!rating) return false;
+        message.value = `[CUSTOMER REVIEW ${rating}/5]\n\n${text.value}`;
+      },
+      copy: {
+        verifying: browserT("Se verifică...", "Verifying..."),
+        sending: browserT("Se trimite...", "Sending..."),
+        success: browserT(
           "Mulțumim! Recenzia a fost trimisă pentru verificare.",
           "Thank you! Your review has been submitted for verification.",
-        );
-        form.reset();
-      } catch {
-        status.classList.remove("hidden");
-        status.textContent = browserT(
+        ),
+        securityError: browserT(
+          "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+          "Security verification is not ready yet. Please try again.",
+        ),
+        requestError: browserT(
+          "Recenzia nu a putut fi trimisă.",
+          "The review could not be sent.",
+        ),
+        networkError: browserT(
           "A apărut o eroare de rețea. Încearcă din nou.",
           "A network error occurred. Please try again.",
-        );
-      } finally {
-        resetTurnstile(turnstile);
-        submit.disabled = false;
-      }
+        ),
+      },
     });
+
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
   }
+
   setupReviewForm();
   document.addEventListener("astro:page-load", setupReviewForm);
 </script>
