@@ -21,6 +21,19 @@
       "id": "a3474e304aeb47168fb65edfaad5ead1"
     }
   ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "MAIL_ANALYTICS",
+      "dataset": "zebrabyte_mail"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "MAIL_SCHEDULER",
+      "name": "zebrabyte-mail-scheduler",
+      "class_name": "MailCampaignWorkflow"
+    }
+  ],
   "queues": {
     "producers": [
       {
