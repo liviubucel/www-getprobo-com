@@ -1,4 +1,4 @@
-// Send a one-off ZebraByte announcement to every confirmed newsletter subscriber.
+// Queue a one-off ZebraByte announcement for every confirmed newsletter subscriber.
 //
 // Usage:
 //   npm run newsletter:announce -- "Titlu anunț" path/to/body.html path/to/body.txt [ro|en]
@@ -40,8 +40,15 @@ const response = await fetch(new URL("/api/newsletter/send-announcement", siteUr
 
 const data = await response.json();
 if (!response.ok || !data.success) {
-  console.error("Failed to send announcement:", data);
+  console.error("Failed to queue announcement:", data);
   process.exit(1);
 }
 
-console.log(`Sent to ${data.sent}/${data.total} subscribers (${data.failed ?? 0} failed).`);
+if (data.campaign) {
+  console.log(
+    `Queued campaign ${data.campaign.id} for ${data.campaign.total} subscriber(s); status: ${data.campaign.status}.`,
+  );
+} else {
+  // Compatibility with a deployment that still uses the pre-Queue dispatcher.
+  console.log(`Sent to ${data.sent}/${data.total} subscribers (${data.failed ?? 0} failed).`);
+}
