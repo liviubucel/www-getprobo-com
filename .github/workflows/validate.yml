@@ -15,6 +15,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  branch-freshness:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Require current main baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_REF="${{ github.event.pull_request.base.ref }}"
+          git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
+          CURRENT_BASE_SHA="$(git rev-parse "refs/remotes/origin/$BASE_REF")"
+          HEAD_SHA="$(git rev-parse HEAD)"
+
+          echo "Current $BASE_REF: $CURRENT_BASE_SHA"
+          echo "PR head: $HEAD_SHA"
+
+          if ! git merge-base --is-ancestor "$CURRENT_BASE_SHA" "$HEAD_SHA"; then
+            echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF. Rebase or recreate the branch from current $BASE_REF before continuing. Do not merge historical branches to repair it."
+            exit 1
+          fi
+
+          echo "Branch contains the current $BASE_REF baseline."
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
