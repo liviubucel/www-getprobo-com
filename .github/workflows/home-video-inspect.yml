@@ -8,27 +8,34 @@ on:
       - .github/workflows/home-video-inspect.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   contact-sheets:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feat/home-zebrabyte-motion
       - name: Verify media tools
         run: |
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
-      - name: Build contact sheets
+      - name: Build compact contact sheets
         run: |
-          mkdir -p video-inspect
+          rm -rf .video-inspect
+          mkdir -p .video-inspect
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
             name="$(basename "$file" .mp4)"
-            ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$file" > "video-inspect/${name}-duration.txt"
-            ffmpeg -y -i "$file" -vf "fps=2,scale=560:360:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x3:padding=4:margin=4" -frames:v 1 "video-inspect/${name}-sheet.jpg"
+            ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=nw=1 "$file" > ".video-inspect/${name}-meta.txt"
+            ffmpeg -y -i "$file" -vf "fps=1,scale=280:180:force_original_aspect_ratio=decrease:force_divisible_by=2,tile=4x2:padding=2:margin=2,scale=700:-2" -frames:v 1 -q:v 12 ".video-inspect/${name}-sheet.jpg"
+            base64 -w 76 ".video-inspect/${name}-sheet.jpg" > ".video-inspect/${name}-sheet.b64"
+            rm ".video-inspect/${name}-sheet.jpg"
           done
-      - uses: actions/upload-artifact@v4
-        with:
-          name: homepage-video-contact-sheets
-          path: video-inspect/
-          retention-days: 3
+      - name: Commit inspection data to branch
+        run: |
+          git config user.name "zebrabyte-video-inspector"
+          git config user.email "actions@users.noreply.github.com"
+          git add .video-inspect
+          git commit -m "chore: capture original homepage video frames [skip ci]"
+          git push origin HEAD:feat/home-zebrabyte-motion
