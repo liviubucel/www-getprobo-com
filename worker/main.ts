@@ -33,6 +33,10 @@ import {
   type UpmindMailSyncEnv,
 } from "./upmind-mail-sync";
 import {
+  guardUpmindWebhookSource,
+  type UpmindWebhookGuardEnv,
+} from "./upmind-webhook-guard";
+import {
   handleYcDealApi,
   type YcDealEnv,
 } from "./yc-deal";
@@ -45,6 +49,7 @@ type WorkerEnv = Parameters<typeof router.fetch>[1] &
   SecurityReportEnv &
   SentryEnv &
   UpmindMailSyncEnv &
+  UpmindWebhookGuardEnv &
   YcDealEnv;
 
 type ExecutionContextLike = {
@@ -90,6 +95,9 @@ export default {
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
       if (dispatchResponse) return dispatchResponse;
+
+      const upmindSourceResponse = guardUpmindWebhookSource(request, env);
+      if (upmindSourceResponse) return upmindSourceResponse;
 
       const upmindMailResponse = await handleUpmindMailSyncApi(request, env);
       if (upmindMailResponse) {
