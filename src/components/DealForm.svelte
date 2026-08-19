@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { onMount } from "svelte";
-  import { browserT } from "../lib/browser-i18n";
+  import { browserT, getBrowserLocale } from "../lib/browser-i18n";
   import { bindPublicForm } from "../lib/public-form";
 
   const props: { children: Snippet } = $props();
@@ -21,6 +21,9 @@
       submit,
       turnstile: turnstileElement,
       endpoint: "/api/yc-deal",
+      headers: () => ({
+        "Accept-Language": getBrowserLocale(),
+      }),
       copy: {
         verifying: browserT("Se verifică...", "Verifying..."),
         sending: browserT("Se trimite...", "Sending..."),
