@@ -81,9 +81,10 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
     onSuccess,
   } = options;
 
+  const turnstileContainer = turnstile ?? null;
   const idleLabel = submit.textContent?.trim() || "Submit";
   let busy = false;
-  const cleanupTurnstile = lazyRenderTurnstile(turnstile);
+  const cleanupTurnstile = lazyRenderTurnstile(turnstileContainer);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -101,7 +102,7 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
       submit.textContent = copy.verifying;
       setStatus(status, copy.verifying, "pending");
 
-      const verified = await ensureTurnstileToken(turnstile);
+      const verified = await ensureTurnstileToken(turnstileContainer);
       if (!verified) {
         setStatus(status, copy.securityError, "error", true);
         return;
@@ -137,7 +138,7 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
       console.error("Public form submission failed:", error);
       setStatus(status, copy.networkError, "error", true);
     } finally {
-      resetTurnstile(turnstile);
+      resetTurnstile(turnstileContainer);
       submit.disabled = false;
       submit.textContent = idleLabel;
       form.removeAttribute("aria-busy");
