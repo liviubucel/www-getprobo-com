@@ -49,18 +49,21 @@ function safeHtmlText(value: string): string {
 function internalCampaignRequest(
   original: Request,
   env: NewsletterQueueCompatEnv,
+  path: string,
   payload: Record<string, unknown>,
+  automation?: string,
 ): Request | null {
   if (!env.MAIL_ADMIN_SECRET || !env.MAIL_QUEUE) return null;
 
   const url = new URL(original.url);
-  url.pathname = "/api/mail/campaigns";
+  url.pathname = path;
   url.search = "";
 
   const headers = new Headers({
     "Content-Type": "application/json",
     Authorization: `Bearer ${env.MAIL_ADMIN_SECRET}`,
   });
+  if (automation) headers.set("X-ZebraByte-Mail-Automation", automation);
   const idempotencyKey = original.headers.get("Idempotency-Key")?.trim();
   if (idempotencyKey) headers.set("Idempotency-Key", idempotencyKey);
 
@@ -90,10 +93,7 @@ export async function handleNewsletterQueueCompatApi(
     return jsonResponse({ success: false, error: "Unauthorized" }, 401);
   }
   if (!env.MAIL_ADMIN_SECRET || !env.MAIL_QUEUE) {
-    return jsonResponse(
-      { success: false, error: "Queued newsletter delivery is not configured." },
-      503,
-    );
+    return jsonResponse({ success: false, error: "Queued newsletter delivery is not configured." }, 503);
   }
 
   if (pathname === "/api/newsletter/send-announcement") {
@@ -102,6 +102,9 @@ export async function handleNewsletterQueueCompatApi(
       bodyHtml?: string;
       bodyText?: string;
       locale?: Locale;
+      previewId?: string;
+      confirm?: boolean;
+      scheduledAt?: string;
     };
     try {
       body = (await request.json()) as typeof body;
@@ -109,15 +112,19 @@ export async function handleNewsletterQueueCompatApi(
       return jsonResponse({ success: false, error: "Invalid JSON body." }, 400);
     }
 
-    const internal = internalCampaignRequest(request, env, {
-      subject: body.title,
-      bodyHtml: body.bodyHtml,
-      bodyText: body.bodyText,
-      locale: body.locale === "en" ? "en" : "ro",
-      messageType: "marketing",
-      audience: "subscribers",
-      test: false,
-    });
+    const internal = body.confirm === true && body.previewId
+      ? internalCampaignRequest(request, env, "/api/mail/campaigns/confirm", { previewId: body.previewId })
+      : internalCampaignRequest(request, env, "/api/mail/campaigns/preview", {
+          subject: body.title,
+          bodyHtml: body.bodyHtml,
+          bodyText: body.bodyText,
+          locale: body.locale === "en" ? "en" : "ro",
+          messageType: "marketing",
+          audience: "subscribers",
+          test: false,
+          scheduledAt: body.scheduledAt,
+        });
+
     if (!internal) return jsonResponse({ success: false, error: "Mail queue unavailable." }, 503);
     return handleMailPlatformApi(internal, env);
   }
@@ -157,16 +164,22 @@ export async function handleNewsletterQueueCompatApi(
   ].filter(Boolean).join("");
   const bodyText = `${introduction}\n\n${excerpt ? `${excerpt}\n\n` : ""}${cta}: ${postUrl}`;
 
-  const internal = internalCampaignRequest(request, env, {
-    subject: title,
-    bodyHtml,
-    bodyText,
-    locale,
-    messageType: "marketing",
-    audience: "subscribers",
-    test: false,
-    sourceId: `blog:${locale}:${slug}`,
-  });
+  const internal = internalCampaignRequest(
+    request,
+    env,
+    "/api/mail/campaigns",
+    {
+      subject: title,
+      bodyHtml,
+      bodyText,
+      locale,
+      messageType: "marketing",
+      audience: "subscribers",
+      test: false,
+      sourceId: `blog:${locale}:${slug}`,
+    },
+    "blog-notify",
+  );
   if (!internal) return jsonResponse({ success: false, error: "Mail queue unavailable." }, 503);
   return handleMailPlatformApi(internal, env);
 }
