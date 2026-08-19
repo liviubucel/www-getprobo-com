@@ -1,3 +1,5 @@
+export { MailCampaignWorkflow } from "./mail-workflow";
+
 import router from "./router";
 import {
   handleZebraByteFormsApi,
