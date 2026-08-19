@@ -1,0 +1,26 @@
+name: Export compliance media assets
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/export-compliance-media.yml
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compliance-media
+          path: |
+            public/navigation/frameworks.svg
+            public/navigation/browser.svg
+            public/navigation/docs.svg
+            public/navigation/ellipse.svg
+            public/navigation/ahrefs.webp
+          retention-days: 1
