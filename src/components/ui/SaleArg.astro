@@ -1,30 +1,19 @@
 ---
 import { clsx } from "clsx";
-import HomeMotion from "./HomeMotion.astro";
-
-type MotionScene = "expert" | "automation" | "security" | "workspace";
-
 interface Props {
   title: string;
   class?: string;
   video?: string;
   poster?: string;
-  motion?: MotionScene;
 }
-
-const { title, video, poster: posterProp, motion, ...props } = Astro.props;
+const { title, video, poster: posterProp, ...props } = Astro.props;
 const poster = posterProp;
 ---
 
 <section class={clsx("flex flex-col gap-8 sm:gap-10", props.class)}>
   <div class="space-y-2">
     {
-      motion ? (
-        <div class="relative mb-6 block aspect-560/360 w-full overflow-hidden rounded-2xl bg-[#EEEDE8] sm:mb-10">
-          <HomeMotion scene={motion} />
-          <div class="from-level-0 to-level-0/0 pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-20 bg-gradient-to-t" />
-        </div>
-      ) : video ? (
+      video && (
         <autopilot-video class="relative mb-6 block aspect-560/360 w-full overflow-hidden rounded-2xl bg-[#EEEDE8] sm:mb-10">
           <video
             muted
@@ -39,7 +28,7 @@ const poster = posterProp;
           />
           <div class="from-level-0 to-level-0/0 absolute right-0 bottom-0 left-0 z-10 h-20 bg-gradient-to-t" />
         </autopilot-video>
-      ) : null
+      )
     }
     <h3 class="text-h4 font-medium">
       {title}
