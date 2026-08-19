@@ -4,11 +4,25 @@
 # Required for /api/contact and /api/newsletter/subscribe
 TURNSTILE_SECRET_KEY=your-turnstile-secret-key
 
-# Required for the private newsletter dispatch endpoints:
+# Required for the legacy/private newsletter dispatch endpoints:
 # - POST /api/newsletter/send-announcement
 # - POST /api/newsletter/notify-post
 # Send it as: Authorization: Bearer <NEWSLETTER_DISPATCH_SECRET>
 NEWSLETTER_DISPATCH_SECRET=your-newsletter-dispatch-secret
+
+# Required for the ZebraByte mail control-plane endpoints:
+# - POST /api/mail/clients/import
+# - GET  /api/mail/clients/stats
+# - POST /api/mail/campaigns
+# - GET  /api/mail/campaigns/:id
+# - POST /api/mail/campaigns/:id/requeue
+# - POST /api/mail/sanity-broadcast
+# Send it as: Authorization: Bearer <MAIL_ADMIN_SECRET>
+MAIL_ADMIN_SECRET=your-dedicated-mail-admin-secret
+
+# Upmind webhook endpoint secret. Upmind signs the exact raw JSON body with
+# HMAC-SHA256 and sends the digest in X-Webhook-Signature.
+UPMIND_WEBHOOK_SECRET=your-upmind-webhook-endpoint-secret
 
 # Legacy upstream Probo YC deal route — retained for compatibility.
 # Only configure these if /api/yc-deal is intentionally used.
@@ -16,9 +30,10 @@ N8N_YC_DEAL_WEBHOOK_URL=https://your-n8n.com/webhook/yc-deal
 WEBHOOK_AUTH_USERNAME=your-username
 WEBHOOK_AUTH_PASSWORD=your-password
 
-# EMAIL, NEWSLETTER KV, destination addresses, Sentry DSN/environment and the
-# public Turnstile site key are declared as Cloudflare bindings/vars in
-# wrangler.jsonc. Production secret values stay in Cloudflare, not in Git.
+# EMAIL, NEWSLETTER KV, MAIL_QUEUE, destination addresses, Sentry
+# DSN/environment and the public Turnstile site key are declared as Cloudflare
+# bindings/vars in wrangler.jsonc. Production secret values stay in Cloudflare,
+# not in Git.
 #
 # Frontend/build-time optional variables are documented separately in README:
 # - PUBLIC_POSTHOG_API_KEY
