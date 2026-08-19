@@ -71,6 +71,18 @@
     const anchor = allNodes[0];
     if (!anchor) return;
 
+    const originalContainers = uniqueNodes([
+      options.submit.parentElement instanceof HTMLElement && options.submit.parentElement !== form
+        ? options.submit.parentElement
+        : null,
+      options.reset?.parentElement instanceof HTMLElement && options.reset.parentElement !== form
+        ? options.reset.parentElement
+        : null,
+      options.status?.parentElement instanceof HTMLElement && options.status.parentElement !== form
+        ? options.status.parentElement
+        : null,
+    ]);
+
     form.dataset.progressiveWizard = "true";
 
     const marker = document.createComment("zbt-progressive-wizard");
@@ -98,7 +110,7 @@
       const fieldset = document.createElement("fieldset");
       fieldset.className = "zbt-wizard-step";
       fieldset.dataset.wizardStep = String(index);
-      fieldset.setAttribute("aria-label", spec.title[0]);
+      fieldset.setAttribute("aria-label", t(spec.title[0], spec.title[1]));
       for (const node of spec.nodes) fieldset.append(node);
       return fieldset;
     });
@@ -123,6 +135,10 @@
     marker.replaceWith(chrome, ...steps);
     if (options.status) form.append(options.status);
     form.append(controls);
+
+    for (const container of originalContainers) {
+      if (container.childElementCount === 0 && !container.textContent?.trim()) container.remove();
+    }
 
     let current = 0;
 
@@ -153,18 +169,37 @@
       }
     };
 
+    const advance = () => {
+      if (!validateStep(steps[current])) return;
+      if (current >= steps.length - 1) return;
+      current += 1;
+      render(true);
+    };
+
     previous.addEventListener("click", () => {
       if (current === 0) return;
       current -= 1;
       render(true);
     });
 
-    next.addEventListener("click", () => {
-      if (!validateStep(steps[current])) return;
-      if (current >= steps.length - 1) return;
-      current += 1;
-      render(true);
-    });
+    next.addEventListener("click", advance);
+
+    form.addEventListener(
+      "submit",
+      (event) => {
+        if (current < steps.length - 1) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          advance();
+          return;
+        }
+        if (!validateStep(steps[current])) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      },
+      true,
+    );
 
     form.addEventListener("reset", () => {
       window.setTimeout(() => {
