@@ -7,6 +7,9 @@ on:
     paths:
       - .github/workflows/home-video-inspect.yml
       - tools/rebrand-home-videos.py
+      - tools/home-video-tracking.b64
+      - tools/home-video-mark-alpha.b64
+      - tools/home-video-text-alpha.b64
 
 permissions:
   contents: write
@@ -19,12 +22,24 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-      - name: Install media dependencies
+      - name: Install FFmpeg
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core python3-opencv python3-numpy python3-pil python3-cairosvg
-      - name: Rebrand original Probo MP4s
-        run: python3 tools/rebrand-home-videos.py
+          sudo apt-get install -y ffmpeg
+      - name: Rebrand original Probo MP4s frame-for-frame
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .home-video-output
+          for number in 1 2 3 4; do
+            source="public/videos/keyshot${number}.mp4"
+            target=".home-video-output/keyshot${number}.mp4"
+            ffmpeg -loglevel error -i "$source" -an -f rawvideo -pix_fmt bgr24 - \
+              | python3 tools/rebrand-home-videos.py "$number" \
+              | ffmpeg -loglevel error -y -f rawvideo -pix_fmt bgr24 -s 1000x720 -r 60 -i - -an \
+                  -c:v libx264 -preset veryfast -crf 16 -pix_fmt yuv420p -movflags +faststart "$target"
+            mv "$target" "$source"
+          done
       - name: Build visual verification sheets
         run: |
           rm -rf video-preview
