@@ -35,7 +35,7 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       <div class="min-w-0 flex-1 space-y-3">
         <input
           class={clsx(
-            "border-border-mid placeholder:text-quaternary bg-secondary w-full rounded-lg border px-3",
+            "border-border-mid placeholder:text-quaternary bg-secondary w-full rounded-lg border px-3 outline-none focus:ring-2 focus:ring-black/10",
             props.variant === "footer" ? "h-9" : "h-11 sm:h-10",
           )}
           name="email"
@@ -66,13 +66,13 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
           <Button
             type="submit"
             class={clsx(
-              "text-base",
+              "text-base disabled:cursor-not-allowed disabled:opacity-50",
               props.variant === "footer" ? "h-9 w-max" : "h-11 sm:h-10",
             )}
           >
             Abonează-mă
           </Button>
-          <span class="text-muted-foreground hidden text-xs" data-status aria-live="polite"></span>
+          <span class="text-muted-foreground hidden text-xs" data-status role="status" aria-live="polite"></span>
         </div>
       </div>
     </form>
@@ -83,6 +83,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
         props.variant === "footer" ? "text-sm" : "text-lg font-medium",
       )}
       data-success
+      role="status"
+      aria-live="polite"
     >
       Verifică inbox-ul pentru linkul de confirmare. Abonarea devine activă numai după confirmare.
     </div>
@@ -91,15 +93,11 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
 
 <script>
   import { customElementDefine } from "../../lib/dom";
-  import { browserT, getBrowserLocale } from "../../lib/browser-i18n";
-  import {
-    ensureTurnstileToken,
-    lazyRenderTurnstile,
-    resetTurnstile,
-  } from "../../lib/turnstile";
+  import { browserT } from "../../lib/browser-i18n";
+  import { bindPublicForm } from "../../lib/public-form";
 
   class NewsletterForm extends HTMLElement {
-    private turnstileCleanup?: () => void;
+    private formCleanup?: () => void;
 
     connectedCallback() {
       const form = this.querySelector("form") as HTMLFormElement | null;
@@ -109,78 +107,55 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
       const turnstile = this.querySelector<HTMLElement>("[data-turnstile-container]");
       if (!form || !success || !status || !button) return;
 
-      this.turnstileCleanup?.();
-      this.turnstileCleanup = lazyRenderTurnstile(turnstile);
+      this.formCleanup?.();
+      form.hidden = false;
+      success.classList.add("hidden");
 
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        button.disabled = true;
-        button.textContent = browserT("Se verifică...", "Verifying...");
-        status.classList.add("hidden");
-        status.textContent = "";
-
-        try {
-          const verified = await ensureTurnstileToken(turnstile);
-          if (!verified) {
-            status.textContent = browserT(
-              "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
-              "Security verification is not ready yet. Please try again.",
-            );
-            status.classList.remove("hidden");
-            return;
-          }
-
-          button.textContent = browserT("Se trimite...", "Sending...");
-          const response = await fetch("/api/newsletter/subscribe", {
-            method: "POST",
-            headers: { "Accept-Language": getBrowserLocale() },
-            body: new FormData(form),
-          });
-          const payload = (await response.json()) as {
-            success?: boolean;
-            error?: string;
-            alreadySubscribed?: boolean;
-          };
-
-          if (!response.ok || !payload.success) {
-            status.textContent = browserT(
-              "Abonarea nu a putut fi procesată.",
-              "Your subscription could not be processed.",
-            );
-            status.classList.remove("hidden");
-            return;
-          }
-
-          form.hidden = true;
-          success.classList.remove("hidden");
-          if (payload.alreadySubscribed) {
-            success.textContent = browserT(
-              "Adresa este deja abonată la newsletter-ul ZebraByte.",
-              "This email address is already subscribed to the ZebraByte newsletter.",
-            );
-          } else {
-            success.textContent = browserT(
-              "Verifică inbox-ul pentru linkul de confirmare. Abonarea devine activă numai după confirmare.",
-              "Check your inbox for the confirmation link. Your subscription becomes active only after confirmation.",
-            );
-          }
-        } catch {
-          status.textContent = browserT(
+      this.formCleanup = bindPublicForm({
+        form,
+        status,
+        submit: button,
+        turnstile,
+        endpoint: "/api/newsletter/subscribe",
+        copy: {
+          verifying: browserT("Se verifică...", "Verifying..."),
+          sending: browserT("Se trimite...", "Sending..."),
+          success: browserT(
+            "Verifică inbox-ul pentru linkul de confirmare.",
+            "Check your inbox for the confirmation link.",
+          ),
+          securityError: browserT(
+            "Verificarea de securitate nu este încă disponibilă. Încearcă din nou.",
+            "Security verification is not ready yet. Please try again.",
+          ),
+          requestError: browserT(
+            "Abonarea nu a putut fi procesată.",
+            "Your subscription could not be processed.",
+          ),
+          networkError: browserT(
             "A apărut o eroare de rețea. Încearcă din nou.",
             "A network error occurred. Please try again.",
-          );
-          status.classList.remove("hidden");
-        } finally {
-          resetTurnstile(turnstile);
-          button.disabled = false;
-          button.textContent = browserT("Abonează-mă", "Subscribe");
-        }
+          ),
+        },
+        onSuccess: (payload) => {
+          form.hidden = true;
+          success.classList.remove("hidden");
+          success.textContent = payload.alreadySubscribed
+            ? browserT(
+                "Adresa este deja abonată la newsletter-ul ZebraByte.",
+                "This email address is already subscribed to the ZebraByte newsletter.",
+              )
+            : browserT(
+                "Verifică inbox-ul pentru linkul de confirmare. Abonarea devine activă numai după confirmare.",
+                "Check your inbox for the confirmation link. Your subscription becomes active only after confirmation.",
+              );
+        },
       });
     }
 
     disconnectedCallback() {
-      this.turnstileCleanup?.();
-      this.turnstileCleanup = undefined;
+      this.formCleanup?.();
+      this.formCleanup = undefined;
     }
   }
 
