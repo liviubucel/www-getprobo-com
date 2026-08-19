@@ -24,63 +24,228 @@ jobs:
           git fetch origin main --depth=1
           git checkout origin/main -- public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
 
-      - name: Restore frame-accurate tracking tools from known-good history
+      - name: Restore ZebraByte mark mask
         run: |
           git fetch origin 698b5134bfff5eee90016f11d35b7506d75f410a --depth=1
-          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/rebrand-home-videos.py > tools/rebrand-home-videos.py
-          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-tracking.b64 > tools/home-video-tracking.b64
-          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-mark-alpha.b64 > tools/home-video-mark-alpha.b64
-          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-text-alpha.b64 > tools/home-video-text-alpha.b64
+          git show 698b5134bfff5eee90016f11d35b7506d75f410a:tools/home-video-mark-alpha.b64 > /tmp/home-video-mark-alpha.b64
 
-      - name: Make ZebraByte mark subtly smaller and validate tracking coverage
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import base64, json, zlib
-
-          script = Path('tools/rebrand-home-videos.py')
-          text = script.read_text()
-          text = text.replace('padding = max(1, int(side * 0.18))', 'padding = max(1, int(side * 0.22))')
-          script.write_text(text)
-
-          track_path = Path('tools/home-video-tracking.b64')
-          tracks = json.loads(zlib.decompress(base64.b64decode(track_path.read_text().strip())))
-          for key in ('1','2','3','4'):
-              entries = {int(k): v for k,v in tracks[key]['entries'].items()}
-              ids = sorted(entries)
-              gaps = []
-              for a,b in zip(ids, ids[1:]):
-                  if b-a > 1:
-                      gaps.append((a,b,b-a-1))
-              print(f'keyshot{key}: frames={tracks[key]["frames"]}; tracked={len(ids)}; first={ids[0] if ids else None}; last={ids[-1] if ids else None}; gaps={gaps[:20]}')
-          PY
-
-      - name: Install FFmpeg
+      - name: Install media tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg python3-pip
+          python3 -m pip install --break-system-packages --disable-pip-version-check opencv-python-headless==4.10.0.84
 
-      - name: Rebrand original MP4s directly with frame-accurate tracking
+      - name: Rebrand every visible transition frame
         run: |
-          set -euo pipefail
-          for idx in 1 2 3 4; do
-            src="public/videos/keyshot${idx}.mp4"
-            out="/tmp/keyshot${idx}-perfect.mp4"
-            fps="$(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=nw=1:nk=1 "$src")"
-            ffmpeg -loglevel error -i "$src" -f rawvideo -pix_fmt bgr24 - \
-              | python3 tools/rebrand-home-videos.py "$idx" \
-              | ffmpeg -loglevel error -y -f rawvideo -pix_fmt bgr24 -s 1000x720 -r "$fps" -i - -an \
-                  -c:v libx264 -preset slow -tune animation -crf 16 -pix_fmt yuv420p -movflags +faststart "$out"
-            mv "$out" "$src"
-          done
+          cat > /tmp/perfect_rebrand.py <<'PY'
+          import base64
+          import cv2
+          import numpy as np
+          import os
+          import subprocess
 
-      - name: Validate frame counts, geometry and produce dense visual proof
+          SPECS = {
+              1: {"time": 1.0, "core": (170,324,56,56), "side": 76, "offset": (4,4), "high": .62, "roi": (0,0,1000,720), "slack": True,  "gap": 18, "edge": 12},
+              2: {"time": 1.0, "core": (174,198,56,56), "side": 64, "offset": (3,3), "high": .34, "roi": (70,80,460,360),  "slack": False, "gap": 18, "edge": 12},
+              3: {"time": 2.0, "core": (73,378,56,56),  "side": 72, "offset": (4,4), "high": .34, "roi": (0,220,430,680),  "slack": False, "gap": 18, "edge": 12},
+              4: {"time": 1.0, "core": (151,290,56,56), "side": 69, "offset": (4,4), "high": .34, "roi": (0,0,520,680),   "slack": False, "gap": 18, "edge": 12},
+          }
+
+          MARK_W = MARK_H = 48
+          mark_alpha = np.frombuffer(
+              base64.b64decode(open('/tmp/home-video-mark-alpha.b64', encoding='ascii').read().strip()),
+              dtype=np.uint8,
+          ).reshape(MARK_H, MARK_W)
+
+          def rounded_mask(size, radius):
+              mask = np.zeros((size, size), dtype=np.uint8)
+              cv2.rectangle(mask, (radius,0), (size-radius-1,size-1), 255, -1)
+              cv2.rectangle(mask, (0,radius), (size-1,size-radius-1), 255, -1)
+              for cx,cy in ((radius,radius),(size-radius-1,radius),(radius,size-radius-1),(size-radius-1,size-radius-1)):
+                  cv2.circle(mask, (cx,cy), radius, 255, -1)
+              return mask
+
+          def make_tile(side):
+              # Same footprint as the original icon; ZebraByte mark itself is ~8% smaller than previous pass.
+              tile = np.zeros((side,side,4), dtype=np.uint8)
+              tile[:,:,:3] = (22,35,16)
+              tile[:,:,3] = rounded_mask(side, max(4, round(side*.17)))
+              padding = max(4, round(side*.23))
+              inner = side - 2*padding
+              mark = cv2.resize(mark_alpha, (inner,inner), interpolation=cv2.INTER_LANCZOS4)
+              roi = tile[padding:padding+inner,padding:padding+inner]
+              a = mark[:,:,None].astype(np.float32)/255.0
+              roi[:,:,:3] = (255*a + roi[:,:,:3]*(1-a)).astype(np.uint8)
+              return tile
+
+          def blend_overlay(frame, overlay, x, y, opacity):
+              h,w = overlay.shape[:2]
+              if x < 0 or y < 0 or x+w > frame.shape[1] or y+h > frame.shape[0] or opacity <= 0:
+                  return False
+              a = overlay[:,:,3:4].astype(np.float32)/255.0
+              a *= float(opacity)/255.0
+              target = frame[y:y+h,x:x+w].astype(np.float32)
+              frame[y:y+h,x:x+w] = (overlay[:,:,:3]*a + target*(1-a)).astype(np.uint8)
+              return True
+
+          def blend_rect(frame, x1, y1, x2, y2, bgr, opacity):
+              x1=max(0,int(x1)); y1=max(0,int(y1)); x2=min(frame.shape[1],int(x2)); y2=min(frame.shape[0],int(y2))
+              if x2<=x1 or y2<=y1 or opacity<=0:
+                  return
+              a=float(opacity)/255.0
+              target=frame[y1:y2,x1:x2].astype(np.float32)
+              fill=np.empty_like(target); fill[:]=bgr
+              frame[y1:y2,x1:x2]=(fill*a+target*(1-a)).astype(np.uint8)
+
+          def sample_bg(frame, x, y, w, h):
+              y0=max(0,y-10); y1=max(0,y-4)
+              x0=max(0,x-4); x1=min(frame.shape[1],x+w+4)
+              sample=frame[y0:y1,x0:x1]
+              if sample.size == 0:
+                  return (250,250,250)
+              med=np.median(sample.reshape(-1,3),axis=0)
+              return tuple(int(v) for v in med)
+
+          def reference(path, seconds):
+              cap=cv2.VideoCapture(path)
+              cap.set(cv2.CAP_PROP_POS_MSEC, seconds*1000)
+              ok,frame=cap.read(); cap.release()
+              if not ok: raise RuntimeError(path)
+              return frame
+
+          def interpolate_track(detections, total, max_gap, edge):
+              track=dict(detections)
+              ids=sorted(track)
+              if not ids: return track
+
+              # Fill every short detector dropout between genuine detections.
+              for a,b in zip(ids,ids[1:]):
+                  gap=b-a-1
+                  if gap <= 0 or gap > max_gap:
+                      continue
+                  xa,ya,sa=track[a]; xb,yb,sb=track[b]
+                  for j in range(1,gap+1):
+                      t=j/(gap+1)
+                      track[a+j]=(round(xa+(xb-xa)*t), round(ya+(yb-ya)*t), min(sa,sb))
+
+              # Find contiguous visible segments after gap filling and extend into fades.
+              ids=sorted(track)
+              segments=[]; start=prev=ids[0]
+              for i in ids[1:]:
+                  if i-prev > 1:
+                      segments.append((start,prev)); start=i
+                  prev=i
+              segments.append((start,prev))
+
+              for start,end in segments:
+                  sx,sy,ss=track[start]; ex,ey,es=track[end]
+                  for d in range(1,edge+1):
+                      before=start-d
+                      after=end+d
+                      fade=max(0.0,1.0-d/(edge+1))
+                      if before >= 0 and before not in track:
+                          track[before]=(sx,sy,ss*fade)
+                      if after < total and after not in track:
+                          track[after]=(ex,ey,es*fade)
+              return track
+
+          def presence_opacity(frame, x, y, side, score, high):
+              # Estimate how strongly the original brand is visible, so ZebraByte follows the same fade.
+              x=max(0,x); y=max(0,y)
+              patch=frame[y:min(frame.shape[0],y+side),x:min(frame.shape[1],x+side)]
+              if patch.size == 0: return 0
+              bg=np.array(sample_bg(frame,x,y,side,side),dtype=np.float32)
+              diff=float(np.mean(np.abs(patch.astype(np.float32)-bg)))
+              presence=min(1.0,max(0.0,diff/34.0))
+              confidence=min(1.0,max(.18,score/max(high,1e-6)))
+              return int(255*presence*confidence)
+
+          def replace_word(frame, idx, x, y, side, opacity, has_slack):
+              if idx not in (1,3,4) or opacity <= 0:
+                  return
+              if idx == 1:
+                  tx=x+(96 if has_slack else 107); ty=y+(1 if has_slack else 0)
+              elif idx == 3:
+                  tx=x+96; ty=y-3
+              else:
+                  tx=x+96; ty=y-4
+              width=98; height=27
+              bg=sample_bg(frame,tx,ty,width,height)
+              # Slightly stronger cleanup than logo opacity so no original Probo glyph can ghost through.
+              cleanup=min(255, int(opacity*1.22)+18)
+              blend_rect(frame,tx-4,ty-3,tx+width,ty+height,bg,cleanup)
+              text_layer=frame.copy()
+              cv2.putText(text_layer,'ZEBRABYTE',(tx,ty+14),cv2.FONT_HERSHEY_DUPLEX,.43,(20,20,20),1,cv2.LINE_AA)
+              a=float(opacity)/255.0
+              frame[:] = (text_layer.astype(np.float32)*a + frame.astype(np.float32)*(1-a)).astype(np.uint8)
+
+          def process(idx,cfg):
+              src=f'public/videos/keyshot{idx}.mp4'; dst=f'/tmp/keyshot{idx}-perfect.mp4'
+              ref=reference(src,cfg['time'])
+              x,y,w,h=cfg['core']; template=cv2.cvtColor(ref[y:y+h,x:x+w],cv2.COLOR_BGR2GRAY)
+
+              cap=cv2.VideoCapture(src)
+              fps=cap.get(cv2.CAP_PROP_FPS); W=int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)); H=int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)); total=int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+              rx1,ry1,rx2,ry2=cfg['roi']
+              detections={}; scores=[]
+              i=0
+              while True:
+                  ok,frame=cap.read()
+                  if not ok: break
+                  gray=cv2.cvtColor(frame[ry1:ry2,rx1:rx2],cv2.COLOR_BGR2GRAY)
+                  result=cv2.matchTemplate(gray,template,cv2.TM_CCOEFF_NORMED)
+                  _,score,_,loc=cv2.minMaxLoc(result)
+                  scores.append(score)
+                  if score >= cfg['high']:
+                      detections[i]=(rx1+loc[0]-cfg['offset'][0], ry1+loc[1]-cfg['offset'][1], score)
+                  i+=1
+              cap.release()
+              track=interpolate_track(detections,total,cfg['gap'],cfg['edge'])
+              print(f'keyshot{idx}: frames={total}; high-confidence={len(detections)}; covered-with-fades={len(track)}; max-score={max(scores):.3f}')
+
+              tile=make_tile(cfg['side'])
+              enc=subprocess.Popen(['ffmpeg','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24','-s',f'{W}x{H}','-r',str(fps),'-i','-','-an','-c:v','libx264','-preset','slow','-tune','animation','-crf','16','-pix_fmt','yuv420p','-movflags','+faststart',dst],stdin=subprocess.PIPE)
+              cap=cv2.VideoCapture(src)
+              i=0; edited=0
+              while True:
+                  ok,frame=cap.read()
+                  if not ok: break
+                  if i in track:
+                      ix,iy,score=track[i]
+                      opacity=presence_opacity(frame,ix,iy,cfg['side'],score,cfg['high'])
+                      slack_patch=None; sx=sy=0; has_slack=False
+                      if cfg['slack']:
+                          sx,sy=ix+52,iy+54
+                          if 0<=sx<W-30 and 0<=sy<H-30:
+                              patch=frame[sy:sy+30,sx:sx+30].copy(); hsv=cv2.cvtColor(patch,cv2.COLOR_BGR2HSV)
+                              if float(np.mean(hsv[:,:,1]))>35:
+                                  slack_patch=patch; has_slack=True
+                      bg=sample_bg(frame,ix,iy,cfg['side'],cfg['side'])
+                      cleanup=min(255,int(opacity*1.20)+15)
+                      blend_rect(frame,ix,iy,ix+cfg['side'],iy+cfg['side'],bg,cleanup)
+                      blend_overlay(frame,tile,ix,iy,opacity)
+                      if slack_patch is not None:
+                          frame[sy:sy+30,sx:sx+30]=slack_patch
+                      replace_word(frame,idx,ix,iy,cfg['side'],opacity,has_slack)
+                      edited+=1
+                  enc.stdin.write(frame.tobytes()); i+=1
+              cap.release(); enc.stdin.close()
+              if enc.wait()!=0: raise RuntimeError(f'encode failed keyshot{idx}')
+              if edited != len(track): raise RuntimeError(f'keyshot{idx}: edited={edited}, track={len(track)}')
+              os.replace(dst,src)
+
+          for idx,cfg in SPECS.items(): process(idx,cfg)
+          PY
+
+          python3 /tmp/perfect_rebrand.py
+
+      - name: Validate video geometry and produce dense proof
         run: |
           rm -rf /tmp/video-proof
           mkdir -p /tmp/video-proof
           for file in public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4; do
             name="$(basename "$file" .mp4)"
-            ffprobe -v error -show_entries stream=width,height,nb_frames,r_frame_rate -show_entries format=duration,size -of default=nw=1 "$file" | tee "/tmp/video-proof/${name}-meta.txt"
+            ffprobe -v error -show_entries stream=width,height,nb_frames,r_frame_rate -show_entries format=duration,size -of default=nw=1 "$file" > "/tmp/video-proof/${name}-meta.txt"
             ffmpeg -loglevel error -y -i "$file" -vf "fps=5,scale=250:180:force_original_aspect_ratio=decrease,tile=10x8:padding=1:margin=1" -frames:v 1 "/tmp/video-proof/${name}-dense.jpg"
           done
 
@@ -90,15 +255,11 @@ jobs:
           path: /tmp/video-proof
           retention-days: 3
 
-      - name: Remove temporary tracking tools
-        run: |
-          rm -f tools/rebrand-home-videos.py tools/home-video-tracking.b64 tools/home-video-mark-alpha.b64 tools/home-video-text-alpha.b64
-
-      - name: Commit only the four polished MP4s
+      - name: Commit only the polished MP4s
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/videos/keyshot1.mp4 public/videos/keyshot2.mp4 public/videos/keyshot3.mp4 public/videos/keyshot4.mp4
           git diff --cached --quiet && exit 1
-          git commit -m "feat: perfect ZebraByte branding in homepage MP4s"
+          git commit -m "feat: remove Probo flashes from homepage MP4s"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
