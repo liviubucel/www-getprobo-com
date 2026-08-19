@@ -28,6 +28,7 @@ type PublicFormOptions = {
   turnstile?: HTMLElement | null;
   endpoint: string;
   copy: PublicFormCopy;
+  headers?: HeadersInit | (() => HeadersInit);
   prepare?: () => void | boolean;
   resetOnSuccess?: boolean;
   onSuccess?: (payload: FormPayload) => void;
@@ -76,6 +77,7 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
     turnstile,
     endpoint,
     copy,
+    headers,
     prepare,
     resetOnSuccess = true,
     onSuccess,
@@ -111,12 +113,16 @@ export function bindPublicForm(options: PublicFormOptions): () => void {
       submit.textContent = copy.sending;
       setStatus(status, copy.sending, "pending");
 
+      const extraHeaders = typeof headers === "function" ? headers() : headers;
+      const requestHeaders = new Headers(extraHeaders);
+      requestHeaders.set("Accept", "application/json");
+      if (!requestHeaders.has("Accept-Language")) {
+        requestHeaders.set("Accept-Language", getBrowserLocale());
+      }
+
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Accept-Language": getBrowserLocale(),
-        },
+        headers: requestHeaders,
         body: new FormData(form),
       });
       const payload = await readPayload(response);
