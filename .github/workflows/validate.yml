@@ -80,11 +80,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Install OCR dependency
+      - name: Install video and OCR dependencies
         shell: bash
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr
+          sudo apt-get install -y -qq ffmpeg tesseract-ocr
 
       - name: OCR remaining changelog videos
         shell: bash
