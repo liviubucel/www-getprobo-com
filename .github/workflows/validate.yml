@@ -90,9 +90,9 @@ jobs:
       - name: OCR remaining changelog videos
         run: python3 tmp/video_brand_audit.py
 
-      - name: Upload OCR report
+      - name: Upload OCR report and contact sheets
         uses: actions/upload-artifact@v4
         with:
           name: remaining-video-brand-audit
-          path: /tmp/video-brand-audit/report.txt
+          path: /tmp/video-brand-audit
           retention-days: 1
