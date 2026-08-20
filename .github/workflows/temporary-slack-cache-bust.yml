@@ -1,0 +1,74 @@
+name: Temporary Slack Lottie cache bust
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-slack-cache-bust.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify branded Lottie and publish cache-busted asset
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          src = Path('public/lottie/trust-center/slack.json')
+          dst = Path('public/lottie/trust-center/slack-zebrabyte-v2.json')
+          page = Path('src/pages/products/compliance-portal.astro')
+
+          data = json.loads(src.read_text())
+          assets = {str(a.get('id')): a for a in data.get('assets', [])}
+          word_id = 'zebrabyte-wordmark-compact'
+          assert word_id in assets, 'ZEBRABYTE wordmark asset missing from slack.json'
+
+          wordmark_refs = 0
+          for asset in data.get('assets', []):
+              for layer in asset.get('layers', []) if isinstance(asset, dict) else []:
+                  if layer.get('refId') == word_id:
+                      wordmark_refs += 1
+          assert wordmark_refs >= 4, f'Expected >=4 ZebraByte wordmark refs, got {wordmark_refs}'
+
+          expected_logo_layers = {'355':353, '861':859, '2494':2492, '3004':3002}
+          for aid, ind in expected_logo_layers.items():
+              layer = next(l for l in assets[aid]['layers'] if l.get('ind') == ind)
+              scale = layer.get('ks', {}).get('s', {}).get('k')
+              assert scale == [84,84,100], f'Unexpected logo scale for {aid}/{ind}: {scale}'
+
+          dst.write_text(json.dumps(data, separators=(',', ':')))
+
+          text = page.read_text()
+          old_paths = [
+              '/lottie/trust-center/slack.json',
+              '/lottie/trust-center/slack-zebrabyte-v2.json',
+          ]
+          for old in old_paths:
+              text = text.replace(old, '/lottie/trust-center/slack-zebrabyte-v2.json')
+          page.write_text(text)
+
+          assert '/lottie/trust-center/slack-zebrabyte-v2.json' in page.read_text()
+          print(f'Branded Lottie verified: {wordmark_refs} wordmark refs; cache-busted asset published')
+          PY
+
+      - name: Commit cache-busted asset and page reference
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack-zebrabyte-v2.json src/pages/products/compliance-portal.astro
+          git commit -m 'fix: serve cache-busted ZebraByte Slack animation'
+          git push origin HEAD:main
