@@ -6,9 +6,9 @@ const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/i;
 const legacyExternalDomainPattern = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
 const legacyMediaAssetPattern = /(?:^|[/_.-])(?:get)?probo(?:[/_.-]|$)/i;
 // The Hub keeps this historical source filename for compatibility, but its binary
-// content is replaced in-repo with reviewed, non-Probo artwork. Do not treat the
-// non-visible legacy filename as a public brand leak.
-const verifiedRebrandedMediaPattern = /(?:^|\/)probo-homepage-screenshot(?:\.[a-z0-9_-]+)?\.jpg(?:[?#].*)?$/i;
+// content is replaced in-repo with reviewed, non-Probo artwork. Astro adds a hash
+// and can transcode it to webp/avif, so accept only this exact verified basename.
+const verifiedRebrandedMediaPattern = /(?:^|\/)probo-homepage-screenshot(?:\.[a-z0-9_-]+)*\.(?:jpe?g|png|webp|avif)(?:[?#].*)?$/i;
 const mediaExtensionPattern = /\.(?:svg|png|jpe?g|webp|gif|avif|mp4|webm)(?:[?#].*)?$/i;
 const absoluteUrlPattern = /https?:\/\/[^\s)<>'"\]]+/gi;
 
