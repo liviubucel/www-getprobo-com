@@ -7,14 +7,18 @@ on:
       - .github/workflows/temporary-render-slack-v3.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   render:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -50,7 +54,7 @@ jobs:
           echo "Chrome: $CHROME"
           cat > tmp/slack-render/render.mjs <<'JS'
           import puppeteer from 'puppeteer-core';
-          import { mkdir } from 'node:fs/promises';
+          import { mkdir, writeFile } from 'node:fs/promises';
           const browser=await puppeteer.launch({headless:true,executablePath:process.env.CHROME,args:['--no-sandbox','--disable-setuid-sandbox']});
           const page=await browser.newPage();
           await page.setViewport({width:900,height:900,deviceScaleFactor:1});
@@ -58,18 +62,28 @@ jobs:
           const total=await page.evaluate(()=>window.ready);
           await mkdir('tmp/slack-render/out',{recursive:true});
           const fractions=[0.15,0.30,0.45,0.60,0.75,0.90];
+          const rendered=[];
           for (let i=0;i<fractions.length;i++) {
             const frame=Math.floor(total*fractions[i]);
             await page.evaluate((f)=>window.anim.goToAndStop(f,true),frame);
             await new Promise(r=>setTimeout(r,150));
-            await page.screenshot({path:`tmp/slack-render/out/frame-${i+1}-${frame}.png`,clip:{x:0,y:0,width:900,height:900}});
+            const path=`tmp/slack-render/out/frame-${i+1}-${frame}.png`;
+            await page.screenshot({path,clip:{x:0,y:0,width:900,height:900}});
+            rendered.push(path);
           }
-          console.log({total});
+          await writeFile('tmp/slack-render/out/frames.json',JSON.stringify({total,rendered},null,2));
           await browser.close();
           JS
           CHROME="$CHROME" node tmp/slack-render/render.mjs
-      - uses: actions/upload-artifact@v4
-        with:
-          name: slack-v3-render
-          path: tmp/slack-render/out/*.png
-          if-no-files-found: error
+      - name: Commit temporary visual QA output
+        shell: bash
+        run: |
+          rm -rf .tmp-slack-qa
+          mkdir -p .tmp-slack-qa
+          cp tmp/slack-render/out/* .tmp-slack-qa/
+          git rm .github/workflows/temporary-render-slack-v3.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .tmp-slack-qa
+          git commit -m 'chore: render Slack v3 visual QA frames'
+          git push origin HEAD:main
