@@ -61,12 +61,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: fix/global-visual-rebrand
-      - name: Upload site assets and source references
+      - name: Pack site assets
+        run: tar -czf /tmp/site-visual-assets.tar.gz public src
+      - name: Upload site assets archive
         uses: actions/upload-artifact@v4
         with:
           name: site-visual-assets
-          path: |
-            public
-            src
+          path: /tmp/site-visual-assets.tar.gz
           retention-days: 1
           if-no-files-found: error
