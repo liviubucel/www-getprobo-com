@@ -1,0 +1,67 @@
+name: Temporary enlarge Slack ZebraByte wordmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-enlarge-slack-wordmark.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Enlarge ZebraByte wordmark only
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('public/lottie/trust-center/slack-zebrabyte-v4.json')
+          data = json.loads(path.read_text())
+          assets = {str(a.get('id')): a for a in data.get('assets', [])}
+          targets = {
+              '305': 20305,
+              '861': 20861,
+              '2444': 22444,
+              '2957': 22957,
+          }
+          changed = 0
+          for aid, ind in targets.items():
+              layer = next((l for l in assets[aid]['layers'] if l.get('ind') == ind and l.get('nm') == 'ZEBRABYTE'), None)
+              if layer is None:
+                  raise SystemExit(f'ZEBRABYTE layer missing: {aid}/{ind}')
+              layer.setdefault('ks', {})['s'] = {'a': 0, 'k': [112, 112, 100]}
+              changed += 1
+
+          if changed != 4:
+              raise SystemExit(f'Expected 4 changed layers, got {changed}')
+
+          path.write_text(json.dumps(data, separators=(',', ':')))
+
+          check = json.loads(path.read_text())
+          ca = {str(a.get('id')): a for a in check.get('assets', [])}
+          for aid, ind in targets.items():
+              layer = next(l for l in ca[aid]['layers'] if l.get('ind') == ind)
+              assert layer['ks']['s']['k'] == [112, 112, 100]
+          print('Slack ZEBRABYTE wordmark enlarged 12% in all four states')
+          PY
+      - name: Commit and remove temporary workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/temporary-enlarge-slack-wordmark.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack-zebrabyte-v4.json
+          git diff --cached --quiet && { echo 'No change'; exit 1; }
+          git commit -m 'fix: slightly enlarge ZebraByte Slack wordmark'
+          git push origin HEAD:main
