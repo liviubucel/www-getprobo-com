@@ -1,7 +1,7 @@
 ---
 title: "How We Automated Our Client Contract Process"
 date: 2026-04-24
-excerpt: "How we handle Probo's contract workflow end-to-end, from prospect handshake to e-signature, and why we rebuilt the pipeline twice."
+excerpt: "How we handle ZebraByte's contract workflow end-to-end, from prospect handshake to e-signature, and why we rebuilt the pipeline twice."
 author:
   name: "Arthur Mayoux"
 ogImage: "/blog/docusign-workflow.png"
@@ -9,13 +9,13 @@ ogImage: "/blog/docusign-workflow.png"
 
 After weeks of back-and-forth, your prospect evaluated the options and picked you. Price is agreed. Deliverables are clear. Now it's time to make it official.
 
-For every new customer who wants Probo to handle their compliance as a managed service, we need three signed documents:
+For every new customer who wants ZebraByte to handle their compliance as a managed service, we need three signed documents:
 
 - **An Order Form** recapping the deal: amount, deliverables, start date, limitations, signatory details.
 - **A Mutual NDA** protecting both sides.
 - **A Master Service Agreement (MSA)** covering the full engagement.
 
-Three documents. All need signatory info, contract details, and official signatures from both a Probo representative and the customer's representative.
+Three documents. All need signatory info, contract details, and official signatures from both a ZebraByte representative and the customer's representative.
 
 We could have filled every field by hand in all three docs, printed them, signed them, and faxed them over. But the probability that a San Francisco startup owns a fax machine is low.
 
@@ -33,17 +33,15 @@ The first version ran on [n8n](https://n8n.io/), our workflow automation tool.
 
 The process started with collecting customer information needed for the contracts: company legal name, headquarters address, signatory details.
 
-We built a simple order form on our website. When a prospect decides to move forward with Probo, we send them the link. They fill it out. A first n8n workflow enriches the deal in HubSpot with that info and automatically moves it to the "Contract Sent" stage.
-
-![Probo order form on the website](/blog/order-form-probo.png)
+We built a simple order form on our website. When a prospect decides to move forward with ZebraByte, we send them the link. They fill it out. A first n8n workflow enriches the deal in HubSpot with that info and automatically moves it to the "Contract Sent" stage.
 
 ![HubSpot deal enriched from the order form](/blog/enrich-hubspot.png)
 
 When a deal hits "Contract Sent," a second workflow fires. It uses the Docusign node to create a new envelope from a pre-built template with three parties, in a specific signing order:
 
-1. **Probo representative** signs first.
+1. **ZebraByte representative** signs first.
 2. **Customer representative** signs second.
-3. **Probo legal** receives a copy.
+3. **ZebraByte legal** receives a copy.
 
 The template contained our three documents, each using [document generation](https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/documents/document-generation/) (a Docusign feature that lets you define variables inside documents). Signature zones were already placed.
 

@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: "ZebraByte Blog",
     description:
-      "Analize și ghiduri ZebraByte despre cyber security, privacy, compliance și infrastructură, împreună cu arhiva editorială Probo atribuită.",
+      "Analize și ghiduri ZebraByte despre securitate cibernetică, privacy, conformitate și infrastructură securizată.",
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

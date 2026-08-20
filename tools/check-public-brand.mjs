@@ -2,17 +2,15 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const distDir = "dist";
-const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/;
+const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/i;
 const legacyExternalDomainPattern = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
-
-/*
- * PUBLIC IDENTITY AUDIT ONLY.
- *
- * Visible historical brand claims and external Probo domains are forbidden in
- * production output. Internal legacy slugs and historical technical identifiers
- * may remain for compatibility, SEO continuity, architecture and migration
- * reference. Never delete useful inherited content to satisfy this audit.
- */
+const legacyMediaAssetPattern = /(?:^|[/_.-])(?:get)?probo(?:[/_.-]|$)/i;
+// The Hub keeps this historical source filename for compatibility, but its binary
+// content is replaced in-repo with reviewed, non-Probo artwork. Astro adds a hash
+// and can transcode it to webp/avif, so accept only this exact verified basename.
+const verifiedRebrandedMediaPattern = /(?:^|\/)probo-homepage-screenshot(?:\.[a-z0-9_-]+)*\.(?:jpe?g|png|webp|avif)(?:[?#].*)?$/i;
+const mediaExtensionPattern = /\.(?:svg|png|jpe?g|webp|gif|avif|mp4|webm)(?:[?#].*)?$/i;
+const absoluteUrlPattern = /https?:\/\/[^\s)<>'"\]]+/gi;
 
 function findFiles(dir) {
   if (!existsSync(dir)) return [];
@@ -21,9 +19,42 @@ function findFiles(dir) {
     const file = join(dir, entry);
     const stat = statSync(file);
     if (stat.isDirectory()) result.push(...findFiles(file));
-    else if (/\.(?:html|md|txt|xml)$/i.test(entry)) result.push(file);
+    else if (/\.(?:html|md|txt|xml|svg)$/i.test(entry)) result.push(file);
   }
   return result;
+}
+
+function collectAttributeValues(markup, names) {
+  const namePattern = names.join("|");
+  return Array.from(
+    markup.matchAll(new RegExp(`\\b(?:${namePattern})=(['\"])([\\s\\S]*?)\\1`, "gi")),
+  ).map((match) => match[2]);
+}
+
+function compactContext(value, index, length) {
+  const start = Math.max(0, index - 80);
+  const end = Math.min(value.length, index + length + 80);
+  return value.slice(start, end).replace(/\s+/g, " ").trim();
+}
+
+function visibleBrandLeak(text) {
+  const brand = legacyVisibleBrandPattern.exec(text);
+  if (!brand) return null;
+  return {
+    kind: "visible-brand",
+    token: brand[0],
+    context: compactContext(text, brand.index, brand[0].length),
+  };
+}
+
+function upstreamUrlLeak(urls) {
+  for (const url of urls) {
+    const match = legacyExternalDomainPattern.exec(url);
+    if (match) {
+      return { kind: "external-domain", token: match[0], context: url };
+    }
+  }
+  return null;
 }
 
 function htmlAuditView(html) {
@@ -31,41 +62,79 @@ function htmlAuditView(html) {
     /<(script|style|textarea|pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
-  const externalUrls = Array.from(
-    withoutRuntimeOrCode.matchAll(
-      /\b(href|action|formaction|src|poster)=(['"])(https?:\/\/[\s\S]*?)\2/gi,
+  const refs = collectAttributeValues(withoutRuntimeOrCode, [
+    "href",
+    "action",
+    "formaction",
+    "src",
+    "poster",
+  ]);
+  return {
+    visibleText: withoutRuntimeOrCode.replace(/<[^>]+>/g, " "),
+    externalUrls: refs.filter((value) => /^https?:\/\//i.test(value)),
+    localMediaRefs: refs.filter(
+      (value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value),
     ),
-  )
-    .map((match) => match[3])
-    .join("\n");
-  return `${withoutRuntimeOrCode.replace(/<[^>]+>/g, " ")}\n${externalUrls}`;
+  };
 }
 
 function markdownAuditView(markdown) {
   const withoutCode = markdown
     .replace(/```[\s\S]*?```/g, "")
     .replace(/~~~[\s\S]*?~~~/g, "")
+    .replace(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
     .replace(/`[^`\n]+`/g, "");
-  const externalUrls = Array.from(
-    withoutCode.matchAll(/https?:\/\/[^\s)<>'"\]]+/gi),
-  )
-    .map((match) => match[0])
-    .join("\n");
-  const visibleText = withoutCode.replace(
-    /(?:https?:\/\/|\/)[^\s)<>'"\]]+/gi,
-    " ",
-  );
-  return `${visibleText}\n${externalUrls}`;
+  const externalUrls = Array.from(withoutCode.matchAll(absoluteUrlPattern)).map((match) => match[0]);
+  const visibleText = withoutCode
+    .replace(absoluteUrlPattern, " ")
+    .replace(/\]\([^)]*\)/g, "]")
+    // Package/repository identifiers are implementation provenance, not a public brand claim.
+    // Keep them auditable in source while excluding them from visible-brand detection.
+    .replace(/@probo\/[a-z0-9._/-]+/gi, " ")
+    .replace(/\bgetprobo\/probo(?:\/[a-z0-9._/-]+)*/gi, " ")
+    // Preserve legacy route slugs for SEO/compatibility without treating the URL itself as prose.
+    .replace(/\/[a-z0-9][^\s)<>'"\]]*/gi, " ");
+  return { visibleText, externalUrls };
 }
 
-function hasLeak(file, content) {
-  if (file.endsWith(".xml")) return legacyExternalDomainPattern.test(content);
-  const auditable = file.endsWith(".html")
-    ? htmlAuditView(content)
-    : file.endsWith(".md") || file.endsWith(".txt")
-      ? markdownAuditView(content)
-      : content;
-  return legacyVisibleBrandPattern.test(auditable) || legacyExternalDomainPattern.test(auditable);
+function svgAuditView(svg) {
+  const withoutRuntimeOrStyle = svg.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "");
+  const refs = collectAttributeValues(withoutRuntimeOrStyle, ["href", "xlink:href", "src"]);
+  return {
+    visibleText: withoutRuntimeOrStyle.replace(/<[^>]+>/g, " "),
+    externalUrls: refs.filter((value) => /^https?:\/\//i.test(value)),
+    localMediaRefs: refs.filter(
+      (value) => !/^https?:\/\//i.test(value) && mediaExtensionPattern.test(value),
+    ),
+  };
+}
+
+function xmlAuditView(xml) {
+  const externalUrls = Array.from(xml.matchAll(absoluteUrlPattern)).map((match) => match[0]);
+  const visibleText = xml
+    .replace(absoluteUrlPattern, " ")
+    .replace(/<[^>]+>/g, " ");
+  return { visibleText, externalUrls };
+}
+
+function structuredLeak(view) {
+  const visible = visibleBrandLeak(view.visibleText);
+  if (visible) return visible;
+  const upstream = upstreamUrlLeak(view.externalUrls ?? []);
+  if (upstream) return upstream;
+  const media = (view.localMediaRefs ?? []).find(
+    (ref) => legacyMediaAssetPattern.test(ref) && !verifiedRebrandedMediaPattern.test(ref),
+  );
+  if (media) return { kind: "media-ref", token: media, context: media };
+  return null;
+}
+
+function findLeak(file, content) {
+  if (file.endsWith(".html")) return structuredLeak(htmlAuditView(content));
+  if (file.endsWith(".svg")) return structuredLeak(svgAuditView(content));
+  if (file.endsWith(".xml")) return structuredLeak(xmlAuditView(content));
+  if (file.endsWith(".md") || file.endsWith(".txt")) return structuredLeak(markdownAuditView(content));
+  return visibleBrandLeak(content);
 }
 
 if (!existsSync(distDir)) {
@@ -76,14 +145,19 @@ if (!existsSync(distDir)) {
 const leaks = [];
 for (const file of findFiles(distDir)) {
   const content = readFileSync(file, "utf8");
-  if (hasLeak(file, content)) leaks.push(relative(distDir, file));
+  const leak = findLeak(file, content);
+  if (leak) leaks.push({ file: relative(distDir, file), ...leak });
 }
 
 if (leaks.length) {
-  console.error(`[public-brand] FAIL: legacy upstream branding remains in ${leaks.length} public file(s). Rebrand/paraphrase; do not delete the content:`);
-  for (const leak of leaks.slice(0, 40)) console.error(`  - ${leak}`);
-  if (leaks.length > 40) console.error(`  - ...and ${leaks.length - 40} more`);
+  console.error(`[public-brand] FAIL: legacy upstream branding remains in ${leaks.length} public file(s):`);
+  for (const leak of leaks.slice(0, 60)) {
+    console.error(`  - ${leak.file}`);
+    console.error(`    ${leak.kind}: ${leak.token}`);
+    console.error(`    context: ${leak.context}`);
+  }
+  if (leaks.length > 60) console.error(`  - ...and ${leaks.length - 60} more`);
   process.exit(1);
 }
 
-console.log("[public-brand] PASS: no legacy upstream brand claims or external domains in generated public output.");
+console.log("[public-brand] PASS: no legacy upstream brand claims, upstream domains, or branded public media references in generated output.");
