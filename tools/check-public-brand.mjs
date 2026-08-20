@@ -78,12 +78,18 @@ function markdownAuditView(markdown) {
   const withoutCode = markdown
     .replace(/```[\s\S]*?```/g, "")
     .replace(/~~~[\s\S]*?~~~/g, "")
+    .replace(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
     .replace(/`[^`\n]+`/g, "");
   const externalUrls = Array.from(withoutCode.matchAll(absoluteUrlPattern)).map((match) => match[0]);
   const visibleText = withoutCode
     .replace(absoluteUrlPattern, " ")
     .replace(/\]\([^)]*\)/g, "]")
-    .replace(/(?:^|\s)\/[a-z0-9][^\s)<>'"\]]*/gi, " ");
+    // Package/repository identifiers are implementation provenance, not a public brand claim.
+    // Keep them auditable in source while excluding them from visible-brand detection.
+    .replace(/@probo\/[a-z0-9._/-]+/gi, " ")
+    .replace(/\bgetprobo\/probo(?:\/[a-z0-9._/-]+)*/gi, " ")
+    // Preserve legacy route slugs for SEO/compatibility without treating the URL itself as prose.
+    .replace(/\/[a-z0-9][^\s)<>'"\]]*/gi, " ");
   return { visibleText, externalUrls };
 }
 
@@ -101,8 +107,6 @@ function svgAuditView(svg) {
 
 function xmlAuditView(xml) {
   const externalUrls = Array.from(xml.matchAll(absoluteUrlPattern)).map((match) => match[0]);
-  // Preserve legacy ZebraByte route slugs for SEO/compatibility, but never treat
-  // the route text itself as a visible upstream brand claim.
   const visibleText = xml
     .replace(absoluteUrlPattern, " ")
     .replace(/<[^>]+>/g, " ");
