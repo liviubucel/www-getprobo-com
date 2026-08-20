@@ -52,42 +52,70 @@ jobs:
       - run: npm run build
       - run: npx wrangler deploy --dry-run
 
-  temporary-compliance-media-audit:
+  temporary-compliance-media-process:
     if: github.event_name == 'pull_request' && github.head_ref == 'fix/compliance-portal-media'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/compliance-portal-media
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      - name: Install media audit dependencies
+      - name: Install media processing dependencies
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq tesseract-ocr libcairo2 chromium
           python3 -m pip install --quiet numpy pytesseract pillow cairosvg
           npm ci --ignore-scripts
           npm install --no-save --package-lock=false puppeteer-core
-      - name: Audit source media
+      - name: Rebrand Compliance Portal source and Slack Lottie
+        run: python3 tmp/fix_compliance_portal_brand.py
+      - name: Audit source media after patch
         run: python3 tmp/compliance_media_audit.py
-      - name: Render actual Lottie compositions
+      - name: Render patched Lottie compositions
         run: node tmp/render_lottie.mjs
-      - name: OCR rendered frames
+      - name: Require zero rendered Probo branding
         shell: bash
         run: |
           set -euo pipefail
           report=/tmp/compliance-media-audit/rendered-ocr.txt
           : > "$report"
+          failed=0
           for f in /tmp/compliance-media-audit/rendered/*.png; do
             txt="$(tesseract "$f" stdout --psm 11 2>/dev/null || true)"
             if printf '%s' "$txt" | grep -Eqi 'probo|getprobo'; then
               printf 'MATCH %s\n%s\n\n' "$(basename "$f")" "$txt" >> "$report"
+              failed=1
             fi
           done
           cat "$report"
-      - uses: actions/upload-artifact@v4
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::Rendered Compliance Portal media still contains Probo branding."
+            exit 1
+          fi
+      - name: Upload patched-media QA
+        uses: actions/upload-artifact@v4
         with:
-          name: compliance-media-audit
+          name: compliance-media-patched-qa
           path: /tmp/compliance-media-audit
           retention-days: 1
+      - name: Commit final page and Lottie changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/products/compliance-portal.astro public/lottie/trust-center/slack.json
+          if git diff --cached --quiet; then
+            echo "No final branding changes to commit."
+            exit 0
+          fi
+          git commit -m "Rebrand Compliance Portal media and content for ZebraByte"
+          git push origin HEAD:fix/compliance-portal-media
