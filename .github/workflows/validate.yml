@@ -62,55 +62,33 @@ jobs:
         with:
           ref: fix/slack-exact-logo-final
           fetch-depth: 0
-      - name: Install Pillow
-        run: python -m pip install --disable-pip-version-check Pillow
       - name: Replace original Probo vector with exact ZebraByte icon
         shell: bash
         run: |
           python - <<'PY'
-          import base64, json, urllib.request
+          import json
           from pathlib import Path
-          from io import BytesIO
-          from PIL import Image
           path=Path('public/lottie/trust-center/slack.json')
           data=json.loads(path.read_text())
           assets={str(a.get('id')):a for a in data.get('assets',[])}
           exact='zebrabyte-exact-icon-final'
-          # Build the exact icon supplied by the owner, removing only its outer black canvas.
-          url='https://pub-038e8088013241609a22cbfd541724a4.r2.dev/icon%20ZebraByte.png'
-          with urllib.request.urlopen(url,timeout=30) as r: im=Image.open(BytesIO(r.read())).convert('RGBA')
-          px=im.load()
-          for y in range(im.height):
-              for x in range(im.width):
-                  rr,gg,bb,aa=px[x,y]
-                  if rr<8 and gg<8 and bb<8: px[x,y]=(0,0,0,0)
-          bbox=im.getbbox()
-          if bbox: im=im.crop(bbox)
-          im.thumbnail((53,53),Image.Resampling.LANCZOS)
-          canvas=Image.new('RGBA',(53,53),(255,255,255,0))
-          canvas.alpha_composite(im,((53-im.width)//2,(53-im.height)//2))
-          bio=BytesIO(); canvas.save(bio,format='PNG')
-          icon_b64=base64.b64encode(bio.getvalue()).decode('ascii')
+          icon_b64='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'
           data['assets']=[a for a in data.get('assets',[]) if a.get('id') not in {'zebrabyte-slack-brand-local',exact}]
           data['assets'].append({'id':exact,'w':53,'h':53,'u':'','p':'data:image/png;base64,'+icon_b64,'e':1})
           assets={str(a.get('id')):a for a in data['assets']}
-          # The four duplicated Slack-card states all have their own original Probo logo layer.
           for aid,ind in {'355':353,'861':859,'2494':2492,'3004':3002}.items():
               l=next(l for l in assets[aid]['layers'] if l.get('ind')==ind)
               l['ty']=2; l['refId']=exact; l['w']=53; l['h']=53
               ks=l.setdefault('ks',{})
               ks['a']={'a':0,'k':[30,30,0]}; ks['p']={'a':0,'k':[30,30,0]}
               ks['s']={'a':0,'k':[100,100,100]}; ks['r']={'a':0,'k':0}; ks['o']={'a':0,'k':100}
-          # Remove the old free-floating overlay so only the true app-logo position remains.
           for a in data['assets']:
               if 'layers' in a: a['layers']=[l for l in a['layers'] if l.get('refId')!='zebrabyte-slack-brand-local']
           data['layers']=[l for l in data.get('layers',[]) if l.get('refId')!='zebrabyte-slack-brand-local']
-          # Remove the vector word “Probo”, preserving APP and each original clock value.
           for aid,ind in {'305':292,'861':804,'2444':2431,'2957':2944}.items():
               l=next(l for l in assets[aid]['layers'] if l.get('ind')==ind)
               l.setdefault('ks',{})['o']={'a':0,'k':0}
           path.write_text(json.dumps(data,separators=(',',':')))
-          # Structural QA.
           check=json.loads(path.read_text()); ca={str(a.get('id')):a for a in check['assets']}
           uses=[]
           for a in check['assets']:
