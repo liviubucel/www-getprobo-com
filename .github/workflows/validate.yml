@@ -25,7 +25,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-
       - name: Require current main baseline
         shell: bash
         run: |
@@ -34,8 +33,6 @@ jobs:
           git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
           CURRENT_BASE_SHA="$(git rev-parse "refs/remotes/origin/$BASE_REF")"
           HEAD_SHA="$(git rev-parse HEAD)"
-          echo "Current $BASE_REF: $CURRENT_BASE_SHA"
-          echo "PR head: $HEAD_SHA"
           if ! git merge-base --is-ancestor "$CURRENT_BASE_SHA" "$HEAD_SHA"; then
             echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF."
             exit 1
@@ -58,16 +55,37 @@ jobs:
   temporary-compliance-media-audit:
     if: github.event_name == 'pull_request' && github.head_ref == 'fix/compliance-portal-media'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
       - name: Install media audit dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr libcairo2
-          python3 -m pip install --quiet opencv-python-headless pytesseract pillow cairosvg
-      - name: Audit page media
+          sudo apt-get install -y -qq tesseract-ocr libcairo2 chromium
+          python3 -m pip install --quiet pytesseract pillow cairosvg
+          npm ci --ignore-scripts
+          npm install --no-save --package-lock=false puppeteer-core
+      - name: Audit source media
         run: python3 tmp/compliance_media_audit.py
+      - name: Render actual Lottie compositions
+        run: node tmp/render_lottie.mjs
+      - name: OCR rendered frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          report=/tmp/compliance-media-audit/rendered-ocr.txt
+          : > "$report"
+          for f in /tmp/compliance-media-audit/rendered/*.png; do
+            txt="$(tesseract "$f" stdout --psm 11 2>/dev/null || true)"
+            if printf '%s' "$txt" | grep -Eqi 'probo|getprobo'; then
+              printf 'MATCH %s\n%s\n\n' "$(basename "$f")" "$txt" >> "$report"
+            fi
+          done
+          cat "$report"
       - uses: actions/upload-artifact@v4
         with:
           name: compliance-media-audit
