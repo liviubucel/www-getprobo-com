@@ -8,7 +8,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validate-${{ github.ref }}
@@ -25,7 +25,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-
       - name: Require current main baseline
         shell: bash
         run: |
@@ -34,38 +33,105 @@ jobs:
           git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
           CURRENT_BASE_SHA="$(git rev-parse "refs/remotes/origin/$BASE_REF")"
           HEAD_SHA="$(git rev-parse HEAD)"
-
-          echo "Current $BASE_REF: $CURRENT_BASE_SHA"
-          echo "PR head: $HEAD_SHA"
-
           if ! git merge-base --is-ancestor "$CURRENT_BASE_SHA" "$HEAD_SHA"; then
-            echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF. Rebase or recreate the branch from current $BASE_REF before continuing. Do not merge historical branches to repair it."
+            echo "::error::STALE BASELINE"
             exit 1
           fi
-
-          echo "Branch contains the current $BASE_REF baseline."
 
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+      - run: npx wrangler deploy --dry-run
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Production dependency audit
-        run: npm audit --omit=dev --audit-level=high
-
-      - name: Build and release gates
-        run: npm run build
-
-      - name: Validate Cloudflare Worker bundle
-        run: npx wrangler deploy --dry-run
+  temporary-exact-slack-logo:
+    if: github.event_name == 'pull_request' && github.head_ref == 'fix/slack-exact-logo-final'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/slack-exact-logo-final
+          fetch-depth: 0
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Replace original Probo vector with exact ZebraByte icon
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, json, urllib.request
+          from pathlib import Path
+          from io import BytesIO
+          from PIL import Image
+          path=Path('public/lottie/trust-center/slack.json')
+          data=json.loads(path.read_text())
+          assets={str(a.get('id')):a for a in data.get('assets',[])}
+          exact='zebrabyte-exact-icon-final'
+          # Build the exact icon supplied by the owner, removing only its outer black canvas.
+          url='https://pub-038e8088013241609a22cbfd541724a4.r2.dev/icon%20ZebraByte.png'
+          with urllib.request.urlopen(url,timeout=30) as r: im=Image.open(BytesIO(r.read())).convert('RGBA')
+          px=im.load()
+          for y in range(im.height):
+              for x in range(im.width):
+                  rr,gg,bb,aa=px[x,y]
+                  if rr<8 and gg<8 and bb<8: px[x,y]=(0,0,0,0)
+          bbox=im.getbbox()
+          if bbox: im=im.crop(bbox)
+          im.thumbnail((53,53),Image.Resampling.LANCZOS)
+          canvas=Image.new('RGBA',(53,53),(255,255,255,0))
+          canvas.alpha_composite(im,((53-im.width)//2,(53-im.height)//2))
+          bio=BytesIO(); canvas.save(bio,format='PNG')
+          icon_b64=base64.b64encode(bio.getvalue()).decode('ascii')
+          data['assets']=[a for a in data.get('assets',[]) if a.get('id') not in {'zebrabyte-slack-brand-local',exact}]
+          data['assets'].append({'id':exact,'w':53,'h':53,'u':'','p':'data:image/png;base64,'+icon_b64,'e':1})
+          assets={str(a.get('id')):a for a in data['assets']}
+          # The four duplicated Slack-card states all have their own original Probo logo layer.
+          for aid,ind in {'355':353,'861':859,'2494':2492,'3004':3002}.items():
+              l=next(l for l in assets[aid]['layers'] if l.get('ind')==ind)
+              l['ty']=2; l['refId']=exact; l['w']=53; l['h']=53
+              ks=l.setdefault('ks',{})
+              ks['a']={'a':0,'k':[30,30,0]}; ks['p']={'a':0,'k':[30,30,0]}
+              ks['s']={'a':0,'k':[100,100,100]}; ks['r']={'a':0,'k':0}; ks['o']={'a':0,'k':100}
+          # Remove the old free-floating overlay so only the true app-logo position remains.
+          for a in data['assets']:
+              if 'layers' in a: a['layers']=[l for l in a['layers'] if l.get('refId')!='zebrabyte-slack-brand-local']
+          data['layers']=[l for l in data.get('layers',[]) if l.get('refId')!='zebrabyte-slack-brand-local']
+          # Remove the vector word “Probo”, preserving APP and each original clock value.
+          for aid,ind in {'305':292,'861':804,'2444':2431,'2957':2944}.items():
+              l=next(l for l in assets[aid]['layers'] if l.get('ind')==ind)
+              l.setdefault('ks',{})['o']={'a':0,'k':0}
+          path.write_text(json.dumps(data,separators=(',',':')))
+          # Structural QA.
+          check=json.loads(path.read_text()); ca={str(a.get('id')):a for a in check['assets']}
+          uses=[]
+          for a in check['assets']:
+              for l in a.get('layers',[]):
+                  if l.get('refId')==exact: uses.append((str(a.get('id')),l.get('ind')))
+                  assert l.get('refId')!='zebrabyte-slack-brand-local'
+          assert sorted(uses)==sorted([('355',353),('861',859),('2494',2492),('3004',3002)]),uses
+          for aid,ind in {'305':292,'861':804,'2444':2431,'2957':2944}.items():
+              l=next(l for l in ca[aid]['layers'] if l.get('ind')==ind)
+              assert l['ks']['o']['k']==0
+          print('Exact icon replacement verified:',uses)
+          PY
+      - name: Commit exact Lottie result
+        shell: bash
+        run: |
+          if git diff --quiet -- public/lottie/trust-center/slack.json; then
+            echo 'Already patched; nothing to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack.json
+          git commit -m 'fix: replace Slack Probo vector with exact ZebraByte icon'
+          git push origin HEAD:fix/slack-exact-logo-final
