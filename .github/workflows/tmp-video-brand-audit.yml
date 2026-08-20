@@ -1,20 +1,20 @@
 name: Temporary video brand audit
 
 on:
-  push:
+  pull_request:
     branches:
-      - feat/home-zebrabyte-motion
+      - main
     paths:
       - .github/workflows/tmp-video-brand-audit.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   audit-video-branding:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch
+      - name: Checkout source branch
         uses: actions/checkout@v4
         with:
           ref: feat/home-zebrabyte-motion
@@ -30,8 +30,8 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf /tmp/video-audit
-          mkdir -p /tmp/video-audit tmp
-          report="tmp/video-brand-audit.txt"
+          mkdir -p /tmp/video-audit
+          report="/tmp/video-audit/video-brand-audit.txt"
           : > "$report"
           videos=(
             "public/changelog/2026-04-03-markdown-copy-paste.mp4"
@@ -92,19 +92,12 @@ PY
             printf 'END_VIDEO\n\n' >> "$report"
           done
 
-          echo '--- REPORT ---'
           cat "$report"
 
-      - name: Commit audit report
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tmp/video-brand-audit.txt
-          if git diff --cached --quiet; then
-            echo "No audit report changes"
-            exit 0
-          fi
-          git commit -m "chore: record remaining video brand audit"
-          git push origin HEAD:feat/home-zebrabyte-motion
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-video-brand-audit
+          path: /tmp/video-audit/video-brand-audit.txt
+          if-no-files-found: error
+          retention-days: 1
