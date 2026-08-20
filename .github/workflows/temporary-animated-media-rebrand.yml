@@ -1,0 +1,71 @@
+name: Temporary animated media rebrand
+
+on:
+  push:
+    branches:
+      - fix/global-visual-rebrand
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/global-visual-rebrand
+          fetch-depth: 0
+
+      - name: Check guard
+        id: guard
+        shell: bash
+        run: |
+          if [ -f .tmp-animated-rebrand-done ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Python
+        if: steps.guard.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install media dependencies
+        if: steps.guard.outputs.run == 'true'
+        run: python -m pip install --disable-pip-version-check opencv-python-headless Pillow cairosvg imageio-ffmpeg
+
+      - name: Rebrand remaining animated media
+        if: steps.guard.outputs.run == 'true'
+        run: python tmp/rebrand_remaining_animated_media.py
+
+      - name: Verify output
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import cv2
+          p='public/changelog/2026-05-04-cookie.banner.mp4'
+          cap=cv2.VideoCapture(p)
+          assert int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) == 1912
+          assert int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) == 1080
+          assert round(cap.get(cv2.CAP_PROP_FPS)) == 60
+          assert int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) == 763
+          cap.release()
+          print('video geometry/frame-count verified')
+          PY
+
+      - name: Commit rebranded video
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          touch .tmp-animated-rebrand-done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/changelog/2026-05-04-cookie.banner.mp4 .tmp-animated-rebrand-done
+          git commit -m "fix: rebrand remaining animated Probo media"
+          git push origin HEAD:fix/global-visual-rebrand
