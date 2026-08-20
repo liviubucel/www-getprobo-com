@@ -1,0 +1,44 @@
+name: Temporary video brand audit
+
+on:
+  push:
+    branches:
+      - feat/home-zebrabyte-motion
+    paths:
+      - .github/workflows/tmp-video-brand-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit-video-branding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Prepare contact sheets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/video-audit
+          videos=(
+            "public/changelog/2026-04-03-markdown-copy-paste.mp4"
+            "public/changelog/2026-05-04-cookie.banner.mp4"
+          )
+          for video in "${videos[@]}"; do
+            base="$(basename "$video" .mp4)"
+            mkdir -p "/tmp/video-audit/$base"
+            ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$video" > "/tmp/video-audit/$base/duration.txt"
+            ffmpeg -hide_banner -loglevel error -i "$video" \
+              -vf "fps=2,scale=960:-2,tile=4x4:padding=4:margin=4" \
+              -q:v 2 "/tmp/video-audit/$base/contact-%03d.jpg"
+          done
+
+      - name: Upload contact sheets
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-video-contact-sheets
+          path: /tmp/video-audit
+          if-no-files-found: error
+          retention-days: 1
