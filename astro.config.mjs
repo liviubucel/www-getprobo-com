@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import svelte from "@astrojs/svelte";
@@ -25,9 +24,6 @@ function svelteVirtualCssFallback() {
   };
 }
 
-const hubBrandAsset = (path) =>
-  fileURLToPath(new URL(`./src/assets/hub/cloud-security-best-practices/${path}`, import.meta.url));
-
 export default defineConfig({
   site: "https://www.zebrabyte.ro",
   compressHTML: true,
@@ -37,19 +33,6 @@ export default defineConfig({
     format: "file",
   },
   vite: {
-    resolve: {
-      // Keep inherited source/history intact while ensuring the public Hub never
-      // renders upstream-branded artwork. These aliases preserve the existing
-      // image containers and responsive behavior without a layout redesign.
-      alias: {
-        "../../assets/hub/cloud-security-best-practices/probo-homepage-screenshot.jpg":
-          hubBrandAsset("story-link-ahrefs-iso27001.png"),
-        "../../assets/hub/cloud-security-best-practices/cta-compliance-done-for-you.png":
-          hubBrandAsset("takeaway-guardrails.png"),
-        "../../assets/hub/cloud-security-best-practices/cta-stay-audit-ready.png":
-          hubBrandAsset("takeaway-scope-shared-responsibility.png"),
-      },
-    },
     optimizeDeps: {
       exclude: ["svelte-sonner"],
     },
