@@ -80,44 +80,15 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Install video and OCR dependencies
+      - name: Install lightweight video OCR dependencies
         shell: bash
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg tesseract-ocr
+          sudo apt-get install -y -qq tesseract-ocr
+          python3 -m pip install --quiet opencv-python-headless pytesseract
 
       - name: OCR remaining changelog videos
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/video-brand-audit
-          report="/tmp/video-brand-audit/report.txt"
-          : > "$report"
-          videos=(
-            "public/changelog/2026-04-03-markdown-copy-paste.mp4"
-            "public/changelog/2026-05-04-cookie.banner.mp4"
-          )
-
-          for video in "${videos[@]}"; do
-            base="$(basename "$video" .mp4)"
-            dir="/tmp/video-brand-audit/$base"
-            mkdir -p "$dir/frames"
-            duration="$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$video")"
-            fps="$(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=nw=1:nk=1 "$video")"
-            size="$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$video")"
-            printf 'VIDEO %s\nDURATION %s\nFPS %s\nSIZE %s\n' "$video" "$duration" "$fps" "$size" >> "$report"
-
-            ffmpeg -hide_banner -loglevel error -i "$video" -vf fps=4 "$dir/frames/frame-%06d.png"
-            index=0
-            for frame in "$dir"/frames/frame-*.png; do
-              index=$((index+1))
-              tsv="${frame%.png}.tsv"
-              tesseract "$frame" stdout --psm 11 tsv 2>/dev/null > "$tsv" || true
-              awk -F '\t' -v idx="$index" 'BEGIN { OFS=" " } NR > 1 { token=tolower($12); gsub(/[^a-z0-9]/,"",token); if (token ~ /pr[o0]b[o0]/) printf "MATCH frame=%d t=%.2fs text=%s conf=%s box=%s,%s,%s,%s\n", idx, (idx-1)/4, $12, $11, $7, $8, $9, $10 }' "$tsv" >> "$report"
-            done
-            printf 'END_VIDEO\n\n' >> "$report"
-          done
-          cat "$report"
+        run: python3 tmp/video_brand_audit.py
 
       - name: Upload OCR report
         uses: actions/upload-artifact@v4
