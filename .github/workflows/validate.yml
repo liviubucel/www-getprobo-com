@@ -34,15 +34,12 @@ jobs:
           git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
           CURRENT_BASE_SHA="$(git rev-parse "refs/remotes/origin/$BASE_REF")"
           HEAD_SHA="$(git rev-parse HEAD)"
-
           echo "Current $BASE_REF: $CURRENT_BASE_SHA"
           echo "PR head: $HEAD_SHA"
-
           if ! git merge-base --is-ancestor "$CURRENT_BASE_SHA" "$HEAD_SHA"; then
             echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF. Rebase or recreate the branch from current $BASE_REF before continuing. Do not merge historical branches to repair it."
             exit 1
           fi
-
           echo "Branch contains the current $BASE_REF baseline."
 
   build:
@@ -51,21 +48,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Production dependency audit
         run: npm audit --omit=dev --audit-level=high
-
       - name: Build and release gates
         run: npm run build
-
       - name: Validate Cloudflare Worker bundle
         run: npx wrangler deploy --dry-run
+
+  temporary-global-visual-audit:
+    if: github.event_name == 'pull_request' && github.head_ref == 'fix/global-visual-rebrand'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/global-visual-rebrand
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install visual audit dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr libcairo2
+          python3 -m pip install --quiet numpy opencv-python-headless pytesseract pillow pillow-avif-plugin cairosvg
+          npm ci --ignore-scripts
+          npm install --no-save --package-lock=false puppeteer-core
+      - name: Render every Lottie composition
+        run: node tmp/render_all_lottie.mjs
+      - name: Audit all visual media formats
+        run: python3 tmp/global_visual_audit.py
+      - name: Upload global visual audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-visual-brand-audit
+          path: /tmp/global-visual-audit
+          retention-days: 1
