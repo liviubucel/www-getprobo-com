@@ -69,3 +69,82 @@ jobs:
 
       - name: Validate Cloudflare Worker bundle
         run: npx wrangler deploy --dry-run
+
+  temporary-video-brand-audit:
+    if: github.event_name == 'pull_request' && github.head_ref == 'feat/home-zebrabyte-motion'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install OCR dependency
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr
+
+      - name: OCR remaining changelog videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/video-brand-audit
+          report="/tmp/video-brand-audit/report.txt"
+          : > "$report"
+          videos=(
+            "public/changelog/2026-04-03-markdown-copy-paste.mp4"
+            "public/changelog/2026-05-04-cookie.banner.mp4"
+          )
+
+          for video in "${videos[@]}"; do
+            base="$(basename "$video" .mp4)"
+            dir="/tmp/video-brand-audit/$base"
+            mkdir -p "$dir/frames"
+            duration="$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$video")"
+            fps="$(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=nw=1:nk=1 "$video")"
+            size="$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$video")"
+            printf 'VIDEO %s\nDURATION %s\nFPS %s\nSIZE %s\n' "$video" "$duration" "$fps" "$size" >> "$report"
+
+            ffmpeg -hide_banner -loglevel error -i "$video" -vf fps=4 "$dir/frames/frame-%06d.png"
+            index=0
+            for frame in "$dir"/frames/frame-*.png; do
+              index=$((index+1))
+              tsv="${frame%.png}.tsv"
+              tesseract "$frame" stdout --psm 11 tsv 2>/dev/null > "$tsv" || true
+              python3 - "$tsv" "$index" >> "$report" <<'PY'
+import csv, re, sys
+from difflib import SequenceMatcher
+path = sys.argv[1]
+idx = int(sys.argv[2])
+time = (idx - 1) / 4.0
+
+def norm(s):
+    s = s.lower().replace('0', 'o').replace('|', 'l')
+    return re.sub(r'[^a-z]', '', s)
+
+def match(s):
+    n = norm(s)
+    return bool(n) and ('probo' in n or (4 <= len(n) <= 6 and SequenceMatcher(None, n, 'probo').ratio() >= 0.72))
+
+with open(path, encoding='utf-8', errors='ignore') as fh:
+    for row in csv.DictReader(fh, delimiter='\t'):
+        text = (row.get('text') or '').strip()
+        if not match(text):
+            continue
+        print('MATCH t={:.2f}s frame={} text={!r} conf={} box={},{},{},{}'.format(
+            time, idx, text, row.get('conf'), row.get('left'), row.get('top'), row.get('width'), row.get('height')
+        ))
+PY
+            done
+            printf 'END_VIDEO\n\n' >> "$report"
+          done
+          cat "$report"
+
+      - name: Upload OCR report
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-video-brand-audit
+          path: /tmp/video-brand-audit/report.txt
+          retention-days: 1
