@@ -25,6 +25,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+
       - name: Require current main baseline
         shell: bash
         run: |
@@ -33,88 +34,38 @@ jobs:
           git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
           CURRENT_BASE_SHA="$(git rev-parse "refs/remotes/origin/$BASE_REF")"
           HEAD_SHA="$(git rev-parse HEAD)"
+
+          echo "Current $BASE_REF: $CURRENT_BASE_SHA"
+          echo "PR head: $HEAD_SHA"
+
           if ! git merge-base --is-ancestor "$CURRENT_BASE_SHA" "$HEAD_SHA"; then
-            echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF."
+            echo "::error::STALE BASELINE: this PR does not contain the current $BASE_REF. Rebase or recreate the branch from current $BASE_REF before continuing. Do not merge historical branches to repair it."
             exit 1
           fi
+
+          echo "Branch contains the current $BASE_REF baseline."
 
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm audit --omit=dev --audit-level=high
-      - run: npm run build
-      - run: npx wrangler deploy --dry-run
-
-  temporary-compliance-media-process:
-    if: github.event_name == 'pull_request' && github.head_ref == 'fix/compliance-portal-media'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout source branch
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: fix/compliance-portal-media
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      - name: Install verification dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr libcairo2
-          python3 -m pip install --quiet numpy pytesseract pillow cairosvg
-          npm ci --ignore-scripts
-          npm install --no-save --package-lock=false puppeteer-core
-      - name: Rebrand Compliance Portal and Slack card states
-        run: python3 tmp/fix_compliance_portal_brand.py
-      - name: Render actual patched Lottie
-        run: node tmp/render_lottie.mjs
-      - name: Require zero rendered Probo branding
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/compliance-media-audit
-          report=/tmp/compliance-media-audit/rendered-ocr.txt
-          : > "$report"
-          failed=0
-          for f in /tmp/compliance-media-audit/rendered/slack-*.png; do
-            txt="$(tesseract "$f" stdout --psm 11 2>/dev/null || true)"
-            if printf '%s' "$txt" | grep -Eqi 'probo|getprobo'; then
-              printf 'MATCH %s\n%s\n\n' "$(basename "$f")" "$txt" >> "$report"
-              failed=1
-            fi
-          done
-          cat "$report"
-          if [ "$failed" -ne 0 ]; then
-            echo "::error::Slack animation still contains legacy Probo branding."
-            exit 1
-          fi
-      - name: Upload final visual QA
-        uses: actions/upload-artifact@v4
-        with:
-          name: compliance-media-final-qa
-          path: /tmp/compliance-media-audit
-          retention-days: 1
-      - name: Commit final page and Lottie changes
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/products/compliance-portal.astro public/lottie/trust-center/slack.json
-          if git diff --cached --quiet; then
-            echo "No final branding changes to commit."
-            exit 0
-          fi
-          git commit -m "Rebrand Compliance Portal media and content for ZebraByte"
-          git push origin HEAD:fix/compliance-portal-media
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Build and release gates
+        run: npm run build
+
+      - name: Validate Cloudflare Worker bundle
+        run: npx wrangler deploy --dry-run
