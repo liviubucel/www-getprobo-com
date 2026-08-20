@@ -9,14 +9,14 @@ import cv2
 import cairosvg
 import numpy as np
 import pytesseract
-from PIL import Image, ImageSequence
+from PIL import Image
 
 ROOT = Path('.')
 OUT = Path('/tmp/global-visual-audit')
 OUT.mkdir(parents=True, exist_ok=True)
 REPORT = OUT / 'report.txt'
 MEDIA_EXTS = {'.png','.jpg','.jpeg','.webp','.gif','.avif','.svg','.mp4','.webm','.mov','.m4v'}
-SKIP_PARTS = {'.git','node_modules','dist','.astro'}
+SKIP_PARTS = {'.git','node_modules','dist'}
 
 
 def norm(s: str) -> str:
@@ -62,7 +62,6 @@ def audit_raster(path: Path, lines: list[str]) -> None:
     except Exception as e:
         lines.append(f'ERROR raster {path}: {e}')
         return
-    frames=[]
     total = getattr(im, 'n_frames', 1)
     wanted = sorted(set([0, total//4, total//2, (3*total)//4, max(0,total-1)])) if total>1 else [0]
     for idx in wanted:
@@ -102,7 +101,6 @@ def audit_video(path: Path, lines: list[str]) -> None:
     fps=cap.get(cv2.CAP_PROP_FPS) or 30.0
     count=int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     duration=count/fps if fps else 0
-    # roughly 2 fps, but always include first/last frames.
     step=max(1, round(fps/2))
     hits_found=0
     idx=0
@@ -119,6 +117,24 @@ def audit_video(path: Path, lines: list[str]) -> None:
                 hits_found+=1
         idx+=1
     cap.release()
+
+
+def audit_rendered_lottie(lines: list[str]) -> None:
+    rendered=OUT/'lottie-rendered'
+    if not rendered.exists():
+        lines.append('LOTTIE_RENDERED 0')
+        return
+    frames=sorted(rendered.glob('*.png'))
+    lines.append(f'LOTTIE_RENDERED {len(frames)}')
+    for p in frames:
+        try:
+            arr=np.array(Image.open(p).convert('RGB'))
+            hits=ocr_array(arr)
+            if hits:
+                lines.append(f'MATCH lottie-render {p.name} hits={hits}')
+                save_preview(arr, f'lottie__{p.name}')
+        except Exception as e:
+            lines.append(f'ERROR lottie-render {p}: {e}')
 
 
 def main() -> None:
@@ -141,15 +157,16 @@ def main() -> None:
         elif ext in {'.png','.jpg','.jpeg','.webp','.gif','.avif'}: audit_raster(p,lines)
         else: audit_video(p,lines)
 
-    # Also catch hard-coded legacy image/media URLs or data references in source files.
+    audit_rendered_lottie(lines)
+
     source_exts={'.astro','.tsx','.ts','.jsx','.js','.svelte','.md','.mdx','.css','.scss','.html','.json'}
     for p in ROOT.rglob('*'):
         if not p.is_file() or p.suffix.lower() not in source_exts: continue
         if any(part in SKIP_PARTS for part in p.parts): continue
         try: text=p.read_text(encoding='utf-8', errors='ignore')
         except Exception: continue
-        if re.search(r'(?i)(getprobo|(?:^|[./_-])probo(?:[./_-]|$)|probo\.com)', text):
-            snippets=[m.group(0).replace('\n',' ') for m in re.finditer(r'(?is).{0,80}(?:getprobo|probo\.com|/probo[-_/]).{0,80}', text)]
+        if re.search(r'(?i)(getprobo|probo\.com|/probo[-_/]|probo-logo)', text):
+            snippets=[m.group(0).replace('\n',' ') for m in re.finditer(r'(?is).{0,80}(?:getprobo|probo\.com|/probo[-_/]|probo-logo).{0,80}', text)]
             if snippets:
                 lines.append(f'SOURCE_REF {p} snippets={snippets[:12]}')
 
