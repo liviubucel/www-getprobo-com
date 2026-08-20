@@ -1,0 +1,70 @@
+name: Temporary fix Slack logo
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix-slack-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check Pillow
+      - name: Replace oversized Slack brand with compact ZebraByte mark
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, io, json
+          from pathlib import Path
+          from PIL import Image
+
+          path = Path('public/lottie/trust-center/slack.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          asset = next((a for a in data.get('assets', []) if a.get('id') == 'zebrabyte-slack-brand-local'), None)
+          if not asset:
+              raise SystemExit('zebrabyte-slack-brand-local asset not found')
+
+          raw = base64.b64decode(asset['p'].split(',', 1)[1])
+          current = Image.open(io.BytesIO(raw)).convert('RGBA')
+          if current.size != (290, 70):
+              raise SystemExit(f'unexpected brand asset size: {current.size}')
+
+          # Keep only the compact ZebraByte symbol and the existing APP badge.
+          icon = current.crop((9, 8, 65, 64)).resize((34, 34), Image.Resampling.LANCZOS)
+          app = current.crop((172, 14, 248, 56))
+          result = Image.new('RGBA', (290, 70), (255, 255, 255, 255))
+          result.alpha_composite(icon, (14, 18))
+          result.alpha_composite(app, (170, 14))
+
+          out = io.BytesIO()
+          result.save(out, format='PNG', optimize=True)
+          replacement = 'data:image/png;base64,' + base64.b64encode(out.getvalue()).decode()
+          if asset.get('p') == replacement:
+              print('already-correct')
+          else:
+              asset['p'] = replacement
+              path.write_text(json.dumps(data, separators=(',', ':')), encoding='utf-8')
+              print('updated')
+          PY
+      - name: Commit fix if needed
+        shell: bash
+        run: |
+          if git diff --quiet -- public/lottie/trust-center/slack.json; then
+            echo 'No change needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack.json
+          git commit -m 'fix: use compact ZebraByte mark in Slack animation'
+          git push origin HEAD:main
