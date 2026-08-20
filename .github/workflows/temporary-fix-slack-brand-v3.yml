@@ -1,0 +1,144 @@
+name: Temporary final Slack brand cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-fix-slack-brand-v3.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Clean Slack branding and publish v3 asset
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+
+          src = Path('public/lottie/trust-center/slack-zebrabyte-v2.json')
+          dst = Path('public/lottie/trust-center/slack-zebrabyte-v3.json')
+          page = Path('src/pages/products/compliance-portal.astro')
+
+          data = json.loads(src.read_text())
+          removed_overlays = 0
+          replaced_text = 0
+          hidden_vector_wordmarks = 0
+
+          overlay_ids = {'zebrabyte-wordmark-compact'}
+
+          # Remove the previous extra ZEBRABYTE overlay that was sitting on top of Probo.
+          data['assets'] = [a for a in data.get('assets', []) if a.get('id') not in overlay_ids]
+
+          def clean_layers(layers):
+              global removed_overlays, replaced_text, hidden_vector_wordmarks
+              out = []
+              for layer in layers:
+                  if not isinstance(layer, dict):
+                      out.append(layer)
+                      continue
+
+                  if layer.get('refId') in overlay_ids:
+                      removed_overlays += 1
+                      continue
+
+                  # Replace real Lottie text documents that say Probo.
+                  t = layer.get('t')
+                  if isinstance(t, dict):
+                      d = t.get('d')
+                      if isinstance(d, dict):
+                          for keyframe in d.get('k', []) if isinstance(d.get('k'), list) else []:
+                              if not isinstance(keyframe, dict):
+                                  continue
+                              style = keyframe.get('s')
+                              if isinstance(style, dict) and isinstance(style.get('t'), str):
+                                  if re.search(r'\bprobo\b', style['t'], flags=re.I):
+                                      style['t'] = re.sub(r'\bprobo\b', 'ZEBRABYTE', style['t'], flags=re.I)
+                                      if isinstance(style.get('s'), (int, float)):
+                                          style['s'] = round(style['s'] * 0.62, 3)
+                                      if isinstance(style.get('tr'), (int, float)):
+                                          style['tr'] = 0
+                                      replaced_text += 1
+
+                  # If the legacy Probo wordmark is an outlined/vector shape, hide only that leaf layer.
+                  if layer.get('ty') == 4:
+                      nm = str(layer.get('nm', ''))
+                      if re.search(r'\bprobo\b', nm, flags=re.I):
+                          ks = layer.setdefault('ks', {})
+                          ks['o'] = {'a': 0, 'k': 0}
+                          hidden_vector_wordmarks += 1
+
+                  # Clean nested layer lists too.
+                  if isinstance(layer.get('layers'), list):
+                      layer['layers'] = clean_layers(layer['layers'])
+
+                  out.append(layer)
+              return out
+
+          for asset in data.get('assets', []):
+              if isinstance(asset, dict) and isinstance(asset.get('layers'), list):
+                  asset['layers'] = clean_layers(asset['layers'])
+          if isinstance(data.get('layers'), list):
+              data['layers'] = clean_layers(data['layers'])
+
+          # Shrink the exact ZebraByte icon just a little in every Slack-card state.
+          assets = {str(a.get('id')): a for a in data.get('assets', [])}
+          logo_layers = {'355':353, '861':859, '2494':2492, '3004':3002}
+          resized = 0
+          for aid, ind in logo_layers.items():
+              asset = assets.get(aid)
+              if not asset:
+                  continue
+              layer = next((l for l in asset.get('layers', []) if l.get('ind') == ind), None)
+              if layer:
+                  layer.setdefault('ks', {})['s'] = {'a':0,'k':[76,76,100]}
+                  resized += 1
+
+          # Replace any remaining literal Probo metadata/text without touching animation geometry.
+          raw = json.dumps(data, separators=(',', ':'))
+          raw = re.sub(r'Probo', 'ZEBRABYTE', raw, flags=re.I)
+          data = json.loads(raw)
+
+          # A final assertion catches the exact regression shown in staging.
+          final_raw = json.dumps(data, separators=(',', ':'))
+          if re.search(r'Probo', final_raw, flags=re.I):
+              raise SystemExit('Legacy Probo token still remains in v3 Lottie')
+          if resized < 4:
+              raise SystemExit(f'Expected 4 ZebraByte logo layers, resized {resized}')
+
+          dst.write_text(final_raw)
+
+          page_text = page.read_text()
+          page_text = page_text.replace('/lottie/trust-center/slack-zebrabyte-v2.json', '/lottie/trust-center/slack-zebrabyte-v3.json')
+          page_text = page_text.replace('/lottie/trust-center/slack.json', '/lottie/trust-center/slack-zebrabyte-v3.json')
+          page.write_text(page_text)
+          assert '/lottie/trust-center/slack-zebrabyte-v3.json' in page.read_text()
+
+          print({
+              'removed_overlays': removed_overlays,
+              'replaced_text': replaced_text,
+              'hidden_vector_wordmarks': hidden_vector_wordmarks,
+              'resized_logo_layers': resized,
+          })
+          PY
+
+      - name: Commit final Slack brand cleanup and self-remove workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/temporary-fix-slack-brand-v3.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack-zebrabyte-v3.json src/pages/products/compliance-portal.astro
+          git commit -m 'fix: clean Slack card branding and remove Probo overlap'
+          git push origin HEAD:main
