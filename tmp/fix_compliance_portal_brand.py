@@ -11,49 +11,41 @@ from PIL import Image, ImageDraw, ImageFont
 
 SLACK = Path("public/lottie/trust-center/slack.json")
 PAGE = Path("src/pages/products/compliance-portal.astro")
-ASSET_ID = "zebrabyte-slack-brand-overlay"
-LAYER_NAME = "ZebraByte Slack Brand Overlay"
+ASSET_ID = "zebrabyte-slack-brand-local"
+LAYER_NAME = "ZebraByte Slack Brand Local"
 
 
 def brand_overlay_png() -> bytes:
-    width, height = 190, 66
-    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    width, height = 290, 70
+    image = Image.new("RGBA", (width, height), (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
 
-    # Hide only the legacy brand row. The lower-right area remains transparent
-    # so the original "New Access Request" line is never covered.
-    draw.rectangle((0, 0, 64, 65), fill=(255, 255, 255, 255))
-    draw.rectangle((63, 7, 188, 41), fill=(255, 255, 255, 255))
+    # This rectangle covers only the legacy logo + Probo + APP region.
+    # The timestamp starts to the right of this area and remains untouched.
+    draw.rectangle((0, 0, 289, 69), fill=(255, 255, 255, 255))
 
-    mark_png = cairosvg.svg2png(
-        bytestring=Path("public/favicon.svg").read_bytes(),
-        output_width=48,
-        output_height=48,
+    logo_png = cairosvg.svg2png(
+        bytestring=Path("public/images/zbt-negru.svg").read_bytes(),
+        output_width=150,
+        output_height=44,
     )
-    mark = Image.open(BytesIO(mark_png)).convert("RGBA")
-    image.alpha_composite(mark, (8, 8))
+    logo = Image.open(BytesIO(logo_png)).convert("RGBA")
+    image.alpha_composite(logo, (10, 13))
 
     font_path = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
     if not font_path.exists():
         font_path = Path("/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf")
-    font = ImageFont.truetype(str(font_path), 12)
-    app_font = ImageFont.truetype(str(font_path), 9)
+    app_font = ImageFont.truetype(str(font_path), 14)
 
-    text_x, text_y = 66, 13
-    draw.text((text_x, text_y), "ZEBRABYTE", font=font, fill=(38, 38, 38, 255))
-    text_width = int(draw.textlength("ZEBRABYTE", font=font))
-
-    badge_x = text_x + text_width + 5
-    badge_y = 11
-    badge_w, badge_h = 29, 20
+    badge_x, badge_y, badge_w, badge_h = 173, 20, 48, 28
     draw.rounded_rectangle(
         (badge_x, badge_y, badge_x + badge_w, badge_y + badge_h),
-        radius=5,
+        radius=7,
         fill=(238, 238, 238, 255),
     )
     app_width = int(draw.textlength("APP", font=app_font))
     draw.text(
-        (badge_x + (badge_w - app_width) / 2, badge_y + 4),
+        (badge_x + (badge_w - app_width) / 2, badge_y + 5),
         "APP",
         font=app_font,
         fill=(104, 104, 104, 255),
@@ -64,27 +56,10 @@ def brand_overlay_png() -> bytes:
     return out.getvalue()
 
 
-def patch_slack_lottie() -> None:
-    data = json.loads(SLACK.read_text(encoding="utf-8"))
-
-    data["assets"] = [a for a in data.get("assets", []) if a.get("id") != ASSET_ID]
-    data["layers"] = [l for l in data.get("layers", []) if l.get("nm") != LAYER_NAME]
-
-    png = brand_overlay_png()
-    data.setdefault("assets", []).append(
-        {
-            "id": ASSET_ID,
-            "w": 190,
-            "h": 66,
-            "p": "data:image/png;base64," + base64.b64encode(png).decode("ascii"),
-            "e": 1,
-        }
-    )
-
-    max_ind = max((int(layer.get("ind", 0)) for layer in data.get("layers", [])), default=0)
-    overlay_layer = {
+def local_overlay_layer(ind: int, parent: int | None, ip: float, op: float) -> dict:
+    layer = {
         "ddd": 0,
-        "ind": max_ind + 1,
+        "ind": ind,
         "ty": 2,
         "nm": LAYER_NAME,
         "refId": ASSET_ID,
@@ -92,19 +67,75 @@ def patch_slack_lottie() -> None:
         "ks": {
             "o": {"a": 0, "k": 100, "ix": 11},
             "r": {"a": 0, "k": 0, "ix": 10},
-            "p": {"a": 0, "k": [309, 483, 0], "ix": 2, "l": 2},
-            "a": {"a": 0, "k": [95, 33, 0], "ix": 1, "l": 2},
+            "p": {"a": 0, "k": [145, 35, 0], "ix": 2, "l": 2},
+            "a": {"a": 0, "k": [145, 35, 0], "ix": 1, "l": 2},
             "s": {"a": 0, "k": [100, 100, 100], "ix": 6, "l": 2},
         },
         "ao": 0,
-        "ip": float(data.get("ip", 0)),
-        "op": float(data.get("op", 1290.6)),
-        "st": float(data.get("ip", 0)),
+        "ip": ip,
+        "op": op,
+        "st": ip,
         "bm": 0,
     }
+    if parent is not None:
+        layer["parent"] = parent
+    return layer
 
-    # Lottie renders lower-index AE layers above the following layers.
-    data.setdefault("layers", []).insert(0, overlay_layer)
+
+def patch_slack_lottie() -> None:
+    data = json.loads(SLACK.read_text(encoding="utf-8"))
+
+    # Remove any previous experimental overlay.
+    data["layers"] = [
+        layer
+        for layer in data.get("layers", [])
+        if not str(layer.get("nm", "")).startswith("ZebraByte Slack Brand")
+    ]
+    for asset in data.get("assets", []):
+        if asset.get("layers"):
+            asset["layers"] = [
+                layer
+                for layer in asset["layers"]
+                if not str(layer.get("nm", "")).startswith("ZebraByte Slack Brand")
+            ]
+    data["assets"] = [a for a in data.get("assets", []) if a.get("id") not in {ASSET_ID, "zebrabyte-slack-brand-overlay"}]
+
+    png = brand_overlay_png()
+    data.setdefault("assets", []).append(
+        {
+            "id": ASSET_ID,
+            "w": 290,
+            "h": 70,
+            "p": "data:image/png;base64," + base64.b64encode(png).decode("ascii"),
+            "e": 1,
+        }
+    )
+
+    # These are the four internal Slack-card compositions used at different
+    # points in the animation (9:18, 10:04 and 11:26 states). Parenting the
+    # overlay to each card root makes it inherit the card's motion/zoom/fades.
+    targets = {
+        "355": None,
+        "861": 362,
+        "2494": 868,
+        "3004": 2501,
+    }
+    assets_by_id = {str(a.get("id")): a for a in data.get("assets", [])}
+    for asset_id, parent in targets.items():
+        asset = assets_by_id.get(asset_id)
+        if not asset or not asset.get("layers"):
+            raise RuntimeError(f"Missing expected Slack card asset {asset_id}")
+        max_ind = max((int(layer.get("ind", 0)) for layer in asset["layers"]), default=0)
+        asset["layers"].insert(
+            0,
+            local_overlay_layer(
+                max_ind + 10000,
+                parent,
+                float(data.get("ip", 0)),
+                float(data.get("op", 1290.6)),
+            ),
+        )
+
     SLACK.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
 
 
