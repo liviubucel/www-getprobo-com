@@ -5,6 +5,10 @@ const distDir = "dist";
 const legacyVisibleBrandPattern = /(?:\bProbo\b|\bGetProbo\b)/i;
 const legacyExternalDomainPattern = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)?(?:getprobo\.com|probo\.com|probostatus\.com)/i;
 const legacyMediaAssetPattern = /(?:^|[/_.-])(?:get)?probo(?:[/_.-]|$)/i;
+// The Hub keeps this historical source filename for compatibility, but its binary
+// content is replaced in-repo with reviewed, non-Probo artwork. Do not treat the
+// non-visible legacy filename as a public brand leak.
+const verifiedRebrandedMediaPattern = /(?:^|\/)probo-homepage-screenshot(?:\.[a-z0-9_-]+)?\.jpg(?:[?#].*)?$/i;
 const mediaExtensionPattern = /\.(?:svg|png|jpe?g|webp|gif|avif|mp4|webm)(?:[?#].*)?$/i;
 const absoluteUrlPattern = /https?:\/\/[^\s)<>'"\]]+/gi;
 
@@ -118,7 +122,9 @@ function structuredLeak(view) {
   if (visible) return visible;
   const upstream = upstreamUrlLeak(view.externalUrls ?? []);
   if (upstream) return upstream;
-  const media = (view.localMediaRefs ?? []).find((ref) => legacyMediaAssetPattern.test(ref));
+  const media = (view.localMediaRefs ?? []).find(
+    (ref) => legacyMediaAssetPattern.test(ref) && !verifiedRebrandedMediaPattern.test(ref),
+  );
   if (media) return { kind: "media-ref", token: media, context: media };
   return null;
 }
