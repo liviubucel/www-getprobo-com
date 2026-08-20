@@ -1,0 +1,194 @@
+name: Temporary final Slack brand v4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-final-slack-brand-v4.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Download exact ZebraByte icon
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --output /tmp/zebrabyte-icon.png 'https://pub-038e8088013241609a22cbfd541724a4.r2.dev/icon%20ZebraByte.png'
+          test -s /tmp/zebrabyte-icon.png
+      - name: Replace vector Probo brand with clean ZebraByte branding
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, json
+          from io import BytesIO
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+          src = Path('public/lottie/trust-center/slack-zebrabyte-v3.json')
+          dst = Path('public/lottie/trust-center/slack-zebrabyte-v4.json')
+          page = Path('src/pages/products/compliance-portal.astro')
+          data = json.loads(src.read_text())
+
+          # --- Exact icon supplied by ZebraByte ---
+          raw_icon = Image.open('/tmp/zebrabyte-icon.png').convert('RGBA')
+          gray = ImageOps.grayscale(raw_icon)
+          corners = [gray.getpixel((0,0)), gray.getpixel((gray.width-1,0)), gray.getpixel((0,gray.height-1)), gray.getpixel((gray.width-1,gray.height-1))]
+          bg = sum(corners) / 4
+          mask = gray if bg < 128 else ImageOps.invert(gray)
+          mask = ImageOps.autocontrast(mask)
+          # Keep antialiasing while eliminating the background.
+          mask = mask.point(lambda p: 0 if p < 22 else p)
+          glyph = Image.new('RGBA', raw_icon.size, (0,0,0,0))
+          glyph.putalpha(mask)
+          bbox = glyph.getbbox()
+          if not bbox:
+              raise SystemExit('Could not isolate ZebraByte icon from supplied PNG')
+          glyph = glyph.crop(bbox)
+          glyph.thumbnail((52,52), Image.Resampling.LANCZOS)
+          icon_canvas = Image.new('RGBA', (60,60), (0,0,0,0))
+          icon_canvas.alpha_composite(glyph, ((60-glyph.width)//2, (60-glyph.height)//2))
+          bio = BytesIO(); icon_canvas.save(bio, format='PNG')
+          icon_b64 = base64.b64encode(bio.getvalue()).decode('ascii')
+
+          # --- Single-line wordmark that fits exactly where vector Probo lived ---
+          font_path = '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf'
+          font = ImageFont.truetype(font_path, 14)
+          text = 'ZEBRABYTE'
+          bb = font.getbbox(text)
+          tight = Image.new('RGBA', (bb[2]-bb[0]+2, bb[3]-bb[1]+2), (0,0,0,0))
+          draw = ImageDraw.Draw(tight)
+          draw.text((1-bb[0], 1-bb[1]), text, font=font, fill=(0,0,0,255))
+          # Probo occupied ~59px in the source animation. Preserve that footprint.
+          target_w = 59
+          target_h = 12
+          tight = tight.resize((target_w, target_h), Image.Resampling.LANCZOS)
+          word_canvas = Image.new('RGBA', (61,17), (0,0,0,0))
+          word_canvas.alpha_composite(tight, (1,2))
+          bio = BytesIO(); word_canvas.save(bio, format='PNG')
+          word_b64 = base64.b64encode(bio.getvalue()).decode('ascii')
+
+          icon_id = 'zebrabyte-exact-icon-v4'
+          word_id = 'zebrabyte-wordmark-v4'
+          legacy_overlay_ids = {'zebrabyte-wordmark-compact', 'zebrabyte-slack-brand-local', icon_id, word_id}
+
+          # Remove all earlier experimental overlays/assets so nothing can overlap.
+          data['assets'] = [a for a in data.get('assets', []) if a.get('id') not in legacy_overlay_ids]
+          def strip_overlay_layers(layers):
+              result=[]
+              for layer in layers:
+                  if isinstance(layer, dict) and layer.get('refId') in {'zebrabyte-wordmark-compact','zebrabyte-slack-brand-local'}:
+                      continue
+                  result.append(layer)
+              return result
+          for asset in data.get('assets', []):
+              if isinstance(asset, dict) and isinstance(asset.get('layers'), list):
+                  asset['layers'] = strip_overlay_layers(asset['layers'])
+          if isinstance(data.get('layers'), list):
+              data['layers'] = strip_overlay_layers(data['layers'])
+
+          data['assets'].append({'id':icon_id,'w':60,'h':60,'u':'','p':'data:image/png;base64,'+icon_b64,'e':1})
+          data['assets'].append({'id':word_id,'w':61,'h':17,'u':'','p':'data:image/png;base64,'+word_b64,'e':1})
+          assets = {str(a.get('id')):a for a in data.get('assets', [])}
+
+          # Replace the original logo precomps with the exact ZebraByte icon and make it a touch smaller.
+          icon_layers = {'355':353, '861':859, '2494':2492, '3004':3002}
+          for aid, ind in icon_layers.items():
+              asset = assets[aid]
+              layer = next(l for l in asset['layers'] if l.get('ind') == ind)
+              layer['ty'] = 2
+              layer['refId'] = icon_id
+              layer['w'] = 60
+              layer['h'] = 60
+              layer['ks'] = {
+                  'o': {'a':0,'k':100},
+                  'r': {'a':0,'k':0},
+                  'p': {'a':0,'k':[30,30]},
+                  'a': {'a':0,'k':[30,30]},
+                  's': {'a':0,'k':[72,72,100]},
+              }
+
+          # These are the exact vector layers that draw P-r-o-b-o in each Slack card state.
+          probo_shapes = {
+              '305':  [304,302,300,298,296],
+              '861':  [808,810,812,814,816],
+              '2444': [2443,2441,2439,2437,2435],
+              '2957': [2956,2954,2952,2950,2948],
+          }
+          probo_roots = {'305':292, '861':804, '2444':2431, '2957':2944}
+          for aid, inds in probo_shapes.items():
+              asset = assets[aid]
+              by_ind = {l.get('ind'):l for l in asset['layers']}
+              for ind in inds:
+                  layer = by_ind[ind]
+                  layer.setdefault('ks', {})['o'] = {'a':0,'k':0}
+              by_ind[probo_roots[aid]].setdefault('ks', {})['o'] = {'a':0,'k':0}
+
+          # Put one clean ZEBRABYTE wordmark exactly where Probo used to begin.
+          word_targets = {
+              '305':  {'parent':276,  'ind':20305},
+              '861':  {'parent':788,  'ind':20861},
+              '2444': {'parent':2415, 'ind':22444},
+              '2957': {'parent':2928, 'ind':22957},
+          }
+          for aid, cfg in word_targets.items():
+              layer = {
+                  'ddd':0,'ind':cfg['ind'],'ty':2,'nm':'ZEBRABYTE wordmark','refId':word_id,
+                  'parent':cfg['parent'],'w':61,'h':17,
+                  'ks':{
+                      'o':{'a':0,'k':100},'r':{'a':0,'k':0},
+                      'p':{'a':0,'k':[0.5,7.2]},'a':{'a':0,'k':[0,0]},
+                      's':{'a':0,'k':[100,100,100]},
+                  },
+                  'ao':0,'ip':0,'op':1291.6,'st':0,'bm':0,
+              }
+              assets[aid]['layers'].insert(0, layer)
+
+          # Cache-bust with a new asset path so the browser cannot reuse the broken v3 animation.
+          dst.write_text(json.dumps(data, separators=(',',':')))
+          page_text = page.read_text()
+          for old in ['/lottie/trust-center/slack.json','/lottie/trust-center/slack-zebrabyte-v2.json','/lottie/trust-center/slack-zebrabyte-v3.json']:
+              page_text = page_text.replace(old, '/lottie/trust-center/slack-zebrabyte-v4.json')
+          page.write_text(page_text)
+
+          # Structural QA: old overlays gone, Probo vectors hidden, exact icon + wordmark in all states.
+          check = json.loads(dst.read_text())
+          ca = {str(a.get('id')):a for a in check['assets']}
+          raw = dst.read_text()
+          assert 'zebrabyte-wordmark-compact' not in raw
+          assert 'zebrabyte-slack-brand-local' not in raw
+          for aid, inds in probo_shapes.items():
+              by_ind = {l.get('ind'):l for l in ca[aid]['layers']}
+              for ind in inds:
+                  assert by_ind[ind]['ks']['o']['k'] == 0
+              assert by_ind[probo_roots[aid]]['ks']['o']['k'] == 0
+          for aid, ind in icon_layers.items():
+              layer = next(l for l in ca[aid]['layers'] if l.get('ind') == ind)
+              assert layer.get('refId') == icon_id
+              assert layer['ks']['s']['k'] == [72,72,100]
+          for aid, cfg in word_targets.items():
+              layer = next(l for l in ca[aid]['layers'] if l.get('ind') == cfg['ind'])
+              assert layer.get('refId') == word_id
+          assert '/lottie/trust-center/slack-zebrabyte-v4.json' in page.read_text()
+          print('FINAL BRAND QA PASS')
+          PY
+      - name: Commit final visual fix and clean temporary QA
+        shell: bash
+        run: |
+          rm -rf .tmp-slack-qa
+          git rm -f .github/workflows/temporary-final-slack-brand-v4.yml
+          git add -A public/lottie/trust-center/slack-zebrabyte-v4.json src/pages/products/compliance-portal.astro .tmp-slack-qa .github/workflows || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: replace vector Probo branding with clean ZebraByte lockup'
+          git push origin HEAD:main
