@@ -1,0 +1,85 @@
+name: Audit noindex sitemap conflicts
+
+on:
+  push:
+    branches:
+      - audit/noindex-sitemap
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/noindex-sitemap
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+
+      - name: Compare noindex HTML against generated sitemap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          from urllib.parse import urlsplit
+
+          dist = Path('dist')
+          sitemap_urls = set()
+          for xml in dist.rglob('sitemap*.xml'):
+              text = xml.read_text(errors='ignore')
+              sitemap_urls.update(re.findall(r'<loc>\s*(.*?)\s*</loc>', text, flags=re.I|re.S))
+
+          noindex = []
+          for html in dist.rglob('*.html'):
+              text = html.read_text(errors='ignore')
+              tags = re.findall(r'<meta\b[^>]*>', text, flags=re.I)
+              is_noindex = False
+              for tag in tags:
+                  if re.search(r'\bname=["\']robots["\']', tag, flags=re.I) and re.search(r'\bcontent=["\'][^"\']*noindex', tag, flags=re.I):
+                      is_noindex = True
+                      break
+              if not is_noindex:
+                  continue
+              canonical = None
+              for tag in re.findall(r'<link\b[^>]*>', text, flags=re.I):
+                  if re.search(r'\brel=["\']canonical["\']', tag, flags=re.I):
+                      m = re.search(r'\bhref=["\']([^"\']+)', tag, flags=re.I)
+                      if m:
+                          canonical = m.group(1)
+                          break
+              noindex.append((str(html.relative_to(dist)), canonical or 'NO_CANONICAL'))
+
+          conflicts = [(f,u) for f,u in noindex if u in sitemap_urls]
+          lines = [
+              f'sitemap_urls={len(sitemap_urls)}',
+              f'noindex_html={len(noindex)}',
+              f'conflicts={len(conflicts)}',
+              '',
+              '[CONFLICTS]'
+          ]
+          lines.extend(f'{u}\t{f}' for f,u in sorted(conflicts, key=lambda x:x[1]))
+          lines += ['', '[ALL_NOINDEX]']
+          lines.extend(f'{u}\t{f}' for f,u in sorted(noindex, key=lambda x:x[1]))
+          report = '\n'.join(lines) + '\n'
+          Path('.tmp-seo-noindex-report.txt').write_text(report)
+          print(report)
+          PY
+
+      - name: Commit audit report only
+        run: |
+          rm .github/workflows/audit-noindex-sitemap.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .tmp-seo-noindex-report.txt .github/workflows/audit-noindex-sitemap.yml
+          git commit -m "chore: capture noindex sitemap audit"
+          git push origin HEAD:audit/noindex-sitemap
