@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 
 const paths = {
+  rootPackage: "package.json",
   studioPackage: "sanity-studio/package.json",
   studioConfig: "sanity-studio/sanity.config.ts",
   studioCli: "sanity-studio/sanity.cli.ts",
@@ -11,7 +12,10 @@ const paths = {
   shared: "sanity-studio/schemaTypes/shared.ts",
   sections: "sanity-studio/schemaTypes/sections.ts",
   documents: "sanity-studio/schemaTypes/documents.ts",
-  sync: "tools/sync-zebrabyte-blog-v2.mjs",
+  policy: "sanity-studio/schemaTypes/policy.ts",
+  siteSync: "tools/sync-sanity-site.mjs",
+  blogSync: "tools/sync-zebrabyte-blog-v2.mjs",
+  optimizedBlogSync: "tools/sync-zebrabyte-blog-optimized.mjs",
 };
 
 const entries = Object.fromEntries(
@@ -87,7 +91,56 @@ for (const type of ["siteSettings", "navigation", "page", "hubArticle", "story",
   requireText(paths.schema, entries.schema, type);
 }
 
-// The legacy blog contract remains available while the rest of the site migrates.
+// Editorial content may compose pages, but it cannot claim runtime/localization
+// namespaces or introduce unsafe link schemes.
+for (const expected of [
+  "'/api'",
+  "'/cdn-cgi'",
+  "'/.well-known'",
+  "'/en'",
+  "validatePublicPath",
+  "validateCmsHref",
+  "validateHttpsUrl",
+  "https:",
+  "mailto:",
+  "tel:",
+]) {
+  requireText(paths.policy, entries.policy, expected);
+}
+requireText(paths.documents, entries.documents, "custom(validatePublicPath)");
+requireText(paths.shared, entries.shared, "custom(validateCmsHref)");
+requireText(paths.schema, entries.schema, "custom(validateCmsHref)");
+requireText(paths.shared, entries.shared, "Internal provenance note");
+requireText(paths.documents, entries.documents, "Internal relationship/provenance note");
+
+// The full public CMS snapshot is fetched once per website build from the live
+// API using only the published perspective. Current blog generation reuses that
+// response instead of consuming a second Content Lake query.
+for (const expected of [
+  ".api.sanity.io",
+  'endpoint.searchParams.set("perspective", "published")',
+  'requestCount: 1',
+  '"siteSettings"',
+  '"navigation"',
+  '"pages"',
+  '"posts"',
+  '"hubArticles"',
+  '"stories"',
+  '"jobs"',
+  '"legalDocuments"',
+  "validateSnapshot(content)",
+]) {
+  requireText(paths.siteSync, entries.siteSync, expected);
+}
+requireText(paths.optimizedBlogSync, entries.optimizedBlogSync, ".sanity-cache/site-content.json");
+requireText(paths.optimizedBlogSync, entries.optimizedBlogSync, "no second Content Lake query");
+requireText(paths.rootPackage, entries.rootPackage, '"sync:sanity-site": "node tools/sync-sanity-site.mjs"');
+const buildScript = JSON.parse(entries.rootPackage).scripts?.build || "";
+if (!buildScript.startsWith("npm run sync:sanity-site && npm run sync:zebrabyte-blog")) {
+  throw new Error("[sanity-cms] Website build must create the validated Sanity snapshot before blog generation.");
+}
+
+// The legacy blog contract remains available while public page consumers migrate.
 for (const field of [
   "name: 'title'",
   "name: 'slug'",
@@ -100,12 +153,11 @@ for (const field of [
 ]) {
   requireText(paths.schema, entries.schema, field);
 }
-
-requireText(paths.sync, entries.sync, '"yj548pxh"');
-requireText(paths.sync, entries.sync, '"production"');
-requireText(paths.sync, entries.sync, '_type == "post"');
-requireText(paths.sync, entries.sync, 'endpoint.searchParams.set("perspective", "published")');
-requireText(paths.sync, entries.sync, 'path("drafts.**")');
+requireText(paths.blogSync, entries.blogSync, '"yj548pxh"');
+requireText(paths.blogSync, entries.blogSync, '"production"');
+requireText(paths.blogSync, entries.blogSync, '_type == "post"');
+requireText(paths.blogSync, entries.blogSync, 'endpoint.searchParams.set("perspective", "published")');
+requireText(paths.blogSync, entries.blogSync, 'path("drafts.**")');
 
 // Browser-facing Studio files may contain public project/dataset/origin values,
 // but never bearer/deploy/read/write credentials or raw script/style injection.
@@ -118,6 +170,7 @@ for (const [name, text] of [
   [paths.shared, entries.shared],
   [paths.sections, entries.sections],
   [paths.documents, entries.documents],
+  [paths.policy, entries.policy],
   [paths.studioWrangler, entries.studioWrangler],
 ]) {
   const forbiddenAssignments = [
@@ -133,4 +186,4 @@ for (const [name, text] of [
   }
 }
 
-console.log("[sanity-cms] Full editorial source-of-truth, Studio, hosting, and legacy blog contracts verified.");
+console.log("[sanity-cms] Security-first editorial, single-query delivery, Studio, hosting, and legacy compatibility contracts verified.");
