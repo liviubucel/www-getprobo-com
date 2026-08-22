@@ -1,0 +1,77 @@
+name: Safe sitemap noindex guard
+
+on:
+  push:
+    branches:
+      - safe/seo-sitemap-guard
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: safe/seo-sitemap-guard
+          fetch-depth: 0
+
+      - name: Apply sitemap exclusions and permanent guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          astro = Path('astro.config.mjs')
+          s = astro.read_text()
+          needle = '        if (pathname === "/products/compliance-portal") return false;\n'
+          addition = '''        if (pathname === "/products/compliance-portal") return false;\n        if (pathname === "/accesibilitate/disclaimer") return false;\n        if (pathname === "/accesibilitate/vs-sienna") return false;\n        if (pathname === "/email-marketing") return false;\n        if (pathname === "/platform-customer-archive") return false;\n        if (pathname === "/platform-heritage") return false;\n        if (pathname === "/servicii-premium-it-migratie-securitate") return false;\n        if (\n          pathname.startsWith("/careers/") &&\n          !pathname.startsWith("/careers/zebrabyte-")\n        )\n          return false;\n'''
+          if s.count(needle) != 1:
+              raise SystemExit(f'astro config marker count={s.count(needle)}')
+          astro.write_text(s.replace(needle, addition, 1))
+
+          package = Path('package.json')
+          p = package.read_text()
+          old = 'npm run sitemap:i18n && npm run check:i18n && npm run check:public-brand'
+          new = 'npm run sitemap:i18n && npm run check:seo-indexing && npm run check:i18n && npm run check:public-brand'
+          if p.count(old) != 1:
+              raise SystemExit(f'package build marker count={p.count(old)}')
+          p = p.replace(old, new, 1)
+          script_marker = '    "check:i18n": "node tools/check-i18n.mjs",\n'
+          script_added = '    "check:seo-indexing": "node tools/check-seo-indexing.mjs",\n    "check:i18n": "node tools/check-i18n.mjs",\n'
+          if p.count(script_marker) != 1:
+              raise SystemExit('package script marker missing')
+          package.write_text(p.replace(script_marker, script_added, 1))
+          PY
+
+      - name: Enforce design freeze
+        run: |
+          git diff --exit-code HEAD -- src/pages/products/compliance-portal.astro src/pages/compliance-portal.astro src/styles || {
+            echo 'ERROR: protected design files changed'; exit 1;
+          }
+          python - <<'PY'
+          import subprocess
+          allowed = {'astro.config.mjs','package.json'}
+          changed = set(subprocess.check_output(['git','diff','--name-only','HEAD'], text=True).splitlines())
+          if changed - allowed:
+              raise SystemExit(f'Unexpected files modified by patch step: {sorted(changed - allowed)}')
+          PY
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - name: Full production build including SEO guard
+        run: npm run build
+
+      - name: Commit validated SEO guard
+        run: |
+          rm .github/workflows/safe-seo-sitemap-guard.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add astro.config.mjs package.json tools/check-seo-indexing.mjs .github/workflows/safe-seo-sitemap-guard.yml
+          git commit -m "fix: keep noindex pages out of generated sitemaps"
+          git push origin HEAD:safe/seo-sitemap-guard
