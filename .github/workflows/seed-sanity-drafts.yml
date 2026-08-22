@@ -1,0 +1,50 @@
+name: Seed Sanity Drafts
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type APPLY_DRAFTS to write the reviewed migration batch as Sanity drafts"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sanity-draft-migration
+  cancel-in-progress: false
+
+jobs:
+  seed-drafts:
+    if: github.ref == 'refs/heads/main' && inputs.confirm == 'APPLY_DRAFTS'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install pinned website dependencies
+        run: npm ci
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Validate migration contracts
+        run: node tools/check-sanity-content-migration.mjs
+
+      - name: Validate migration batch without mutation
+        run: node tools/migrate-site-content-to-sanity.mjs
+
+      - name: Write Sanity drafts only
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+          SANITY_PROJECT_ID: yj548pxh
+          SANITY_DATASET: production
+        run: node tools/migrate-site-content-to-sanity.mjs --apply-drafts
