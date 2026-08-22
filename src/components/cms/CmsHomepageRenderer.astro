@@ -1,0 +1,165 @@
+---
+import Button from "../ui/Button.svelte";
+import Badges from "../Badges.svelte";
+import Logos from "../block/Logos.astro";
+import ZebraByteTestimonials from "../block/ZebraByteTestimonials.astro";
+import SaleArg from "../ui/SaleArg.astro";
+import Stories from "../block/Stories.astro";
+import ComplianceTrack from "../block/ComplianceTrack.astro";
+import {
+  cmsFileUrl,
+  cmsImageUrl,
+  localize,
+  portableTextToHtml,
+  toPublicHref,
+  type CmsLocale,
+} from "../../lib/cms/content";
+
+interface Props {
+  document: Record<string, any>;
+  locale: CmsLocale;
+}
+
+const {document, locale} = Astro.props;
+const sections = (document.sections ?? []).filter((section: any) => section?.enabled !== false);
+const byKey = new Map(sections.map((section: any) => [section._key, section]));
+const hero = byKey.get("home-hero") as any;
+const compliance = byKey.get("compliance-track") as any;
+const autopilot = byKey.get("autopilot") as any;
+const testimonials = byKey.get("zebrabyte-testimonials") as any;
+const stories = byKey.get("stories") as any;
+
+const text = (value: any) => localize(value, locale) as string;
+const href = (value: string | undefined) => toPublicHref(value, locale);
+const buttonVariant = (style: string | undefined) =>
+  style === "secondary" ? "secondary" : style === "highlight" ? "highlight" : undefined;
+const mediaVideo = (media: any) => cmsFileUrl(media?.videoFile) ?? media?.videoUrl;
+const posterFor = (item: any) => {
+  const uploadedPoster = cmsImageUrl(item?.poster);
+  if (uploadedPoster) return uploadedPoster;
+  const video = String(item?.media?.videoUrl ?? "");
+  return video.startsWith("https://www.zebrabyte.ro/videos/") && video.endsWith(".mp4")
+    ? video.replace(/\.mp4$/i, ".jpg")
+    : undefined;
+};
+const referenceLogosTitle =
+  locale === "en"
+    ? "Organisations in the platform reference library"
+    : "Organizații din biblioteca de referință a platformei";
+---
+
+<main data-cms-managed-page data-cms-homepage data-cms-document-id={document._id}>
+  {
+    hero && (
+      <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+        {hero.eyebrow && (
+          <div class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-fit max-w-full items-center justify-center gap-2 px-3 py-2 text-center text-sm leading-snug sm:mb-8 sm:px-4 sm:text-base">
+            {text(hero.eyebrow)}
+          </div>
+        )}
+
+        <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
+          <span class="animate-perspective-in block">{text(hero.title)}</span>
+          {hero.highlight && <span class="animate-perspective-in block delay-50"> {text(hero.highlight)} </span>}
+        </h1>
+
+        {hero.description && (
+          <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
+            {text(hero.description)}
+          </p>
+        )}
+
+        {(hero.primaryCta || hero.secondaryCta) && (
+          <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
+            {hero.primaryCta && (
+              <Button
+                class="animate-perspective-in animation-delay-200"
+                variant={buttonVariant(hero.primaryCta.style)}
+                size="lg"
+                href={href(hero.primaryCta.href)}
+              >
+                {text(hero.primaryCta.label)}
+              </Button>
+            )}
+            {hero.secondaryCta && (
+              <Button
+                class="animate-perspective-in animation-delay-300"
+                variant={buttonVariant(hero.secondaryCta.style)}
+                size="lg"
+                rel="nofollow noreferrer"
+                href={href(hero.secondaryCta.href)}
+              >
+                {text(hero.secondaryCta.label)}
+              </Button>
+            )}
+          </div>
+        )}
+
+        {hero.showFrameworkBadges && (
+          <Badges
+            count={10}
+            countMobile={6}
+            client:load
+            border
+            class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5"
+          />
+        )}
+
+        {hero.showReferenceLogos && (
+          <section class="mt-11 mix-blend-multiply sm:mt-17">
+            <h2 class="text-tertiary-foreground animate-perspective-in animation-delay-300 text-center">
+              {referenceLogosTitle}
+            </h2>
+            <Logos class="animate-slide-in animation-delay-300" constrained />
+          </section>
+        )}
+      </animated-hero>
+    )
+  }
+
+  {compliance && <ComplianceTrack />}
+
+  {
+    autopilot && (
+      <section class="deferred-home-section container py-10 sm:py-20">
+        {autopilot.title && (
+          <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">{text(autopilot.title)}</h2>
+        )}
+        {autopilot.description && (
+          <p class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12">
+            {text(autopilot.description)}
+          </p>
+        )}
+
+        <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
+          {(autopilot.items ?? []).map((item: any) => (
+            <SaleArg
+              title={text(item.title)}
+              video={mediaVideo(item.media)}
+              poster={posterFor(item)}
+            >
+              <Fragment set:html={portableTextToHtml(text(item.body), locale)} />
+            </SaleArg>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {testimonials && <ZebraByteTestimonials />}
+  {stories && <Stories />}
+</main>
+
+<script>
+  import {AnimatedHero} from "../../lib/elements/hero";
+  import {customElementDefine} from "../../lib/dom";
+
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
+
+<style>
+  .deferred-home-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1500px;
+  }
+</style>
