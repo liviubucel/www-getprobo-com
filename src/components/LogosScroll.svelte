@@ -58,21 +58,16 @@
   };
 
   onMount(() => {
-    if (!slider) {
-      return;
-    }
+    if (!slider) return;
 
-    const astroSlot = slider.querySelector("astro-slot") as HTMLElement | null;
     const list =
-      astroSlot ??
+      (slider.querySelector("astro-slot") as HTMLElement | null) ??
       (slider.querySelector(".splide__list") as HTMLElement | null);
 
-    if (!list) {
-      return;
-    }
+    if (!list) return;
 
-    if (astroSlot) {
-      astroSlot.setAttribute("class", "splide__list items-center block");
+    if (list.tagName.toLowerCase() === "astro-slot") {
+      list.setAttribute("class", "splide__list items-center block");
     }
 
     Array.from(list.children).forEach((child) => {
@@ -90,11 +85,15 @@
   });
 </script>
 
-<div class={clsx(props.class, "splide")} bind:this={slider}>
-  <div class="splide__track">
-    {#if props.children}
-      {@render props.children()}
-    {:else if props.logos?.length}
+{#if props.logos?.length}
+  <div
+    class={clsx(
+      props.class,
+      "splide flex h-16 w-full items-center sm:h-30",
+    )}
+    bind:this={slider}
+  >
+    <div class="splide__track w-full">
       <div class="splide__list items-center block">
         {#each props.logos as logo}
           <div
@@ -112,6 +111,12 @@
           </div>
         {/each}
       </div>
-    {/if}
+    </div>
   </div>
-</div>
+{:else}
+  <div class={clsx(props.class, "splide")} bind:this={slider}>
+    <div class="splide__track">
+      {@render props.children!()}
+    </div>
+  </div>
+{/if}
