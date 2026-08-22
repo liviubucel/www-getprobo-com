@@ -27,7 +27,7 @@
     "docs:generate": "node tools/generate-reference.mjs",
     "redirects:generate": "node tools/generate-redirects.mjs",
     "indexnow:submit": "node --env-file=.env tools/submit-indexnow.mjs",
-    "newsletter:announce": "node --env-file=.env tools/notify-newsletter-post.mjs",
+    "newsletter:announce": "node --env-file=.env tools/send-newsletter-announcement.mjs",
     "newsletter:notify-post": "node --env-file=.env tools/notify-newsletter-post.mjs",
     "mail:campaign": "node --env-file=.env tools/send-mail-campaign.mjs",
     "mail:clients:import": "node --env-file=.env tools/import-mail-clients.mjs",
