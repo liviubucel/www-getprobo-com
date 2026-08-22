@@ -21,7 +21,8 @@ export function validateCanonicalPath(value: unknown): true | string {
 }
 
 export function validateCmsHref(value: unknown): true | string {
-  if (typeof value !== 'string' || !value.trim()) return 'A destination is required.'
+  if (value === undefined || value === null || value === '') return true
+  if (typeof value !== 'string' || !value.trim()) return 'Use a valid destination.'
   const href = value.trim()
 
   if (href.startsWith('#')) {
