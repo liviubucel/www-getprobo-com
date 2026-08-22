@@ -84,7 +84,7 @@ jobs:
 
       - name: Install pinned Studio dependencies
         working-directory: sanity-studio
-        run: npm install --no-package-lock
+        run: npm install
 
       - name: Audit Studio dependencies
         working-directory: sanity-studio
