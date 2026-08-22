@@ -29,10 +29,6 @@ const primaryCta = cmsSettings?.headerPrimaryCta ?? {
   label: locale === "en" ? "Talk to an expert" : "Discută cu un expert",
   href: locale === "en" ? "/en/contact" : "/contact",
 };
-const secondaryCta = cmsSettings?.mobileSecondaryCta ?? {
-  label: locale === "en" ? "See the GRC Platform" : "Vezi Platforma GRC",
-  href: locale === "en" ? "/en/compliance-platform" : "/compliance-platform",
-};
 const navigationLabel = locale === "en" ? "Main navigation" : "Navigație principală";
 const burgerLabel = locale === "en" ? "Open menu" : "Deschide meniul";
 ---
@@ -99,12 +95,7 @@ const burgerLabel = locale === "en" ? "Open menu" : "Deschide meniul";
   </div>
 </header>
 
-<MobileMenu
-  id="mobile-menu"
-  groups={groups}
-  primaryCta={primaryCta}
-  secondaryCta={secondaryCta}
-/>
+<MobileMenu id="mobile-menu" />
 
 <script>
   import { customElementDefine } from "../lib/dom";
