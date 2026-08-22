@@ -1,4 +1,4 @@
-const RESERVED_PUBLIC_PREFIXES = ['/api', '/cdn-cgi', '/.well-known', '/en']
+const RESERVED_PUBLIC_PREFIXES = ['/api', '/cdn-cgi', '/.well-known', '/en', '/_cms']
 
 function hasReservedPrefix(pathname: string) {
   return RESERVED_PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))
