@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "zebrabyte-website",
-  "main": "./worker/main.ts",
+  "main": "./worker/redirect-wrapper.ts",
   "compatibility_date": "2026-06-11",
   "assets": {
     "directory": "./dist",
