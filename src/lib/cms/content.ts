@@ -53,6 +53,19 @@ export function cmsImageUrl(image: any): string | undefined {
   return `https://cdn.sanity.io/images/${encodeURIComponent(projectId)}/${encodeURIComponent(dataset)}/${id}-${dimensions}.${format}?auto=format`;
 }
 
+export function cmsFileUrl(file: any): string | undefined {
+  const snapshot = readSnapshot();
+  const projectId = snapshot?.source?.projectId;
+  const dataset = snapshot?.source?.dataset;
+  const ref = file?.asset?._ref;
+  if (!projectId || !dataset || typeof ref !== "string" || !ref.startsWith("file-")) return undefined;
+
+  const match = ref.match(/^file-(.+)-([a-z0-9]+)$/i);
+  if (!match) return undefined;
+  const [, id, extension] = match;
+  return `https://cdn.sanity.io/files/${encodeURIComponent(projectId)}/${encodeURIComponent(dataset)}/${id}.${extension}`;
+}
+
 export function getCmsSiteSettings(locale: CmsLocale): JsonObject | null {
   const settings = readSnapshot()?.content?.siteSettings?.[0];
   if (!settings) return null;
