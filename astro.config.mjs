@@ -113,6 +113,17 @@ export default defineConfig({
         if (pathname.startsWith("/newsletter/rezultat")) return false;
         if (pathname === "/blog/page/1") return false;
         if (pathname === "/products/compliance-portal") return false;
+        if (pathname === "/accesibilitate/disclaimer") return false;
+        if (pathname === "/accesibilitate/vs-sienna") return false;
+        if (pathname === "/email-marketing") return false;
+        if (pathname === "/platform-customer-archive") return false;
+        if (pathname === "/platform-heritage") return false;
+        if (pathname === "/servicii-premium-it-migratie-securitate") return false;
+        if (
+          pathname.startsWith("/careers/") &&
+          !pathname.startsWith("/careers/zebrabyte-")
+        )
+          return false;
 
         // Compatibility URLs remain available for inbound links, but only their
         // ZebraByte-branded equivalents are advertised as canonical discovery
