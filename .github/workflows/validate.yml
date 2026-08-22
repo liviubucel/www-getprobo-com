@@ -96,3 +96,7 @@ jobs:
           SANITY_STUDIO_PROJECT_ID: yj548pxh
           SANITY_STUDIO_DATASET: production
         run: npm run build
+
+      - name: Validate isolated Cloudflare CMS bundle
+        working-directory: sanity-studio
+        run: npx --yes wrangler@4.123.0 deploy --dry-run --config wrangler.jsonc
