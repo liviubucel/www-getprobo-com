@@ -56,7 +56,20 @@ export const mediaAsset = defineType({
   type: 'object',
   fields: [
     defineField({name: 'image', title: 'Image', type: 'image', options: {hotspot: true}}),
-    defineField({name: 'videoUrl', title: 'Video URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
+    defineField({
+      name: 'videoFile',
+      title: 'Uploaded video',
+      type: 'file',
+      options: {accept: 'video/*'},
+      description: 'Preferred for videos managed directly from ZebraByte CMS.',
+    }),
+    defineField({
+      name: 'videoUrl',
+      title: 'External / migration video URL',
+      type: 'url',
+      description: 'HTTPS fallback for existing or externally hosted video. Prefer Uploaded video for new CMS-managed media.',
+      validation: (Rule) => Rule.custom(validateHttpsUrl),
+    }),
     defineField({name: 'alt', title: 'Alternative text', type: 'localizedString'}),
     defineField({name: 'caption', title: 'Caption', type: 'localizedString'}),
   ],

@@ -6,11 +6,24 @@ const requireCondition = (condition, message) => {
   if (!condition) failures.push(message);
 };
 
-const [runner, menuSource, homepageSource, footerSource] = await Promise.all([
+const [
+  runner,
+  menuSource,
+  homepageSource,
+  footerSource,
+  homepageRenderer,
+  documentRenderer,
+  sharedSchema,
+  cmsContent,
+] = await Promise.all([
   readFile("tools/migrate-site-content-to-sanity.mjs", "utf8"),
   readFile("src/content/menu.ts", "utf8"),
   readFile("src/pages/index.astro", "utf8"),
   readFile("src/components/Footer.astro", "utf8"),
+  readFile("src/components/cms/CmsHomepageRenderer.astro", "utf8"),
+  readFile("src/components/cms/CmsDocumentRenderer.astro", "utf8"),
+  readFile("sanity-studio/schemaTypes/shared.ts", "utf8"),
+  readFile("src/lib/cms/content.ts", "utf8"),
 ]);
 
 requireCondition(migrationVersion === "zebrabyte-site-v1-20260822", "unexpected migration version");
@@ -88,6 +101,42 @@ for (const phrase of [
   requireCondition(homepageJson.includes(phrase), `Sanity homepage seed is missing protected phrase: ${phrase}`);
 }
 
+for (const componentContract of [
+  'import Badges from "../Badges.svelte"',
+  'import Logos from "../block/Logos.astro"',
+  'import ComplianceTrack from "../block/ComplianceTrack.astro"',
+  'import SaleArg from "../ui/SaleArg.astro"',
+  'import ZebraByteTestimonials from "../block/ZebraByteTestimonials.astro"',
+  'import Stories from "../block/Stories.astro"',
+  "<animated-hero",
+  "<Badges",
+  "<ComplianceTrack />",
+  "<SaleArg",
+  "<ZebraByteTestimonials />",
+  "<Stories />",
+  "data-cms-homepage",
+]) {
+  requireCondition(homepageRenderer.includes(componentContract), `CMS homepage parity renderer missing ${componentContract}`);
+}
+requireCondition(
+  documentRenderer.includes('document.path === "/"') && documentRenderer.includes("<CmsHomepageRenderer"),
+  "homepage documents must use the dedicated production-parity renderer",
+);
+requireCondition(
+  homepageRenderer.includes("variant={buttonVariant(hero.secondaryCta.style)}"),
+  "secondary homepage CTA must respect its Sanity style instead of being forced secondary",
+);
+
+for (const mediaContract of [
+  "name: 'videoFile'",
+  "type: 'file'",
+  "accept: 'video/*'",
+]) {
+  requireCondition(sharedSchema.includes(mediaContract), `Sanity media schema missing ${mediaContract}`);
+}
+requireCondition(cmsContent.includes("export function cmsFileUrl"), "CMS content adapter must resolve Sanity file assets");
+requireCondition(homepageRenderer.includes("cmsFileUrl(media?.videoFile)"), "homepage renderer must prefer Sanity-uploaded video files");
+
 for (const expected of [
   "SANITY_API_WRITE_TOKEN",
   "--apply-drafts",
@@ -106,4 +155,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("[sanity-content-migration] Draft-only settings, navigation and homepage migration contracts verified.");
+console.log("[sanity-content-migration] Draft-only migration, homepage production parity, bilingual content and CMS media contracts verified.");
