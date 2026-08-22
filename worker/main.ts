@@ -29,6 +29,7 @@ import {
   handleSecurityReportApi,
   type SecurityReportEnv,
 } from "./security-report";
+import { withWorkerSecurityHeaders } from "./security-headers";
 import {
   captureSentryException,
   captureSentryMessage,
@@ -65,15 +66,16 @@ type ExecutionContextLike = {
   waitUntil?: (promise: Promise<unknown>) => void;
 };
 
-function withDeploymentSeoHeaders(request: Request, response: Response): Response {
+function finalizeHttpResponse(request: Request, response: Response): Response {
+  const securedResponse = withWorkerSecurityHeaders(response);
   const hostname = new URL(request.url).hostname.toLowerCase();
-  if (hostname !== "stag.zebrabyte.ro") return response;
+  if (hostname !== "stag.zebrabyte.ro") return securedResponse;
 
-  const headers = new Headers(response.headers);
+  const headers = new Headers(securedResponse.headers);
   headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
+  return new Response(securedResponse.body, {
+    status: securedResponse.status,
+    statusText: securedResponse.statusText,
     headers,
   });
 }
@@ -99,11 +101,11 @@ export default {
     try {
       const publicRedirect = configuredRedirect(request);
       if (publicRedirect) {
-        return withDeploymentSeoHeaders(request, publicRedirect);
+        return finalizeHttpResponse(request, publicRedirect);
       }
 
       const clientErrorResponse = await handleSentryClientApi(request, env);
-      if (clientErrorResponse) return clientErrorResponse;
+      if (clientErrorResponse) return finalizeHttpResponse(request, clientErrorResponse);
 
       const publicStatusResponse = await handlePublicStatusApi(request, env);
       if (publicStatusResponse) {
@@ -117,7 +119,7 @@ export default {
             }),
           );
         }
-        return publicStatusResponse;
+        return finalizeHttpResponse(request, publicStatusResponse);
       }
 
       const queuedNewsletterResponse = await handleNewsletterQueueCompatApi(request, env);
@@ -132,14 +134,14 @@ export default {
             }),
           );
         }
-        return queuedNewsletterResponse;
+        return finalizeHttpResponse(request, queuedNewsletterResponse);
       }
 
       const dispatchResponse = await handleNewsletterDispatchApi(request, env);
-      if (dispatchResponse) return dispatchResponse;
+      if (dispatchResponse) return finalizeHttpResponse(request, dispatchResponse);
 
       const upmindSourceResponse = guardUpmindWebhookSource(request, env);
-      if (upmindSourceResponse) return upmindSourceResponse;
+      if (upmindSourceResponse) return finalizeHttpResponse(request, upmindSourceResponse);
 
       const upmindMailResponse = await handleUpmindMailSyncApi(request, env);
       if (upmindMailResponse) {
@@ -153,11 +155,11 @@ export default {
             }),
           );
         }
-        return upmindMailResponse;
+        return finalizeHttpResponse(request, upmindMailResponse);
       }
 
       const mailDashboardResponse = await handleMailDashboardApi(request, env);
-      if (mailDashboardResponse) return mailDashboardResponse;
+      if (mailDashboardResponse) return finalizeHttpResponse(request, mailDashboardResponse);
 
       const mailPlatformResponse = await handleMailPlatformApi(request, env);
       if (mailPlatformResponse) {
@@ -171,7 +173,7 @@ export default {
             }),
           );
         }
-        return mailPlatformResponse;
+        return finalizeHttpResponse(request, mailPlatformResponse);
       }
 
       const securityReportResponse = await handleSecurityReportApi(request, env);
@@ -186,7 +188,7 @@ export default {
             }),
           );
         }
-        return securityReportResponse;
+        return finalizeHttpResponse(request, securityReportResponse);
       }
 
       const ycDealResponse = await handleYcDealApi(request, env);
@@ -201,7 +203,7 @@ export default {
             }),
           );
         }
-        return ycDealResponse;
+        return finalizeHttpResponse(request, ycDealResponse);
       }
 
       const formsResponse = await handleZebraByteFormsApi(request, env);
@@ -216,7 +218,7 @@ export default {
             }),
           );
         }
-        return formsResponse;
+        return finalizeHttpResponse(request, formsResponse);
       }
 
       const response = await router.fetch(request, env);
@@ -230,7 +232,7 @@ export default {
           }),
         );
       }
-      return withDeploymentSeoHeaders(request, response);
+      return finalizeHttpResponse(request, response);
     } catch (error) {
       await captureSentryException(env, error, {
         request,
