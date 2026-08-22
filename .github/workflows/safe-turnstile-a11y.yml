@@ -1,0 +1,96 @@
+name: Safe Turnstile accessibility fix
+
+on:
+  push:
+    branches:
+      - safe/turnstile-a11y-no-design
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: safe/turnstile-a11y-no-design
+          fetch-depth: 0
+
+      - name: Add semantic role to labelled Turnstile containers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          changed = []
+          count = 0
+          for p in Path('src').rglob('*'):
+              if p.suffix not in {'.astro', '.svelte'}:
+                  continue
+              text = p.read_text()
+
+              def fix(match):
+                  global count
+                  tag = match.group(0)
+                  if 'aria-label=' not in tag or 'data-sitekey' not in tag or re.search(r'\brole=', tag):
+                      return tag
+                  count += 1
+                  return tag.replace('aria-label=', 'role="group"\n                aria-label=', 1)
+
+              updated = re.sub(r'<div\b[^>]*>', fix, text, flags=re.S)
+              if updated != text:
+                  p.write_text(updated)
+                  changed.append(str(p))
+
+          if count == 0:
+              raise SystemExit('No labelled Turnstile containers required a semantic role')
+          print(f'Updated {count} Turnstile containers:')
+          print('\n'.join(changed))
+          PY
+
+      - name: Enforce visual design freeze
+        run: |
+          git diff --exit-code HEAD -- src/pages/products/compliance-portal.astro src/pages/compliance-portal.astro src/styles || {
+            echo 'ERROR: protected design files changed'; exit 1;
+          }
+          if git diff --name-only HEAD | grep -E '\.(css|scss)$'; then
+            echo 'ERROR: stylesheet changed'; exit 1;
+          fi
+          git diff --check
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - run: npm run check:experience
+      - run: npm run build
+
+      - name: Verify semantic fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          problems=[]
+          for p in Path('src').rglob('*'):
+              if p.suffix not in {'.astro','.svelte'}: continue
+              text=p.read_text()
+              for tag in re.findall(r'<div\b[^>]*>', text, flags=re.S):
+                  if 'data-sitekey' in tag and 'aria-label=' in tag and not re.search(r'\brole=', tag):
+                      problems.append(f'{p}: {tag[:160]}')
+          if problems:
+              raise SystemExit('Labelled generic Turnstile containers remain:\n'+'\n'.join(problems))
+          print('Turnstile ARIA semantic check passed')
+          PY
+
+      - name: Commit validated accessibility fix
+        run: |
+          rm .github/workflows/safe-turnstile-a11y.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src .github/workflows/safe-turnstile-a11y.yml
+          git commit -m "fix: give labelled Turnstile containers a semantic role"
+          git push origin HEAD:safe/turnstile-a11y-no-design
