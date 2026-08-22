@@ -1,0 +1,307 @@
+name: Temporary compliance portal audit fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-compliance-portal-audit-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Patch Slack branding and accessibility
+        shell: bash
+        run: |
+          python - <<'PY'
+          import copy
+          import json
+          import re
+          from pathlib import Path
+
+          src = Path('public/lottie/trust-center/slack-zebrabyte-v6.json')
+          dst = Path('public/lottie/trust-center/slack-zebrabyte-v7.json')
+          data = json.loads(src.read_text())
+          assets = {str(a.get('id')): a for a in data.get('assets', [])}
+
+          # Exact APP precomp layers discovered from the v6 diagnostic.
+          app_layers = {
+              '305': (290, '288'),
+              '861': (802, '800'),
+              '2444': (2429, '2427'),
+              '2957': (2942, '2940'),
+          }
+          hidden = 0
+          for aid, (ind, refid) in app_layers.items():
+              asset = assets.get(aid)
+              if not asset:
+                  raise SystemExit(f'Missing branding asset {aid}')
+              layer = next((l for l in asset.get('layers', []) if l.get('ind') == ind and str(l.get('refId')) == refid), None)
+              if not layer:
+                  raise SystemExit(f'Missing APP layer {aid}/{ind}/{refid}')
+              layer['hd'] = True
+              hidden += 1
+
+          # Keep current ZebraByte size/position; change only typeface weight to Geist Bold.
+          wordmarks = {
+              '305': 20305,
+              '861': 20861,
+              '2444': 22444,
+              '2957': 22957,
+          }
+
+          fonts = data.setdefault('fonts', {}).setdefault('list', [])
+          if not any(f.get('fName') == 'GeistBold' for f in fonts):
+              source_font = next((f for f in fonts if f.get('fName') == 'GeistSemiBold'), None)
+              if source_font:
+                  bold_font = copy.deepcopy(source_font)
+                  bold_font['fName'] = 'GeistBold'
+                  bold_font['fFamily'] = 'Geist'
+                  bold_font['fStyle'] = 'Bold'
+              else:
+                  bold_font = {
+                      'fName': 'GeistBold',
+                      'fFamily': 'Geist',
+                      'fStyle': 'Bold',
+                      'ascent': 75,
+                  }
+              fonts.append(bold_font)
+
+          bolded = 0
+          for aid, ind in wordmarks.items():
+              asset = assets.get(aid)
+              layer = next((l for l in asset.get('layers', []) if l.get('ind') == ind and l.get('nm') == 'ZEBRABYTE'), None)
+              if not layer:
+                  raise SystemExit(f'Missing ZEBRABYTE layer {aid}/{ind}')
+              docs = layer.get('t', {}).get('d', {}).get('k', [])
+              if not docs:
+                  raise SystemExit(f'Missing text document {aid}/{ind}')
+              for doc in docs:
+                  s = doc.get('s', {})
+                  if s.get('t') == 'ZEBRABYTE':
+                      # Do not touch s(size), tr(tracking), position or scale.
+                      s['f'] = 'GeistBold'
+                      bolded += 1
+
+          if hidden != 4 or bolded < 4:
+              raise SystemExit(f'Unexpected branding patch result: hidden={hidden}, bolded={bolded}')
+
+          dst.write_text(json.dumps(data, separators=(',', ':')))
+
+          # Page: use a fresh versioned asset and mark redundant illustrations decorative.
+          page_path = Path('src/pages/products/compliance-portal.astro')
+          page = page_path.read_text()
+          if 'slack-zebrabyte-v6.json' not in page:
+              raise SystemExit('Expected v6 Slack reference not found')
+          page = page.replace('slack-zebrabyte-v6.json', 'slack-zebrabyte-v7.json', 1)
+
+          # All access-feature Lotties sit next to a text heading and are visual duplication.
+          if 'decorative={true}' not in page:
+              pattern = r'(label=\{`\$\{feature\.title\} animation`\}\s*\n)(\s*)(client:visible)'
+              page, count = re.subn(pattern, r'\1\2decorative={true}\n\2\3', page, count=1)
+              if count != 1:
+                  raise SystemExit('Could not add decorative prop to feature Lottie')
+          page_path.write_text(page)
+
+          # Lottie player: load a static first frame for reduced motion, hide decorative
+          # illustrations from AT, and progressively build SVG DOM for complex animations.
+          component = Path('src/components/LottiePlayer.svelte')
+          component.write_text('''<script lang="ts">
+  import { onDestroy } from "svelte";
+  import type { AnimationItem } from "lottie-web";
+  import { useIntersectionObserver } from "../lib/runes/useIntersectionObserver.svelte.ts";
+
+  type Props = {
+    src: string;
+    label?: string;
+    class?: string;
+    loop?: boolean;
+    decorative?: boolean;
+  };
+
+  const {
+    src,
+    label = "Animated illustration",
+    class: className,
+    loop = true,
+    decorative = false,
+  }: Props = $props();
+
+  let animation = $state<AnimationItem | null>(null);
+  let loadingPromise: Promise<void> | null = null;
+  let reducedMotion = $state(false);
+  const intersection = useIntersectionObserver({ threshold: 0.2 });
+
+  const syncPlayback = () => {
+    if (!animation) return;
+
+    if (reducedMotion) {
+      animation.goToAndStop(0, true);
+    } else if (intersection.observed) {
+      animation.play();
+    } else {
+      animation.pause();
+    }
+  };
+
+  const loadAnimation = async () => {
+    const { default: lottie } = await import("lottie-web");
+
+    if (!intersection.ref || animation) {
+      return;
+    }
+
+    animation = lottie.loadAnimation({
+      container: intersection.ref,
+      renderer: "svg",
+      loop,
+      autoplay: false,
+      path: src,
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid meet",
+        progressiveLoad: true,
+      },
+    });
+
+    animation.addEventListener("DOMLoaded", syncPlayback);
+  };
+
+  $effect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotionPreference = () => {
+      reducedMotion = mediaQuery.matches;
+      syncPlayback();
+    };
+
+    syncMotionPreference();
+    mediaQuery.addEventListener("change", syncMotionPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncMotionPreference);
+    };
+  });
+
+  $effect(() => {
+    if (!intersection.ref) {
+      return;
+    }
+
+    if (!intersection.observed) {
+      animation?.pause();
+      return;
+    }
+
+    if (animation) {
+      syncPlayback();
+      return;
+    }
+
+    loadingPromise ??= loadAnimation();
+  });
+
+  onDestroy(() => {
+    animation?.removeEventListener("DOMLoaded", syncPlayback);
+    animation?.destroy();
+  });
+</script>
+
+<div
+  bind:this={intersection.ref}
+  class={className}
+  role={decorative ? undefined : "img"}
+  aria-label={decorative ? undefined : label}
+  aria-hidden={decorative ? "true" : undefined}
+></div>
+''')
+
+          # Clean diagnostic from the inspection phase.
+          diagnostic = Path('.tmp-slack-app-diagnostic.txt')
+          if diagnostic.exists():
+              diagnostic.unlink()
+
+          # Structural assertions.
+          check = json.loads(dst.read_text())
+          ca = {str(a.get('id')): a for a in check.get('assets', [])}
+          for aid, (ind, refid) in app_layers.items():
+              layer = next(l for l in ca[aid]['layers'] if l.get('ind') == ind)
+              assert str(layer.get('refId')) == refid
+              assert layer.get('hd') is True
+          for aid, ind in wordmarks.items():
+              layer = next(l for l in ca[aid]['layers'] if l.get('ind') == ind)
+              docs = layer['t']['d']['k']
+              assert all(d['s'].get('f') == 'GeistBold' for d in docs if d['s'].get('t') == 'ZEBRABYTE')
+          print(f'v7 size: {dst.stat().st_size} bytes')
+          print('APP hidden in all four states; ZebraByte preserved and bolded')
+          PY
+
+      - name: Install dependencies
+        run: npm ci --progress=false
+
+      - name: Compliance Portal source audit
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const page = fs.readFileSync('src/pages/products/compliance-portal.astro','utf8');
+          const player = fs.readFileSync('src/components/LottiePlayer.svelte','utf8');
+          const checks = [
+            ['fresh v7 asset reference', page.includes('slack-zebrabyte-v7.json')],
+            ['decorative Lottie semantics', page.includes('decorative={true}')],
+            ['reduced motion static frame', player.includes('goToAndStop(0, true)')],
+            ['offscreen pause', player.includes('animation?.pause()')],
+            ['progressive SVG load', player.includes('progressiveLoad: true')],
+            ['visibility hydration retained', page.includes('client:visible')],
+          ];
+          let failed = false;
+          for (const [name, ok] of checks) {
+            console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
+            if (!ok) failed = true;
+          }
+          if (failed) process.exit(1);
+
+          const files = [
+            'public/lottie/trust-center/slack-zebrabyte-v7.json',
+            'public/lottie/trust-center/nda.json',
+            'public/lottie/trust-center/authentication.json',
+            'public/lottie/trust-center/updates.json',
+          ];
+          console.log('\nRaw animation sizes (lazy-loaded, before transfer compression):');
+          for (const file of files) {
+            const mb = fs.statSync(file).size / 1024 / 1024;
+            console.log(`${file}: ${mb.toFixed(2)} MB`);
+          }
+          NODE
+
+      - name: Full production build
+        run: npm run build
+
+      - name: Commit validated fixes and remove temporary workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/temporary-compliance-portal-audit-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/lottie/trust-center/slack-zebrabyte-v7.json src/pages/products/compliance-portal.astro src/components/LottiePlayer.svelte
+          git add -u .tmp-slack-app-diagnostic.txt || true
+          git diff --cached --quiet && { echo 'No change'; exit 1; }
+          git commit -m 'fix: polish compliance portal Lottie accessibility and branding'
+          git push origin HEAD:main
