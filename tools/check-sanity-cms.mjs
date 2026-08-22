@@ -23,6 +23,19 @@ function requireText(sourceName, text, expected) {
 
 requireText(paths.studioPackage, entries.studioPackage, '"sanity"');
 requireText(paths.studioPackage, entries.studioPackage, '"@sanity/vision"');
+
+// Sanity 6.10.1 currently pulls CLI-only transitives with known advisories.
+// Pin patched legacy-compatible releases until upstream dependency ranges no
+// longer resolve the vulnerable versions. CI then runs npm audit and a real
+// Studio build, so an incompatible override cannot silently reach main.
+for (const patchedDependency of [
+  '"js-yaml": "3.15.1"',
+  '"smol-toml": "1.8.0"',
+  '"uuid": "11.1.1"',
+]) {
+  requireText(paths.studioPackage, entries.studioPackage, patchedDependency);
+}
+
 requireText(paths.studioConfig, entries.studioConfig, "title: 'ZebraByte CMS'");
 requireText(paths.studioConfig, entries.studioConfig, "SANITY_STUDIO_PROJECT_ID");
 requireText(paths.studioConfig, entries.studioConfig, "SANITY_STUDIO_DATASET");
