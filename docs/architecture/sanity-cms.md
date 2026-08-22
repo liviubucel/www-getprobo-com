@@ -79,30 +79,106 @@ The checked-in defaults point to `yj548pxh / production`. To use another project
 
 ## Studio deployment
 
-Sanity Studio v6 is a browser SPA. It can be hosted by Sanity or self-hosted. For ZebraByte production, the preferred final topology is a dedicated CMS hostname such as `cms.zebrabyte.ro`, deployed separately from the public website and protected by Sanity authentication; Cloudflare Access may be added as a second gate when self-hosted.
+Sanity Studio v6 is a browser SPA. ZebraByte self-hosts the Studio as a completely separate Cloudflare application so the CMS deployment cannot overwrite the public website Worker.
 
-If self-hosted, the Studio origin must be added to the Sanity project's CORS origins. Never embed API/deploy tokens in the Studio bundle.
+The checked-in `sanity-studio/wrangler.jsonc` uses:
+
+- Worker name: `zebrabyte-cms`
+- build output: `sanity-studio/dist`
+- SPA fallback: `single-page-application`
+
+The intended production hostname is:
+
+- `https://cms.zebrabyte.ro`
+
+Do not add the CMS hostname as a route of the public `zebrabyte-website` Worker. It belongs to the separate `zebrabyte-cms` application.
+
+### Cloudflare setup
+
+Create or connect a separate Worker/Build for the CMS using this repository and the Studio directory/configuration. Build the Studio before the Wrangler deployment. The validation workflow performs a Studio build and a separate Cloudflare dry-run so the two deployment targets cannot be confused silently.
+
+After the CMS is deployed, attach `cms.zebrabyte.ro` as the custom domain of `zebrabyte-cms`.
+
+Cloudflare Access is recommended as a second authentication boundary for the CMS hostname. Sanity authentication remains required for access to the project/content even when Access is enabled.
+
+### Sanity CORS
+
+A self-hosted Studio must be explicitly trusted by the Sanity project. In Sanity Manage for project `yj548pxh`, add exactly:
+
+- Origin: `https://cms.zebrabyte.ro`
+- Allow credentials: **Yes**
+
+Do not add a platform-wide wildcard and do not use `*.zebrabyte.ro` when an exact production origin is sufficient.
+
+The project ID/dataset are safe browser configuration. API tokens, deploy tokens and webhook URLs are not.
+
+## Automatic publishing: Sanity -> Cloudflare
+
+The public website is generated at build time, so publishing in Sanity must trigger a new build of the public `zebrabyte-website` Worker.
+
+Use Cloudflare Workers Builds **Deploy Hooks** rather than putting a Cloudflare API token in Sanity or in browser-facing Studio code.
+
+### Cloudflare Deploy Hook
+
+On the **public website Worker** (`zebrabyte-website`), create a Deploy Hook:
+
+- suggested name: `sanity-published-content`
+- branch: `main`
+
+Cloudflare returns a unique POST URL. Treat that URL as a secret credential:
+
+- never commit it to Git
+- never place it in `SANITY_STUDIO_*`
+- never expose it in client-side code
+- rotate/delete it in Cloudflare if it is disclosed
+
+The Deploy Hook deliberately targets `main`. The existing website build then imports only Sanity's published perspective and executes the existing content, design, SEO, i18n, security and Worker release gates.
+
+### Sanity webhook
+
+In Sanity Manage, create a webhook for project `yj548pxh` / dataset `production` whose target is the Cloudflare Deploy Hook URL.
+
+For Phase 1 keep it narrow:
+
+- document filter: `_type == "post"`
+- trigger only content mutations relevant to publish/unpublish/update
+- do not include drafts
+- do not include all document versions
+- method: `POST`
+
+This means normal draft editing does not rebuild production. A published content mutation triggers Cloudflare, and Cloudflare deduplicates duplicate hook calls that arrive before the first build starts.
+
+The direct Deploy Hook is preferred for this build trigger because the unique hook URL itself is the Cloudflare build credential and no broad Cloudflare API token is required. If future requirements need payload validation, custom authorization or event transformation, add a dedicated server-side proxy that validates Sanity's webhook signature before calling a Deploy Hook stored as a Worker secret. Do not add that complexity until it is actually needed.
 
 ## Publishing workflow
 
-Initial safe workflow:
+Production flow after the dashboard integration is enabled:
 
 1. Editor changes a draft in ZebraByte CMS.
 2. Editor publishes the document in Sanity.
-3. The website build imports the `published` perspective.
-4. Existing build/release gates run.
-5. The exact validated website artifact is deployed.
+3. Sanity calls the private Cloudflare Deploy Hook.
+4. Cloudflare builds `main` for `zebrabyte-website`.
+5. The website importer queries only Sanity's `published` perspective.
+6. Existing build/release gates run.
+7. Cloudflare deploys the exact successfully built website artifact.
 
-A signed Sanity webhook/build trigger can be added after Phase 1. Until that trigger is implemented and verified, publishing a Sanity document does not by itself guarantee an immediate website deployment.
+Publishing content never gives Sanity permission to change Worker routing, application code, layouts or security controls.
 
 ## Production acceptance for Phase 1
 
 Before enabling the CMS for normal editorial use:
 
+- Sanity Studio audit reports no known vulnerabilities at the configured threshold.
 - Sanity Studio builds successfully on its own.
-- The existing website build succeeds with the same project/dataset.
-- At least one harmless draft/edit/publish cycle is tested on staging.
-- Published article URL, title, body, image, tags and author render correctly.
+- `zebrabyte-cms` Cloudflare bundle passes dry-run separately from `zebrabyte-website`.
+- `cms.zebrabyte.ro` points only to the separate CMS application.
+- Sanity CORS allows exactly `https://cms.zebrabyte.ro` with credentials.
+- Cloudflare Access is enabled for the CMS hostname if used as the second gate.
+- the Deploy Hook points to the public website `main` branch and its URL is not present in Git/client code.
+- the Sanity webhook is filtered to published Phase-1 `post` content, without drafts/all versions.
+- at least one harmless draft/edit/publish cycle is tested first against the intended release path.
+- the triggered Cloudflare build identifies the expected `main` SHA.
+- published article URL, title, body, image, tags and author render correctly.
 - `/en` behavior remains correct.
 - RSS, sitemap and SEO checks remain green.
 - no Studio token or secret is present in Git or the browser bundle.

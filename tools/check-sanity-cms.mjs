@@ -5,6 +5,7 @@ const paths = {
   studioConfig: "sanity-studio/sanity.config.ts",
   studioCli: "sanity-studio/sanity.cli.ts",
   studioEnv: "sanity-studio/.env.example",
+  studioWrangler: "sanity-studio/wrangler.jsonc",
   schema: "sanity-studio/schemaTypes/index.ts",
   sync: "tools/sync-zebrabyte-blog-v2.mjs",
 };
@@ -44,6 +45,20 @@ requireText(paths.studioConfig, entries.studioConfig, "production");
 requireText(paths.studioCli, entries.studioCli, "SANITY_STUDIO_PROJECT_ID");
 requireText(paths.studioCli, entries.studioCli, "SANITY_STUDIO_DATASET");
 
+// The CMS is deployed as a separate static SPA. It must never share the public
+// website Worker name/configuration because editorial hosting must be unable to
+// replace or alter the www application deployment.
+requireText(paths.studioWrangler, entries.studioWrangler, '"name": "zebrabyte-cms"');
+requireText(paths.studioWrangler, entries.studioWrangler, '"directory": "./dist"');
+requireText(
+  paths.studioWrangler,
+  entries.studioWrangler,
+  '"not_found_handling": "single-page-application"',
+);
+if (/"name"\s*:\s*"zebrabyte-website"/.test(entries.studioWrangler)) {
+  throw new Error("[sanity-cms] Studio must not target the public website Worker.");
+}
+
 for (const field of [
   "name: 'title'",
   "name: 'slug'",
@@ -73,10 +88,12 @@ for (const [name, text] of [
   [paths.studioCli, entries.studioCli],
   [paths.studioEnv, entries.studioEnv],
   [paths.schema, entries.schema],
+  [paths.studioWrangler, entries.studioWrangler],
 ]) {
   const forbiddenAssignments = [
     /SANITY_STUDIO_[A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|KEY)\s*=/,
     /Authorization\s*[:=]\s*["'`]Bearer\s+/i,
+    /deploy_hooks\/[A-Za-z0-9_-]{12,}/i,
   ];
   for (const pattern of forbiddenAssignments) {
     if (pattern.test(text)) {
@@ -85,4 +102,4 @@ for (const [name, text] of [
   }
 }
 
-console.log("[sanity-cms] Studio and build-time blog integration contract verified.");
+console.log("[sanity-cms] Studio, hosting, and build-time blog integration contract verified.");
