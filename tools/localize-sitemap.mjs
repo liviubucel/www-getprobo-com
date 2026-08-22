@@ -5,6 +5,7 @@ import process from "node:process";
 const root = process.cwd();
 const dist = path.join(root, "dist");
 const siteOrigin = "https://www.zebrabyte.ro";
+const sanitySnapshot = path.join(root, ".sanity-cache", "site-content.json");
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -29,10 +30,45 @@ function replaceLoc(block, nextLoc) {
   return block.replace(/<loc>[^<]+<\/loc>/, `<loc>${nextLoc}</loc>`);
 }
 
+function normalizeRoute(route) {
+  if (!route || route === "/") return "/";
+  return `/${String(route).replace(/^\/+|\/+$/g, "")}`;
+}
+
+async function cmsSitemapRoutes() {
+  let snapshot;
+  try {
+    snapshot = JSON.parse(await readFile(sanitySnapshot, "utf8"));
+  } catch {
+    return [];
+  }
+
+  const content = snapshot?.content ?? {};
+  const routes = [];
+  for (const document of content.pages ?? []) {
+    if (!document?.seo?.noIndex) routes.push(normalizeRoute(document.path));
+  }
+  for (const document of content.legalDocuments ?? []) {
+    if (!document?.seo?.noIndex) routes.push(normalizeRoute(document.path));
+  }
+  for (const document of content.hubArticles ?? []) {
+    if (!document?.seo?.noIndex && document?.slug) routes.push(`/hub/${document.slug}`);
+  }
+  for (const document of content.stories ?? []) {
+    if (!document?.seo?.noIndex && document?.slug) routes.push(`/stories/${document.slug}`);
+  }
+  for (const document of content.jobs ?? []) {
+    if (!document?.seo?.noIndex && document?.slug) routes.push(`/careers/${document.slug}`);
+  }
+  return [...new Set(routes)].sort((a, b) => a.localeCompare(b));
+}
+
 const files = (await walk(dist)).filter((file) => /sitemap[^/]*\.xml$/i.test(file));
+const cmsRoutes = await cmsSitemapRoutes();
 let sourceCount = 0;
 let englishCount = 0;
 let changedFiles = 0;
+let cmsRoutesInjected = false;
 
 for (const file of files) {
   const xml = await readFile(file, "utf8");
@@ -47,6 +83,20 @@ for (const file of files) {
       .filter(Boolean),
   );
   const additions = [];
+
+  // Astro only knows the hidden /_cms materialization routes for CMS-only pages.
+  // Add their canonical public URLs to exactly one urlset, never the internal path.
+  if (!cmsRoutesInjected && cmsRoutes.length > 0) {
+    for (const route of cmsRoutes) {
+      const loc = new URL(route, siteOrigin).toString().replace(/\/$/, route === "/" ? "/" : "");
+      if (existing.has(loc)) continue;
+      const block = `<url><loc>${loc}</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>`;
+      blocks.push(block);
+      additions.push(block);
+      existing.add(loc);
+    }
+    cmsRoutesInjected = true;
+  }
 
   for (const block of blocks) {
     const loc = block.match(/<loc>([^<]+)<\/loc>/)?.[1];
@@ -77,5 +127,8 @@ if (files.length === 0) {
 if (sourceCount > 0 && englishCount === 0) {
   throw new Error("No English sitemap URLs were generated.");
 }
+if (cmsRoutes.length > 0 && !cmsRoutesInjected) {
+  throw new Error("CMS-managed routes could not be injected into a sitemap urlset.");
+}
 
-console.log(`[i18n] sitemap: ${sourceCount} RO URLs, ${englishCount} EN URLs across ${changedFiles} localized file(s).`);
+console.log(`[i18n] sitemap: ${sourceCount} RO URLs, ${englishCount} EN URLs, ${cmsRoutes.length} CMS route(s) across ${changedFiles} localized file(s).`);
