@@ -1,0 +1,84 @@
+---
+import Button from "../ui/Button.svelte";
+import CmsPageRenderer from "./CmsPageRenderer.astro";
+import {
+  cmsImageUrl,
+  localize,
+  portableTextToHtml,
+  type CmsLocale,
+} from "../../lib/cms/content";
+
+interface Props {
+  document: Record<string, any>;
+  locale: CmsLocale;
+}
+
+const { document, locale } = Astro.props;
+const text = (value: any) => localize(value, locale) as any;
+const heroImage = cmsImageUrl(document.heroMedia?.image ?? document.logo);
+const applyLabel = locale === "en" ? "Apply for this role" : "Aplică pentru acest rol";
+---
+
+{
+  document._type === "page" ? (
+    <CmsPageRenderer document={document} locale={locale} />
+  ) : document._type === "legalDocument" ? (
+    <main class="container max-w-4xl py-12 sm:py-20" data-cms-managed-page data-cms-document-id={document._id}>
+      <h1 class="text-h2 sm:text-h1 mb-5 font-medium">{text(document.title)}</h1>
+      <div class="text-muted-foreground mb-10 text-sm">
+        {locale === "en" ? "Effective" : "În vigoare"}: {document.effectiveDate}
+        {document.lastReviewedAt ? ` · ${locale === "en" ? "Reviewed" : "Revizuit"}: ${document.lastReviewedAt}` : ""}
+      </div>
+      <div class="cms-document-rich" set:html={portableTextToHtml(text(document.body), locale)} />
+    </main>
+  ) : document._type === "hubArticle" ? (
+    <main data-cms-managed-page data-cms-document-id={document._id}>
+      <header class="container max-w-5xl py-12 text-center sm:py-20">
+        {document.eyebrow && <p class="text-muted-foreground mb-4 text-sm font-medium">{text(document.eyebrow)}</p>}
+        <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">{text(document.title)}</h1>
+        <p class="text-muted-foreground mx-auto max-w-3xl text-lg">{text(document.description)}</p>
+        {document.frameworks?.length > 0 && <div class="mt-6 flex flex-wrap justify-center gap-2">{document.frameworks.map((tag: string) => <span class="rounded-full border px-3 py-1 text-sm">{tag}</span>)}</div>}
+      </header>
+      <article class="container max-w-4xl pb-16 sm:pb-24"><div class="cms-document-rich" set:html={portableTextToHtml(text(document.body), locale)} /></article>
+    </main>
+  ) : document._type === "story" ? (
+    <main data-cms-managed-page data-cms-document-id={document._id}>
+      <header class="container max-w-5xl py-12 text-center sm:py-20">
+        {document.industry && <p class="text-muted-foreground mb-4 text-sm font-medium">{text(document.industry)}</p>}
+        <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">{text(document.title)}</h1>
+        {document.description && <p class="text-muted-foreground mx-auto max-w-3xl text-lg">{text(document.description)}</p>}
+        {heroImage && <img class="mx-auto mt-10 max-h-[620px] w-full rounded-2xl border object-cover" src={heroImage} alt={document.company ?? text(document.title)} loading="eager" decoding="async" />}
+      </header>
+      {document.impacts?.length > 0 && <section class="container mb-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{document.impacts.map((item: any) => <div class="rounded-2xl border p-6 text-center"><div class="text-h3 font-semibold">{item.value}</div><div class="mt-2 font-medium">{text(item.label)}</div>{item.detail && <div class="text-muted-foreground mt-1 text-sm">{text(item.detail)}</div>}</div>)}</section>}
+      <article class="container max-w-4xl pb-16 sm:pb-24"><div class="cms-document-rich" set:html={portableTextToHtml(text(document.body), locale)} /></article>
+    </main>
+  ) : document._type === "job" ? (
+    <main data-cms-managed-page data-cms-document-id={document._id}>
+      <header class="container max-w-5xl py-12 text-center sm:py-20">
+        <p class="text-muted-foreground mb-4 text-sm font-medium">{[document.location, document.employmentType, document.remote ? "Remote" : null].filter(Boolean).join(" · ")}</p>
+        <h1 class="text-h2 sm:text-h1 mb-5 font-medium text-balance">{text(document.title)}</h1>
+        {document.description && <p class="text-muted-foreground mx-auto max-w-3xl text-lg">{text(document.description)}</p>}
+        {document.open && document.applyUrl && <div class="mt-8"><Button href={document.applyUrl}>{applyLabel}</Button></div>}
+      </header>
+      <article class="container max-w-4xl pb-16 sm:pb-24"><div class="cms-document-rich" set:html={portableTextToHtml(text(document.body), locale)} /></article>
+    </main>
+  ) : null
+}
+
+<style>
+  .cms-document-rich :global(p) { margin-top: 1rem; line-height: 1.8; }
+  .cms-document-rich :global(p:first-child) { margin-top: 0; }
+  .cms-document-rich :global(h2) { margin-top: 2.75rem; margin-bottom: .8rem; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 600; line-height: 1.15; }
+  .cms-document-rich :global(h3) { margin-top: 2rem; margin-bottom: .7rem; font-size: 1.5rem; font-weight: 600; }
+  .cms-document-rich :global(h4) { margin-top: 1.5rem; margin-bottom: .5rem; font-size: 1.2rem; font-weight: 600; }
+  .cms-document-rich :global(ul), .cms-document-rich :global(ol) { margin-top: 1rem; padding-left: 1.5rem; }
+  .cms-document-rich :global(ul) { list-style: disc; }
+  .cms-document-rich :global(ol) { list-style: decimal; }
+  .cms-document-rich :global(li) { margin-top: .45rem; }
+  .cms-document-rich :global(blockquote) { margin: 1.5rem 0; border-left: 2px solid currentColor; padding-left: 1rem; font-style: italic; }
+  .cms-document-rich :global(a) { text-decoration: underline; text-underline-offset: 3px; }
+  .cms-document-rich :global(code) { border-radius: .35rem; padding: .1rem .3rem; font-size: .9em; }
+  .cms-document-rich :global(figure) { margin: 2rem 0; }
+  .cms-document-rich :global(img) { width: 100%; border-radius: 1rem; }
+  .cms-document-rich :global(figcaption) { margin-top: .5rem; color: var(--color-muted-foreground); font-size: .875rem; }
+</style>
