@@ -43,17 +43,23 @@ for (const expected of [
   "SANITY_STUDIO_PROJECT_ID",
   "SANITY_STUDIO_DATASET",
   "SANITY_STUDIO_PREVIEW_URL",
+  "resolveTrustedPreviewUrl",
   "presentationTool({",
   "allowOrigins:",
+  "http://localhost:*",
+  "http://127.0.0.1:*",
   "https://stag.zebrabyte.ro",
-  "https://www.zebrabyte.ro",
   "documentId('siteSettings')",
   "documentId('mainNavigation')",
 ]) {
   requireText(paths.studioConfig, entries.studioConfig, expected);
 }
+if (/allowOrigins\s*:\s*\[[^\]]*www\.zebrabyte\.ro/s.test(entries.studioConfig)) {
+  throw new Error("[sanity-cms] Public production must not be a trusted draft-preview origin.");
+}
 requireText(paths.studioConfig, entries.studioConfig, "yj548pxh");
 requireText(paths.studioConfig, entries.studioConfig, "production");
+requireText(paths.studioConfig, entries.studioConfig, "must target ZebraByte staging or localhost");
 requireText(paths.studioCli, entries.studioCli, "SANITY_STUDIO_PROJECT_ID");
 requireText(paths.studioCli, entries.studioCli, "SANITY_STUDIO_DATASET");
 requireText(paths.studioEnv, entries.studioEnv, "SANITY_STUDIO_PREVIEW_URL=https://stag.zebrabyte.ro");
@@ -91,8 +97,6 @@ for (const type of ["siteSettings", "navigation", "page", "hubArticle", "story",
   requireText(paths.schema, entries.schema, type);
 }
 
-// Editorial content may compose pages, but it cannot claim runtime/localization
-// namespaces or introduce unsafe link schemes.
 for (const expected of [
   "'/api'",
   "'/cdn-cgi'",
@@ -113,9 +117,6 @@ requireText(paths.schema, entries.schema, "custom(validateCmsHref)");
 requireText(paths.shared, entries.shared, "Internal provenance note");
 requireText(paths.documents, entries.documents, "Internal relationship/provenance note");
 
-// The full public CMS snapshot is fetched once per website build from the live
-// API using only the published perspective. Current blog generation reuses that
-// response instead of consuming a second Content Lake query.
 for (const expected of [
   ".api.sanity.io",
   'endpoint.searchParams.set("perspective", "published")',
@@ -140,7 +141,6 @@ if (!buildScript.startsWith("npm run sync:sanity-site && npm run sync:zebrabyte-
   throw new Error("[sanity-cms] Website build must create the validated Sanity snapshot before blog generation.");
 }
 
-// The legacy blog contract remains available while public page consumers migrate.
 for (const field of [
   "name: 'title'",
   "name: 'slug'",
@@ -159,8 +159,6 @@ requireText(paths.blogSync, entries.blogSync, '_type == "post"');
 requireText(paths.blogSync, entries.blogSync, 'endpoint.searchParams.set("perspective", "published")');
 requireText(paths.blogSync, entries.blogSync, 'path("drafts.**")');
 
-// Browser-facing Studio files may contain public project/dataset/origin values,
-// but never bearer/deploy/read/write credentials or raw script/style injection.
 for (const [name, text] of [
   [paths.studioConfig, entries.studioConfig],
   [paths.studioCli, entries.studioCli],
@@ -186,4 +184,4 @@ for (const [name, text] of [
   }
 }
 
-console.log("[sanity-cms] Security-first editorial, single-query delivery, Studio, hosting, and legacy compatibility contracts verified.");
+console.log("[sanity-cms] Security-first editorial, single-query delivery, staging-only preview, Studio, hosting, and legacy compatibility contracts verified.");
