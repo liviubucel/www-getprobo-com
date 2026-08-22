@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {validateCanonicalPath, validateCmsHref, validateHttpsUrl} from './policy'
 
 export const cmsLink = defineType({
   name: 'cmsLink',
@@ -10,17 +11,8 @@ export const cmsLink = defineType({
       name: 'href',
       title: 'Destination',
       type: 'string',
-      description: 'Internal path such as /soc2 or a full https:// URL.',
-      validation: (Rule) => Rule.required().custom((value) => {
-        if (!value) return true
-        if (value.startsWith('/') || value.startsWith('#')) return true
-        try {
-          const url = new URL(value)
-          return ['https:', 'mailto:', 'tel:'].includes(url.protocol) || 'Use an internal path or an approved https/mailto/tel URL.'
-        } catch {
-          return 'Use an internal path or an approved https/mailto/tel URL.'
-        }
-      }),
+      description: 'Canonical ZebraByte path, anchor, HTTPS URL, mailto address or telephone link.',
+      validation: (Rule) => Rule.required().custom(validateCmsHref),
     }),
     defineField({name: 'newTab', title: 'Open in new tab', type: 'boolean', initialValue: false}),
     defineField({name: 'style', title: 'Style', type: 'string', options: {list: ['primary', 'secondary', 'text']}, initialValue: 'text'}),
@@ -36,7 +28,13 @@ export const seo = defineType({
     defineField({name: 'description', title: 'Meta description', type: 'localizedText'}),
     defineField({name: 'image', title: 'Social image', type: 'image', options: {hotspot: true}}),
     defineField({name: 'noIndex', title: 'No index', type: 'boolean', initialValue: false}),
-    defineField({name: 'canonicalPath', title: 'Canonical path override', type: 'string'}),
+    defineField({
+      name: 'canonicalPath',
+      title: 'Canonical path override',
+      type: 'string',
+      description: 'Use only when the canonical route differs from this document route. Never enter /en manually.',
+      validation: (Rule) => Rule.custom(validateCanonicalPath),
+    }),
     defineField({name: 'structuredDataType', title: 'Schema.org type', type: 'string', options: {list: ['WebPage', 'Article', 'Service', 'FAQPage', 'AboutPage', 'ContactPage']}}),
   ],
 })
@@ -58,7 +56,7 @@ export const mediaAsset = defineType({
   type: 'object',
   fields: [
     defineField({name: 'image', title: 'Image', type: 'image', options: {hotspot: true}}),
-    defineField({name: 'videoUrl', title: 'Video URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
+    defineField({name: 'videoUrl', title: 'Video URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
     defineField({name: 'alt', title: 'Alternative text', type: 'localizedString'}),
     defineField({name: 'caption', title: 'Caption', type: 'localizedString'}),
   ],
@@ -94,7 +92,7 @@ export const logoItem = defineType({
   fields: [
     defineField({name: 'name', title: 'Name', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'logo', title: 'Logo', type: 'image', validation: (Rule) => Rule.required()}),
-    defineField({name: 'url', title: 'URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
+    defineField({name: 'url', title: 'URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
   ],
 })
 
@@ -108,6 +106,13 @@ export const testimonialItem = defineType({
     defineField({name: 'role', title: 'Role', type: 'localizedString'}),
     defineField({name: 'company', title: 'Company', type: 'string'}),
     defineField({name: 'avatar', title: 'Avatar', type: 'image'}),
+    defineField({
+      name: 'sourceNote',
+      title: 'Internal provenance note',
+      type: 'text',
+      rows: 3,
+      description: 'Internal evidence/source for the relationship or quote. Not rendered publicly.',
+    }),
   ],
 })
 
