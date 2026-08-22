@@ -15,6 +15,7 @@ import {
   testimonialsSection,
 } from './sections'
 import {hubArticle, job, legalDocument, navigation, page, siteSettings, story} from './documents'
+import {validateCmsHref} from './policy'
 
 const richText = defineType({
   name: 'zebrabyteRichText',
@@ -49,8 +50,8 @@ const richText = defineType({
               defineField({
                 name: 'href',
                 title: 'URL',
-                type: 'url',
-                validation: (Rule) => Rule.uri({allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel']}),
+                type: 'string',
+                validation: (Rule) => Rule.required().custom(validateCmsHref),
               }),
             ],
           },
