@@ -1,6 +1,7 @@
 export { MailCampaignWorkflow } from "./mail-workflow";
 
 import router from "./router";
+import { configuredRedirect } from "./redirects-runtime";
 import {
   handleZebraByteFormsApi,
   type FormsEnv,
@@ -96,6 +97,11 @@ export default {
     context?: ExecutionContextLike,
   ): Promise<Response> {
     try {
+      const publicRedirect = configuredRedirect(request);
+      if (publicRedirect) {
+        return withDeploymentSeoHeaders(request, publicRedirect);
+      }
+
       const clientErrorResponse = await handleSentryClientApi(request, env);
       if (clientErrorResponse) return clientErrorResponse;
 
