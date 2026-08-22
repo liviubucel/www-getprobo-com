@@ -1,5 +1,6 @@
 ---
 import { menuGroups as fallbackMenuGroups, type MenuGroup } from "../content/menu.ts";
+import { getCmsNavigation, getCmsSiteSettings, type CmsLocale } from "../lib/cms/content";
 import Icon from "./Icon.astro";
 import MenuIcon from "./MenuIcon.astro";
 
@@ -15,11 +16,26 @@ interface Props {
   secondaryCta?: MenuCta;
 }
 
+const internalPath = Astro.url.pathname || "/";
+const inferredLocale: CmsLocale =
+  internalPath === "/_cms/en" || internalPath.startsWith("/_cms/en/") ? "en" : "ro";
+const cmsNavigation = getCmsNavigation(inferredLocale);
+const cmsSettings = getCmsSiteSettings(inferredLocale);
+const cmsGroups = (cmsNavigation?.groups?.length ? cmsNavigation.groups : fallbackMenuGroups) as MenuGroup[];
+const cmsPrimaryCta = cmsSettings?.headerPrimaryCta ?? {
+  label: inferredLocale === "en" ? "Talk to an expert" : "Discută cu un expert",
+  href: inferredLocale === "en" ? "/en/contact" : "/contact",
+};
+const cmsSecondaryCta = cmsSettings?.mobileSecondaryCta ?? {
+  label: inferredLocale === "en" ? "See the GRC Platform" : "Vezi Platforma GRC",
+  href: inferredLocale === "en" ? "/en/compliance-platform" : "/compliance-platform",
+};
+
 const {
   id,
-  groups = fallbackMenuGroups,
-  primaryCta = { label: "Discută cu un expert", href: "/contact" },
-  secondaryCta = { label: "Vezi Platforma GRC", href: "/compliance-platform" },
+  groups = cmsGroups,
+  primaryCta = cmsPrimaryCta,
+  secondaryCta = cmsSecondaryCta,
 } = Astro.props;
 const currentPath = Astro.url.pathname;
 
