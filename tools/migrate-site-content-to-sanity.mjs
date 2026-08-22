@@ -1,5 +1,5 @@
 import process from "node:process";
-import {migrationDocuments, migrationVersion} from "./sanity-migration/content-v1.mjs";
+import {migrationDocuments, migrationVersion} from "./sanity-migration/content-v2.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || "yj548pxh";
 const dataset = process.env.SANITY_DATASET || "production";
@@ -14,7 +14,12 @@ if (process.argv.some((arg) => ["--apply", "--publish", "--production"].includes
 }
 
 const allowedTypes = new Set(["siteSettings", "navigation", "page"]);
-const requiredIds = new Set(["siteSettings", "mainNavigation", "page.homepage"]);
+const requiredIds = new Set([
+  "siteSettings",
+  "mainNavigation",
+  "page.homepage",
+  "page.managed-compliance",
+]);
 const reservedPathPrefixes = ["/api", "/cdn-cgi", "/.well-known", "/en", "/_cms"];
 
 function assert(condition, message) {
@@ -62,6 +67,7 @@ function validateTree(value, pointer = "document") {
 
 function validateDocuments(documents) {
   const ids = new Set();
+  const pagePaths = new Set();
   for (const document of documents) {
     assert(document && typeof document === "object", "Every migration entry must be an object.");
     assert(typeof document._id === "string" && document._id.length > 0, "Every migration document requires _id.");
@@ -77,6 +83,8 @@ function validateDocuments(documents) {
         !reservedPathPrefixes.some((prefix) => pagePath === prefix || pagePath.startsWith(`${prefix}/`)),
         `${document._id} attempts to claim reserved path ${pagePath}.`,
       );
+      assert(!pagePaths.has(pagePath), `Duplicate page path in migration batch: ${pagePath}`);
+      pagePaths.add(pagePath);
     }
 
     validateTree(document, document._id);
@@ -127,7 +135,7 @@ const endpoint = new URL(
   `https://${projectId}.api.sanity.io/v2025-02-19/data/mutate/${encodeURIComponent(dataset)}`,
 );
 endpoint.searchParams.set("returnIds", "true");
-endpoint.searchParams.set("tag", "zebrabyte.site-migration.v1");
+endpoint.searchParams.set("tag", "zebrabyte.site-migration.v2");
 
 const response = await fetch(endpoint, {
   method: "POST",

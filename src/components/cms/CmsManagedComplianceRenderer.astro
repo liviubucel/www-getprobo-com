@@ -1,0 +1,209 @@
+---
+import Button from "../ui/Button.svelte";
+import Badges from "../Badges.svelte";
+import SaleArg from "../ui/SaleArg.astro";
+import ComplianceTrack from "../block/ComplianceTrack.astro";
+import Testimonials from "../block/Testimonials.astro";
+import Stories from "../block/Stories.astro";
+import {
+  cmsFileUrl,
+  cmsImageUrl,
+  localize,
+  portableTextToHtml,
+  toPublicHref,
+  type CmsLocale,
+} from "../../lib/cms/content";
+
+interface Props {
+  document: Record<string, any>;
+  locale: CmsLocale;
+}
+
+const {document, locale} = Astro.props;
+const sections = (document.sections ?? []).filter((section: any) => section?.enabled !== false);
+const byKey = new Map(sections.map((section: any) => [section._key, section]));
+const hero = byKey.get("managed-hero") as any;
+const compliance = byKey.get("managed-compliance-track") as any;
+const autopilot = byKey.get("managed-autopilot") as any;
+const responsibilities = byKey.get("managed-responsibilities") as any;
+const frameworks = byKey.get("managed-frameworks") as any;
+const testimonials = byKey.get("managed-testimonials") as any;
+const stories = byKey.get("managed-stories") as any;
+const faq = byKey.get("managed-faq") as any;
+const finalCta = byKey.get("managed-final-cta") as any;
+
+const text = (value: any) => localize(value, locale) as string;
+const href = (value: string | undefined) => toPublicHref(value, locale);
+const buttonVariant = (style: string | undefined) =>
+  style === "secondary" ? "secondary" : style === "highlight" ? "highlight" : undefined;
+const mediaVideo = (media: any) => cmsFileUrl(media?.videoFile) ?? media?.videoUrl;
+const posterFor = (item: any) => {
+  const uploadedPoster = cmsImageUrl(item?.poster);
+  if (uploadedPoster) return uploadedPoster;
+  const video = String(item?.media?.videoUrl ?? "");
+  return video.startsWith("https://www.zebrabyte.ro/videos/") && video.endsWith(".mp4")
+    ? video.replace(/\.mp4$/i, ".jpg")
+    : undefined;
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "ZebraByte Managed Compliance",
+  provider: {
+    "@type": "Organization",
+    name: "ZebraByte",
+    url: "https://www.zebrabyte.ro",
+  },
+  serviceType: "Managed compliance and continuous GRC operations",
+  url: "https://www.zebrabyte.ro/managed-compliance",
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+
+<main data-cms-managed-page data-cms-managed-compliance data-cms-document-id={document._id}>
+  {
+    hero && (
+      <animated-hero class="relative -mt-16 block overflow-hidden px-5 py-10 pt-26 sm:pt-36 sm:pb-12">
+        {hero.eyebrow && (
+          <div class="yc-btn text-muted-foreground animate-perspective-in animation-delay-300 mx-auto mb-6 flex w-max items-center gap-2 px-4 py-2 sm:mb-8">
+            {text(hero.eyebrow)}
+          </div>
+        )}
+        <h1 class="text-h2 sm:text-h1 mb-6 overflow-hidden text-center font-medium text-balance sm:mb-8">
+          <span class="animate-perspective-in block">{text(hero.title)}</span>
+          {hero.highlight && <span class="animate-perspective-in block delay-50"> {text(hero.highlight)} </span>}
+        </h1>
+        {hero.description && (
+          <p class="text-muted-foreground animate-perspective-in animation-delay-150 mx-auto mb-6 max-w-200 text-center text-lg text-balance sm:mb-8">
+            {text(hero.description)}
+          </p>
+        )}
+        <div class="mb-11 flex flex-col items-stretch justify-center gap-3 sm:mb-17 sm:flex-row sm:items-center">
+          {hero.primaryCta && (
+            <Button class="animate-perspective-in animation-delay-200" variant={buttonVariant(hero.primaryCta.style)} size="lg" href={href(hero.primaryCta.href)}>
+              {text(hero.primaryCta.label)}
+            </Button>
+          )}
+          {hero.secondaryCta && (
+            <Button class="animate-perspective-in animation-delay-300" variant={buttonVariant(hero.secondaryCta.style)} size="lg" href={href(hero.secondaryCta.href)}>
+              {text(hero.secondaryCta.label)}
+            </Button>
+          )}
+        </div>
+        {hero.showFrameworkBadges && (
+          <Badges count={10} countMobile={6} client:load border class="mx-auto grid max-w-[960px] grid-cols-3 sm:grid-cols-5" />
+        )}
+      </animated-hero>
+    )
+  }
+
+  {compliance && <ComplianceTrack />}
+
+  {
+    autopilot && (
+      <section class="container py-10 sm:py-20">
+        <h2 class="text-h3 sm:text-h2 mb-3 text-center font-medium">{text(autopilot.title)}</h2>
+        <p class="text-muted-foreground mx-auto mb-10 max-w-180 text-center text-lg sm:mb-12">{text(autopilot.description)}</p>
+        <div class="flex grid-cols-2 flex-col items-start gap-10 sm:grid sm:gap-x-20 sm:gap-y-12">
+          {(autopilot.items ?? []).map((item: any) => (
+            <SaleArg title={text(item.title)} video={mediaVideo(item.media)} poster={posterFor(item)}>
+              <Fragment set:html={portableTextToHtml(text(item.body), locale)} />
+            </SaleArg>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    responsibilities && (
+      <section class="container py-10 sm:py-20">
+        <div class="mx-auto max-w-5xl">
+          <div class="mb-10 max-w-180 sm:mb-14">
+            <h2 class="text-h3 sm:text-h2 mb-3 font-medium">{text(responsibilities.title)}</h2>
+            <p class="text-muted-foreground text-lg">{text(responsibilities.description)}</p>
+          </div>
+          <div class="border-y">
+            <div class="text-muted-foreground hidden grid-cols-[0.7fr_1.15fr_1.15fr] gap-8 border-b py-4 text-sm sm:grid">
+              {(responsibilities.columns ?? []).map((column: any) => <span>{text(column)}</span>)}
+            </div>
+            {(responsibilities.rows ?? []).map((row: any) => (
+              <div class="grid gap-3 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.15fr_1.15fr] sm:gap-8">
+                <h3 class="font-medium">{text(row.label)}</h3>
+                {(row.values ?? []).map((value: any) => <p class="text-muted-foreground leading-relaxed">{text(value)}</p>)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    frameworks && (
+      <section class="container py-10 sm:py-20">
+        <div class="mx-auto mb-10 max-w-180 text-center sm:mb-14">
+          <h2 class="text-h3 sm:text-h2 mb-3 font-medium">{text(frameworks.title)}</h2>
+          <p class="text-muted-foreground text-lg">{text(frameworks.description)}</p>
+        </div>
+        <div class="mx-auto max-w-4xl border-y">
+          {(frameworks.cards ?? []).map((card: any) => (
+            <a href={href(card.link?.href)} class="group grid gap-2 border-b py-6 last:border-b-0 sm:grid-cols-[0.7fr_1.3fr] sm:gap-10">
+              <h3 class="font-medium group-hover:underline group-hover:underline-offset-4">{text(card.title)}</h3>
+              <p class="text-muted-foreground leading-relaxed">{text(card.description)}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {testimonials && <Testimonials />}
+  {stories && <Stories />}
+
+  {
+    faq && (
+      <section class="container py-10 sm:py-20">
+        <div class="mx-auto max-w-3xl">
+          <h2 class="text-h3 sm:text-h2 mb-8 text-center font-medium">{text(faq.title)}</h2>
+          <div class="border-y">
+            {(faq.items ?? []).map((item: any) => (
+              <details class="group border-b py-5 last:border-b-0">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-medium">
+                  <span>{text(item.question)}</span>
+                  <span class="text-muted-foreground text-xl transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <div class="cms-managed-answer text-muted-foreground max-w-2xl pt-4 leading-relaxed" set:html={portableTextToHtml(text(item.answer), locale)} />
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    finalCta && (
+      <section class="container py-12 text-center sm:py-24">
+        <h2 class="text-h3 sm:text-h2 mx-auto mb-4 max-w-180 font-medium">{text(finalCta.title)}</h2>
+        <p class="text-muted-foreground mx-auto mb-8 max-w-160 text-lg">{text(finalCta.description)}</p>
+        <Button href={href(finalCta.primaryCta?.href)} size="lg" variant={buttonVariant(finalCta.primaryCta?.style)}>
+          {text(finalCta.primaryCta?.label)}
+        </Button>
+      </section>
+    )
+  }
+</main>
+
+<script>
+  import {AnimatedHero} from "../../lib/elements/hero";
+  import {customElementDefine} from "../../lib/dom";
+
+  customElementDefine("animated-hero", () => AnimatedHero);
+</script>
+
+<style>
+  .cms-managed-answer :global(p) { margin: 0; }
+</style>

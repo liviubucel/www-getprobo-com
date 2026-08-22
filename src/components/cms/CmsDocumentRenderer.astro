@@ -2,6 +2,7 @@
 import Button from "../ui/Button.svelte";
 import CmsPageRenderer from "./CmsPageRenderer.astro";
 import CmsHomepageRenderer from "./CmsHomepageRenderer.astro";
+import CmsManagedComplianceRenderer from "./CmsManagedComplianceRenderer.astro";
 import {
   cmsImageUrl,
   localize,
@@ -19,11 +20,16 @@ const text = (value: any) => localize(value, locale) as any;
 const heroImage = cmsImageUrl(document.heroMedia?.image ?? document.logo);
 const applyLabel = locale === "en" ? "Apply for this role" : "Aplică pentru acest rol";
 const isHomepage = document._type === "page" && (document.path === "/" || document._cmsPath === "/");
+const isManagedCompliance =
+  document._type === "page" &&
+  (document.path === "/managed-compliance" || document._cmsPath === "/managed-compliance");
 ---
 
 {
   isHomepage ? (
     <CmsHomepageRenderer document={document} locale={locale} />
+  ) : isManagedCompliance ? (
+    <CmsManagedComplianceRenderer document={document} locale={locale} />
   ) : document._type === "page" ? (
     <CmsPageRenderer document={document} locale={locale} />
   ) : document._type === "legalDocument" ? (
