@@ -85,7 +85,8 @@ const turnstileSiteKey = "0x4AAAAAABBpDfopxKwUIKF_";
         </span>
       </label>
 
-      <div data-turnstile-container data-sitekey={turnstileSiteKey} aria-label="Verificare de securitate"></div>
+      <div data-turnstile-container data-sitekey={turnstileSiteKey} role="group"
+                aria-label="Verificare de securitate"></div>
       <div id="order-status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
       <button id="order-submit" type="submit" class="bg-primary text-primary-foreground h-11 rounded-lg px-5 text-sm font-medium disabled:opacity-50">
         Trimite detaliile
