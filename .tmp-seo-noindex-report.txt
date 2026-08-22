@@ -1,0 +1,30 @@
+sitemap_urls=1083
+noindex_html=14
+conflicts=9
+
+[CONFLICTS]
+https://www.zebrabyte.ro/accesibilitate/disclaimer	accesibilitate/disclaimer.html
+https://www.zebrabyte.ro/accesibilitate/vs-sienna	accesibilitate/vs-sienna.html
+https://www.zebrabyte.ro/careers/forward-deployed-engineer	careers/forward-deployed-engineer.html
+https://www.zebrabyte.ro/careers/founders-associate-intern	careers/founders-associate-intern.html
+https://www.zebrabyte.ro/email-marketing	email-marketing.html
+https://www.zebrabyte.ro/newsletter	probo-newsletter.html
+https://www.zebrabyte.ro/platform-customer-archive	platform-customer-archive.html
+https://www.zebrabyte.ro/platform-heritage	platform-heritage.html
+https://www.zebrabyte.ro/servicii-premium-it-migratie-securitate	servicii-premium-it-migratie-securitate.html
+
+[ALL_NOINDEX]
+https://www.iubenda.com/privacy-policy/21663824/cookie-policy	cookie-policy.html
+https://www.iubenda.com/privacy-policy/21663824/full-legal	privacy.html
+https://www.zebrabyte.ro/404	404.html
+https://www.zebrabyte.ro/accesibilitate/disclaimer	accesibilitate/disclaimer.html
+https://www.zebrabyte.ro/accesibilitate/vs-sienna	accesibilitate/vs-sienna.html
+https://www.zebrabyte.ro/careers/forward-deployed-engineer	careers/forward-deployed-engineer.html
+https://www.zebrabyte.ro/careers/founders-associate-intern	careers/founders-associate-intern.html
+https://www.zebrabyte.ro/email-marketing	email-marketing.html
+https://www.zebrabyte.ro/newsletter	probo-newsletter.html
+https://www.zebrabyte.ro/newsletter/rezultat	newsletter/rezultat.html
+https://www.zebrabyte.ro/platform-customer-archive	platform-customer-archive.html
+https://www.zebrabyte.ro/platform-heritage	platform-heritage.html
+https://www.zebrabyte.ro/servicii-premium-it-migratie-securitate	servicii-premium-it-migratie-securitate.html
+https://www.zebrabyte.ro/welcome	welcome.html
