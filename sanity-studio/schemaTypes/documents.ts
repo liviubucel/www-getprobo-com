@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {validateCmsHref, validateHttpsUrl, validatePublicPath} from './policy'
 
 export const siteSettings = defineType({
   name: 'siteSettings',
@@ -10,9 +11,9 @@ export const siteSettings = defineType({
     defineField({name: 'defaultSeo', title: 'Default SEO', type: 'seo'}),
     defineField({name: 'primaryEmail', title: 'Primary email', type: 'email'}),
     defineField({name: 'securityEmail', title: 'Security email', type: 'email'}),
-    defineField({name: 'supportUrl', title: 'Support URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
-    defineField({name: 'statusUrl', title: 'Status URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
-    defineField({name: 'trustCenterUrl', title: 'Trust Center URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
+    defineField({name: 'supportUrl', title: 'Support URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
+    defineField({name: 'statusUrl', title: 'Status URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
+    defineField({name: 'trustCenterUrl', title: 'Trust Center URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
     defineField({name: 'socialLinks', title: 'Social links', type: 'array', of: [defineArrayMember({type: 'cmsLink'})]}),
     defineField({
       name: 'announcement',
@@ -45,7 +46,7 @@ export const navigation = defineType({
           name: 'navGroup',
           fields: [
             defineField({name: 'label', title: 'Label', type: 'localizedString', validation: (Rule) => Rule.required()}),
-            defineField({name: 'href', title: 'Direct href', type: 'string'}),
+            defineField({name: 'href', title: 'Direct href', type: 'string', validation: (Rule) => Rule.custom(validateCmsHref)}),
             defineField({name: 'items', title: 'Dropdown items', type: 'array', of: [defineArrayMember({type: 'cmsLink'})]}),
           ],
           preview: {select: {title: 'label.ro'}},
@@ -82,8 +83,8 @@ export const page = defineType({
       name: 'path',
       title: 'Public path',
       type: 'string',
-      description: 'Canonical Romanian path. English is rendered under /en automatically.',
-      validation: (Rule) => Rule.required().regex(/^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*)?$/),
+      description: 'Canonical Romanian path. English is rendered under /en automatically. Runtime-reserved paths cannot be claimed by CMS content.',
+      validation: (Rule) => Rule.required().custom(validatePublicPath),
     }),
     defineField({name: 'pageType', title: 'Page type', type: 'string', options: {list: ['landing', 'product', 'service', 'security', 'compliance', 'company', 'contact', 'legal', 'utility']}, initialValue: 'landing'}),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
@@ -100,7 +101,7 @@ export const hubArticle = defineType({
   type: 'document',
   fields: [
     defineField({name: 'title', title: 'Title', type: 'localizedString', validation: (Rule) => Rule.required()}),
-    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro'}, validation: (Rule) => Rule.required()}),
+    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro', maxLength: 96}, validation: (Rule) => Rule.required()}),
     defineField({name: 'eyebrow', title: 'Eyebrow', type: 'localizedString'}),
     defineField({name: 'description', title: 'Description', type: 'localizedText', validation: (Rule) => Rule.required()}),
     defineField({name: 'tag', title: 'Card tag', type: 'localizedString'}),
@@ -119,7 +120,7 @@ export const story = defineType({
   type: 'document',
   fields: [
     defineField({name: 'title', title: 'Title', type: 'localizedString', validation: (Rule) => Rule.required()}),
-    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro'}, validation: (Rule) => Rule.required()}),
+    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro', maxLength: 96}, validation: (Rule) => Rule.required()}),
     defineField({name: 'description', title: 'Description', type: 'localizedText'}),
     defineField({name: 'company', title: 'Company / subject', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'industry', title: 'Industry', type: 'localizedString'}),
@@ -129,6 +130,13 @@ export const story = defineType({
     defineField({name: 'body', title: 'Story', type: 'localizedRichText', validation: (Rule) => Rule.required()}),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
     defineField({name: 'publishedAt', title: 'Published at', type: 'datetime'}),
+    defineField({
+      name: 'sourceNote',
+      title: 'Internal relationship/provenance note',
+      type: 'text',
+      rows: 3,
+      description: 'Internal evidence for customer/subject claims. Not rendered publicly.',
+    }),
   ],
   preview: {select: {title: 'title.ro', subtitle: 'company', media: 'logo'}},
 })
@@ -139,13 +147,13 @@ export const job = defineType({
   type: 'document',
   fields: [
     defineField({name: 'title', title: 'Title', type: 'localizedString', validation: (Rule) => Rule.required()}),
-    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro'}, validation: (Rule) => Rule.required()}),
+    defineField({name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title.ro', maxLength: 96}, validation: (Rule) => Rule.required()}),
     defineField({name: 'location', title: 'Location', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'employmentType', title: 'Employment type', type: 'string', options: {list: ['full-time', 'part-time', 'contract', 'internship']}, validation: (Rule) => Rule.required()}),
     defineField({name: 'remote', title: 'Remote', type: 'boolean', initialValue: false}),
     defineField({name: 'description', title: 'Description', type: 'localizedText'}),
     defineField({name: 'body', title: 'Job description', type: 'localizedRichText', validation: (Rule) => Rule.required()}),
-    defineField({name: 'applyUrl', title: 'Apply URL', type: 'url', validation: (Rule) => Rule.uri({scheme: ['https']})}),
+    defineField({name: 'applyUrl', title: 'Apply URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
     defineField({name: 'open', title: 'Open', type: 'boolean', initialValue: true}),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
@@ -158,7 +166,7 @@ export const legalDocument = defineType({
   type: 'document',
   fields: [
     defineField({name: 'title', title: 'Title', type: 'localizedString', validation: (Rule) => Rule.required()}),
-    defineField({name: 'path', title: 'Public path', type: 'string', validation: (Rule) => Rule.required().regex(/^\/[a-z0-9/-]+$/)}),
+    defineField({name: 'path', title: 'Public path', type: 'string', validation: (Rule) => Rule.required().custom(validatePublicPath)}),
     defineField({name: 'body', title: 'Body', type: 'localizedRichText', validation: (Rule) => Rule.required()}),
     defineField({name: 'effectiveDate', title: 'Effective date', type: 'date', validation: (Rule) => Rule.required()}),
     defineField({name: 'lastReviewedAt', title: 'Last reviewed', type: 'date'}),

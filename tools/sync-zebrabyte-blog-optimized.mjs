@@ -4,21 +4,21 @@ import path from "node:path";
 const originalFetch = globalThis.fetch;
 const manifestPath = path.resolve("src/content/blog/zebrabyte-generated/_manifest.json");
 const slugModulePath = path.resolve("worker/blog-zebrabyte-slugs.ts");
+const snapshotPath = path.resolve(".sanity-cache/site-content.json");
 
 if (typeof originalFetch !== "function") {
   throw new Error("Global fetch is required for the ZebraByte blog sync.");
 }
 
-function optimizedSanityImageRequest(input) {
-  const rawUrl =
-    input instanceof Request
-      ? input.url
-      : input instanceof URL
-        ? input.toString()
-        : typeof input === "string"
-          ? input
-          : null;
+function requestUrl(input) {
+  if (input instanceof Request) return input.url;
+  if (input instanceof URL) return input.toString();
+  if (typeof input === "string") return input;
+  return null;
+}
 
+function optimizedSanityImageRequest(input) {
+  const rawUrl = requestUrl(input);
   if (!rawUrl) return input;
 
   let url;
@@ -46,6 +46,51 @@ function optimizedSanityImageRequest(input) {
   return url.toString();
 }
 
+let snapshotPromise;
+async function loadPublishedSnapshot() {
+  snapshotPromise ??= fs
+    .readFile(snapshotPath, "utf8")
+    .then((text) => JSON.parse(text))
+    .catch((error) => {
+      if (error?.code === "ENOENT") return null;
+      throw error;
+    });
+  return snapshotPromise;
+}
+
+async function snapshotSanityQuery(input) {
+  const rawUrl = requestUrl(input);
+  if (!rawUrl) return null;
+
+  let url;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    return null;
+  }
+
+  if (!url.hostname.endsWith(".api.sanity.io") || !url.pathname.includes("/data/query/")) return null;
+  if (url.searchParams.get("perspective") !== "published") return null;
+
+  const snapshot = await loadPublishedSnapshot();
+  if (!snapshot?.content?.posts || !snapshot?.source) return null;
+
+  const requestProjectId = url.hostname.split(".")[0];
+  const requestDataset = decodeURIComponent(url.pathname.split("/").at(-1) || "");
+  if (snapshot.source.projectId !== requestProjectId || snapshot.source.dataset !== requestDataset) return null;
+  if (snapshot.source.perspective !== "published") return null;
+
+  console.log("[blog-sync] Reusing the validated published Sanity build snapshot; no second Content Lake query.");
+  return new Response(
+    JSON.stringify({
+      query: url.searchParams.get("query") || "",
+      result: snapshot.content.posts,
+      ms: 0,
+    }),
+    {status: 200, headers: {"content-type": "application/json"}},
+  );
+}
+
 async function writeZebraByteSlugModule() {
   const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
   const slugs = [...new Set((manifest.imported ?? []).map((entry) => String(entry.slug || "").trim()).filter(Boolean))]
@@ -61,7 +106,11 @@ async function writeZebraByteSlugModule() {
   console.log(`[blog-sync] ${slugs.length} ZebraByte blog slug(s) enabled for direct Romanian streaming.`);
 }
 
-globalThis.fetch = (input, init) => originalFetch(optimizedSanityImageRequest(input), init);
+globalThis.fetch = async (input, init) => {
+  const snapshotResponse = await snapshotSanityQuery(input);
+  if (snapshotResponse) return snapshotResponse;
+  return originalFetch(optimizedSanityImageRequest(input), init);
+};
 
 try {
   await import("./sync-zebrabyte-blog-v2.mjs");

@@ -33,6 +33,9 @@ pnpm-debug.log*
 .dev.vars
 .vercel
 
+# Sanity build snapshot (published content only, generated per build)
+.sanity-cache/
+
 # ZebraByte legacy blog generated from Sanity during build
 src/content/blog/zebrabyte-generated/
 public/blog/zebrabyte-generated/
