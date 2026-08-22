@@ -7,7 +7,7 @@
  * paths are normalized to the root equivalent for backwards compatibility.
  */
 export function getCanonicalUrl(url: URL): string {
-  const baseUrl = url.origin;
+  const baseUrl = "https://www.zebrabyte.ro";
   let pathname = url.pathname;
 
   pathname = pathname.replace(/\.html$/, "");

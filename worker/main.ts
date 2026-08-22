@@ -64,6 +64,19 @@ type ExecutionContextLike = {
   waitUntil?: (promise: Promise<unknown>) => void;
 };
 
+function withDeploymentSeoHeaders(request: Request, response: Response): Response {
+  const hostname = new URL(request.url).hostname.toLowerCase();
+  if (hostname !== "stag.zebrabyte.ro") return response;
+
+  const headers = new Headers(response.headers);
+  headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 function reportInBackground(
   context: ExecutionContextLike | undefined,
   promise: Promise<unknown>,
@@ -211,7 +224,7 @@ export default {
           }),
         );
       }
-      return response;
+      return withDeploymentSeoHeaders(request, response);
     } catch (error) {
       await captureSentryException(env, error, {
         request,
