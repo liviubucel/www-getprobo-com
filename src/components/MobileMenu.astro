@@ -1,16 +1,29 @@
 ---
-import { menuGroups } from "../content/menu.ts";
+import { menuGroups as fallbackMenuGroups, type MenuGroup } from "../content/menu.ts";
 import Icon from "./Icon.astro";
 import MenuIcon from "./MenuIcon.astro";
 
-interface Props {
-  id?: string;
+interface MenuCta {
+  label: string;
+  href: string;
 }
 
-const { id } = Astro.props;
+interface Props {
+  id?: string;
+  groups?: MenuGroup[];
+  primaryCta?: MenuCta;
+  secondaryCta?: MenuCta;
+}
+
+const {
+  id,
+  groups = fallbackMenuGroups,
+  primaryCta = { label: "Discută cu un expert", href: "/contact" },
+  secondaryCta = { label: "Vezi Platforma GRC", href: "/compliance-platform" },
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 
-const isGroupActive = (group: (typeof menuGroups)[number]) =>
+const isGroupActive = (group: MenuGroup) =>
   group.items.some(
     (item) => item.href.startsWith("/") && currentPath.startsWith(item.href),
   ) ||
@@ -28,7 +41,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
   <div class="mx-auto w-full max-w-2xl px-4 pt-4 pb-28 sm:px-5">
     <div class="overflow-hidden rounded-2xl border bg-secondary">
       {
-        menuGroups.map((group) => (
+        groups.map((group) => (
           <details
             data-mobile-section
             class="group/mobile border-b last:border-b-0"
@@ -42,7 +55,7 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
             </summary>
 
             <div class="bg-subtle/45 border-t px-2 pt-1 pb-3">
-              <div class="flex flex-col">
+              <div class="flex w-full flex-col">
                 {group.items.map((item) => {
                   const external = item.href.startsWith("http");
                   return (
@@ -138,16 +151,16 @@ const isGroupActive = (group: (typeof menuGroups)[number]) =>
 
     <div class="mt-4 grid gap-2.5">
       <a
-        href="/contact"
+        href={primaryCta.href}
         class="bg-primary text-primary-foreground flex min-h-12 items-center justify-center rounded-full px-4 text-center text-[15px] font-semibold transition-opacity hover:opacity-90"
       >
-        Discută cu un expert
+        {primaryCta.label}
       </a>
       <a
-        href="/compliance-platform"
+        href={secondaryCta.href}
         class="flex min-h-11 items-center justify-center rounded-full border bg-secondary px-4 text-center text-[14px] font-semibold transition-colors hover:bg-subtle"
       >
-        Vezi Platforma GRC
+        {secondaryCta.label}
       </a>
     </div>
   </div>
