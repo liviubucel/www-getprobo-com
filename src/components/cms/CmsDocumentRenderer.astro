@@ -1,6 +1,7 @@
 ---
 import Button from "../ui/Button.svelte";
 import CmsPageRenderer from "./CmsPageRenderer.astro";
+import CmsHomepageRenderer from "./CmsHomepageRenderer.astro";
 import {
   cmsImageUrl,
   localize,
@@ -17,10 +18,13 @@ const { document, locale } = Astro.props;
 const text = (value: any) => localize(value, locale) as any;
 const heroImage = cmsImageUrl(document.heroMedia?.image ?? document.logo);
 const applyLabel = locale === "en" ? "Apply for this role" : "Aplică pentru acest rol";
+const isHomepage = document._type === "page" && (document.path === "/" || document._cmsPath === "/");
 ---
 
 {
-  document._type === "page" ? (
+  isHomepage ? (
+    <CmsHomepageRenderer document={document} locale={locale} />
+  ) : document._type === "page" ? (
     <CmsPageRenderer document={document} locale={locale} />
   ) : document._type === "legalDocument" ? (
     <main class="container max-w-4xl py-12 sm:py-20" data-cms-managed-page data-cms-document-id={document._id}>
