@@ -1,0 +1,60 @@
+name: Safe Compliance Portal accessibility patch
+
+on:
+  push:
+    branches:
+      - safe/compliance-a11y-no-design
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: safe/compliance-a11y-no-design
+          fetch-depth: 0
+
+      - name: Apply one non-visual accessibility change
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/pages/products/compliance-portal.astro')
+          s = p.read_text()
+          old = '                  label={`${feature.title} animation`}\n                  class="size-full origin-center scale-[1.12] transform-gpu"'
+          new = '                  label={`${feature.title} animation`}\n                  decorative={true}\n                  class="size-full origin-center scale-[1.12] transform-gpu"'
+          if s.count(old) != 1:
+              raise SystemExit(f'Expected exactly one target, found {s.count(old)}')
+          p.write_text(s.replace(old, new))
+          PY
+
+      - name: Prove design markup was not changed
+        run: |
+          git diff -- src/pages/products/compliance-portal.astro
+          test "$(git diff --numstat -- src/pages/products/compliance-portal.astro)" = $'1\t0\tsrc/pages/products/compliance-portal.astro'
+          git diff -- src/pages/products/compliance-portal.astro | grep -F '+                  decorative={true}'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Validate experience and build
+        run: |
+          npm run check:experience
+          npm run build
+
+      - name: Commit only the safe patch
+        run: |
+          rm .github/workflows/safe-compliance-a11y.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/products/compliance-portal.astro .github/workflows/safe-compliance-a11y.yml
+          git commit -m "fix: restore Compliance Portal animation accessibility"
+          git push origin HEAD:safe/compliance-a11y-no-design
