@@ -2,15 +2,25 @@
 interface Props {
   class?: string;
   compact?: boolean;
+  locale?: "ro" | "en";
+  canonicalPath?: string;
 }
 
-const { class: className, compact = false } = Astro.props;
-const currentPath = Astro.url.pathname || "/";
-const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
+const { class: className, compact = false, locale, canonicalPath } = Astro.props;
+const currentPath = canonicalPath || Astro.url.pathname || "/";
+const normalizedPath = currentPath === "/" ? "/" : `/${currentPath.replace(/^\/+|\/+$/g, "")}`;
+const isEnglish = locale ? locale === "en" : normalizedPath === "/en" || normalizedPath.startsWith("/en/");
+const romanianPath = isEnglish
+  ? normalizedPath === "/en"
+    ? "/"
+    : normalizedPath.replace(/^\/en(?=\/|$)/, "") || "/"
+  : normalizedPath;
+const englishPath = romanianPath === "/" ? "/en" : `/en${romanianPath}`;
+const switchPath = isEnglish ? romanianPath : englishPath;
 ---
 
 <a
-  href={englishPath}
+  href={switchPath}
   data-locale-switch
   data-language-switch
   class:list={[
@@ -18,8 +28,8 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
     compact ? "h-10 min-w-[3.75rem] rounded-lg px-2" : "h-8 rounded-md px-[9px]",
     className,
   ]}
-  aria-label="Switch language to English"
-  title="English"
+  aria-label={isEnglish ? "Schimbă limba în română" : "Switch language to English"}
+  title={isEnglish ? "Română" : "English"}
 >
   <svg
     viewBox="0 0 24 24"
@@ -38,7 +48,7 @@ const englishPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
     <path d="M12 2a15.3 15.3 0 0 1 0 20" />
     <path d="M12 2a15.3 15.3 0 0 0 0 20" />
   </svg>
-  <span data-language-code class="shrink-0 text-xs font-semibold tracking-wide">EN</span>
+  <span data-language-code class="shrink-0 text-xs font-semibold tracking-wide">{isEnglish ? "RO" : "EN"}</span>
 </a>
 
 <script>
