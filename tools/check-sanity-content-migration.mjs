@@ -1,5 +1,5 @@
 import {readFile} from "node:fs/promises";
-import {migrationDocuments, migrationVersion} from "./sanity-migration/content-v1.mjs";
+import {migrationDocuments, migrationVersion} from "./sanity-migration/content-v2.mjs";
 
 const failures = [];
 const requireCondition = (condition, message) => {
@@ -10,8 +10,10 @@ const [
   runner,
   menuSource,
   homepageSource,
+  managedComplianceSource,
   footerSource,
   homepageRenderer,
+  managedComplianceRenderer,
   documentRenderer,
   sharedSchema,
   cmsContent,
@@ -19,26 +21,32 @@ const [
   readFile("tools/migrate-site-content-to-sanity.mjs", "utf8"),
   readFile("src/content/menu.ts", "utf8"),
   readFile("src/pages/index.astro", "utf8"),
+  readFile("src/pages/managed-compliance.astro", "utf8"),
   readFile("src/components/Footer.astro", "utf8"),
   readFile("src/components/cms/CmsHomepageRenderer.astro", "utf8"),
+  readFile("src/components/cms/CmsManagedComplianceRenderer.astro", "utf8"),
   readFile("src/components/cms/CmsDocumentRenderer.astro", "utf8"),
   readFile("sanity-studio/schemaTypes/shared.ts", "utf8"),
   readFile("src/lib/cms/content.ts", "utf8"),
 ]);
 
-requireCondition(migrationVersion === "zebrabyte-site-v1-20260822", "unexpected migration version");
-requireCondition(migrationDocuments.length === 3, "phase-1 migration must contain exactly settings, navigation and homepage");
+requireCondition(migrationVersion === "zebrabyte-site-v2-20260822", "unexpected migration version");
+requireCondition(migrationDocuments.length === 4, "phase-2 migration must contain settings, navigation, homepage and Managed Compliance");
 
 const byId = new Map(migrationDocuments.map((document) => [document._id, document]));
 const settings = byId.get("siteSettings");
 const navigation = byId.get("mainNavigation");
 const homepage = byId.get("page.homepage");
+const managedCompliance = byId.get("page.managed-compliance");
 
 requireCondition(Boolean(settings), "siteSettings seed is missing");
 requireCondition(Boolean(navigation), "mainNavigation seed is missing");
 requireCondition(Boolean(homepage), "homepage seed is missing");
+requireCondition(Boolean(managedCompliance), "Managed Compliance seed is missing");
 requireCondition(homepage?.path === "/", "homepage seed must own canonical path /");
+requireCondition(managedCompliance?.path === "/managed-compliance", "Managed Compliance seed must own canonical path /managed-compliance");
 requireCondition(homepage?.sections?.length === 5, "homepage seed must preserve five major content regions");
+requireCondition(managedCompliance?.sections?.length === 9, "Managed Compliance seed must preserve nine major content regions");
 
 for (const document of migrationDocuments) {
   requireCondition(!document._id.startsWith("drafts."), `seed source must keep canonical ID: ${document._id}`);
@@ -101,6 +109,24 @@ for (const phrase of [
   requireCondition(homepageJson.includes(phrase), `Sanity homepage seed is missing protected phrase: ${phrase}`);
 }
 
+const managedJson = JSON.stringify(managedCompliance);
+for (const phrase of [
+  "Compliance,",
+  "gestionat împreună cu tine.",
+  "Programul rulează continuu, nu doar înainte de audit",
+  "Cine face ce",
+  "Un program, mai multe framework-uri",
+  "Întrebări frecvente",
+  "Construiește un program pe care îl poți menține după primul audit.",
+]) {
+  requireCondition(managedComplianceSource.includes(phrase), `current Managed Compliance page no longer contains protected phrase: ${phrase}`);
+  requireCondition(managedJson.includes(phrase), `Sanity Managed Compliance seed is missing protected phrase: ${phrase}`);
+}
+for (const frameworkPath of ["/iso-27001", "/soc2", "/gdpr", "/nis2", "/accessibility"]) {
+  requireCondition(managedComplianceSource.includes(`href: "${frameworkPath}"`), `current Managed Compliance page no longer contains ${frameworkPath}`);
+  requireCondition(managedJson.includes(`"${frameworkPath}"`), `Sanity Managed Compliance seed is missing ${frameworkPath}`);
+}
+
 for (const componentContract of [
   'import Badges from "../Badges.svelte"',
   'import Logos from "../block/Logos.astro"',
@@ -127,6 +153,27 @@ requireCondition(
   "secondary homepage CTA must respect its Sanity style instead of being forced secondary",
 );
 
+for (const componentContract of [
+  'import Badges from "../Badges.svelte"',
+  'import SaleArg from "../ui/SaleArg.astro"',
+  'import ComplianceTrack from "../block/ComplianceTrack.astro"',
+  'import Testimonials from "../block/Testimonials.astro"',
+  'import Stories from "../block/Stories.astro"',
+  "<animated-hero",
+  "<ComplianceTrack />",
+  "<SaleArg",
+  "<Testimonials />",
+  "<Stories />",
+  "data-cms-managed-compliance",
+  '"@type": "Service"',
+]) {
+  requireCondition(managedComplianceRenderer.includes(componentContract), `Managed Compliance parity renderer missing ${componentContract}`);
+}
+requireCondition(
+  documentRenderer.includes('document.path === "/managed-compliance"') && documentRenderer.includes("<CmsManagedComplianceRenderer"),
+  "Managed Compliance must use the dedicated production-parity renderer",
+);
+
 for (const mediaContract of [
   "name: 'videoFile'",
   "type: 'file'",
@@ -136,6 +183,7 @@ for (const mediaContract of [
 }
 requireCondition(cmsContent.includes("export function cmsFileUrl"), "CMS content adapter must resolve Sanity file assets");
 requireCondition(homepageRenderer.includes("cmsFileUrl(media?.videoFile)"), "homepage renderer must prefer Sanity-uploaded video files");
+requireCondition(managedComplianceRenderer.includes("cmsFileUrl(media?.videoFile)"), "Managed Compliance renderer must prefer Sanity-uploaded video files");
 
 for (const expected of [
   "SANITY_API_WRITE_TOKEN",
@@ -145,6 +193,7 @@ for (const expected of [
   "Dry-run only",
   "Nothing was published",
   '["--apply", "--publish", "--production"]',
+  "zebrabyte.site-migration.v2",
 ]) {
   requireCondition(runner.includes(expected), `migration runner missing safety contract: ${expected}`);
 }
@@ -155,4 +204,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("[sanity-content-migration] Draft-only migration, homepage production parity, bilingual content and CMS media contracts verified.");
+console.log("[sanity-content-migration] Draft-only migration, homepage and Managed Compliance production parity, bilingual content and CMS media contracts verified.");
