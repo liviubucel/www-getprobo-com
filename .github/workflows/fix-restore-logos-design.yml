@@ -1,9 +1,9 @@
 name: Restore Compliance Portal logo design
 
 on:
-  push:
+  pull_request:
     branches:
-      - fix/restore-logos-design
+      - main
 
 permissions:
   contents: write
