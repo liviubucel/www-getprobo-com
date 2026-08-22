@@ -46,6 +46,7 @@ function walk(value, pointer = "seed") {
 }
 walk(migrationDocuments);
 
+const navigationJson = JSON.stringify(navigation);
 for (const criticalPath of [
   "/compliance-platform",
   "/compliance-portal",
@@ -65,14 +66,15 @@ for (const criticalPath of [
   "/docs",
 ]) {
   requireCondition(menuSource.includes(`href: "${criticalPath}"`), `current menu no longer contains ${criticalPath}`);
-  requireCondition(JSON.stringify(navigation).includes(`\"${criticalPath}\"`), `Sanity navigation seed is missing ${criticalPath}`);
+  requireCondition(navigationJson.includes(`"${criticalPath}"`), `Sanity navigation seed is missing ${criticalPath}`);
 }
 
 for (const footerPath of ["/legal", "/privacy", "/terms", "/dpa", "/legal/hosting-sla"]) {
   requireCondition(footerSource.includes(`href: "${footerPath}"`), `current footer no longer contains ${footerPath}`);
-  requireCondition(JSON.stringify(navigation).includes(`\"${footerPath}\"`), `Sanity footer seed is missing ${footerPath}`);
+  requireCondition(navigationJson.includes(`"${footerPath}"`), `Sanity footer seed is missing ${footerPath}`);
 }
 
+const homepageJson = JSON.stringify(homepage);
 for (const phrase of [
   "Conformitate și securitate,",
   "gestionate pentru tine.",
@@ -83,7 +85,7 @@ for (const phrase of [
   "Lucrează dintr-un singur program",
 ]) {
   requireCondition(homepageSource.includes(phrase), `current homepage no longer contains protected phrase: ${phrase}`);
-  requireCondition(JSON.stringify(homepage).includes(phrase), `Sanity homepage seed is missing protected phrase: ${phrase}`);
+  requireCondition(homepageJson.includes(phrase), `Sanity homepage seed is missing protected phrase: ${phrase}`);
 }
 
 for (const expected of [
@@ -93,10 +95,10 @@ for (const expected of [
   "createOrReplace",
   "Dry-run only",
   "Nothing was published",
+  '["--apply", "--publish", "--production"]',
 ]) {
   requireCondition(runner.includes(expected), `migration runner missing safety contract: ${expected}`);
 }
-requireCondition(!runner.includes('process.argv.includes("--publish") &&'), "runner must reject publishing rather than support it");
 
 if (failures.length > 0) {
   console.error(`[sanity-content-migration] ${failures.length} contract violation(s):`);
