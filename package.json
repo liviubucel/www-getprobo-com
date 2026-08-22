@@ -14,7 +14,7 @@
     "check:performance-assets": "node tools/check-performance-assets.mjs",
     "check:zebrabyte-content": "node tools/check-zebrabyte-content.mjs",
     "check:content-preservation": "node tools/check-content-preservation.mjs",
-    "check:experience": "node tools/check-probo-design-contract.mjs && node tools/check-svg-assets.mjs && node tools/check-experience-contract.mjs && node tools/check-experience-provenance.mjs",
+    "check:experience": "node tools/check-probo-design-contract.mjs && node tools/check-svg-assets.mjs && node tools/check-experience-contract.mjs && node tools/check-experience-provenance.mjs && node tools/check-worker-security-headers.mjs",
     "check:redirects": "node tools/check-redirects.mjs",
     "check:seo-indexing": "node tools/check-seo-indexing.mjs",
     "check:i18n": "node tools/check-i18n.mjs",
