@@ -105,6 +105,7 @@ export default defineConfig({
       filter(page) {
         const pathname = new URL(page).pathname.replace(/\/+$/, "") || "/";
 
+        if (pathname === "/_cms" || pathname.startsWith("/_cms/")) return false;
         if (pathname.includes("/404")) return false;
         if (pathname.startsWith("/feedback")) return false;
         if (pathname.startsWith("/welcome")) return false;

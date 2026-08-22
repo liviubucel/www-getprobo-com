@@ -1,0 +1,48 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import CmsDocumentRenderer from "../../../components/cms/CmsDocumentRenderer.astro";
+import {
+  getCmsManagedDocuments,
+  getCmsSeo,
+  type CmsLocale,
+} from "../../../lib/cms/content";
+
+export function getStaticPaths() {
+  return getCmsManagedDocuments().flatMap((document) =>
+    (["ro", "en"] as CmsLocale[]).map((locale) => ({
+      params: {
+        locale,
+        cmsPath: document._cmsPath === "/" ? undefined : document._cmsPath.slice(1),
+      },
+      props: {document, locale},
+    })),
+  );
+}
+
+interface Props {
+  document: Record<string, any>;
+  locale: CmsLocale;
+}
+
+const { document, locale } = Astro.props;
+const seo = getCmsSeo(document, locale);
+const canonicalPath = document._cmsPath;
+const showHeader = document._type === "page" ? document.showHeader !== false : true;
+const showFooter = document._type === "page" ? document.showFooter !== false : true;
+const noFrameworks = document._type === "page" ? document.showFooterFrameworks === false : false;
+---
+
+<Layout
+  title={String(seo.title || "ZebraByte")}
+  description={String(seo.description || "")}
+  ogImage={seo.ogImage}
+  noIndex={seo.noIndex}
+  noFrameworks={noFrameworks}
+  locale={locale}
+  canonicalPath={canonicalPath}
+  showHeader={showHeader}
+  showFooter={showFooter}
+  cmsManaged
+>
+  <CmsDocumentRenderer document={document} locale={locale} />
+</Layout>

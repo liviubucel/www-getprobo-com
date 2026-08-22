@@ -9,29 +9,65 @@ import ProgressiveForms from "../components/ProgressiveForms.astro";
 import SentryClient from "../components/SentryClient.astro";
 import { getCanonicalUrl } from "../lib/i18n.ts";
 import { publicBrandText, publicBrandUrl } from "../lib/public-brand.ts";
+import {
+  getCmsSiteSettings,
+  type CmsLocale,
+} from "../lib/cms/content";
 
-const { title, description, ogImage, noIndex } = Astro.props;
 interface Props {
   noFrameworks?: boolean;
   noIndex?: boolean;
   title: string;
   description?: string;
   ogImage?: string;
+  locale?: CmsLocale;
+  canonicalPath?: string;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  cmsManaged?: boolean;
 }
+
+const {
+  title,
+  description,
+  ogImage,
+  noIndex,
+  locale = "ro",
+  canonicalPath,
+  showHeader = true,
+  showFooter = true,
+  cmsManaged = false,
+} = Astro.props;
 
 const publicTitle = publicBrandText(title);
 const publicDescription = publicBrandText(description);
 const seoTitle = publicTitle
   ? `${publicTitle} | ZebraByte`
   : "Cyber Security & Compliance | ZebraByte";
-const canonical = getCanonicalUrl(Astro.url);
-const canonicalUrl = new URL(canonical);
-const englishCanonicalUrl = new URL(canonical);
-englishCanonicalUrl.pathname =
-  canonicalUrl.pathname === "/"
-    ? "/en"
-    : `/en${canonicalUrl.pathname.replace(/^\/en(?=\/|$)/, "")}`;
-const englishCanonical = englishCanonicalUrl.toString().replace(/\/$/, "");
+
+const normalizeCanonicalPath = (value: string) => {
+  if (!value || value === "/") return "/";
+  return `/${value.replace(/^\/+|\/+$/g, "")}`;
+};
+
+let romanianCanonical: string;
+let englishCanonical: string;
+if (canonicalPath) {
+  const normalized = normalizeCanonicalPath(canonicalPath.replace(/^\/en(?=\/|$)/, "") || "/");
+  romanianCanonical = new URL(normalized, "https://www.zebrabyte.ro").toString().replace(/\/$/, normalized === "/" ? "/" : "");
+  const englishPath = normalized === "/" ? "/en" : `/en${normalized}`;
+  englishCanonical = new URL(englishPath, "https://www.zebrabyte.ro").toString().replace(/\/$/, "");
+} else {
+  romanianCanonical = getCanonicalUrl(Astro.url);
+  const canonicalUrl = new URL(romanianCanonical);
+  const englishCanonicalUrl = new URL(romanianCanonical);
+  englishCanonicalUrl.pathname =
+    canonicalUrl.pathname === "/"
+      ? "/en"
+      : `/en${canonicalUrl.pathname.replace(/^\/en(?=\/|$)/, "")}`;
+  englishCanonical = englishCanonicalUrl.toString().replace(/\/$/, "");
+}
+const canonical = locale === "en" ? englishCanonical : romanianCanonical;
 const effectiveNoIndex = Boolean(noIndex);
 const publicOgImage = ogImage
   ? ogImage.startsWith("http")
@@ -40,10 +76,19 @@ const publicOgImage = ogImage
   : "https://www.zebrabyte.ro/og.png";
 const geistStylesheet =
   "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
+const cmsSettings = getCmsSiteSettings(locale);
+const announcement = cmsSettings?.announcement?.enabled ? cmsSettings.announcement : null;
+const announcementTone = {
+  info: "bg-subtle text-primary",
+  success: "bg-secondary text-primary",
+  warning: "bg-secondary text-primary",
+  critical: "bg-primary text-primary-foreground",
+}[announcement?.tone ?? "info"];
+const skipLabel = locale === "en" ? "Skip to main content" : "Sari la conținutul principal";
 ---
 
 <!doctype html>
-<html lang="ro">
+<html lang={locale} data-cms-managed={cmsManaged ? "true" : undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -80,12 +125,12 @@ const geistStylesheet =
         : "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}
     />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ro" href={canonical} />
+    <link rel="alternate" hreflang="ro" href={romanianCanonical} />
     <link rel="alternate" hreflang="en" href={englishCanonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={romanianCanonical} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ZebraByte" />
-    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:locale" content={locale === "en" ? "en_GB" : "ro_RO"} />
     <meta property="og:title" content={seoTitle} />
     <meta property="og:description" content={publicDescription} />
     <meta property="og:url" content={canonical} />
@@ -130,12 +175,27 @@ const geistStylesheet =
       href="#main-content"
       class="focus:bg-level-0 focus:text-primary sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
     >
-      Sari la conținutul principal
+      {skipLabel}
     </a>
-    <Header />
+    {announcement && (
+      <aside class:list={["border-b px-4 py-2.5 text-center text-sm", announcementTone]} data-cms-announcement>
+        <span>{announcement.message}</span>
+        {announcement.link && (
+          <a
+            href={announcement.link.href}
+            target={announcement.link.newTab ? "_blank" : undefined}
+            rel={announcement.link.newTab ? "noopener noreferrer" : undefined}
+            class="ml-2 font-semibold underline underline-offset-4"
+          >
+            {announcement.link.label}
+          </a>
+        )}
+      </aside>
+    )}
+    {showHeader && <Header locale={locale} canonicalPath={canonicalPath} />}
     <div id="main-content" tabindex="-1">
       <slot />
     </div>
-    <Footer noFrameworks={Astro.props.noFrameworks} />
+    {showFooter && <Footer noFrameworks={Astro.props.noFrameworks} locale={locale} />}
   </body>
 </html>

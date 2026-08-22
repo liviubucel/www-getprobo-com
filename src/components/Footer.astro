@@ -4,8 +4,9 @@ import Frameworks from "./block/Frameworks.astro";
 import ZebraByteStatus from "../components/ZebraByteStatus.svelte";
 import Newsletter from "./block/Newsletter.astro";
 import AskAi from "./AskAi.astro";
+import { getCmsNavigation, getCmsSiteSettings, type CmsLocale } from "../lib/cms/content";
 
-const menus = [
+const fallbackMenus = [
   {
     label: "Resurse",
     items: [
@@ -56,10 +57,26 @@ const menus = [
 
 type Props = {
   noFrameworks?: boolean;
+  locale?: CmsLocale;
 };
+
+const { noFrameworks = false, locale = "ro" } = Astro.props;
+const cmsNavigation = getCmsNavigation(locale);
+const cmsSettings = getCmsSiteSettings(locale);
+const menus = cmsNavigation?.footerGroups?.length ? cmsNavigation.footerGroups : fallbackMenus;
+const copyright =
+  cmsSettings?.footerCopyright ||
+  (locale === "en"
+    ? "Copyright © 2023-2026 ZEBRABYTE LIMITED. All rights reserved."
+    : "Copyright © 2023-2026 ZEBRABYTE LIMITED. Toate drepturile rezervate.");
+const legalLine =
+  cmsSettings?.footerLegalLine ||
+  (locale === "en"
+    ? "Company no. 15194067 · ICO ZB748706"
+    : "Nr. companie 15194067 · ICO ZB748706");
 ---
 
-{!Astro.props.noFrameworks && <Frameworks />}
+{!noFrameworks && <Frameworks />}
 
 <footer class="site-footer bg-level-0 space-y-10 py-10 sm:py-20">
   <div class="container flex grid-cols-[520fr_560fr] flex-col-reverse gap-8 sm:grid">
@@ -71,13 +88,18 @@ type Props = {
     </div>
 
     <div class="grid grid-cols-2 gap-x-6 gap-y-10 text-xs sm:grid-cols-3 sm:gap-y-6">
-      {menus.map((menu, index) => (
+      {menus.map((menu: any, index: number) => (
         <div class:list={["space-y-3", index === 2 && "col-span-2 sm:col-span-1"]}>
           <div class="mb-3 font-medium">{menu.label}</div>
           <ul class:list={["space-y-3", index === 2 && "columns-2 gap-x-8 sm:columns-1"]}>
-            {menu.items.map((item) => (
+            {(menu.items ?? []).map((item: any) => (
               <li class="break-inside-avoid">
-                <a href={item.href} class="text-tertiary-foreground text-sm hover:text-white hover:underline">
+                <a
+                  href={item.href}
+                  target={item.newTab ? "_blank" : undefined}
+                  rel={item.newTab ? "noopener noreferrer" : undefined}
+                  class="text-tertiary-foreground text-sm hover:text-white hover:underline"
+                >
                   {item.label}
                 </a>
               </li>
@@ -89,11 +111,27 @@ type Props = {
   </div>
 
   <div class="container flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-    <p class="text-tertiary-foreground text-xxs flex flex-wrap items-center gap-3">
-      Copyright © 2023-2026 ZEBRABYTE LIMITED. Toate drepturile rezervate.
-      <span>Nr. companie 15194067 · ICO ZB748706</span>
-      <ZebraByteStatus client:load />
-    </p>
+    <div class="space-y-2">
+      <p class="text-tertiary-foreground text-xxs flex flex-wrap items-center gap-3">
+        {copyright}
+        <span>{legalLine}</span>
+        <ZebraByteStatus client:load />
+      </p>
+      {cmsNavigation?.footerLegal?.length > 0 && (
+        <nav class="text-tertiary-foreground text-xxs flex flex-wrap gap-x-3 gap-y-1" aria-label={locale === "en" ? "Legal links" : "Linkuri juridice"}>
+          {cmsNavigation.footerLegal.map((item: any) => (
+            <a
+              href={item.href}
+              target={item.newTab ? "_blank" : undefined}
+              rel={item.newTab ? "noopener noreferrer" : undefined}
+              class="hover:text-white hover:underline"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      )}
+    </div>
     <AskAi />
   </div>
 </footer>

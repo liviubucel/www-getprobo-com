@@ -1,6 +1,26 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {validateCmsHref, validateHttpsUrl, validatePublicPath} from './policy'
 
+const menuIconOptions = [
+  'article',
+  'book-open-text',
+  'briefcase',
+  'clock-counter-clockwise',
+  'code',
+  'compass',
+  'handshake',
+  'heart',
+  'magnifying-glass',
+  'monitor',
+  'notepad',
+  'paint-brush',
+  'quotes',
+  'shield-check',
+  'sparkle',
+  'terminal-window',
+  'users-three',
+]
+
 export const siteSettings = defineType({
   name: 'siteSettings',
   title: 'Site settings',
@@ -15,6 +35,10 @@ export const siteSettings = defineType({
     defineField({name: 'statusUrl', title: 'Status URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
     defineField({name: 'trustCenterUrl', title: 'Trust Center URL', type: 'url', validation: (Rule) => Rule.custom(validateHttpsUrl)}),
     defineField({name: 'socialLinks', title: 'Social links', type: 'array', of: [defineArrayMember({type: 'cmsLink'})]}),
+    defineField({name: 'headerPrimaryCta', title: 'Header primary CTA', type: 'cmsLink'}),
+    defineField({name: 'mobileSecondaryCta', title: 'Mobile secondary CTA', type: 'cmsLink'}),
+    defineField({name: 'footerCopyright', title: 'Footer copyright', type: 'localizedString'}),
+    defineField({name: 'footerLegalLine', title: 'Footer company/legal line', type: 'localizedString'}),
     defineField({
       name: 'announcement',
       title: 'Global announcement',
@@ -38,7 +62,7 @@ export const navigation = defineType({
     defineField({name: 'name', title: 'Name', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({
       name: 'header',
-      title: 'Header',
+      title: 'Header mega-menu',
       type: 'array',
       of: [
         defineArrayMember({
@@ -47,7 +71,41 @@ export const navigation = defineType({
           fields: [
             defineField({name: 'label', title: 'Label', type: 'localizedString', validation: (Rule) => Rule.required()}),
             defineField({name: 'href', title: 'Direct href', type: 'string', validation: (Rule) => Rule.custom(validateCmsHref)}),
-            defineField({name: 'items', title: 'Dropdown items', type: 'array', of: [defineArrayMember({type: 'cmsLink'})]}),
+            defineField({name: 'showLabel', title: 'Show group label inside menu', type: 'boolean', initialValue: true}),
+            defineField({
+              name: 'items',
+              title: 'Dropdown items',
+              type: 'array',
+              validation: (Rule) => Rule.required().min(1),
+              of: [
+                defineArrayMember({
+                  name: 'navItem',
+                  type: 'object',
+                  fields: [
+                    defineField({name: 'label', title: 'Label', type: 'localizedString', validation: (Rule) => Rule.required()}),
+                    defineField({name: 'description', title: 'Description', type: 'localizedString', validation: (Rule) => Rule.required()}),
+                    defineField({name: 'href', title: 'Destination', type: 'string', validation: (Rule) => Rule.required().custom(validateCmsHref)}),
+                    defineField({name: 'icon', title: 'Icon', type: 'string', options: {list: menuIconOptions}, validation: (Rule) => Rule.required()}),
+                  ],
+                  preview: {select: {title: 'label.ro', subtitle: 'description.ro'}},
+                }),
+              ],
+            }),
+            defineField({
+              name: 'feature',
+              title: 'Feature card',
+              type: 'object',
+              validation: (Rule) => Rule.required(),
+              fields: [
+                defineField({name: 'eyebrow', title: 'Eyebrow', type: 'localizedString', validation: (Rule) => Rule.required()}),
+                defineField({name: 'title', title: 'Title', type: 'localizedString', validation: (Rule) => Rule.required()}),
+                defineField({name: 'href', title: 'Destination', type: 'string', validation: (Rule) => Rule.required().custom(validateCmsHref)}),
+                defineField({name: 'image', title: 'Image', type: 'image', options: {hotspot: true}}),
+                defineField({name: 'legacyAssetPath', title: 'Existing site asset path', type: 'string', description: 'Migration fallback only, for assets already in the ZebraByte repository.'}),
+                defineField({name: 'alt', title: 'Alternative text', type: 'localizedString', validation: (Rule) => Rule.required()}),
+                defineField({name: 'variant', title: 'Visual variant', type: 'string', options: {list: ['product', 'story', 'guide']}, validation: (Rule) => Rule.required()}),
+              ],
+            }),
           ],
           preview: {select: {title: 'label.ro'}},
         }),
@@ -83,12 +141,15 @@ export const page = defineType({
       name: 'path',
       title: 'Public path',
       type: 'string',
-      description: 'Canonical Romanian path. English is rendered under /en automatically. Runtime-reserved paths cannot be claimed by CMS content.',
+      description: 'Canonical Romanian path. English is rendered under /en automatically. Publishing a page here makes the CMS version authoritative for that route.',
       validation: (Rule) => Rule.required().custom(validatePublicPath),
     }),
     defineField({name: 'pageType', title: 'Page type', type: 'string', options: {list: ['landing', 'product', 'service', 'security', 'compliance', 'company', 'contact', 'legal', 'utility']}, initialValue: 'landing'}),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
     defineField({name: 'sections', title: 'Sections', type: 'pageSections', validation: (Rule) => Rule.required().min(1)}),
+    defineField({name: 'showHeader', title: 'Show site header', type: 'boolean', initialValue: true}),
+    defineField({name: 'showFooter', title: 'Show site footer', type: 'boolean', initialValue: true}),
+    defineField({name: 'showFooterFrameworks', title: 'Show framework strip above footer', type: 'boolean', initialValue: true}),
     defineField({name: 'hideFromNavigation', title: 'Hide from navigation', type: 'boolean', initialValue: false}),
   ],
   orderings: [{title: 'Path', name: 'pathAsc', by: [{field: 'path', direction: 'asc'}]}],

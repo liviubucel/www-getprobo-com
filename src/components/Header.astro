@@ -6,14 +6,31 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
 import Button from "./ui/Button.svelte";
 import MobileMenu from "./MobileMenu.astro";
 import Icon from "./Icon.astro";
-import { menuGroups } from "../content/menu";
+import { menuGroups as fallbackMenuGroups, type MenuGroup } from "../content/menu";
+import { getCmsNavigation, getCmsSiteSettings, type CmsLocale } from "../lib/cms/content";
 
 type Props = {
   hideBurger?: boolean;
   docsChrome?: boolean;
+  locale?: CmsLocale;
+  canonicalPath?: string;
 };
 
-const { hideBurger = false, docsChrome = false } = Astro.props;
+const {
+  hideBurger = false,
+  docsChrome = false,
+  locale = "ro",
+  canonicalPath,
+} = Astro.props;
+const cmsNavigation = getCmsNavigation(locale);
+const cmsSettings = getCmsSiteSettings(locale);
+const groups = (cmsNavigation?.groups?.length ? cmsNavigation.groups : fallbackMenuGroups) as MenuGroup[];
+const primaryCta = cmsSettings?.headerPrimaryCta ?? {
+  label: locale === "en" ? "Talk to an expert" : "Discută cu un expert",
+  href: locale === "en" ? "/en/contact" : "/contact",
+};
+const navigationLabel = locale === "en" ? "Main navigation" : "Navigație principală";
+const burgerLabel = locale === "en" ? "Open menu" : "Deschide meniul";
 ---
 
 <header
@@ -38,15 +55,15 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     <nav
       class="hidden items-center gap-2.25 xl:flex"
       transition:name="header-nav"
-      aria-label="Navigație principală"
+      aria-label={navigationLabel}
     >
-      <HeaderMenu groups={menuGroups} />
+      <HeaderMenu groups={groups} />
     </nav>
 
     <div class="ml-auto hidden items-center gap-2 xl:ml-3 xl:flex" transition:name="header-actions">
-      <LanguageSwitcher />
-      <Button href="/contact" class="h-8 px-3 whitespace-nowrap">
-        Discută cu un expert
+      <LanguageSwitcher locale={locale} canonicalPath={canonicalPath} />
+      <Button href={primaryCta.href} class="h-8 px-3 whitespace-nowrap">
+        {primaryCta.label}
       </Button>
       <AccountMenu id="client-access-panel-desktop" />
     </div>
@@ -56,12 +73,12 @@ const { hideBurger = false, docsChrome = false } = Astro.props;
     {
       !hideBurger && (
         <div class="ml-auto flex items-center gap-1 xl:hidden">
-          <LanguageSwitcher compact />
+          <LanguageSwitcher compact locale={locale} canonicalPath={canonicalPath} />
           <AccountMenu id="client-access-panel-mobile" mobile />
 
           <burger-menu
             class="group grid size-10 cursor-pointer place-items-center rounded-lg transition-colors hover:bg-subtle"
-            aria-label="Deschide meniul"
+            aria-label={burgerLabel}
             aria-expanded="false"
             aria-controls="mobile-menu"
             role="button"

@@ -1,6 +1,7 @@
 import app from "./index";
 import { legacyWixBlogRedirects } from "./blog-legacy-redirects";
 import { zebrabyteBlogSlugs } from "./blog-zebrabyte-slugs";
+import { cmsManagedRoutes } from "./cms-managed-routes";
 import { isEnglishPath, stripEnglishPrefix, toEnglishPath } from "./i18n";
 import {
   apiLocaleFromRequest,
@@ -23,6 +24,7 @@ type LocalizableKind = "html" | "xml" | "markdown" | null;
 
 const localizablePublicTextPath = /^\/(?:llms|llms-docs|llms-full)\.txt$/i;
 const localizedResponseTtlSeconds = 60 * 60 * 24 * 7;
+const internalCmsPrefix = "/_cms";
 
 // These pages are authored natively in Romanian. Returning the static asset body
 // directly keeps Cloudflare streaming intact and lets the browser discover CSS,
@@ -45,6 +47,42 @@ const nativeRomanianHtmlPaths = new Set([
 function normalizedPathname(pathname: string): string {
   if (pathname === "/") return "/";
   return pathname.replace(/\/+$/, "") || "/";
+}
+
+function canonicalCmsPath(pathname: string): string {
+  const publicPath = isEnglishPath(pathname) ? stripEnglishPrefix(pathname) : pathname;
+  return normalizedPathname(publicPath);
+}
+
+function isInternalCmsPath(pathname: string): boolean {
+  return pathname === internalCmsPrefix || pathname.startsWith(`${internalCmsPrefix}/`);
+}
+
+async function cmsManagedResponse(
+  request: Request,
+  env: WorkerEnv,
+  locale: TargetLocale,
+): Promise<Response | null> {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const publicUrl = new URL(request.url);
+  const canonicalPath = canonicalCmsPath(publicUrl.pathname);
+  if (!cmsManagedRoutes.has(canonicalPath)) return null;
+
+  const internalUrl = new URL(request.url);
+  internalUrl.pathname = `${internalCmsPrefix}/${locale}${canonicalPath === "/" ? "" : canonicalPath}`;
+  const internalRequest = new Request(internalUrl, request);
+  const response = await app.fetch(internalRequest, env);
+  const headers = new Headers(response.headers);
+  headers.set("Content-Language", locale);
+  headers.set("X-ZebraByte-Content-Source", "sanity");
+  headers.delete("X-Robots-Tag");
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 function isNativeRomanianHtmlPath(pathname: string): boolean {
@@ -240,17 +278,41 @@ function isApiRequestPath(pathname: string): boolean {
 
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+    const url = new URL(request.url);
+
+    // /_cms is an implementation detail used only for static asset materialization.
+    // Never expose it as an alternate public route or an indexable duplicate.
+    if (isInternalCmsPath(url.pathname)) {
+      return new Response("Not Found", {
+        status: 404,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-store",
+          "X-Robots-Tag": "noindex, nofollow",
+          "X-Content-Type-Options": "nosniff",
+        },
+      });
+    }
+
     const frenchRedirect = legacyFrenchRedirect(request);
     if (frenchRedirect) return frenchRedirect;
 
     const wixBlogRedirect = legacyWixBlogRedirect(request);
     if (wixBlogRedirect) return wixBlogRedirect;
 
-    const url = new URL(request.url);
     const english = isEnglishPath(url.pathname);
     const apiRequest = isApiRequestPath(url.pathname);
     const apiLocale = apiRequest ? apiLocaleFromRequest(request, english) : null;
     const requestEnv = apiLocale ? withLocalizedEmailEnv(env, apiLocale) : env;
+
+    // Published CMS routes are native RO/EN static assets. They take precedence
+    // over the historical code page for the same URL and bypass AI translation.
+    // Unpublishing removes the route from the generated manifest, automatically
+    // restoring the existing code-owned page as a safe migration fallback.
+    if (!apiRequest) {
+      const cmsResponse = await cmsManagedResponse(request, requestEnv, english ? "en" : "ro");
+      if (cmsResponse) return cmsResponse;
+    }
 
     if (isLocalizablePublicTextPath(url.pathname)) {
       const upstreamUrl = new URL(request.url);
