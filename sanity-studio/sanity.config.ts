@@ -6,7 +6,28 @@ import {schemaTypes} from './schemaTypes'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'yj548pxh'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
-const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://stag.zebrabyte.ro'
+
+function resolveTrustedPreviewUrl(value: string) {
+  let url: URL
+  try {
+    url = new URL(value)
+  } catch {
+    throw new Error('SANITY_STUDIO_PREVIEW_URL must be an absolute URL.')
+  }
+
+  const trustedStaging = url.origin === 'https://stag.zebrabyte.ro'
+  const trustedLocal =
+    url.protocol === 'http:' && (url.hostname === 'localhost' || url.hostname === '127.0.0.1')
+
+  if (!trustedStaging && !trustedLocal) {
+    throw new Error('SANITY_STUDIO_PREVIEW_URL must target ZebraByte staging or localhost.')
+  }
+  return url.toString().replace(/\/$/, '')
+}
+
+const previewUrl = resolveTrustedPreviewUrl(
+  process.env.SANITY_STUDIO_PREVIEW_URL || 'https://stag.zebrabyte.ro',
+)
 
 const locations = {
   siteSettings: defineLocations({message: 'Global settings are used across the whole ZebraByte website.', tone: 'caution'}),
@@ -61,7 +82,7 @@ export default defineConfig({
     }),
     presentationTool({
       previewUrl,
-      allowOrigins: ['http://localhost:*', 'https://stag.zebrabyte.ro', 'https://www.zebrabyte.ro'],
+      allowOrigins: ['http://localhost:*', 'http://127.0.0.1:*', 'https://stag.zebrabyte.ro'],
       resolve: {locations},
     }),
     visionTool({
