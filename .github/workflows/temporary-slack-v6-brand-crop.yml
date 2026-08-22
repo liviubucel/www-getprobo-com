@@ -1,0 +1,89 @@
+name: Temporary Slack v6 brand crop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temporary-slack-v6-brand-crop.yml
+
+permissions:
+  contents: write
+
+jobs:
+  crop:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: |
+          npm ci --progress=false
+          npm install --no-save puppeteer-core@24
+      - name: Render focused brand crop
+        shell: bash
+        run: |
+          mkdir -p .tmp-slack-v6-brand
+          cat > .tmp-slack-v6-brand/index.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8">
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap">
+          <style>html,body{margin:0;background:#fff}#anim{width:900px;height:900px}</style></head><body>
+          <div id="anim"></div><script src="/node_modules/lottie-web/build/player/lottie.min.js"></script>
+          <script>
+          window.ready=new Promise((resolve,reject)=>{
+            const anim=lottie.loadAnimation({container:document.getElementById('anim'),renderer:'svg',loop:false,autoplay:false,path:'/public/lottie/trust-center/slack-zebrabyte-v6.json',rendererSettings:{preserveAspectRatio:'xMidYMid meet'}});
+            anim.addEventListener('DOMLoaded',async()=>{if(document.fonts?.ready)await document.fonts.ready;window.anim=anim;resolve(anim.totalFrames)});
+            anim.addEventListener('data_failed',reject);
+          });
+          </script></body></html>
+          HTML
+          python3 -m http.server 4173 >/tmp/slack-brand-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          cat > .tmp-slack-v6-brand/render.mjs <<'JS'
+          import puppeteer from 'puppeteer-core';
+          import { writeFile } from 'node:fs/promises';
+          const browser=await puppeteer.launch({headless:true,executablePath:process.env.CHROME,args:['--no-sandbox','--disable-setuid-sandbox']});
+          const page=await browser.newPage();
+          await page.setViewport({width:900,height:900,deviceScaleFactor:1});
+          await page.goto('http://127.0.0.1:4173/.tmp-slack-v6-brand/index.html',{waitUntil:'networkidle0'});
+          await page.evaluate(()=>window.ready);
+          await page.evaluate(()=>window.anim.goToAndStop(387,true));
+          await new Promise(r=>setTimeout(r,250));
+          const box=await page.evaluate(()=>{
+            const nodes=[...document.querySelectorAll('text')];
+            const el=nodes.find(n=>n.textContent?.includes('ZEBRABYTE'));
+            if(!el)return null;
+            const r=el.getBoundingClientRect();
+            const cs=getComputedStyle(el);
+            return {x:r.x,y:r.y,width:r.width,height:r.height,fontFamily:cs.fontFamily,fontSize:cs.fontSize,fontWeight:cs.fontWeight,text:el.textContent};
+          });
+          if(!box) throw new Error('ZEBRABYTE text node not found');
+          const clip={
+            x:Math.max(0,box.x-115),
+            y:Math.max(0,box.y-42),
+            width:Math.min(360,900-Math.max(0,box.x-115)),
+            height:Math.min(110,900-Math.max(0,box.y-42)),
+          };
+          await page.screenshot({path:'.tmp-slack-v6-brand/brand-crop.png',clip});
+          await writeFile('.tmp-slack-v6-brand/metrics.json',JSON.stringify({box,clip},null,2));
+          await browser.close();
+          JS
+          CHROME="$CHROME" node .tmp-slack-v6-brand/render.mjs
+          rm -f .tmp-slack-v6-brand/index.html .tmp-slack-v6-brand/render.mjs
+      - name: Commit crop and clean workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/temporary-slack-v6-brand-crop.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .tmp-slack-v6-brand
+          git commit -m 'chore: capture optimized Slack v6 brand QA'
+          git push origin HEAD:main
