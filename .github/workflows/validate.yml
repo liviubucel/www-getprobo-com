@@ -69,3 +69,30 @@ jobs:
 
       - name: Validate Cloudflare Worker bundle
         run: npx wrangler deploy --dry-run
+
+  sanity-studio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install pinned Studio dependencies
+        working-directory: sanity-studio
+        run: npm install
+
+      - name: Audit Studio dependencies
+        working-directory: sanity-studio
+        run: npm audit --audit-level=high
+
+      - name: Build ZebraByte CMS
+        working-directory: sanity-studio
+        env:
+          SANITY_STUDIO_PROJECT_ID: yj548pxh
+          SANITY_STUDIO_DATASET: production
+        run: npm run build

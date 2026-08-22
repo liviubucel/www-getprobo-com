@@ -1,0 +1,26 @@
+{
+  "name": "zebrabyte-sanity-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "schema:extract": "sanity schema extract",
+    "schema:deploy": "sanity schema deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "6.10.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sanity": "6.10.1",
+    "styled-components": "6.5.3"
+  },
+  "overrides": {
+    "js-yaml": "3.15.1",
+    "smol-toml": "1.8.0",
+    "uuid": "11.1.1"
+  }
+}
