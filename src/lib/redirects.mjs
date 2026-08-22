@@ -23,7 +23,7 @@ const redirect = (destination) => ({ status: 301, destination });
 
 export const redirects = {
   "/sitemap.xml": redirect("/sitemap-index.xml"),
-  "/subprocessors": redirect("https://compliance.probo.com/subprocessors"),
+  "/subprocessors": redirect("https://trust.zebrabyte.ro/subprocessors"),
   "/compliance-guides": redirect("/hub"),
   "/compliance-guides/soc2": redirect("/hub/soc2"),
   "/compliance-guides/iso27001": redirect("/hub/iso27001"),

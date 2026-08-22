@@ -252,6 +252,25 @@ export default {
     const apiLocale = apiRequest ? apiLocaleFromRequest(request, english) : null;
     const requestEnv = apiLocale ? withLocalizedEmailEnv(env, apiLocale) : env;
 
+    if (isLocalizablePublicTextPath(url.pathname)) {
+      const upstreamUrl = new URL(request.url);
+      upstreamUrl.pathname = stripEnglishPrefix(url.pathname);
+      const upstreamRequest = new Request(upstreamUrl, request);
+      const response = await app.fetch(upstreamRequest, requestEnv);
+      const headers = new Headers(response.headers);
+      headers.set("Content-Language", "en");
+      headers.set(
+        "Cache-Control",
+        "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+      );
+      headers.set("X-Content-Type-Options", "nosniff");
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
     if (!english) {
       const response = await app.fetch(request, requestEnv);
       if (apiLocale) return localizeApiResponse(response, apiLocale, env);

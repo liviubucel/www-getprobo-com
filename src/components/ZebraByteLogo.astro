@@ -2,9 +2,10 @@
 interface Props {
   class?: string;
   inverse?: boolean;
+  priority?: boolean;
 }
 
-const { class: className = "", inverse = false } = Astro.props;
+const { class: className = "", inverse = false, priority = false } = Astro.props;
 ---
 
 <a
@@ -20,6 +21,9 @@ const { class: className = "", inverse = false } = Astro.props;
     alt="ZebraByte"
     width="3242"
     height="1166"
+    loading={priority ? "eager" : "lazy"}
+    decoding="async"
+    fetchpriority={priority ? "high" : "auto"}
     class:list={[
       "h-7 w-auto max-w-[96px] object-contain sm:h-8 sm:max-w-[108px]",
       inverse && "brightness-0 invert",

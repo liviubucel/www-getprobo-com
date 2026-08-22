@@ -112,6 +112,7 @@ export default defineConfig({
         if (pathname.startsWith("/orderform")) return false;
         if (pathname.startsWith("/newsletter/rezultat")) return false;
         if (pathname === "/blog/page/1") return false;
+        if (pathname === "/products/compliance-portal") return false;
 
         // Compatibility URLs remain available for inbound links, but only their
         // ZebraByte-branded equivalents are advertised as canonical discovery
