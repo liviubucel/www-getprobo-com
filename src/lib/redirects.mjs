@@ -1,9 +1,6 @@
 /**
  * Redirects an entire moved documentation section with a single wildcard
- * rule instead of one rule per file. Cloudflare Pages enforces a small cap
- * on the number of redirect rules it will actually apply (well under the
- * ~190 rules a per-file enumeration produced here), so any section move
- * must collapse to a couple of rules rather than one per page.
+ * rule instead of one rule per file.
  * @param {string} fromPrefix
  * @param {string} toPrefix
  * @returns {Record<string, { status: 301; destination: string }>}
@@ -21,14 +18,37 @@ function movedDocsRedirects(fromPrefix, toPrefix) {
  */
 const redirect = (destination) => ({ status: 301, destination });
 
+/**
+ * Single source of truth for public permanent redirects. The same table is
+ * consumed by the Cloudflare Worker and by tools/generate-redirects.mjs.
+ */
 export const redirects = {
   "/sitemap.xml": redirect("/sitemap-index.xml"),
   "/subprocessors": redirect("https://trust.zebrabyte.ro/subprocessors"),
   "/compliance-guides": redirect("/hub"),
-  "/compliance-guides/soc2": redirect("/hub/soc2"),
-  "/compliance-guides/iso27001": redirect("/hub/iso27001"),
+  "/compliance-guides/soc2": redirect("/soc2"),
+  "/compliance-guides/iso27001": redirect("/iso-27001"),
   "/wall-of-trust": redirect("/love-from-customer"),
   "/blog/page/1": redirect("/blog"),
+  "/probo-newsletter": redirect("/newsletter"),
+  "/products/compliance-portal": redirect("/compliance-portal"),
+  "/hub/probo-vs-vanta": redirect("/hub/zebrabyte-vs-vanta"),
+  "/hub/probo-vs-fractional-ciso": redirect(
+    "/hub/zebrabyte-vs-fractional-ciso",
+  ),
+  "/accesibilitate": redirect("/accessibility"),
+  "/am-fost-atacat-cibernetic": redirect("/incident-response"),
+  "/cyber-audit": redirect("/security-assessment"),
+  "/securitate-website": redirect("/website-security"),
+  "/hosting": redirect("/secure-hosting"),
+  "/despre-noi": redirect("/about"),
+  "/securitate": redirect("/security"),
+  "/appointment": redirect("/programare"),
+  "/industrii": redirect("/industries"),
+  "/parteneriate": redirect("/partnerships"),
+
+  // Retained French compatibility routes. Specific patterns must stay before
+  // the catch-all so identifiers are preserved when a legacy URL is followed.
   "/fr": redirect("/"),
   "/fr/about": redirect("/about"),
   "/fr/blog": redirect("/blog"),
@@ -43,6 +63,8 @@ export const redirects = {
   "/fr/stories/[id]": redirect("/stories/[id]"),
   "/fr/terms": redirect("/terms"),
   "/fr/yc": redirect("/yc"),
+  "/fr/*": redirect("/:splat"),
+
   ...movedDocsRedirects(
     "/docs/getting-started",
     "/docs/product/getting-started",
@@ -115,6 +137,75 @@ export const redirects = {
     ]),
   ),
 };
+
+function normalizePathname(pathname) {
+  if (pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function resolveParameterizedRedirect(source, destination, pathname) {
+  const names = [];
+  let cursor = 0;
+  let pattern = "^";
+  for (const match of source.matchAll(/\[([^\]]+)\]/g)) {
+    pattern += escapeRegExp(source.slice(cursor, match.index));
+    pattern += "([^/]+)";
+    names.push(match[1]);
+    cursor = match.index + match[0].length;
+  }
+  pattern += `${escapeRegExp(source.slice(cursor))}$`;
+
+  const match = pathname.match(new RegExp(pattern));
+  if (!match) return null;
+
+  let resolved = destination;
+  names.forEach((name, index) => {
+    const value = match[index + 1] ?? "";
+    resolved = resolved.replaceAll(`[${name}]`, value).replaceAll(`:${name}`, value);
+  });
+  return resolved;
+}
+
+/**
+ * Resolve one pathname using the exact same redirect table used to generate
+ * public/_redirects. This is required when Cloudflare runs the Worker before
+ * static assets, because asset redirect rules are not guaranteed to execute.
+ * @param {string} pathname
+ * @returns {{ status: 301; destination: string } | null}
+ */
+export function resolveRedirect(pathname) {
+  const normalized = normalizePathname(pathname);
+  const exact = redirects[normalized];
+  if (exact && !normalized.includes("[") && !normalized.endsWith("/*")) {
+    return exact;
+  }
+
+  for (const [source, rule] of Object.entries(redirects)) {
+    if (source.endsWith("/*")) {
+      const prefix = source.slice(0, -2);
+      if (!normalized.startsWith(`${prefix}/`)) continue;
+      const splat = normalized.slice(prefix.length + 1);
+      return {
+        ...rule,
+        destination: rule.destination.replaceAll(":splat", splat),
+      };
+    }
+
+    if (!source.includes("[")) continue;
+    const destination = resolveParameterizedRedirect(
+      source,
+      rule.destination,
+      normalized,
+    );
+    if (destination) return { ...rule, destination };
+  }
+
+  return null;
+}
 
 export function cloudflareRedirectLines() {
   return Object.entries(redirects).map(([from, { destination, status }]) => {

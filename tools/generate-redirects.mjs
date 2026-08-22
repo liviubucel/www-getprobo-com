@@ -4,9 +4,7 @@ import { fileURLToPath } from "node:url";
 import { cloudflareRedirectLines, redirects } from "../src/lib/redirects.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const lines = [...cloudflareRedirectLines(), "/fr/* /:splat 301", ""];
+const lines = [...cloudflareRedirectLines(), ""];
 
 await writeFile(resolve(root, "public/_redirects"), lines.join("\n"));
-console.log(
-  `Generated ${Object.keys(redirects).length + 1} Cloudflare redirects.`,
-);
+console.log(`Generated ${Object.keys(redirects).length} Cloudflare redirects.`);
